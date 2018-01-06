@@ -33,5 +33,7 @@ include($$PWD/3rdParty/qsint-properties/PropertyEditor.pri)
 INCLUDEPATH += $$PWD $$PWD/.. $$PWD/src $$PWD/3rdParty/qsint-widgets $$PWD/3rdParty/qsint-properties
 
 win32{
-        LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
+    LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
+
+    RC_FILE = $$PWD/win32/icon.rc
 }
