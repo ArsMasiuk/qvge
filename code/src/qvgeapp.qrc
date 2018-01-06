@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file alias="Edge-Mutual">Icons/Direction-Both.png</file>
+        <file alias="Edge-Directed">Icons/Direction-One.png</file>
+        <file alias="Edge-Undirected">Icons/Direction-None.png</file>
+        <file alias="Grid-Show">Icons/Grid.png</file>
+        <file alias="Grid-Snap">Icons/Grid-Snap.png</file>
+        <file alias="Node-Diamond">Icons/Node-Romb.png</file>
+        <file alias="Node-Disc">Icons/Node-Round.png</file>
+        <file alias="Node-Square">Icons/Node-Square.png</file>
+        <file alias="Node-Triangle">Icons/Node-Triangle.png</file>
+        <file alias="Node-Triangle-Down">Icons/Node-Triangle-Down.png</file>
+        <file alias="AppIcon">Icons/AppIcon.png</file>
+    </qresource>
+</RCC>
