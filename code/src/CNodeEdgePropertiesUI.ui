@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>256</width>
-    <height>314</height>
+    <height>428</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -38,6 +38,39 @@
       <string>Nodes (1)</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="3" column="0" colspan="4">
+       <widget class="QGroupBox" name="NodeAttrBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="title">
+         <string>Custom Attributes</string>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="CAttributesEditorUI" name="NodeAttrEditor" native="true"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QSint::QSplitButton" name="NodeShape">
         <property name="minimumSize">
@@ -136,36 +169,16 @@
        </widget>
       </item>
       <item row="2" column="0" colspan="4">
-       <widget class="QGroupBox" name="NodeAttrBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+       <widget class="QPushButton" name="NodeId">
+        <property name="toolTip">
+         <string>Click to edit</string>
         </property>
-        <property name="title">
-         <string>Custom Attributes</string>
+        <property name="statusTip">
+         <string>Change Id of the selected node</string>
         </property>
-        <property name="flat">
-         <bool>true</bool>
+        <property name="text">
+         <string>Id: 123</string>
         </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="CAttributesEditorUI" name="NodeAttrEditor" native="true"/>
-         </item>
-        </layout>
        </widget>
       </item>
      </layout>
@@ -305,6 +318,19 @@
          </spacer>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="EdgeId">
+        <property name="toolTip">
+         <string>Click to edit</string>
+        </property>
+        <property name="statusTip">
+         <string>Change Id of the selected edge</string>
+        </property>
+        <property name="text">
+         <string>Id: E1</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QGroupBox" name="EdgeAttrBox">

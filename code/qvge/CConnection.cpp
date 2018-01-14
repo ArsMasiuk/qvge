@@ -138,7 +138,7 @@ QPainterPath CConnection::shape() const
 
 QRectF CConnection::boundingRect() const
 {
-	return Shape::boundingRect();
+    return Shape::boundingRect().adjusted(-10,-10,10,10);
 }
 
 

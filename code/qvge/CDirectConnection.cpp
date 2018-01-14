@@ -45,11 +45,10 @@ void CDirectConnection::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 {
 	//qDebug() << boundingRect() << option->exposedRect << option->rect;
 
-	painter->setClipRect(option->exposedRect);
-	//painter->setClipRect(boundingRect());
-
 	// called before draw 
     setupPainter(painter, option, widget);
+
+    painter->setClipRect(option->exposedRect);
 
 	// circled connection
 	if (isCircled())

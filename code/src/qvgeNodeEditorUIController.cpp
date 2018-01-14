@@ -216,7 +216,7 @@ void qvgeNodeEditorUIController::createPanels()
     propertyDock->setWidget(propertiesPanel);
 
 	// connections
-	QDockWidget *connectionsDock = new QDockWidget(tr("Connections"));
+    QDockWidget *connectionsDock = new QDockWidget(tr("Topology"));
     connectionsDock->setObjectName("connectionsDock");
 	m_parent->addDockWidget(Qt::RightDockWidgetArea, connectionsDock);
 

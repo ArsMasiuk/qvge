@@ -149,6 +149,8 @@ int CAttributesEditorUI::setupFromItems(CEditorScene& scene, QList<CItem*> &item
 
 	ui->Editor->setUpdatesEnabled(true);
 
+    ui->Editor->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+
 	return ui->Editor->topLevelItemCount();
 }
 

@@ -7,6 +7,9 @@ QVGE - Qt Visual Graph Editor
 It can be used freely, maintaining the information above.
 */
 
+#include <QInputDialog>
+#include <QMessageBox>
+
 #include "CNodeEdgePropertiesUI.h"
 #include "ui_CNodeEdgePropertiesUI.h"
 
@@ -77,7 +80,6 @@ void CNodeEdgePropertiesUI::connectSignals(CEditorScene* scene)
 {
     connect(scene, SIGNAL(sceneChanged()), this, SLOT(onSceneChanged()));
     connect(scene, SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
-	//connect(scene, SIGNAL(destroyed(QObject*)), this, SLOT(onSceneDied(QObject*)));
 }
 
 
@@ -112,6 +114,8 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     QList<CConnection*> edges = m_scene->getSelectedEdges();
     QList<CNode*> nodes = m_scene->getSelectedNodes();
 
+
+    // nodes
     ui->NodesBox->setTitle(tr("Nodes (%1)").arg(nodes.count()));
 
     if (nodes.count())
@@ -123,6 +127,17 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
         ui->NodeSize->setValue(node->getAttribute("size").toSize().width());
     }
 
+    if (nodes.count() == 1)
+    {
+        ui->NodeId->setEnabled(true);
+        ui->NodeId->setText(tr("Node Id: %1").arg(nodes.first()->getId()));
+    }
+    else
+    {
+        ui->NodeId->setEnabled(false);
+        ui->NodeId->setText(tr("Select single node to edit its Id"));
+    }
+
     QList<CItem*> nodeItems;
     for (auto item: nodes) nodeItems << item;
     int attrCount = ui->NodeAttrEditor->setupFromItems(*m_scene, nodeItems);
@@ -130,6 +145,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 	//ui->NodeAttrBox->setChecked(attrCount > 0);
 
 
+    // edges
     ui->EdgesBox->setTitle(tr("Edges (%1)").arg(edges.count()));
 
     if (edges.count())
@@ -140,7 +156,18 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
         ui->EdgeWeight->setValue(edge->getAttribute("weight").toDouble());
         ui->EdgeStyle->selectAction(edge->getAttribute("style"));
 		ui->EdgeDirection->selectAction(edge->getAttribute("direction"));
-     }
+    }
+
+    if (edges.count() == 1)
+    {
+        ui->EdgeId->setEnabled(true);
+        ui->EdgeId->setText(tr("Edge Id: %1").arg(edges.first()->getId()));
+    }
+    else
+    {
+        ui->EdgeId->setEnabled(false);
+        ui->EdgeId->setText(tr("Select single edge to edit its Id"));
+    }
 
     QList<CItem*> edgeItems;
     for (auto item: edges) edgeItems << item;
@@ -227,6 +254,72 @@ void CNodeEdgePropertiesUI::on_NodeSize_valueChanged(int value)
 }
 
 
+void CNodeEdgePropertiesUI::on_NodeId_clicked()
+{
+    QList<CNode*> nodes = m_scene->getSelectedNodes();
+    if (nodes.count() != 1)
+        return;
+
+    QString id = nodes.first()->getId();
+    QString editId = id;
+
+_again:
+
+    QString newId = QInputDialog::getText(this, tr("Change node Id"),
+        tr("Specify new node Id:"), QLineEdit::Normal, editId);
+
+    if (newId.isEmpty() || newId == id)
+        return;
+
+    auto items = m_scene->getItemsById(newId);
+    for (auto item: items)
+    {
+        CNode* node = dynamic_cast<CNode*>(item);
+        if (node == NULL || node == nodes.first())
+            continue;
+
+        if (node->getId() == newId)
+        {
+            int count = 0;
+            QString nextFreeId = newId + QString::number(count++);
+            while (m_scene->getItemsById(nextFreeId).count())
+            {
+                nextFreeId = newId + QString::number(count++);
+            }
+
+            QString autoId = QString(tr("Suggested Id: %1").arg(nextFreeId));
+
+            int r = QMessageBox::warning(this, tr("Warning: Id is in use"),
+                                 tr("Id %1 is already used by another node.").arg(newId),
+                                 autoId,
+                                 tr("Swap node Ids"),
+                                 tr("Continue editing"), 0, 2);
+
+            if (r == 2)
+            {
+                editId = newId;
+                goto _again;
+            }
+
+            if (r == 1)
+            {
+                nodes.first()->setId(newId);
+                node->setId(id);
+                m_scene->addUndoState();
+                return;
+            }
+
+            // r = 0
+            editId = nextFreeId;
+            goto _again;
+        }
+    }
+
+    nodes.first()->setId(newId);
+    m_scene->addUndoState();
+}
+
+
 void CNodeEdgePropertiesUI::on_EdgeColor_activated(const QColor &color)
 {
     if (m_updateLock || m_scene == NULL)
@@ -295,7 +388,73 @@ void CNodeEdgePropertiesUI::on_EdgeDirection_activated(QVariant data)
 		edge->setAttribute("direction", data);
 	}
 
-	m_scene->addUndoState();
+    m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_EdgeId_clicked()
+{
+    QList<CConnection*> edges = m_scene->getSelectedEdges();
+    if (edges.count() != 1)
+        return;
+
+    QString id = edges.first()->getId();
+    QString editId = id;
+
+_again:
+
+    QString newId = QInputDialog::getText(this, tr("Change edge Id"),
+        tr("Specify new edge Id:"), QLineEdit::Normal, editId);
+
+    if (newId.isEmpty() || newId == id)
+        return;
+
+    auto items = m_scene->getItemsById(newId);
+    for (auto item: items)
+    {
+        CConnection* edge = dynamic_cast<CConnection*>(item);
+        if (edge == NULL || edge == edges.first())
+            continue;
+
+        if (edge->getId() == newId)
+        {
+            int count = 0;
+            QString nextFreeId = newId + QString::number(count++);
+            while (m_scene->getItemsById(nextFreeId).count())
+            {
+                nextFreeId = newId + QString::number(count++);
+            }
+
+            QString autoId = QString(tr("Suggested Id: %1").arg(nextFreeId));
+
+            int r = QMessageBox::warning(this, tr("Warning: Id is in use"),
+                                 tr("Id %1 is already used by another edge.").arg(newId),
+                                 autoId,
+                                 tr("Swap edge Ids"),
+                                 tr("Continue editing"), 0, 2);
+
+            if (r == 2)
+            {
+                editId = newId;
+                goto _again;
+            }
+
+            if (r == 1)
+            {
+                edges.first()->setId(newId);
+                edge->setId(id);
+                m_scene->addUndoState();
+                return;
+            }
+
+            // r = 0
+            editId = nextFreeId;
+            goto _again;
+        }
+    }
+
+    edges.first()->setId(newId);
+    m_scene->addUndoState();
 }
 
 

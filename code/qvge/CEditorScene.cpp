@@ -34,12 +34,12 @@ const char* versionId = "VersionId";
 
 
 CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent), 
-	m_startDragItem(NULL),
-    m_activeItemFactory(NULL),
-    m_draggedItem(NULL),
-    m_menuTriggerItem(NULL),
     m_doubleClick(false),
+    m_startDragItem(NULL),
+    m_activeItemFactory(NULL),
     m_undoManager(new CSimpleUndoManager(*this)),
+    m_menuTriggerItem(NULL),
+    m_draggedItem(NULL),
     m_needUpdateItems(true)
 {
     m_gridSize = 25;
@@ -104,7 +104,7 @@ void CEditorScene::initialize()
 	setClassAttribute("item", labelSizeAttr);
 
     CAttribute idAttr("id", "ID", "");
-    setClassAttribute("item", idAttr);
+    setClassAttribute("item", idAttr, true);
 
 
 	// static init
