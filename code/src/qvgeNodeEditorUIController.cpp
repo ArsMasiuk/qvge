@@ -26,6 +26,7 @@ It can be used freely, maintaining the information above.
 #include <CCommutationTable.h>
 #include <CSceneOptionsDialog.h>
 #include <CNodeEdgePropertiesUI.h>
+#include <CClassAttributesEditorUI.h>
 
 
 qvgeNodeEditorUIController::qvgeNodeEditorUIController(CMainWindow *parent, CNodeEditorScene *scene, CEditorView *view) : 
@@ -207,7 +208,7 @@ void qvgeNodeEditorUIController::createMenus()
 void qvgeNodeEditorUIController::createPanels()
 {
 	// propertis
-	QDockWidget *propertyDock = new QDockWidget(tr("Properties"));
+    QDockWidget *propertyDock = new QDockWidget(tr("Item Properties"));
     propertyDock->setObjectName("propertyDock");
 	m_parent->addDockWidget(Qt::RightDockWidgetArea, propertyDock);
 
@@ -223,6 +224,15 @@ void qvgeNodeEditorUIController::createPanels()
     CCommutationTable *connectionsPanel = new CCommutationTable(connectionsDock);
 	connectionsDock->setWidget(connectionsPanel);
 	connectionsPanel->setScene(m_scene);
+
+    // default properties
+    QDockWidget *defaultsDock = new QDockWidget(tr("Default Properties"));
+    defaultsDock ->setObjectName("defaultsDock");
+    m_parent->addDockWidget(Qt::LeftDockWidgetArea, defaultsDock);
+
+    CClassAttributesEditorUI *defaultsPanel = new CClassAttributesEditorUI(defaultsDock);
+    //defaultsPanel->setScene(m_scene);
+    defaultsDock->setWidget(defaultsPanel);
 }
 
 
