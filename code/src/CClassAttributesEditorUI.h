@@ -31,6 +31,19 @@ public:
 
     //int setupFromItems(CEditorScene& scene, QList<CItem*>& items);
 
+    void setScene(CEditorScene* scene);
+
+protected:
+    void connectSignals(CEditorScene* scene);
+    void onSceneAttached(CEditorScene* scene);
+    void onSceneDetached(CEditorScene* scene);
+
+    void rebuild();
+
+protected Q_SLOTS:
+    void onSceneChanged();
+    void on_ClassId_currentIndexChanged(int);
+
 private Q_SLOTS:
 //	void on_AddButton_clicked();
 //	void on_RemoveButton_clicked();

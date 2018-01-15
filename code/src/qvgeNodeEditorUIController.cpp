@@ -231,7 +231,7 @@ void qvgeNodeEditorUIController::createPanels()
     m_parent->addDockWidget(Qt::LeftDockWidgetArea, defaultsDock);
 
     CClassAttributesEditorUI *defaultsPanel = new CClassAttributesEditorUI(defaultsDock);
-    //defaultsPanel->setScene(m_scene);
+    defaultsPanel->setScene(m_scene);
     defaultsDock->setWidget(defaultsPanel);
 }
 
