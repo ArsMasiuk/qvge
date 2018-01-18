@@ -60,9 +60,6 @@ CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent),
 	setMinimumRenderSize(5);
 
 	QPixmapCache::setCacheLimit(200000);
-
-	// init scene
-	addUndoState();
 }
 
 CEditorScene::~CEditorScene()
@@ -497,7 +494,12 @@ bool CEditorScene::createClassAttribute(const QByteArray& classId,
 
 void CEditorScene::setClassAttribute(const QByteArray& classId, const CAttribute& attr, bool vis)
 {
-	m_classAttributes[classId][attr.id] = attr;
+	// only update value if exists 
+	if (m_classAttributes[classId].contains(attr.id))
+		m_classAttributes[classId][attr.id].defaultValue = attr.defaultValue;
+	else 
+		// else insert
+		m_classAttributes[classId][attr.id] = attr;
 
 	setClassAttributeVisible(classId, attr.id, vis);
 
@@ -1206,7 +1208,7 @@ void CEditorScene::onDragging(QGraphicsItem* /*dragItem*/, const QSet<CItem*>& a
 }
 
 
-void CEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem)
+void CEditorScene::onDropped(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* dragItem)
 {
 	if (m_gridSnap)
 	{
@@ -1348,6 +1350,23 @@ void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 		keyEvent->accept();
 		return;
+	}
+}
+
+
+// general events
+
+void CEditorScene::focusInEvent(QFocusEvent *focusEvent)
+{
+	Super::focusInEvent(focusEvent);
+
+	static bool s_firstRun = true;
+	if (s_firstRun) 
+	{
+		s_firstRun = false;
+
+		// init scene
+		addUndoState();
 	}
 }
 

@@ -71,19 +71,19 @@ bool CFileSerializerGEXF::load(const QString& fileName, CEditorScene& scene) con
 bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEditorScene &scene) const
 {
     auto elem = domNode.toElement();
-    QByteArray classId = elem.attribute("class", "").toLocal8Bit();
+    QByteArray classId = elem.attribute("class", "").toLatin1();
 
     auto attrs = elem.elementsByTagName("attribute");
     for (int i = 0; i < attrs.count(); ++i)
     {
         auto attrElem = attrs.at(i).toElement();
-        QByteArray id = attrElem.attribute("id", "").toLocal8Bit();
+        QByteArray id = attrElem.attribute("id", "").toLatin1();
         if (id.isEmpty())
             continue;
-        QByteArray attrId = attrElem.attribute("title", "").toLocal8Bit();
+        QByteArray attrId = attrElem.attribute("title", "").toLatin1();
         if (attrId.isEmpty())
             attrId = id;
-        QByteArray type = attrElem.attribute("type", "").toLocal8Bit();
+        QByteArray type = attrElem.attribute("type", "").toLatin1();
 
         AttrInfo attrInfo = {attrId, 0};
 
@@ -180,9 +180,9 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
     for (int i = 0; i < attrs.count(); ++i)
     {
         auto attrElem = attrs.at(i).toElement();
-        QByteArray attrId = attrElem.attribute("id", "").toLocal8Bit();     // v1.2
+        QByteArray attrId = attrElem.attribute("id", "").toLatin1();     // v1.2
         if (attrId.isEmpty())
-            attrId = attrElem.attribute("for", "").toLocal8Bit();           // v1.1
+            attrId = attrElem.attribute("for", "").toLatin1();           // v1.1
         if (attrId.isEmpty())
             continue;   // error: no id
         if (!idMap.contains(attrId))
@@ -241,9 +241,9 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
     for (int i = 0; i < attrs.count(); ++i)
     {
         auto attrElem = attrs.at(i).toElement();
-        QByteArray attrId = attrElem.attribute("id", "").toLocal8Bit();     // v1.2
+        QByteArray attrId = attrElem.attribute("id", "").toLatin1();     // v1.2
         if (attrId.isEmpty())
-            attrId = attrElem.attribute("for", "").toLocal8Bit();           // v1.1
+            attrId = attrElem.attribute("for", "").toLatin1();           // v1.1
         if (attrId.isEmpty())
             continue;   // error: no id
         if (!idMap.contains(attrId))

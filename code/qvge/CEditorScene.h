@@ -204,6 +204,7 @@ protected:
 	virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent);
 	virtual void keyPressEvent(QKeyEvent *keyEvent);
+	virtual void focusInEvent(QFocusEvent *focusEvent);
 
 	// to reimplement
 	virtual bool populateMenu(QMenu& menu, QGraphicsItem* item, const QList<QGraphicsItem*>& selectedItems);

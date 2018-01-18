@@ -28,8 +28,10 @@ struct CAttribute
 	QByteArray id;
 	QString name;
 	QVariant defaultValue;
+
 	bool isVirtual = false;	// x,y,label,color etc.
 	bool noDefault = false;	// default value makes no sense (id, label, position)
+    bool noRemove = false;
 
 	int valueType = 0;
 
