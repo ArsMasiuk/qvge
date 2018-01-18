@@ -91,7 +91,8 @@ void CEditorScene::initialize()
 
 	// default item attrs
     CAttribute labelAttr("label", "Label", "");
-    setClassAttribute("item", labelAttr, true);
+	labelAttr.noDefault = true;
+	setClassAttribute("item", labelAttr, true);
 
 	CAttribute labelColorAttr("label.color", "Label Color", QColor(Qt::black));
 	setClassAttribute("item", labelColorAttr);
@@ -104,8 +105,8 @@ void CEditorScene::initialize()
 	setClassAttribute("item", labelSizeAttr);
 
     CAttribute idAttr("id", "ID", "");
-    setClassAttribute("item", idAttr, true);
-
+	idAttr.noDefault = true;
+	setClassAttribute("item", idAttr, true);
 
 	// static init
 	static bool s_init = false;
@@ -501,21 +502,35 @@ void CEditorScene::setClassAttribute(const QByteArray& classId, const CAttribute
 	setClassAttributeVisible(classId, attr.id, vis);
 
 	m_needUpdateItems = true;
-	//update();
-	//invalidate();
 }
 
 
 void CEditorScene::setClassAttribute(const QByteArray& classId, const QByteArray& attrId, const QVariant& defaultValue)
 {
-	if (m_classAttributes[classId].contains(attrId))
+	// clone from super if not found
+	if (!m_classAttributes[classId].contains(attrId))
 	{
-		m_classAttributes[classId][attrId].defaultValue = defaultValue;
+		auto superId = getSuperClassId(classId);
+		while (!superId.isEmpty() && !m_classAttributes[superId].contains(attrId))
+		{
+			superId = getSuperClassId(superId);
+		}
 
-		m_needUpdateItems = true;
-		//update();
-		//invalidate();
+		if (!superId.isEmpty())
+		{
+			auto attr = m_classAttributes[superId][attrId];
+			attr.defaultValue = defaultValue;
+			m_classAttributes[classId][attrId] = attr;
+			m_needUpdateItems = true;
+		}
+
+		return;
 	}
+
+	// else just update the value
+	m_classAttributes[classId][attrId].defaultValue = defaultValue;
+
+	m_needUpdateItems = true;
 }
 
 
@@ -526,8 +541,6 @@ bool CEditorScene::removeClassAttribute(const QByteArray& classId, const QByteAr
 		return false;
 
 	m_needUpdateItems = true;
-	//update();
-	//invalidate();
 
 	return (*it).remove(attrId);
 }
@@ -1143,8 +1156,11 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 
 	m_startDragItem = NULL;
 
-	QGraphicsItem *hoverItem = itemAt(mouseEvent->scenePos(), QTransform());
-	updateMovedCursor(mouseEvent, hoverItem);
+	if (mouseEvent)
+	{
+		QGraphicsItem *hoverItem = itemAt(mouseEvent->scenePos(), QTransform());
+		updateMovedCursor(mouseEvent, hoverItem);
+	}
 }
 
 

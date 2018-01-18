@@ -53,53 +53,13 @@
        </item>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="AddClassButton">
-       <property name="statusTip">
-        <string>Add new custom attribute for the selected items</string>
-       </property>
-       <property name="text">
-        <string>Add...</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="RemoveClassButton">
-       <property name="statusTip">
-        <string>Remove the attribute from the selected items</string>
-       </property>
-       <property name="text">
-        <string>Remove...</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
-    <widget class="CPropertyEditor" name="Editor">
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <property name="alternatingRowColors">
-      <bool>true</bool>
-     </property>
-     <property name="allColumnsShowFocus">
-      <bool>true</bool>
-     </property>
-     <attribute name="headerVisible">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="headerCascadingSectionResizes">
-      <bool>true</bool>
-     </attribute>
+    <widget class="QtTreePropertyBrowser" name="Editor">
      <column>
       <property name="text">
-       <string notr="true">Attribute</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Value</string>
+       <string notr="true">1</string>
       </property>
      </column>
     </widget>
@@ -145,15 +105,13 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CPropertyEditor</class>
+   <class>QtTreePropertyBrowser</class>
    <extends>QTreeWidget</extends>
-   <header>CPropertyEditor.h</header>
+   <header location="global">QtTreePropertyBrowser</header>
   </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>ClassId</tabstop>
-  <tabstop>AddClassButton</tabstop>
-  <tabstop>RemoveClassButton</tabstop>
   <tabstop>Editor</tabstop>
   <tabstop>AddButton</tabstop>
   <tabstop>RemoveButton</tabstop>

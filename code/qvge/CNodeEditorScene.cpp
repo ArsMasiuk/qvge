@@ -53,7 +53,8 @@ void CNodeEditorScene::initialize()
 	createClassAttribute("node", "size", "Size", QSizeF(11.0, 11.0));
 
     CAttribute posAttr("pos", "Position", QPointF());
-    setClassAttribute("node", posAttr);
+	posAttr.noDefault = true;
+	setClassAttribute("node", posAttr);
 
 	// default edge attr
     CAttribute edgeAttr("color", "Color", QColor(Qt::gray));

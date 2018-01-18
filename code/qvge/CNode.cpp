@@ -175,6 +175,18 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 }
 
 
+bool CNode::removeAttribute(const QByteArray& attrId)
+{
+	if (Super::removeAttribute(attrId))
+	{
+		updateCachedItems();
+		return true;
+	}
+	else
+		return false;
+}
+
+
 QVariant CNode::getAttribute(const QByteArray& attrId) const
 {
 	// virtual attributes

@@ -68,6 +68,16 @@
        </item>
        <item>
         <property name="text">
+         <string>Color</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Font</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>String</string>
         </property>
        </item>

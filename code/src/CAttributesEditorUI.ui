@@ -27,33 +27,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="CPropertyEditor" name="Editor">
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <property name="alternatingRowColors">
-      <bool>true</bool>
-     </property>
-     <property name="allColumnsShowFocus">
-      <bool>true</bool>
-     </property>
-     <attribute name="headerVisible">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="headerCascadingSectionResizes">
-      <bool>true</bool>
-     </attribute>
-     <column>
-      <property name="text">
-       <string notr="true">Attribute</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Value</string>
-      </property>
-     </column>
-    </widget>
+    <widget class="QtTreePropertyBrowser" name="Editor"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -96,9 +70,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CPropertyEditor</class>
+   <class>QtTreePropertyBrowser</class>
    <extends>QTreeWidget</extends>
-   <header>CPropertyEditor.h</header>
+   <header location="global">QtTreePropertyBrowser</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -12,10 +12,11 @@ It can be used freely, maintaining the information above.
 #include <QWidget>
 #include <QList>
 
+#include <QtVariantPropertyManager>
+#include <QtVariantEditorFactory>
+
 class CEditorScene;
 class CItem;
-
-class CBaseProperty;
 
 namespace Ui {
 class CClassAttributesEditorUI;
@@ -28,8 +29,6 @@ class CClassAttributesEditorUI : public QWidget
 public:
     explicit CClassAttributesEditorUI(QWidget *parent = 0);
     ~CClassAttributesEditorUI();
-
-    //int setupFromItems(CEditorScene& scene, QList<CItem*>& items);
 
     void setScene(CEditorScene* scene);
 
@@ -47,11 +46,16 @@ protected Q_SLOTS:
 private Q_SLOTS:
 //	void on_AddButton_clicked();
 //	void on_RemoveButton_clicked();
-//	void on_Editor_valueChanged(CBaseProperty* prop, const QVariant &v);
+    void onValueChanged(QtProperty *property, const QVariant &val);
 
 private:
     Ui::CClassAttributesEditorUI *ui;
 
+    QtVariantPropertyManager m_manager;
+    QtVariantEditorFactory m_factory;
+
     CEditorScene *m_scene;
+
+    bool m_locked;
 };
 

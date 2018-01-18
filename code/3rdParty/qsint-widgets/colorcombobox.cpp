@@ -117,7 +117,7 @@ void ColorComboBox::setEditable(bool editable)
 
         // workaround of QCompleter bug (QTBUG-49165)
         connect(lineEdit(), SIGNAL(selectionChanged()), this, SLOT(onSelectionTextChanged()));
-        connect(lineEdit(), SIGNAL(textChanged(QString&)), this, SLOT(onSelectionTextChanged()));
+        connect(lineEdit(), SIGNAL(textChanged(const QString&)), this, SLOT(onSelectionTextChanged()));
     }
     else if (lineEdit())
     {

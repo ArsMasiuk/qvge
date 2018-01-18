@@ -28,9 +28,10 @@ struct CAttribute
 	QByteArray id;
 	QString name;
 	QVariant defaultValue;
-	bool isVirtual;	// x,y,label,color etc.
+	bool isVirtual = false;	// x,y,label,color etc.
+	bool noDefault = false;	// default value makes no sense (id, label, position)
 
-	int valueType;
+	int valueType = 0;
 
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;

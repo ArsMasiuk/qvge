@@ -56,6 +56,7 @@ public:
 	// attributes
 	virtual bool hasLocalAttribute(const QByteArray& attrId) const;
 	virtual bool setAttribute(const QByteArray& attrId, const QVariant& v);
+	virtual bool removeAttribute(const QByteArray& attrId);
 	virtual QVariant getAttribute(const QByteArray& attrId) const;
     virtual QByteArray classId() const { return "node"; }
     virtual QByteArray superClassId() const { return Super::classId(); }

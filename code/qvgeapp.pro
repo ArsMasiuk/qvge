@@ -27,10 +27,13 @@ include($$PWD/qvge/qvge.pri)
 SOURCES += $$files($$PWD/3rdParty/qsint-widgets/*.cpp)
 HEADERS += $$files($$PWD/3rdParty/qsint-widgets/*.h)
 
-include($$PWD/3rdParty/qsint-properties/PropertyEditor.pri)
+SOURCES += $$files($$PWD/3rdParty/qtpropertybrowser/*.cpp)
+HEADERS += $$files($$PWD/3rdParty/qtpropertybrowser/*.h)
+RESOURCES += $$files($$PWD/3rdParty/qtpropertybrowser/*.qrc)
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 
 # includes & libs
-INCLUDEPATH += $$PWD $$PWD/.. $$PWD/src $$PWD/3rdParty/qsint-widgets $$PWD/3rdParty/qsint-properties
+INCLUDEPATH += $$PWD $$PWD/.. $$PWD/src $$PWD/3rdParty/qsint-widgets $$PWD/3rdParty/qtpropertybrowser
 
 win32{
     LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
