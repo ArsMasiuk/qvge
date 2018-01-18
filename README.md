@@ -1,37 +1,32 @@
-## Welcome to GitHub Pages
+## Qt Visual Graph Editor
 
-You can use the [editor on GitHub](https://github.com/ArsMasiuk/qvge/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+qvge is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
+in a simple and intuitive way.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Please note that qvge is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor :)
 
-### Markdown
+### Main Features
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+- Easy creation and parametrising of small till middle-sized graphs
+- Directed, undirected and mixed graphs supported
+- Loading GraphML and GEXF files (as well as native XGR format)
+- Export into PDF and popular image formats
+- List of commutations between nodes
 
-```markdown
-Syntax highlighted code block
+### Installation
 
-# Header 1
-## Header 2
-### Header 3
+Prebuild Windows binaries can be loaded from [SourceForge](https://sourceforge.net/projects/qvge/files/).
 
-- Bulleted
-- List
+Or you can get qvge's sources and build them by yourself. In this case you need to have installed Qt 5.x toolkit and corresponding C++ compiler with C++11 support. qvge uses native Qt build system (main project file is qvgeapp.pro) so it should look like:
 
-1. Numbered
-2. List
+*cd* <directory-with-qvgeapp.pro>
 
-**Bold** and _Italic_ and `Code` text
+*qmake*
 
-[Link](url) and ![Image](src)
-```
+*make* (linux) or *nmake* (windows)
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Supported OSes
 
-### Jekyll Themes
+qvge has been tested on Microsoft Windows 10 and several Linux OSes. Theoretically it should run on (almost) any OS which have Qt 5.x installed.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ArsMasiuk/qvge/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
