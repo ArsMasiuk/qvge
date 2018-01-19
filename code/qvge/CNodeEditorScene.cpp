@@ -76,6 +76,11 @@ void CNodeEditorScene::initialize()
 	edgeDirections->icons << QIcon(":/Icons/Edge-Directed") << QIcon(":/Icons/Edge-Mutual") << QIcon(":/Icons/Edge-Undirected");
 	setClassAttributeConstrains("edge", "direction", edgeDirections);
 
+	CAttributeConstrainsList *edgeStyles = new CAttributeConstrainsList();
+	edgeStyles->names << "Solid" << "Dots" << "Dashes";
+	edgeStyles->ids << "solid" << "dotted" << "dashed";
+	setClassAttributeConstrains("edge", "style", edgeStyles);
+
 	CAttributeConstrainsList *nodeShapes = new CAttributeConstrainsList();
 	nodeShapes->names << "Dics" << "Square" << "Triangle (up)" << "Triangle (down)" << "Diamond";
 	nodeShapes->ids << "disc" << "square" << "triangle" << "triangle2" << "diamond";

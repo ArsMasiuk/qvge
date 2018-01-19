@@ -125,7 +125,7 @@ void CAttributesEditorUI::on_AddButton_clicked()
     if (dialog.exec() == QDialog::Rejected)
         return;
 
-    auto id = dialog.getId().toLocal8Bit();
+    auto id = dialog.getId();
     if (id.isEmpty())
         return;
 

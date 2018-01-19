@@ -31,7 +31,7 @@ struct CAttribute
 
 	bool isVirtual = false;	// x,y,label,color etc.
 	bool noDefault = false;	// default value makes no sense (id, label, position)
-    bool noRemove = false;
+    bool userDefined = false;
 
 	int valueType = 0;
 

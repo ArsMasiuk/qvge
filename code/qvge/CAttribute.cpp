@@ -31,7 +31,7 @@ CAttribute::CAttribute(
 
 bool CAttribute::storeTo(QDataStream& out, quint64 /*version64*/) const
 {
-    out << id << name << defaultValue << true << true;
+    out << id << name << defaultValue << userDefined << true;
 
 	return true;
 }
@@ -45,7 +45,7 @@ bool CAttribute::restoreFrom(QDataStream& out, quint64 version64)
 	if (version64 < 6)
 		out >> classId;	// dummy value
 
-    out >> name >> defaultValue >> dummy >> dummy;
+    out >> name >> defaultValue >> userDefined >> dummy;
 
 	// size must be converted
 	if (version64 < 7)

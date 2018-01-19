@@ -29,6 +29,13 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Attributes of</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="ClassId">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -56,13 +63,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QtTreePropertyBrowser" name="Editor">
-     <column>
-      <property name="text">
-       <string notr="true">1</string>
-      </property>
-     </column>
-    </widget>
+    <widget class="QtTreePropertyBrowser" name="Editor"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">

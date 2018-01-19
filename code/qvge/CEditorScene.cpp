@@ -503,7 +503,7 @@ void CEditorScene::setClassAttribute(const QByteArray& classId, const CAttribute
 
 	setClassAttributeVisible(classId, attr.id, vis);
 
-	m_needUpdateItems = true;
+	needUpdate();
 }
 
 
@@ -523,7 +523,8 @@ void CEditorScene::setClassAttribute(const QByteArray& classId, const QByteArray
 			auto attr = m_classAttributes[superId][attrId];
 			attr.defaultValue = defaultValue;
 			m_classAttributes[classId][attrId] = attr;
-			m_needUpdateItems = true;
+			
+			needUpdate();
 		}
 
 		return;
@@ -532,7 +533,7 @@ void CEditorScene::setClassAttribute(const QByteArray& classId, const QByteArray
 	// else just update the value
 	m_classAttributes[classId][attrId].defaultValue = defaultValue;
 
-	m_needUpdateItems = true;
+	needUpdate();
 }
 
 
@@ -542,7 +543,7 @@ bool CEditorScene::removeClassAttribute(const QByteArray& classId, const QByteAr
 	if (it == m_classAttributes.end())
 		return false;
 
-	m_needUpdateItems = true;
+	needUpdate();
 
 	return (*it).remove(attrId);
 }
@@ -944,7 +945,8 @@ void CEditorScene::layoutItemLabels()
 
 void CEditorScene::needUpdate()
 {
-	m_labelsUpdate = true;
+	//m_labelsUpdate = true;
+	m_needUpdateItems = true;
 
 	update();
 }

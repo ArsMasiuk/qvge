@@ -27,9 +27,9 @@ CNewAttributeDialog::~CNewAttributeDialog()
     delete ui;
 }
 
-QString CNewAttributeDialog::getId() const
+QByteArray CNewAttributeDialog::getId() const
 {
-    return ui->Id->text();
+    return ui->Id->text().toLatin1();
 }
 
 int CNewAttributeDialog::getType() const

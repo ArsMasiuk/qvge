@@ -44,7 +44,7 @@ protected Q_SLOTS:
     void on_ClassId_currentIndexChanged(int);
 
 private Q_SLOTS:
-//	void on_AddButton_clicked();
+    void on_AddButton_clicked();
 //	void on_RemoveButton_clicked();
     void onValueChanged(QtProperty *property, const QVariant &val);
 

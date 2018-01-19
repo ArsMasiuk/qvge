@@ -24,7 +24,7 @@ public:
     explicit CNewAttributeDialog(QWidget *parent = 0);
     ~CNewAttributeDialog();
 
-    QString getId() const;
+    QByteArray getId() const;
     int getType() const;
     QVariant getValue() const;
 
