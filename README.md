@@ -1,3 +1,5 @@
+[![Download qvge](https://img.shields.io/sourceforge/dm/qvge.svg)](https://sourceforge.net/projects/qvge/files)
+
 ## Qt Visual Graph Editor
 
 qvge is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
@@ -7,15 +9,17 @@ Please note that qvge is not a replacement for such a software like Gephi, Graph
 
 ### Main Features
 
-- Easy creation and parametrising of small till middle-sized graphs
+- Easy creation and parametrising of small-sized till middle-sized graphs
+- Dynamically maintained list of commutations between nodes
 - Directed, undirected and mixed graphs supported
 - Loading GraphML and GEXF files (as well as native XGR format)
 - Export into PDF and popular image formats
-- List of commutations between nodes
 
 ### Installation
 
-Prebuild Windows binaries can be loaded from [SourceForge](https://sourceforge.net/projects/qvge/files/).
+Prebuild Windows binaries can be loaded here:
+
+[![Download qvge](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/qvge/files)
 
 Or you can get qvge's sources and build them by yourself. In this case you need to have installed Qt 5.x toolkit and corresponding C++ compiler with C++11 support. qvge uses native Qt build system (main project file is qvgeapp.pro) so it should look like:
 
