@@ -35,8 +35,8 @@ qvge has been tested on Microsoft Windows 10 and several Linux OSes. Theoretical
 
 qvge uses following 3rd party components:
 
-- __Qt__ (c) Qt Company (https://www.qt.io)
-- __Qt Property Browser__ (c) Qt Company (https://github.com/qtproject/qt-solutions)
-- __QSint widgets library__ (c) Sintegrial Technologies (https://sourceforge.net/projects/qsint)
-- __Inkscape (SVG icons)__ (https://inkscape.org)
-- __read_proc library__ (c) Daniel Knuettel (https://daknuett.eu/personal)
+- [Qt](https://www.qt.io) (c) Qt Company 
+- [Qt property browser](https://github.com/qtproject/qt-solutions) (c) Qt Company 
+- [QSint widgets library](https://sourceforge.net/projects/qsint) (c) Sintegrial Technologies
+- [Inkscape](https://inkscape.org) (SVG icons)
+- [read_proc library](https://daknuett.eu/personal) (c) Daniel Knuettel
