@@ -15,6 +15,7 @@ It can be used freely, maintaining the information above.
 #include <QTextStream>
 #include <QApplication>
 #include <QFileInfo>
+#include <QPixmapCache>
 
 #include <qvge/CFileSerializerGEXF.h>
 #include <qvge/CFileSerializerGraphML.h>
@@ -221,6 +222,10 @@ void qvgeMainWindow::doReadSettings(QSettings& settings)
 		bool isAA = m_editorView->renderHints().testFlag(QPainter::Antialiasing);
 		isAA = settings.value("antialiasing", isAA).toBool();
 		m_editorView->setRenderHint(QPainter::Antialiasing, isAA);
+
+		int cacheRam = QPixmapCache::cacheLimit();
+		cacheRam = settings.value("cacheRam", cacheRam).toInt();
+		QPixmapCache::setCacheLimit(cacheRam);
 	}
 }
 
@@ -233,5 +238,8 @@ void qvgeMainWindow::doWriteSettings(QSettings& settings)
 	{
 		bool isAA = m_editorView->renderHints().testFlag(QPainter::Antialiasing);
 		settings.setValue("antialiasing", isAA);
+
+		int cacheRam = QPixmapCache::cacheLimit();
+		settings.setValue("cacheRam", cacheRam);
 	}
 }

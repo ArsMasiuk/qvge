@@ -12,5 +12,6 @@
         <file alias="Node-Triangle-Down">Icons/Node-Triangle-Down.png</file>
         <file alias="AppIcon">Icons/AppIcon.png</file>
         <file alias="Navigator">Icons/Scroll-Navigator.png</file>
+        <file alias="Settings">Icons/Settings.png</file>
     </qresource>
 </RCC>

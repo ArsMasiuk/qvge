@@ -44,13 +44,11 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view)
 
 	ui->Antialiasing->setChecked(view.renderHints().testFlag(QPainter::Antialiasing));
 
-	ui->CacheSpin->setValue(QPixmapCache::cacheLimit() / 1024);
 	ui->CacheSlider->setValue(QPixmapCache::cacheLimit() / 1024);
-
 	quint64 ram = CPlatformServices::GetTotalRAMBytes() / (1024 * 1024);	// mb
-	ui->CacheSpin->setMaximum(ram);
-	ui->CacheSlider->setMaximum(ram);
-	ui->MaxRAM->setNum((int)ram);
+	ram /= 2;	// 50%
+    ui->CacheSlider->setMaximum((int)ram);
+    ui->CacheSlider->setUnitText(tr("MB"));
 
 	if (QDialog::exec() == QDialog::Rejected)
 		return QDialog::Rejected;
@@ -66,6 +64,8 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view)
 	scene.enableGridSnap(ui->GridSnap->isChecked());
 
 	view.setRenderHint(QPainter::Antialiasing, ui->Antialiasing->isChecked());
+
+	QPixmapCache::setCacheLimit(ui->CacheSlider->value() * 1024);
 
 	return QDialog::Accepted;
 }
