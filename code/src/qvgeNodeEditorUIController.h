@@ -12,7 +12,7 @@ It can be used freely, maintaining the information above.
 #include <QAction>
 #include <QLabel>
 
-#include <base/CMainWindow.h>
+#include <qvgeMainWindow.h>
 
 #include <qvge/CNodeEditorScene.h>
 #include <qvge/CEditorView.h>
@@ -25,7 +25,7 @@ class qvgeNodeEditorUIController : public QObject
 	Q_OBJECT
 
 public:
-	qvgeNodeEditorUIController(CMainWindow *parent, CNodeEditorScene *scene, CEditorView *view);
+	qvgeNodeEditorUIController(qvgeMainWindow *parent, CNodeEditorScene *scene, CEditorView *view);
 	~qvgeNodeEditorUIController();
 
 private Q_SLOTS:
@@ -50,7 +50,7 @@ private:
     void createNavigator();
 
 private:
-	CMainWindow *m_parent;
+	qvgeMainWindow *m_parent;
 	CNodeEditorScene *m_scene;
 	CEditorView *m_editorView;
 

@@ -1,6 +1,35 @@
 #include "CPlatformServices.h"
 
 
+int CPlatformServices::GetPlatformBits()
+{
+    // Check windows
+    #if _WIN32 || _WIN64
+    #if _WIN64
+        #define SYSTEM64
+        return 64;
+    #else
+        #define SYSTEM32
+        return 32;
+    #endif
+    #endif
+
+    // Check GCC
+    #if __GNUC__
+    #if __x86_64__ || __ppc64__
+        #define SYSTEM64
+        return 64;
+    #else
+        #define SYSTEM32
+        return 32;
+    #endif
+    #endif
+
+    // not detected
+    return 0;
+}
+
+
 #ifdef Q_OS_WIN32
 
 #include <Windows.h>
@@ -51,6 +80,20 @@ CPlatformServices::PIDs CPlatformServices::GetRunningPIDs()
 }
 
 
+quint64 CPlatformServices::GetTotalRAMBytes()
+{
+	MEMORYSTATUSEX memory_status;
+	ZeroMemory(&memory_status, sizeof(MEMORYSTATUSEX));
+	memory_status.dwLength = sizeof(MEMORYSTATUSEX);
+	if (GlobalMemoryStatusEx(&memory_status))
+	{
+		return memory_status.ullTotalPhys;
+	}
+	else
+		return 0;
+}
+
+
 #endif // windows
 
 
@@ -61,6 +104,8 @@ CPlatformServices::PIDs CPlatformServices::GetRunningPIDs()
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xos.h>
+
+#include <sys/sysinfo.h>
 
 extern "C" {
 #include <read_proc.h>
@@ -102,5 +147,19 @@ CPlatformServices::PIDs CPlatformServices::GetRunningPIDs()
 
     return result;
 }
+
+
+quint64 CPlatformServices::GetTotalRAMBytes()
+{
+	struct sysinfo info;
+
+	if (sysinfo(&info) == 0)
+	{
+		return info.totalram;
+	}
+	else
+		return 0;
+}
+
 
 #endif // linux

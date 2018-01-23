@@ -15,6 +15,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CItem.h>
 
 #include <QMessageBox>
+#include <QDebug>
 
 
 CClassAttributesEditorUI::CClassAttributesEditorUI(QWidget *parent) :
@@ -31,10 +32,16 @@ CClassAttributesEditorUI::CClassAttributesEditorUI(QWidget *parent) :
             this, SLOT(onValueChanged(QtProperty*, const QVariant&)));
 
     ui->ClassId->setCurrentIndex(1);    // node by def.
+
+	//const QObjectList& objs = ui->Editor->children();
+	//qDebug() << objs
 }
 
 CClassAttributesEditorUI::~CClassAttributesEditorUI()
 {
+	// important to avoid crash
+	ui->Editor->disconnect(this);
+
 	delete ui;
 }
 
@@ -87,6 +94,8 @@ void CClassAttributesEditorUI::on_ClassId_currentIndexChanged(int)
 
 void CClassAttributesEditorUI::rebuild()
 {
+	on_Editor_currentItemChanged(NULL);
+
     if (!m_scene || m_locked)
 		return;
 
@@ -116,7 +125,9 @@ void CClassAttributesEditorUI::rebuild()
 			if (connList) {
 				prop = m_manager.addProperty(QtVariantPropertyManager::enumTypeId(), it.key());
 				prop->setAttribute(QLatin1String("enumNames"), connList->ids);
-				//prop->setAttribute(QLatin1String("enumIcons"), connList->icons);
+				QVariant v;
+				qVariantSetValue(v, connList->iconsAsMap());
+				prop->setAttribute(QLatin1String("enumIcons"), v);
 				int index = connList->ids.indexOf(it.value().defaultValue.toString());
 				prop->setValue(index);
 			}
@@ -134,6 +145,9 @@ void CClassAttributesEditorUI::rebuild()
 
 		if (it.value().userDefined)
 			prop->setModified(true);
+
+		if (ui->Editor->currentItem() == NULL)
+			ui->Editor->setCurrentItem(item);
     }
 
     ui->Editor->setUpdatesEnabled(true);
@@ -218,4 +232,66 @@ void CClassAttributesEditorUI::on_AddButton_clicked()
 
     // rebuild tree
     rebuild();
+
+	ui->Editor->setFocus();
 }
+
+
+void CClassAttributesEditorUI::on_Editor_currentItemChanged(QtBrowserItem* item)
+{
+	if (!item)
+	{
+		ui->RemoveButton->setEnabled(false);
+		return;
+	}
+
+	// only custom attrs can be removed
+	ui->RemoveButton->setEnabled(item->property()->isModified());
+}
+
+
+void CClassAttributesEditorUI::on_RemoveButton_clicked()
+{
+	if (!m_scene)
+		return;
+
+	auto item = (ui->Editor->currentItem());
+	if (!item)
+		return;
+
+	// no subprops
+	if (item->parent())
+		return;
+
+	QString classId;
+	if (ui->ClassId->currentIndex() > 0)
+		classId = ui->ClassId->currentText();
+
+	auto prop = item->property();
+	QString attrId = prop->propertyName();
+
+	int r = QMessageBox::question(NULL,
+		tr("Remove Attribute"),
+		tr("Remove attribute '%1' from class '%2'?").arg(attrId, classId),
+		QMessageBox::Yes, QMessageBox::Cancel);
+
+	if (r == QMessageBox::Cancel)
+		return;
+
+	// remove prop
+	m_locked = true;
+	delete prop;
+
+	m_scene->removeClassAttribute(classId.toLatin1(), attrId.toLatin1());
+
+	// store state
+	m_scene->addUndoState();
+
+	m_locked = false;
+	// rebuild tree
+	//rebuild();
+
+	ui->Editor->setFocus();
+}
+
+

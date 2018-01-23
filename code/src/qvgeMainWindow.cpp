@@ -20,11 +20,17 @@ It can be used freely, maintaining the information above.
 #include <qvge/CFileSerializerGraphML.h>
 #include <qvge/CFileSerializerXGR.h>
 
+#include <base/CPlatformServices.h>
+
 
 qvgeMainWindow::qvgeMainWindow()
 {
+	QString bitString;
+	int bits = CPlatformServices::GetPlatformBits();
+	if (bits > 0) bitString = QString(" %1bit").arg(bits);
+
     QApplication::setApplicationName("Qt Visual Graph Editor");
-    QApplication::setApplicationVersion(qvgeVersion.toString() + tr(" (preview edition)"));
+    QApplication::setApplicationVersion(qvgeVersion.toString() + tr(" (Beta)") + bitString);
 
     CDocumentFormat gexf = { "GEXF", "*.gexf", false, true };
     CDocumentFormat graphml = { "GraphML", "*.graphml", true, true };
@@ -203,4 +209,29 @@ QString qvgeMainWindow::getAboutText() const
 			"<p>This is a free software."
 			"<br>It comes without warranty of any kind. Use it on your own risk."
 			"<p>&copy; 2016-2018 Ars L. Masiuk");
+}
+
+
+void qvgeMainWindow::doReadSettings(QSettings& settings)
+{
+	Super::doReadSettings(settings);
+
+	if (m_editorView)
+	{
+		bool isAA = m_editorView->renderHints().testFlag(QPainter::Antialiasing);
+		isAA = settings.value("antialiasing", isAA).toBool();
+		m_editorView->setRenderHint(QPainter::Antialiasing, isAA);
+	}
+}
+
+
+void qvgeMainWindow::doWriteSettings(QSettings& settings)
+{
+	Super::doWriteSettings(settings);
+
+	if (m_editorView)
+	{
+		bool isAA = m_editorView->renderHints().testFlag(QPainter::Antialiasing);
+		settings.setValue("antialiasing", isAA);
+	}
 }

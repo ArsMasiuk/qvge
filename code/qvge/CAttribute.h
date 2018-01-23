@@ -123,5 +123,18 @@ struct CAttributeConstrainsList: public CAttributeConstrains
 	QStringList names;
 	QStringList ids;
 	IconsList icons;
+
+	// convenience method to conform property browser API
+	QMap<int, QIcon> iconsAsMap() const
+	{
+		QMap<int, QIcon> result;
+
+		for (int i = 0; i < icons.size(); ++i)
+		{
+			result[i] = icons[i];
+		}
+
+		return result;
+	}
 };
 

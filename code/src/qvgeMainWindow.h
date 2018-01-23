@@ -25,6 +25,7 @@ class qvgeMainWindow : public CMainWindow
 
 public:
     typedef CMainWindow Super;
+	friend class qvgeNodeEditorUIController;
 
     qvgeMainWindow();
 
@@ -36,12 +37,15 @@ protected:
     virtual bool onSaveDocument(const QString &fileName, const QString &selectedFilter, const QByteArray &docType);
 
 	virtual QString getAboutText() const;
+
+	virtual void doReadSettings(QSettings& settings);
+	virtual void doWriteSettings(QSettings& settings);
 	
 private:
-    CNodeEditorScene *m_editorScene;
-    CEditorView *m_editorView;
+    CNodeEditorScene *m_editorScene = NULL;
+    CEditorView *m_editorView = NULL;
 
-    QPlainTextEdit *m_textEditor;
+    QPlainTextEdit *m_textEditor = NULL;
 };
 
 #endif // QVGEMAINWINDOW_H

@@ -42,10 +42,11 @@ protected:
 protected Q_SLOTS:
     void onSceneChanged();
     void on_ClassId_currentIndexChanged(int);
+	void on_Editor_currentItemChanged(QtBrowserItem*);
 
 private Q_SLOTS:
     void on_AddButton_clicked();
-//	void on_RemoveButton_clicked();
+	void on_RemoveButton_clicked();
     void onValueChanged(QtProperty *property, const QVariant &val);
 
 private:

@@ -29,7 +29,7 @@ It can be used freely, maintaining the information above.
 #include <CClassAttributesEditorUI.h>
 
 
-qvgeNodeEditorUIController::qvgeNodeEditorUIController(CMainWindow *parent, CNodeEditorScene *scene, CEditorView *view) : 
+qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent, CNodeEditorScene *scene, CEditorView *view) :
 	QObject(parent),
 	m_parent(parent), m_scene(scene), m_editorView(view)
 {
@@ -244,6 +244,7 @@ void qvgeNodeEditorUIController::createNavigator()
     QToolButton *sliderButton = m_sliderView->makeAsButton();
     m_editorView->setCornerWidget(sliderButton);
 
+	sliderButton->setIcon(QIcon(":/Icons/Navigator"));
     sliderButton->setToolTip(tr("Show scene navigator"));
     connect(m_sliderView, SIGNAL(aboutToShow()), this, SLOT(onNavigatorShown()));
 
@@ -326,11 +327,13 @@ void qvgeNodeEditorUIController::resetZoom()
 void qvgeNodeEditorUIController::sceneOptions()
 {
     CSceneOptionsDialog dialog;
-    if (dialog.exec(*m_scene))
+    if (dialog.exec(*m_scene, *m_editorView))
     {
         gridAction->setChecked(m_scene->gridEnabled());
         gridSnapAction->setChecked(m_scene->gridSnapEnabled());
         actionShowLabels->setChecked(m_scene->itemLabelsEnabled());
+
+		m_parent->writeSettings();
     }
 }
 

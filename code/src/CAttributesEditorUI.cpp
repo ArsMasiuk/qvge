@@ -112,6 +112,9 @@ int CAttributesEditorUI::setupFromItems(CEditorScene& scene, QList<CItem*> &item
 
     m_manager.blockSignals(false);
 
+	// force update
+	on_Editor_currentItemChanged(ui->Editor->currentItem());
+
     return topCount;
 }
 
@@ -150,6 +153,8 @@ void CAttributesEditorUI::on_AddButton_clicked()
 
 	// rebuild tree
 	setupFromItems(*m_scene, m_items);
+
+	ui->Editor->setFocus();
 }
 
 
@@ -158,31 +163,34 @@ void CAttributesEditorUI::on_RemoveButton_clicked()
 	if (!m_scene || m_items.isEmpty())
 		return;
 
-    auto prop = (ui->Editor->currentItem());
-	if (!prop)
+	auto item = (ui->Editor->currentItem());
+	if (!item)
 		return;
 
 	// no subprops
-	if (prop->parent())
+	if (item->parent())
 		return;
 
-    auto attrId = prop->property()->propertyName().toLatin1();
+	auto prop = item->property();
+	QString attrId = prop->propertyName();
 	if (attrId.isEmpty())
 		return;
 
 	int r = QMessageBox::question(NULL,
 		tr("Remove Attribute"),
-		tr("Remove attribute '%1' from selected item(s)?").arg(QString(attrId)),
+		tr("Remove attribute '%1' from selected item(s)?").arg(attrId),
 		QMessageBox::Yes, QMessageBox::Cancel);
 
 	if (r == QMessageBox::Cancel)
 		return;
 
+	delete prop;
+
 	bool used = false;
 
 	for (auto sceneItem : m_items)
 	{
-		bool ok = sceneItem->removeAttribute(attrId);
+		bool ok = sceneItem->removeAttribute(attrId.toLatin1());
 		if (ok)
 			sceneItem->getSceneItem()->update();
 
@@ -196,7 +204,15 @@ void CAttributesEditorUI::on_RemoveButton_clicked()
 	m_scene->addUndoState();
 
 	// rebuild tree
-	setupFromItems(*m_scene, m_items);
+	//setupFromItems(*m_scene, m_items);
+
+	ui->Editor->setFocus();
+}
+
+
+void CAttributesEditorUI::on_Editor_currentItemChanged(QtBrowserItem* item)
+{
+	ui->RemoveButton->setEnabled(item != NULL);
 }
 
 

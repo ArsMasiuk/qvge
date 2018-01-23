@@ -13,6 +13,8 @@ It can be used freely, maintaining the information above.
 #include <QDialog>
 
 #include <qvge/CEditorScene.h>
+#include <qvge/CEditorView.h>
+
 
 namespace Ui {
 class CSceneOptionsDialog;
@@ -27,7 +29,7 @@ public:
     ~CSceneOptionsDialog();
 
 public Q_SLOTS:
-	virtual int exec(CEditorScene &scene);
+	virtual int exec(CEditorScene &scene, CEditorView &view);
 
 private:
     Ui::CSceneOptionsDialog *ui;
