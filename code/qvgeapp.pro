@@ -32,6 +32,8 @@ HEADERS += $$files($$PWD/3rdParty/qtpropertybrowser/*.h)
 RESOURCES += $$files($$PWD/3rdParty/qtpropertybrowser/*.qrc)
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 
+include($$PWD/3rdParty/ogdf/ogdf.pri)
+
 # includes & libs
 INCLUDEPATH += $$PWD $$PWD/.. $$PWD/src $$PWD/3rdParty/qsint-widgets $$PWD/3rdParty/qtpropertybrowser
 

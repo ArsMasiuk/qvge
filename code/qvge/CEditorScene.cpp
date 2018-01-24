@@ -29,7 +29,7 @@ It can be used freely, maintaining the information above.
 #include <qopengl.h>
 
 
-const quint64 version64 = 8;	// build
+const quint64 version64 = 9;	// build
 const char* versionId = "VersionId";
 
 
@@ -286,6 +286,9 @@ bool CEditorScene::storeTo(QDataStream& out, bool storeOptions) const
 		out << m_gridEnabled << m_gridSnap;
 	}
 
+	// 9+: scene rect
+	out << sceneRect();
+
 	return true;
 }
 
@@ -402,6 +405,14 @@ bool CEditorScene::restoreFrom(QDataStream& out, bool readOptions)
 		out >> m_gridPen;
 		out >> m_gridSize;
 		out >> m_gridEnabled >> m_gridSnap;
+	}
+
+	// scene rect
+	if (storedVersion >= 9)
+	{
+		QRectF sr; 
+		out >> sr;
+		setSceneRect(sr);
 	}
 
 	// finish
@@ -594,7 +605,7 @@ AttributesMap CEditorScene::getClassAttributes(const QByteArray& classId, bool i
 			//result = result.unite(m_classAttributes[superId]);
 			// unite does not check for existing elements :(
 			// there must be insertUnique
-			Utils::insertUnique(result, m_classAttributes[superId]);
+            CUtils::insertUnique(result, m_classAttributes[superId]);
 
 			superId = getSuperClassId(superId);
 		}

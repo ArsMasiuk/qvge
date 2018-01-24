@@ -1,0 +1,20 @@
+/**
+ * \page ex-basic Basic Functionality
+ *
+ * \section sec-ex-manual-1 Generate an acyclic random graph
+ * This example shows how to generate a random graph, make it acyclic by removing edges, and then store it as a GML file.
+ *
+ * \include gen-acyclic-graph.cpp
+ *
+ * <h3>Step-by-step explanation</h3>
+ *
+ *   -# We first have to include all header files declaring the classes and functions we want to use. OGDF's header files
+ *      are contained in subdirectories of a common include directory <tt>ogdf</tt>. Here we use the class ogdf::Graph,
+ *      a graph generator function ogdf::randomSimpleGraph(), an algorithm for making a digraph acyclic (ogdf::DfsAcyclicSubgraph),
+ *      and functionality for exporting graphs provided by ogdf::GraphIO.
+ *   -# ttt
+ *
+ * \section sec-ex-manual-2 Manual creation and layout of graphs
+ *
+ * \include manual.cpp
+ */

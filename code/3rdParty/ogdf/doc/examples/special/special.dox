@@ -1,0 +1,11 @@
+/**
+ * \page ex-special Special Functionality
+ *
+ * \section sec-ex-special-1 Displaying information about the system
+ *
+ * \include system-info.cpp
+ *
+ * \section sec-ex-special-2 Planarization of a connected graph
+ *
+ * \include subgraph-planarizer.cpp
+ */

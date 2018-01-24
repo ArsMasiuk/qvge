@@ -223,7 +223,7 @@ void CItem::updateLabelContent()
 	QMap<QByteArray, QString> visibleLabels;
 	for (const QByteArray& id : idsToShow)
 	{
-		QString text = Utils::variantToText(getAttribute(id));
+        QString text = CUtils::variantToText(getAttribute(id));
 		if (text.size())
 			visibleLabels[id] = text;
 	}
@@ -332,7 +332,7 @@ void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 	auto idsToShow = getVisibleAttributeIds(CItem::VF_TOOLTIP);
 	for (const QByteArray& id : idsToShow)
 	{
-		QString text = Utils::variantToText(getAttribute(id));
+        QString text = CUtils::variantToText(getAttribute(id));
 		if (tooltipToShow.size()) tooltipToShow += "\n";
 		tooltipToShow += QString("%1: \t%2").arg(QString(id)).arg(text);
 	}

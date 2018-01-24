@@ -91,28 +91,28 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
         {
             attrInfo.variantType = QVariant::Int;
             QString def = attrElem.attribute("default", "0");
-            QVariant v = Utils::textToVariant(def, attrInfo.variantType);
+            QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
             scene.setClassAttribute(classId, attrId, v);
         }
         else if (type == "double" || type == "float")
         {
             attrInfo.variantType = QVariant::Double;
             QString def = attrElem.attribute("default", "0.0");
-            QVariant v = Utils::textToVariant(def, attrInfo.variantType);
+            QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
             scene.setClassAttribute(classId, attrId, v);
         }
         else if (type == "boolean")
         {
             attrInfo.variantType = QVariant::Bool;
             QString def = attrElem.attribute("default", "true");
-            QVariant v = Utils::textToVariant(def, attrInfo.variantType);
+            QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
             scene.setClassAttribute(classId, attrId, v);
         }
         else    // string
         {
             attrInfo.variantType = QVariant::String;
             QString def = attrElem.attribute("default", "");
-            QVariant v = Utils::textToVariant(def, attrInfo.variantType);
+            QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
             scene.setClassAttribute(classId, attrId, v);
         }
 
@@ -188,7 +188,7 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
         if (!idMap.contains(attrId))
             continue;      // error: not valid id
 
-        QVariant value = Utils::textToVariant(attrElem.attribute("value"), idMap[attrId].variantType);
+        QVariant value = CUtils::textToVariant(attrElem.attribute("value"), idMap[attrId].variantType);
         node->setAttribute(idMap[attrId].id, value);
     }
 
@@ -225,7 +225,7 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 	link->setLastNode(last);
 
 	// line
-	float weight = elem.attribute("weight", "-1").toFloat();
+	double weight = elem.attribute("weight", "-1").toDouble();
 	if (weight >= 0)
 		link->setAttribute("weight", weight);
 
@@ -249,7 +249,7 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
         if (!idMap.contains(attrId))
             continue;      // error: not valid id
 
-        QVariant value = Utils::textToVariant(attrElem.attribute("value"), idMap[attrId].variantType);
+        QVariant value = CUtils::textToVariant(attrElem.attribute("value"), idMap[attrId].variantType);
         link->setAttribute(idMap[attrId].id, value);
     }
 

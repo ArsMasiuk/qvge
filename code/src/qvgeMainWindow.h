@@ -25,6 +25,7 @@ class qvgeMainWindow : public CMainWindow
 
 public:
     typedef CMainWindow Super;
+
 	friend class qvgeNodeEditorUIController;
 
     qvgeMainWindow();

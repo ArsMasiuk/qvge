@@ -362,7 +362,7 @@ double CNode::getDistanceToLineEnd(const QLineF& line) const
 
 	// polygon (must be cashed)
 	QPolygonF scenePolygon = m_shapeCache.translated(pos());
-	QPointF intersectionPoint = Utils::closestIntersection(line, scenePolygon);
+    QPointF intersectionPoint = CUtils::closestIntersection(line, scenePolygon);
 	return QLineF(intersectionPoint, line.p2()).length();
 }
 

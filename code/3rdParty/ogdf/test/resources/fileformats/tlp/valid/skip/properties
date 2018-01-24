@@ -1,0 +1,15 @@
+(tlp "2.0"
+  (nodes 0 1 2 3)
+  (edge 0 1 0)
+  (edge 1 0 2)
+  (edge 8 1 3)
+)
+
+(property  0 bool "viewSelection"
+  (default "false" "false" )
+  (node 1 "true")
+  (node 2 "true")
+  (node 3 "true")
+  (edge 2 "true")
+  (edge 8 "true")
+)

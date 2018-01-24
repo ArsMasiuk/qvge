@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+     <graph mode="static" defaultedgetype="directed">
+        <nodes>
+          <node id="a" label="Kevin Bacon">
+            <nodes>
+              <node id="b" label="God">
+                <nodes>
+                  <node id="c" label="human1"/>
+                  <node id="d" label="human2"/>
+                </nodes>
+              </node>
+              <node id="e" label="Me">
+                <nodes>
+                  <node id="f" label="frog1"/>
+                  <node id="g" label="frog2"/>
+                </nodes>
+              </node>
+            </nodes>
+          </node>
+        </nodes>
+        <edges>
+            <edge id="0" source="b" target="e" />
+            <edge id="1" source="c" target="d" />
+            <edge id="2" source="g" target="b" />
+            <edge id="3" source="f" target="a" />
+        </edges>
+    </graph>
+</gexf>
+

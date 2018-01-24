@@ -1,0 +1,19 @@
+/**
+ * \page ex-layout Calling Layout Algorithms
+ *
+ * \section sec-ex-layout-1 Hierarchical layout
+ *
+ * \include hierarchical.cpp
+ *
+ * \section sec-ex-layout-2 Hierarchical layout with predefined layering
+ *
+ * \include hierarchical-ranking.cpp
+ *
+ * \section sec-ex-layout-3 Energy-based layout
+ *
+ * \include energybased.cpp
+ *
+ * \section sec-ex-layout-4 Orthogonal layout
+ *
+ * \include orthogonal.cpp
+ */

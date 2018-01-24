@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was written by the JAVA GraphML Library.-->
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"  
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns 
+                                http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <graph id="G" edgedefault="directed" 
+            parse.nodes="11" parse.edges="12" 
+            parse.maxindegree="2" parse.maxoutdegree="3"
+            parse.nodeids="canonical" parse.edgeids="free" 
+            parse.order="nodesfirst">
+    <node id="n0" parse.indegree="0" parse.outdegree="1"/>
+    <node id="n1" parse.indegree="0" parse.outdegree="1"/>
+    <node id="n2" parse.indegree="2" parse.outdegree="1"/>
+    <node id="n3" parse.indegree="1" parse.outdegree="2"/>
+    <node id="n4" parse.indegree="1" parse.outdegree="1"/>
+    <node id="n5" parse.indegree="2" parse.outdegree="1"/>
+    <node id="n6" parse.indegree="1" parse.outdegree="2"/>
+    <node id="n7" parse.indegree="2" parse.outdegree="0"/>
+    <node id="n8" parse.indegree="1" parse.outdegree="3"/>
+    <node id="n9" parse.indegree="1" parse.outdegree="0"/>
+    <node id="n10" parse.indegree="1" parse.outdegree="0"/>
+    <edge id="edge0001" source="n0" target="n2"/>
+    <edge id="edge0002" source="n1" target="n2"/>
+    <edge id="edge0003" source="n2" target="n3"/>
+    <edge id="edge0004" source="n3" target="n5"/>
+    <edge id="edge0005" source="n3" target="n4"/>
+    <edge id="edge0006" source="n4" target="n6"/>
+    <edge id="edge0007" source="n6" target="n5"/>
+    <edge id="edge0008" source="n5" target="n7"/>
+    <edge id="edge0009" source="n6" target="n8"/>
+    <edge id="edge0010" source="n8" target="n7"/>
+    <edge id="edge0011" source="n8" target="n9"/>
+    <edge id="edge0012" source="n8" target="n10"/>
+  </graph>
+</graphml>

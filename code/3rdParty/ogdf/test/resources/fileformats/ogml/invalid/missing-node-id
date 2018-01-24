@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ogml>
+  <graph>
+    <structure>
+      <node />
+      <node id="v2"></node>
+      <edge id="e1">
+        <source idRef="v1" />
+        <target idRef="v2"></target>
+      </edge>
+    </structure>
+
+    <layout>
+      <styleTemplates>
+      </styleTemplates>
+      <styles/>
+    </layout>
+  </graph>
+</ogml>
+

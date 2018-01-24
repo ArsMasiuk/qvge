@@ -12,12 +12,12 @@ It can be used freely, maintaining the information above.
 #include <QAction>
 #include <QLabel>
 
-#include <qvgeMainWindow.h>
-
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CEditorView.h>
-
 #include <slider2d.h>
+
+class qvgeMainWindow;
+
+class CNodeEditorScene;
+class CEditorView;
 
 
 class qvgeNodeEditorUIController : public QObject 
@@ -53,6 +53,8 @@ private:
 	qvgeMainWindow *m_parent;
 	CNodeEditorScene *m_scene;
 	CEditorView *m_editorView;
+
+    class COGDFLayoutUIController *m_ogdfController;
 
     class QSint::Slider2d *m_sliderView;
 

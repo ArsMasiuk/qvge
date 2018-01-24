@@ -7,7 +7,20 @@ QVGE - Qt Visual Graph Editor
 It can be used freely, maintaining the information above.
 */
 
-#include "qvgeNodeEditorUIController.h"
+#include <qvgeNodeEditorUIController.h>
+#include <qvgeMainWindow.h>
+#include <COGDFLayoutUIController.h>
+#include <CCommutationTable.h>
+#include <CSceneOptionsDialog.h>
+#include <CNodeEdgePropertiesUI.h>
+#include <CClassAttributesEditorUI.h>
+
+#include <qvge/CNode.h>
+#include <qvge/CConnection.h>
+#include <qvge/CImageExport.h>
+#include <qvge/CPDFExport.h>
+#include <qvge/CNodeEditorScene.h>
+#include <qvge/CEditorView.h>
 
 #include <QMenuBar>
 #include <QStatusBar>
@@ -17,16 +30,6 @@ It can be used freely, maintaining the information above.
 #include <QWidgetAction>
 #include <QResizeEvent>
 #include <QDebug>
-
-#include <qvge/CNode.h>
-#include <qvge/CConnection.h>
-#include <qvge/CImageExport.h>
-#include <qvge/CPDFExport.h>
-
-#include <CCommutationTable.h>
-#include <CSceneOptionsDialog.h>
-#include <CNodeEdgePropertiesUI.h>
-#include <CClassAttributesEditorUI.h>
 
 
 qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent, CNodeEditorScene *scene, CEditorView *view) :
@@ -58,6 +61,9 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent, C
     onSceneChanged();
     onSelectionChanged();
     onZoomChanged(1);
+
+    // OGDF
+    m_ogdfController = new COGDFLayoutUIController(parent, scene);
 }
 
 

@@ -136,7 +136,15 @@ void CClassAttributesEditorUI::rebuild()
 		// else custom property
 		if (!prop)
 		{
-			prop = m_manager.addProperty(it.value().valueType, it.key());
+			int type = it.value().valueType;
+			if (type == QMetaType::Float)
+				type = QMetaType::Double;
+
+			prop = m_manager.addProperty(type, it.key());
+			Q_ASSERT(prop != NULL);
+			if (!prop)
+				continue;	// ignore
+
 			prop->setValue(it.value().defaultValue);
 		}
         

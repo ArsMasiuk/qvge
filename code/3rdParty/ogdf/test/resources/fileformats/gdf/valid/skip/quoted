@@ -1,0 +1,10 @@
+nodedef>name VARCHAR,label VARCHAR,class VARCHAR, visible BOOLEAN,labelvisible BOOLEAN,width DOUBLE,height DOUBLE,x DOUBLE,y DOUBLE,color VARCHAR
+s1,'Hello "world" !',type1,true,true,10.0,10.0,-52.11296,-25.921143,'114,116,177'
+s2,'Well, this is',type1,true,true,10.986123,10.986123,-20.114172,25.740356,'219,116,251'
+s3,'A correct 'GDF' file',type1,true,true,10.986123,10.986123,8.598924,-26.867584,'192,208,223'
+edgedef>node1 VARCHAR,node2 VARCHAR,directed BOOLEAN,color VARCHAR
+s1,s2,true,'114,116,177'
+s2,s3,true,'219,116,251'
+s3,s2,true,'192,208,223'
+s3,s1,true,'192,208,223'
+

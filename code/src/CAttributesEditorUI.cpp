@@ -72,7 +72,13 @@ int CAttributesEditorUI::setupFromItems(CEditorScene& scene, QList<CItem*> &item
 			if (item->hasLocalAttribute(id))
 			{
 				auto itemValue = item->getAttribute(id);
-				attrs[id].dataType = itemValue.type();
+
+				// trick: float -> double
+				if (itemValue.type() == QMetaType::Float)
+					attrs[id].dataType = QMetaType::Double;
+				else
+					attrs[id].dataType = itemValue.type();
+
 
                 if (attrs[id].isSet && attrs[id].data != itemValue)
                 {
@@ -98,6 +104,10 @@ int CAttributesEditorUI::setupFromItems(CEditorScene& scene, QList<CItem*> &item
 	for (auto it = attrs.constBegin(); it != attrs.constEnd(); ++it)
 	{
         auto prop = m_manager.addProperty(it.value().dataType, it.key());
+		Q_ASSERT(prop != NULL);
+		if (!prop)
+			continue;	// ignore
+
         prop->setValue(it.value().data);
         auto item = ui->Editor->addProperty(prop);
         ui->Editor->setExpanded(item, false);
