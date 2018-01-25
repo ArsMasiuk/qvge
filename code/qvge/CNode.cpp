@@ -539,8 +539,7 @@ QVariant CNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVari
 
 void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget*)
 {
-	painter->setClipRect(option->exposedRect);
-	//painter->setClipRect(boundingRect());
+	painter->setClipRect(boundingRect());
 
 	// get color (to optimize!)
 	QVariant color = getAttribute("color");

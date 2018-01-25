@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -74,15 +74,16 @@ protected:
 	virtual QString getAboutText() const;
 
     virtual void doCreateNewDocument(const QByteArray &docType);
-    virtual bool onCreateNewDocument(const QByteArray &docType);
+    virtual bool сreateDocument(const QByteArray &docType);
+	virtual void onNewDocumentCreated(const QByteArray &docType) {}
 
     virtual void onOpenDocumentDialog(QString &title, QString &filter);
     virtual bool doOpenDocument(const QString &fileName);
-    virtual bool onOpenDocument(const QString &fileName, QByteArray &docType) { return false; }
+    virtual bool openDocument(const QString &fileName, QByteArray &docType) { return false; }
 
     virtual void onSaveDocumentDialog(QString &title, QString &filter) {}
     virtual bool doSaveDocument(const QString &fileName, const QString &selectedFilter, const QByteArray &docType);
-    virtual bool onSaveDocument(const QString &fileName, const QString &selectedFilter, const QByteArray &docType) { return true; }
+    virtual bool saveDocument(const QString &fileName, const QString &selectedFilter, const QByteArray &docType) { return true; }
 
 	virtual bool saveOnExit();
 	virtual bool save();

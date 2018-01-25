@@ -1,4 +1,4 @@
-#include "CMainWindow.h"
+﻿#include "CMainWindow.h"
 #include "CPlatformServices.h"
 
 #include <QFileDialog>
@@ -307,10 +307,12 @@ void CMainWindow::doCreateNewDocument(const QByteArray &docType)
     }
 
     // no document - create in place
-    if (onCreateNewDocument(docType))
+    if (сreateDocument(docType))
     {
         m_currentDocType = docType;
         m_isChanged = false;
+
+		onNewDocumentCreated(docType);
 
 		onCurrentFileChanged();
 
@@ -322,7 +324,7 @@ void CMainWindow::doCreateNewDocument(const QByteArray &docType)
 }
 
 
-bool CMainWindow::onCreateNewDocument(const QByteArray &docType)
+bool CMainWindow::сreateDocument(const QByteArray &docType)
 {
     qDebug() << docType;
 
@@ -376,7 +378,7 @@ bool CMainWindow::doOpenDocument(const QString &fileName)
     }
 
     // no document - open in place
-    if (onOpenDocument(normalizedName, m_currentDocType))
+    if (openDocument(normalizedName, m_currentDocType))
     {
         m_currentFileName = normalizedName;
         m_isChanged = false;
@@ -484,7 +486,7 @@ bool CMainWindow::saveAs()
 
 bool CMainWindow::doSaveDocument(const QString &fileName, const QString &selectedFilter, const QByteArray &docType)
 {
-    if (onSaveDocument(fileName, selectedFilter, docType))
+    if (saveDocument(fileName, selectedFilter, docType))
     {
         m_currentFileName = fileName;
         m_isChanged = false;

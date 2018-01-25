@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
@@ -15,11 +15,6 @@ It can be used freely, maintaining the information above.
 #include <QTextStream>
 #include <QApplication>
 #include <QFileInfo>
-#include <QPixmapCache>
-
-#include <qvge/CFileSerializerGEXF.h>
-#include <qvge/CFileSerializerGraphML.h>
-#include <qvge/CFileSerializerXGR.h>
 
 #include <base/CPlatformServices.h>
 
@@ -54,16 +49,12 @@ void qvgeMainWindow::init(int argc, char *argv[])
 }
 
 
-bool qvgeMainWindow::onCreateNewDocument(const QByteArray &docType)
+bool qvgeMainWindow::сreateDocument(const QByteArray &docType)
 {
     // scene
     if (docType == "graph")
     {
-        m_editorScene = new CNodeEditorScene(this);
-        m_editorView = new CEditorView(m_editorScene, this);
-        setCentralWidget(m_editorView);
-
-        /*auto uiController = */new qvgeNodeEditorUIController(this, m_editorScene, m_editorView);
+		m_graphEditController = new qvgeNodeEditorUIController(this);
 
         // restore settings for this instance
         readSettings();
@@ -90,65 +81,39 @@ bool qvgeMainWindow::onCreateNewDocument(const QByteArray &docType)
 }
 
 
-bool qvgeMainWindow::onOpenDocument(const QString &fileName, QByteArray &docType)
+void qvgeMainWindow::onNewDocumentCreated(const QByteArray &docType)
 {
-	// graphs formats
-    if (fileName.toLower().endsWith(".graphml"))
-    {
-        docType = "graph";
-
-        if (onCreateNewDocument(docType))
-        {
-			if (CFileSerializerGraphML().load(fileName, *m_editorScene))
-			{
-				m_editorScene->addUndoState();
-				return true;
-			}
-        }
-
-        return false;
-    }
+	// wizard
+	if (docType == "graph")
+	{
+		QMessageLogger lg;
+	}
+}
 
 
-    if (fileName.toLower().endsWith(".gexf"))
-    {
-        docType = "graph";
+bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
+{
+	QString format = QFileInfo(fileName).suffix().toLower();
 
-        if (onCreateNewDocument(docType))
-        {
-			if (CFileSerializerGEXF().load(fileName, *m_editorScene))
-			{
-				m_editorScene->addUndoState();
-				return true;
-			}
-        }
-        
+	// graph formats
+	if (format == "graphml" || format == "gexf" || format == "xgr")
+	{
+		docType = "graph";
+
+		if (сreateDocument(docType) && m_graphEditController->loadFromFile(fileName, format))
+		{
+			return true;
+		}
+
 		return false;
-    }
-
-
-    if (fileName.toLower().endsWith(".xgr"))
-    {
-        docType = "graph";
-
-        if (onCreateNewDocument(docType))
-        {
-            if (CFileSerializerXGR().load(fileName, *m_editorScene))
-            {
-                m_editorScene->addUndoState();
-                return true;
-            }
-        }
-
-        return false;
-    }
+	}
 
 	// fallback: load as text
 	//if (fileName.toLower().endsWith(".txt"))
 	{
 		docType = "text";
 
-		if (onCreateNewDocument(docType))
+		if (сreateDocument(docType))
 		{
 			QFile f(fileName);
 			if (f.open(QFile::ReadOnly))
@@ -165,7 +130,7 @@ bool qvgeMainWindow::onOpenDocument(const QString &fileName, QByteArray &docType
 }
 
 
-bool qvgeMainWindow::onSaveDocument(const QString &fileName, const QString &/*selectedFilter*/, const QByteArray &docType)
+bool qvgeMainWindow::saveDocument(const QString &fileName, const QString &/*selectedFilter*/, const QByteArray &docType)
 {
     // text
     if (docType == "text")
@@ -188,12 +153,7 @@ bool qvgeMainWindow::onSaveDocument(const QString &fileName, const QString &/*se
 
 		if (extType == "xgr")
 		{
-			if (CFileSerializerXGR().save(fileName, *m_editorScene))
-			{
-				return true;
-			}
-
-			return false;
+			return m_graphEditController->saveToFile(fileName, "xgr");
 		}
 	}
 
@@ -217,15 +177,9 @@ void qvgeMainWindow::doReadSettings(QSettings& settings)
 {
 	Super::doReadSettings(settings);
 
-	if (m_editorView)
+	if (m_graphEditController)
 	{
-		bool isAA = m_editorView->renderHints().testFlag(QPainter::Antialiasing);
-		isAA = settings.value("antialiasing", isAA).toBool();
-		m_editorView->setRenderHint(QPainter::Antialiasing, isAA);
-
-		int cacheRam = QPixmapCache::cacheLimit();
-		cacheRam = settings.value("cacheRam", cacheRam).toInt();
-		QPixmapCache::setCacheLimit(cacheRam);
+		m_graphEditController->doReadSettings(settings);
 	}
 }
 
@@ -234,12 +188,8 @@ void qvgeMainWindow::doWriteSettings(QSettings& settings)
 {
 	Super::doWriteSettings(settings);
 
-	if (m_editorView)
+	if (m_graphEditController)
 	{
-		bool isAA = m_editorView->renderHints().testFlag(QPainter::Antialiasing);
-		settings.setValue("antialiasing", isAA);
-
-		int cacheRam = QPixmapCache::cacheLimit();
-		settings.setValue("cacheRam", cacheRam);
+		m_graphEditController->doWriteSettings(settings);
 	}
 }
