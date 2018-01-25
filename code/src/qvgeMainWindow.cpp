@@ -49,7 +49,7 @@ void qvgeMainWindow::init(int argc, char *argv[])
 }
 
 
-bool qvgeMainWindow::сreateDocument(const QByteArray &docType)
+bool qvgeMainWindow::createDocument(const QByteArray &docType)
 {
     // scene
     if (docType == "graph")
@@ -86,7 +86,7 @@ void qvgeMainWindow::onNewDocumentCreated(const QByteArray &docType)
 	// wizard
 	if (docType == "graph")
 	{
-		QMessageLogger lg;
+        m_graphEditController->onNewDocumentCreated();
 	}
 }
 
@@ -100,7 +100,7 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 	{
 		docType = "graph";
 
-		if (сreateDocument(docType) && m_graphEditController->loadFromFile(fileName, format))
+        if (createDocument(docType) && m_graphEditController->loadFromFile(fileName, format))
 		{
 			return true;
 		}
@@ -113,7 +113,7 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 	{
 		docType = "text";
 
-		if (сreateDocument(docType))
+        if (createDocument(docType))
 		{
 			QFile f(fileName);
 			if (f.open(QFile::ReadOnly))

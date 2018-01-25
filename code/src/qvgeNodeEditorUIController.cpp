@@ -9,11 +9,12 @@ It can be used freely, maintaining the information above.
 
 #include <qvgeNodeEditorUIController.h>
 #include <qvgeMainWindow.h>
-#include <COGDFLayoutUIController.h>
 #include <CCommutationTable.h>
 #include <CSceneOptionsDialog.h>
 #include <CNodeEdgePropertiesUI.h>
 #include <CClassAttributesEditorUI.h>
+#include <COGDFLayoutUIController.h>
+#include <COGDFNewGraphDialog.h>
 
 #include <qvge/CNode.h>
 #include <qvge/CConnection.h>
@@ -439,5 +440,16 @@ bool qvgeNodeEditorUIController::loadFromFile(const QString &fileName, const QSt
 
 bool qvgeNodeEditorUIController::saveToFile(const QString &fileName, const QString &format)
 {
-	return (CFileSerializerXGR().save(fileName, *m_editorScene));
+    return (CFileSerializerXGR().save(fileName, *m_editorScene));
+}
+
+
+void qvgeNodeEditorUIController::onNewDocumentCreated()
+{
+    COGDFNewGraphDialog dialog;
+    if (dialog.exec(*m_editorScene))
+    {
+        // update scene info
+        onSceneChanged();
+    }
 }

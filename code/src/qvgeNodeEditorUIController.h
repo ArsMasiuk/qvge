@@ -35,6 +35,8 @@ public:
 	bool loadFromFile(const QString &fileName, const QString &format);
 	bool saveToFile(const QString &fileName, const QString &format);
 
+    void onNewDocumentCreated();
+
 private Q_SLOTS:
 	void exportFile();
 	void exportPDF();

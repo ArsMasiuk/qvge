@@ -70,3 +70,38 @@ void COGDFLayout::doLayout(ogdf::LayoutModule &layout, CNodeEditorScene &scene)
 
 	QApplication::restoreOverrideCursor();
 }
+
+
+void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes &GA, CNodeEditorScene &scene)
+{
+    scene.reset();
+
+    // create nodes
+    QMap<ogdf::node, CNode*> nodeMap;
+
+    for (auto n: G.nodes)
+    {
+        CNode* node = scene.createNewNode();
+        scene.addItem(node);
+
+        node->getSceneItem()->setPos(GA.x(n), GA.y(n));
+
+        nodeMap[n] = node;
+    }
+
+    for (auto e: G.edges)
+    {
+        CConnection* edge = scene.createNewConnection();
+        scene.addItem(edge);
+
+        edge->setFirstNode(nodeMap[e->source()]);
+        edge->setLastNode(nodeMap[e->target()]);
+    }
+
+
+    // finalize
+    scene.setSceneRect(scene.itemsBoundingRect());
+
+    scene.addUndoState();
+}
+

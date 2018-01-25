@@ -74,7 +74,7 @@ protected:
 	virtual QString getAboutText() const;
 
     virtual void doCreateNewDocument(const QByteArray &docType);
-    virtual bool сreateDocument(const QByteArray &docType);
+    virtual bool createDocument(const QByteArray &docType);
 	virtual void onNewDocumentCreated(const QByteArray &docType) {}
 
     virtual void onOpenDocumentDialog(QString &title, QString &filter);

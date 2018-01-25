@@ -16,6 +16,9 @@ It can be used freely, maintaining the information above.
 #include <base/CMainWindow.h>
 
 
+class qvgeNodeEditorUIController;
+
+
 class qvgeMainWindow : public CMainWindow
 {
     Q_OBJECT
@@ -30,7 +33,7 @@ public:
     virtual void init(int argc, char *argv[]);
 
 protected:
-    virtual bool сreateDocument(const QByteArray &docType);
+    virtual bool createDocument(const QByteArray &docType);
 	virtual void onNewDocumentCreated(const QByteArray &docType);
     virtual bool openDocument(const QString &fileName, QByteArray &docType);
     virtual bool saveDocument(const QString &fileName, const QString &selectedFilter, const QByteArray &docType);

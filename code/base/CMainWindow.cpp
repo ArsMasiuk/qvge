@@ -307,7 +307,7 @@ void CMainWindow::doCreateNewDocument(const QByteArray &docType)
     }
 
     // no document - create in place
-    if (сreateDocument(docType))
+    if (createDocument(docType))
     {
         m_currentDocType = docType;
         m_isChanged = false;
@@ -324,7 +324,7 @@ void CMainWindow::doCreateNewDocument(const QByteArray &docType)
 }
 
 
-bool CMainWindow::сreateDocument(const QByteArray &docType)
+bool CMainWindow::createDocument(const QByteArray &docType)
 {
     qDebug() << docType;
 

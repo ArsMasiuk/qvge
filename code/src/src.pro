@@ -7,8 +7,16 @@
 
 
 TEMPLATE = app
-TARGET = qvge
-DESTDIR = $$OUT_PWD/../bin
+TARGET = qvgeapp
+
+CONFIG(debug, debug|release){
+        DESTDIR = $$OUT_PWD/../bin.debug
+        LIBS += -L$$OUT_PWD/../lib.debug
+}
+else{
+        DESTDIR = $$OUT_PWD/../bin
+        LIBS += -L$$OUT_PWD/../lib
+}
 
 QT += core gui widgets xml opengl network printsupport
 CONFIG += c++11
@@ -21,15 +29,21 @@ RESOURCES += $$files($$PWD/*.qrc)
 
 # base sources
 include($$PWD/../base/base.pri)
-include($$PWD/../qvge/qvge.pri)
+#include($$PWD/../qvge/qvge.pri)
 
 # includes & libs
 INCLUDEPATH += $$PWD $$PWD/.. $$PWD/../3rdParty/qsint-widgets $$PWD/../3rdParty/qtpropertybrowser $$PWD/../3rdParty/ogdf/include
 
-LIBS += -L$$OUT_PWD/../lib -logdf -lqtpropertybrowser -lqsint-widgets
+LIBS += -logdf -lqtpropertybrowser -lqsint-widgets -lqvge
 
 win32{
     LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
 
     RC_FILE = $$PWD/../win32/icon.rc
+}
+
+
+# compiler stuff
+win32-msvc*{
+  QMAKE_CXXFLAGS += /MP
 }
