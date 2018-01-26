@@ -220,7 +220,7 @@ void ClusterPlanRep::convertClusterGraph(cluster act,
 		isLeaf = true;
 	}
 	// Test children first
-	safeForEach(act->children, [&](cluster child) {
+    safeForEach<ListContainer<cluster, ClusterElement>>(act->children, [&](cluster child) {
 		convertClusterGraph(child, currentEdge, outEdge);
 	});
 

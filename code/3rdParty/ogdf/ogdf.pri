@@ -1,9 +1,7 @@
 INCLUDEPATH += $$PWD/include
 INCLUDEPATH += $$PWD/include/coin
 
-win32{
 DEFINES += UNICODE HAVE_CMATH HAVE_FLOAT_H
-}
 
 SOURCES += \
     $$PWD/src/coin/Clp/Clp_C_Interface.cpp \

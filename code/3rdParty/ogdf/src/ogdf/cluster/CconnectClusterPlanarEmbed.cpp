@@ -1026,7 +1026,7 @@ bool CconnectClusterPlanarEmbed::planarityTest(
 	cluster origOfAct = m_clusterTableCopy2Orig[act];
 
 	// Test children first
-	if (!safeTestForEach(act->children, [&](cluster child) {
+    if (!safeTestForEach<ListContainer<cluster, ClusterElement>>(act->children, [&](cluster child) {
 		return planarityTest(Ccopy, child, Gcopy);
 	})) {
 		return false;

@@ -42,7 +42,7 @@ namespace ogdf {
 // Recursive call for testing C-connectivity.
 bool cConnectTest(ClusterGraph &C, const cluster act, NodeArray<bool> &mark, Graph &G)
 {
-	bool childOk = safeTestForEach(act->children, [&](cluster child) {
+    bool childOk = safeTestForEach<ListContainer<cluster, ClusterElement>>(act->children, [&](cluster child) {
 		return cConnectTest(C, child, mark, G);
 	});
 	if (!childOk) {
@@ -164,7 +164,7 @@ void recursiveConnect(
 	//for non-cc clusters, add edges to make them connected
 	//recursively search for connection nodes (simple version:
 	//use first node/first node of first child (recursive)
-	safeForEach(act->children, [&](cluster child) {
+    safeForEach<ListContainer<cluster, ClusterElement>>(act->children, [&](cluster child) {
 		recursiveConnect(CG, child, origCluster, oCcluster, origNode, G, newEdges);
 	});
 
@@ -331,7 +331,7 @@ void recursiveCConnect(
 	//for non-cc clusters, add edges to make them connected
 	//recursively search for connection nodes (simple version:
 	//use first node/first node of first child (recursive)
-	safeForEach(act->children, [&](cluster child) {
+    safeForEach<ListContainer<cluster, ClusterElement>>(act->children, [&](cluster child) {
 		recursiveCConnect(CG, child, origCluster, oCcluster, origNode, G, fullCopy, copyNode, badNode, newEdges);
 	});
 
