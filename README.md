@@ -41,5 +41,6 @@ qvge uses following 3rd party components:
 - [Qt](https://www.qt.io) (c) Qt Company 
 - [Qt property browser](https://github.com/qtproject/qt-solutions) (c) Qt Company 
 - [QSint widgets library](https://sourceforge.net/projects/qsint) (c) Sintegrial Technologies
+- [OGDF - Open Graph Drawing Framework](http://www.ogdf.net)
 - [Inkscape](https://inkscape.org) (SVG icons)
 - [read_proc library](https://daknuett.eu/personal) (c) Daniel Knuettel
