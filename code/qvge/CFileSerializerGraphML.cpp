@@ -63,6 +63,8 @@ bool CFileSerializerGraphML::load(const QString& fileName, CEditorScene& scene) 
     // update scene rect
     scene.setSceneRect(scene.itemsBoundingRect());
 
+    scene.addUndoState();
+
 	// done
 	return true;
 }

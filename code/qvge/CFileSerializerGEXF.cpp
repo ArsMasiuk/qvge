@@ -64,6 +64,8 @@ bool CFileSerializerGEXF::load(const QString& fileName, CEditorScene& scene) con
     // update scene rect
     scene.setSceneRect(scene.itemsBoundingRect());
 
+    scene.addUndoState();
+
 	return true;
 }
 

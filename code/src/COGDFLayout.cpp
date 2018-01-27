@@ -7,6 +7,7 @@
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
 #include <ogdf/module/LayoutModule.h>
+#include <ogdf/fileformats/GraphIO.h>
 
 #include <QMap>
 #include <QApplication>
@@ -14,6 +15,50 @@
 
 COGDFLayout::COGDFLayout()
 {
+}
+
+
+static QVariant toVariant(ogdf::Shape shape)
+{
+    using namespace ogdf;
+
+    switch (shape)
+    {
+    case Shape::Rect:           return "square";
+    case Shape::RoundedRect:    return "rsquare";
+    case Shape::Ellipse:        return "disc";
+    case Shape::Triangle:       return "triangle";
+    case Shape::Pentagon:       return "star";
+    case Shape::Hexagon:        return "hexagon";
+    case Shape::Octagon:        return "octagon";
+    case Shape::Rhomb:          return "diamond";
+    case Shape::Trapeze:        return "trapeze";
+    case Shape::Parallelogram:  return "parallelogram";
+    case Shape::InvTriangle:    return "triangle2";
+    case Shape::InvTrapeze:     return "trapeze2";
+    case Shape::InvParallelogram:  return "parallelogram2";
+    case Shape::Image:          return "image";
+    }
+
+    return QVariant();
+}
+
+
+static QVariant toVariant(ogdf::StrokeType stroke)
+{
+    using namespace ogdf;
+
+    switch (stroke)
+    {
+    case StrokeType::Solid:         return "solid";
+    case StrokeType::Dash:          return "dashed";
+    case StrokeType::Dot:           return "dotted";
+    case StrokeType::Dashdot:       return "dashdot";
+    case StrokeType::Dashdotdot:    return "dashdotdot";
+    default:;
+    }
+
+    return QVariant();
 }
 
 
@@ -84,9 +129,29 @@ void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes
         CNode* node = scene.createNewNode();
         scene.addItem(node);
 
-        node->getSceneItem()->setPos(GA.x(n), GA.y(n));
-
         nodeMap[n] = node;
+
+        if (GA.has(GA.nodeGraphics))
+        {
+            node->getSceneItem()->setPos(GA.x(n), GA.y(n));
+            node->setAttribute("size", QSizeF(GA.width(n), GA.height(n)));
+            node->setAttribute("shape", toVariant(GA.shape(n)));
+        }
+
+        if (GA.has(GA.nodeStyle))
+        {
+            auto c = GA.fillColor(n);
+            node->setAttribute("color", QColor(c.red(), c.green(), c.blue()));
+        }
+
+        if (GA.has(GA.nodeId))
+            node->setId(QString::number(GA.idNode(n)));
+
+        if (GA.has(GA.nodeLabel))
+            node->setAttribute("label", QString::fromStdString(GA.label(n)));
+
+        if (GA.has(GA.nodeWeight))
+            node->setAttribute("weight", GA.weight(n));
     }
 
     for (auto e: G.edges)
@@ -96,6 +161,22 @@ void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes
 
         edge->setFirstNode(nodeMap[e->source()]);
         edge->setLastNode(nodeMap[e->target()]);
+
+        if (GA.has(GA.edgeDoubleWeight))
+            edge->setAttribute("weight", GA.doubleWeight(e));
+        else if (GA.has(GA.edgeIntWeight))
+            edge->setAttribute("weight", GA.intWeight(e));
+
+        if (GA.has(GA.edgeLabel))
+            edge->setAttribute("label", QString::fromStdString(GA.label(e)));
+
+        if (GA.has(GA.edgeStyle))
+        {
+            auto c = GA.strokeColor(e);
+            edge->setAttribute("color", QColor(c.red(), c.green(), c.blue()));
+
+            edge->setAttribute("style", toVariant(GA.strokeType(e)));
+        }
     }
 
 
@@ -103,5 +184,20 @@ void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes
     scene.setSceneRect(scene.itemsBoundingRect());
 
     scene.addUndoState();
+}
+
+
+// file IO
+
+bool COGDFLayout::loadGML(const std::string &filename, CNodeEditorScene &scene)
+{
+    ogdf::Graph G;
+    ogdf::GraphAttributes GA(G, 0xffffff);   // all attrs
+
+    if (!ogdf::GraphIO::readGML(GA, G, filename))
+        return false;
+
+    graphToScene(G, GA, scene);
+    return true;
 }
 

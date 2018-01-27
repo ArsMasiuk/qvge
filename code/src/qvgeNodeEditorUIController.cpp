@@ -15,6 +15,7 @@ It can be used freely, maintaining the information above.
 #include <CClassAttributesEditorUI.h>
 #include <COGDFLayoutUIController.h>
 #include <COGDFNewGraphDialog.h>
+#include <COGDFLayout.h>
 
 #include <qvge/CNode.h>
 #include <qvge/CConnection.h>
@@ -407,34 +408,21 @@ bool qvgeNodeEditorUIController::loadFromFile(const QString &fileName, const QSt
 {
 	if (format == "graphml")
 	{
-		if (CFileSerializerGraphML().load(fileName, *m_editorScene))
-		{
-			m_editorScene->addUndoState();
-			return true;
-		}
-		else
-			return false;
+        return (CFileSerializerGraphML().load(fileName, *m_editorScene));
 	}
 
 	if (format == "gexf")
 	{
-		if (CFileSerializerGEXF().load(fileName, *m_editorScene))
-		{
-			m_editorScene->addUndoState();
-			return true;
-		}
-		else
-			return false;
+        return (CFileSerializerGEXF().load(fileName, *m_editorScene));
 	}
 
+    if (format == "gml")
+    {
+        return (COGDFLayout::loadGML(fileName.toStdString(), *m_editorScene));
+    }
+
 	// else xgr
-	if (CFileSerializerXGR().load(fileName, *m_editorScene))
-	{
-		m_editorScene->addUndoState();
-		return true;
-	}
-	else
-		return false;
+    return (CFileSerializerXGR().load(fileName, *m_editorScene));
 }
 
 
@@ -450,6 +438,6 @@ void qvgeNodeEditorUIController::onNewDocumentCreated()
     if (dialog.exec(*m_editorScene))
     {
         // update scene info
-        onSceneChanged();
+        //onSceneChanged();
     }
 }

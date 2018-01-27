@@ -26,6 +26,8 @@ bool CFileSerializerXGR::load(const QString& fileName, CEditorScene& scene) cons
 	QDataStream ds(&openFile);
 	scene.restoreFrom(ds, true);
 
+    scene.addUndoState();
+
 	return true;
 }
 

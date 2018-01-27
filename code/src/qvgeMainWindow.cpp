@@ -32,7 +32,9 @@ qvgeMainWindow::qvgeMainWindow()
     CDocumentFormat graphml = { "GraphML", "*.graphml", true, true };
 //    CDocumentFormat gr = { "Old plain GR", "*.gr", false, true };
     CDocumentFormat xgr = { "XML Graph", "*.xgr", true, true };
-    CDocument graph = { tr("Graph Document"), tr("Directed or undirected graph"), "graph", true, {gexf, graphml, xgr} };
+    CDocumentFormat gml = { "GML", "*.gml", true, true };
+    CDocument graph = { tr("Graph Document"), tr("Directed or undirected graph"), "graph", true,
+                        {gexf, graphml, gml, xgr} };
     addDocument(graph);
 
     CDocumentFormat txt = { tr("Plain Text"), "*.txt", true, true };
@@ -96,7 +98,7 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 	QString format = QFileInfo(fileName).suffix().toLower();
 
 	// graph formats
-	if (format == "graphml" || format == "gexf" || format == "xgr")
+    if (format == "graphml" || format == "gexf" || format == "xgr" || format == "gml")
 	{
 		docType = "graph";
 
