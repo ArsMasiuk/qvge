@@ -12,6 +12,7 @@ It can be used freely, maintaining the information above.
 #include <QPainter> 
 
 #include "CImageExport.h"
+#include "CUtils.h"
 
 
 bool CImageExport::write(/*const*/ CEditorScene &scene, const QString &startPath)
@@ -27,12 +28,7 @@ bool CImageExport::write(/*const*/ CEditorScene &scene, const QString &startPath
 
 	filter.chop(2);
 
-	QFileInfo fi(startPath);
-	QString fileName(startPath);
-	if (int ss = fi.completeSuffix().size()) {
-		fileName.chop(ss + 1); // .suffix
-	}
-
+	QString fileName = CUtils::cutLastSuffix(startPath);
 	QString selectedFilter;
 
 	QString path = QFileDialog::getSaveFileName(NULL,

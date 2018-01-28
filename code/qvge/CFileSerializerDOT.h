@@ -23,15 +23,15 @@ class CFileSerializerDOT : public IFileSerializer
 public:
 	// reimp
 	virtual QString description() const {
-        return "DOT graph format";
+        return "DOT/GraphViz graph format";
 	}
 
 	virtual QString filters() const {
-        return "*.dot;*.gv";
+		return "*.gv;*.dot";
 	}
 
 	virtual QString defaultFileExtension() const {
-        return "dot";
+        return "gv";
 	}
 
 	virtual bool loadSupported() const {
@@ -49,7 +49,12 @@ public:
 	virtual bool save(const QString& fileName, const CEditorScene& scene) const;
 
 private:
+	void doWriteNodeDefaults(QTextStream& ts, const CEditorScene& scene) const;
 	void doWriteNode(QTextStream& ts, const CNode& node, const CEditorScene& scene) const;
+	void doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVariant> nodeAttrs) const;
+
+	void doWriteEdgeDefaults(QTextStream& ts, const CEditorScene& scene) const;
 	void doWriteEdge(QTextStream& ts, const CConnection& edge, const CEditorScene& scene) const;
+	void doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVariant> edgeAttrs) const;
 };
 

@@ -90,3 +90,14 @@ QPointF CUtils::closestIntersection(const QLineF& line, const QPolygonF& endPoly
 
 	return intersectPoint;
 }
+
+
+QString CUtils::cutLastSuffix(const QString& fileName)
+{
+	int idx = fileName.lastIndexOf(".");
+	if (idx < 0)
+		return fileName;
+	else
+		return fileName.left(idx);
+}
+

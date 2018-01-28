@@ -33,9 +33,9 @@ qvgeMainWindow::qvgeMainWindow()
 //    CDocumentFormat gr = { "Old plain GR", "*.gr", false, true };
 	CDocumentFormat xgr = { "XML Graph", "*.xgr", {"xgr"}, true, true };
     CDocumentFormat gml = { "GML", "*.gml", { "gml" }, false, true };
-    CDocumentFormat dot = { "DOT", "*.dot *.gv", { "dot","gv" }, true, true };
+    //CDocumentFormat dot = { "DOT", "*.dot *.gv", { "dot","gv" }, true, true };
     CDocument graph = { tr("Graph Document"), tr("Directed or undirected graph"), "graph", true,
-                        {gexf, graphml, gml, dot, xgr} };
+                        {gexf, graphml, gml, xgr} };
     addDocument(graph);
 
     CDocumentFormat txt = { tr("Plain Text"), "*.txt", { "txt" }, true, true };
