@@ -28,16 +28,17 @@ qvgeMainWindow::qvgeMainWindow()
     QApplication::setApplicationName("Qt Visual Graph Editor");
     QApplication::setApplicationVersion(qvgeVersion.toString() + tr(" (Beta)") + bitString);
 
-    CDocumentFormat gexf = { "GEXF", "*.gexf", false, true };
-    CDocumentFormat graphml = { "GraphML", "*.graphml", true, true };
+	CDocumentFormat gexf = { "GEXF", "*.gexf", {"gexf"}, false, true };
+	CDocumentFormat graphml = { "GraphML", "*.graphml", {"graphml"}, false, true };
 //    CDocumentFormat gr = { "Old plain GR", "*.gr", false, true };
-    CDocumentFormat xgr = { "XML Graph", "*.xgr", true, true };
-    CDocumentFormat gml = { "GML", "*.gml", true, true };
+	CDocumentFormat xgr = { "XML Graph", "*.xgr", {"xgr"}, true, true };
+    CDocumentFormat gml = { "GML", "*.gml", { "gml" }, false, true };
+    CDocumentFormat dot = { "DOT", "*.dot *.gv", { "dot","gv" }, true, true };
     CDocument graph = { tr("Graph Document"), tr("Directed or undirected graph"), "graph", true,
-                        {gexf, graphml, gml, xgr} };
+                        {gexf, graphml, gml, dot, xgr} };
     addDocument(graph);
 
-    CDocumentFormat txt = { tr("Plain Text"), "*.txt", true, true };
+    CDocumentFormat txt = { tr("Plain Text"), "*.txt", { "txt" }, true, true };
     CDocument text = { tr("Text Document"), tr("Simple text document"), "text", true, {txt} };
     addDocument(text);
 }
@@ -98,7 +99,7 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 	QString format = QFileInfo(fileName).suffix().toLower();
 
 	// graph formats
-    if (format == "graphml" || format == "gexf" || format == "xgr" || format == "gml")
+    if (format == "graphml" || format == "gexf" || format == "xgr" || format == "gml" || format == "dot")
 	{
 		docType = "graph";
 
@@ -153,12 +154,8 @@ bool qvgeMainWindow::saveDocument(const QString &fileName, const QString &/*sele
 	{
 		QString extType = QFileInfo(fileName).suffix().toLower();
 
-		if (extType == "xgr")
-		{
-			return m_graphEditController->saveToFile(fileName, "xgr");
-		}
+        return m_graphEditController->saveToFile(fileName, extType);
 	}
-
 
     // unknown type
     return false;

@@ -26,6 +26,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CFileSerializerGEXF.h>
 #include <qvge/CFileSerializerGraphML.h>
 #include <qvge/CFileSerializerXGR.h>
+#include <qvge/CFileSerializerDOT.h>
 
 #include <QMenuBar>
 #include <QStatusBar>
@@ -406,6 +407,11 @@ void qvgeNodeEditorUIController::doWriteSettings(QSettings& settings)
 
 bool qvgeNodeEditorUIController::loadFromFile(const QString &fileName, const QString &format)
 {
+    if (format == "xgr")
+    {
+        return (CFileSerializerXGR().load(fileName, *m_editorScene));
+    }
+
 	if (format == "graphml")
 	{
         return (CFileSerializerGraphML().load(fileName, *m_editorScene));
@@ -416,19 +422,20 @@ bool qvgeNodeEditorUIController::loadFromFile(const QString &fileName, const QSt
         return (CFileSerializerGEXF().load(fileName, *m_editorScene));
 	}
 
-    if (format == "gml")
-    {
-        return (COGDFLayout::loadGML(fileName.toStdString(), *m_editorScene));
-    }
-
-	// else xgr
-    return (CFileSerializerXGR().load(fileName, *m_editorScene));
+    // else via ogdf
+    return (COGDFLayout::loadGraph(fileName.toStdString(), *m_editorScene));
 }
 
 
 bool qvgeNodeEditorUIController::saveToFile(const QString &fileName, const QString &format)
 {
-    return (CFileSerializerXGR().save(fileName, *m_editorScene));
+    if (format == "xgr")
+        return (CFileSerializerXGR().save(fileName, *m_editorScene));
+
+    if (format == "dot")
+        return (CFileSerializerDOT().save(fileName, *m_editorScene));
+
+    return false;
 }
 
 

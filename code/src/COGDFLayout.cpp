@@ -11,6 +11,7 @@
 
 #include <QMap>
 #include <QApplication>
+#include <QFileInfo>
 
 
 COGDFLayout::COGDFLayout()
@@ -117,6 +118,42 @@ void COGDFLayout::doLayout(ogdf::LayoutModule &layout, CNodeEditorScene &scene)
 }
 
 
+void COGDFLayout::graphTopologyToScene(const ogdf::Graph &G, const ogdf::GraphAttributes &GA, CNodeEditorScene &scene)
+{
+    scene.reset();
+
+    // create nodes
+    QMap<ogdf::node, CNode*> nodeMap;
+
+    for (auto n: G.nodes)
+    {
+        CNode* node = scene.createNewNode();
+        scene.addItem(node);
+
+        nodeMap[n] = node;
+
+        if (GA.has(GA.nodeGraphics))
+        {
+            node->getSceneItem()->setPos(GA.x(n), GA.y(n));
+        }
+    }
+
+    for (auto e: G.edges)
+    {
+        CConnection* edge = scene.createNewConnection();
+        scene.addItem(edge);
+
+        edge->setFirstNode(nodeMap[e->source()]);
+        edge->setLastNode(nodeMap[e->target()]);
+    }
+
+    // finalize
+    scene.setSceneRect(scene.itemsBoundingRect());
+
+    scene.addUndoState();
+}
+
+
 void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes &GA, CNodeEditorScene &scene)
 {
     scene.reset();
@@ -144,15 +181,27 @@ void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes
             node->setAttribute("color", QColor(c.red(), c.green(), c.blue()));
         }
 
-        if (GA.has(GA.nodeId))
-            node->setId(QString::number(GA.idNode(n)));
+		int id = -1;
+		if (GA.has(GA.nodeId)) {
+			id = GA.idNode(n);
+			if (id >= 0) node->setId(QString::number(id));
+		}
 
-        if (GA.has(GA.nodeLabel))
-            node->setAttribute("label", QString::fromStdString(GA.label(n)));
+        if (GA.has(GA.nodeLabel)) {
+			auto label = QString::fromStdString(GA.label(n));	// label -> ID
+			if (id < 0 && label.size()) node->setId(label);
+		}
+
+		if (GA.has(GA.nodeTemplate)) {
+			auto label = QString::fromStdString(GA.templateNode(n));	// comment -> label
+			if (label.size())
+				node->setAttribute("label", label);
+		}
 
         if (GA.has(GA.nodeWeight))
             node->setAttribute("weight", GA.weight(n));
     }
+
 
     for (auto e: G.edges)
     {
@@ -189,15 +238,24 @@ void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes
 
 // file IO
 
-bool COGDFLayout::loadGML(const std::string &filename, CNodeEditorScene &scene)
+bool COGDFLayout::loadGraph(const std::string &filename, CNodeEditorScene &scene)
 {
     ogdf::Graph G;
     ogdf::GraphAttributes GA(G, 0xffffff);   // all attrs
 
-    if (!ogdf::GraphIO::readGML(GA, G, filename))
-        return false;
+    QString format = QFileInfo(QString::fromStdString(filename)).suffix().toLower();
 
-    graphToScene(G, GA, scene);
-    return true;
+    bool ok = false;
+    if (format == "gml")
+        ok = ogdf::GraphIO::readGML(GA, G, filename);
+    else if (format == "dot")
+        ok = ogdf::GraphIO::readDOT(GA, G, filename);
+
+    if (ok)
+    {
+        graphToScene(G, GA, scene);
+    }
+
+    return ok;
 }
 

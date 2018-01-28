@@ -140,7 +140,7 @@ bool COGDFNewGraphDialog::exec(CNodeEditorScene &scene)
         break;
     }
 
-    COGDFLayout::graphToScene(G, GA, scene);
+    COGDFLayout::graphTopologyToScene(G, GA, scene);
 
     return true;
 }

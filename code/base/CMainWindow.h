@@ -13,8 +13,9 @@
 
 struct CDocumentFormat
 {
-    QString name;
-    QString filters;
+    QString name;		// textual description i.e "Images"
+    QString filters;	// filters in form like: "*.png *.xpm *.jpg" 
+	QStringList suffixes;	// supported suffixes like: png xpm jpg (first one assumed to be default)
     bool canSave, canRead;
 };
 

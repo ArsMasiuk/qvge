@@ -458,25 +458,37 @@ bool CMainWindow::saveAs()
         return true;
 
     QString filter;
-    const CDocument& doc = m_docTypes[m_currentDocType];
-    for (const auto& format : doc.formats)
+	QMap<QString, QString> filterToSuffix;
+	const CDocument& doc = m_docTypes[m_currentDocType];
+    for (const CDocumentFormat& format : doc.formats)
     {
         if (format.canSave)
         {
-            filter += format.name + " (" + format.filters + ") ;;";
+			QString formatFilter = format.name + " (" + format.filters + ")";
+            filter += formatFilter + ";;";
+
+			filterToSuffix[formatFilter] = format.suffixes.first();
         }
     }
 
     if (filter.size())
-        filter.chop(3);
+        filter.chop(2);
 
     QString title = tr("Save File");
     onSaveDocumentDialog(title, filter);
 
+	QString suffix = QFileInfo(m_currentFileName).suffix().toLower();
+
     QString selectedFilter = m_lastSaveFilter;
+
     QString fileName = QFileDialog::getSaveFileName(NULL, title, m_currentFileName, filter, &selectedFilter);
     if (fileName.isEmpty())
         return false;
+
+	// workaround: auto append suffix (QTBUG!)
+	QString selectedSuffix = QFileInfo(fileName).suffix().toLower();
+	if (selectedSuffix.isEmpty() && filterToSuffix.contains(selectedFilter))
+		fileName += "." + filterToSuffix[selectedFilter];
 
     QString normalizedName = QDir::toNativeSeparators(fileName);
 

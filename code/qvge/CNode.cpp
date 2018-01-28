@@ -129,6 +129,7 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 			QSizeF sp = v.toSizeF();
 			if (!sp.isNull())
 			{
+				Super::setAttribute(attrId, sp);
 				resize(sp);
 				updateCachedItems();
 				return true;
@@ -139,6 +140,7 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 		float s = v.toFloat();
 		if (s > 0)
 		{
+			Super::setAttribute(attrId, QSizeF(s,s));
 			resize(s);
 			updateCachedItems();
 			return true;
