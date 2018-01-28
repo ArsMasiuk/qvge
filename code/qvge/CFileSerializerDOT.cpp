@@ -32,6 +32,10 @@ bool CFileSerializerDOT::save(const QString& fileName, const CEditorScene& scene
 		ts << "\n\n";
 
         // nodes
+		doWriteNodeDefaults(ts, scene);
+
+		ts << "\n\n";
+
         auto nodes = scene.getItems<CNode>();
         for (auto node: nodes)
         {
@@ -43,7 +47,12 @@ bool CFileSerializerDOT::save(const QString& fileName, const CEditorScene& scene
 
 		ts << "\n\n";
 
+
         // edges
+		doWriteEdgeDefaults(ts, scene);
+
+		ts << "\n\n";
+
         auto edges = scene.getItems<CConnection>();
         for (auto edge: edges)
         {
@@ -74,29 +83,111 @@ static QString toDotShape(const QString& shape)
 }
 
 
-void CFileSerializerDOT::doWriteNode(QTextStream& ts, const CNode& node, const CEditorScene& scene) const
+void CFileSerializerDOT::doWriteNodeDefaults(QTextStream& ts, const CEditorScene& scene) const
 {
-	ts << "pos = \"" << node.pos().x() << "," << node.pos().y() << "\"\n";
+	// build map of default attrs
+	QMap<QByteArray, QVariant> nodeAttrs;
 
-	const auto& nodeAttrs = node.getLocalAttributes();
-
-	if (nodeAttrs.contains("color")) {
-		ts << ",fillcolor = \"" << nodeAttrs["color"].toString() << "\"\n";
+	const AttributesMap& nodeAttrMap = scene.getClassAttributes("node", false);
+	for (const auto &attr : nodeAttrMap)
+	{
+		if (!attr.noDefault)
+			nodeAttrs[attr.id] = attr.defaultValue;
 	}
 
-	if (nodeAttrs.contains("label")) {
-		ts << ",comment = \"" << nodeAttrs["label"].toString() << "\"\n";	// ogdf 
-		ts << ",xlabel = \"" << nodeAttrs["label"].toString() << "\"\n";	// dot standard
+	// write it down
+	if (nodeAttrs.size())
+	{
+		ts << "node [\n";
+		ts << "class = \"node\"\n";
+
+		doWriteNodeAttrs(ts, nodeAttrs);
+
+		ts << "];\n";
+	}
+}
+
+
+void CFileSerializerDOT::doWriteNode(QTextStream& ts, const CNode& node, const CEditorScene& scene) const
+{
+	ts << "pos = \"" << node.pos().x() / 72.0  << "," << -node.pos().y() / 72.0 << "!\"\n";	//  / 72.0 -> point to inch; -y
+
+	const QMap<QByteArray, QVariant>& nodeAttrs = node.getLocalAttributes();
+
+	doWriteNodeAttrs(ts, nodeAttrs);
+}
+
+
+void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVariant> nodeAttrs) const
+{
+	// standard attrs
+	if (nodeAttrs.contains("color")) {
+		ts << ",fillcolor = \"" << nodeAttrs["color"].toString() << "\"";
+		ts << ",style = \"filled\"\n";
+		nodeAttrs.remove("color");
 	}
 
 	if (nodeAttrs.contains("size")) {
-		ts << ",width = \"" << nodeAttrs["size"].toSizeF().width() << "\"";
-		ts << ",height = \"" << nodeAttrs["size"].toSizeF().height() << "\"";
+		ts << ",width = \"" << nodeAttrs["size"].toSizeF().width() / 72.0 << "\"";		//  / 72.0 -> point to inch
+		ts << ",height = \"" << nodeAttrs["size"].toSizeF().height() / 72.0 << "\"";
 		ts << "\n";
+		nodeAttrs.remove("size");
 	}
 
 	if (nodeAttrs.contains("shape")) {
-		ts << ",shape = \"" << toDotShape(nodeAttrs["shape"].toString()) << "\"\n";	
+		ts << ",shape = \"" << toDotShape(nodeAttrs["shape"].toString()) << "\"\n";
+		nodeAttrs.remove("shape");
+	}
+
+	if (nodeAttrs.contains("label")) {
+		ts << ",xlabel = \"" << nodeAttrs["label"].toString() << "\"\n";	
+		nodeAttrs.remove("label");
+	}
+
+	if (nodeAttrs.contains("label.color")) {
+		ts << ",fontcolor = \"" << nodeAttrs["label.color"].toString() << "\"\n";
+		nodeAttrs.remove("label.color");
+	}
+
+	if (nodeAttrs.contains("label.size")) {
+		ts << ",fontsize = \"" << nodeAttrs["label.size"].toString() << "\"\n";
+		nodeAttrs.remove("label.size");
+	}
+
+	if (nodeAttrs.contains("label.font")) {
+		ts << ",fontname = \"" << nodeAttrs["label.font"].value<QFont>().family() << "\"\n";
+		nodeAttrs.remove("label.font");
+	}
+	
+	// custom attrs
+	for (auto it = nodeAttrs.constBegin(); it != nodeAttrs.constEnd(); ++it)
+	{
+		ts << "," << it.key() << " = \"" << it.value().toString() << "\"\n";
+	}
+}
+
+
+void CFileSerializerDOT::doWriteEdgeDefaults(QTextStream& ts, const CEditorScene& scene) const
+{
+	// build map of default attrs
+	QMap<QByteArray, QVariant> edgeAttrs;
+
+	const AttributesMap& edgeAttrMap = scene.getClassAttributes("edge", false);
+	for (const auto &attr : edgeAttrMap)
+	{
+		if (!attr.noDefault)
+			edgeAttrs[attr.id] = attr.defaultValue;
+	}
+
+	// write it down
+	if (edgeAttrs.size())
+	{
+		ts << "edge [\n";
+		ts << "class = \"edge\"\n";
+
+		doWriteEdgeAttrs(ts, edgeAttrs);
+
+		ts << "];\n";
 	}
 }
 
@@ -106,36 +197,59 @@ void CFileSerializerDOT::doWriteEdge(QTextStream& ts, const CConnection& edge, c
 	const auto& edgeAttrs = edge.getLocalAttributes();
 
 	ts << edge.firstNode()->getId();
-
-	auto dir = edge.getAttribute("direction").toString();
-	if (dir == "undirected")
-		ts << " -- ";
-	else
-		ts << " -> ";
-
+	ts << " -> ";
 	ts << edge.lastNode()->getId();
 	
 	ts << " [id = \"" << edge.getId() << "\"\n";
 
-	if (dir == "mutual") {
-		ts << ",dir=both" << "\n";
-	}
+	doWriteEdgeAttrs(ts, edgeAttrs);
 
-	if (edgeAttrs.contains("color")) {
-		ts << ",color = \"" << edgeAttrs["color"].toString() << "\"\n";
-	}
+	ts << "];\n";
+}
 
-	if (edgeAttrs.contains("label")) {
-		ts << ",label = \"" << edgeAttrs["label"].toString() << "\"\n";	
+
+void CFileSerializerDOT::doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVariant> edgeAttrs) const
+{
+	if (edgeAttrs.contains("direction")) {
+		auto dir = edgeAttrs["direction"].toString();
+		edgeAttrs.remove("direction");
+
+		if (dir == "mutual")
+			ts << ",dir=both" << "\n";
+		else if (dir == "undirected")
+			ts << ",dir=none" << "\n";
 	}
 
 	if (edgeAttrs.contains("weight")) {
 		ts << ",weight = \"" << edgeAttrs["weight"].toString() << "\"\n";
+		ts << ",penwidth = \"" << edgeAttrs["weight"].toString() << "\"\n";
+		edgeAttrs.remove("weight");
 	}
 
-	if (edgeAttrs.contains("style")) {
-		ts << ",style = \"" << edgeAttrs["style"].toString() << "\"\n";
+	if (edgeAttrs.contains("label")) {
+		ts << ",xlabel = \"" << edgeAttrs["label"].toString() << "\"\n";
+		edgeAttrs.remove("label");
 	}
 
-	ts << "];\n";
+	if (edgeAttrs.contains("label.color")) {
+		ts << ",fontcolor = \"" << edgeAttrs["label.color"].toString() << "\"\n";
+		edgeAttrs.remove("label.color");
+	}
+
+	if (edgeAttrs.contains("label.size")) {
+		ts << ",fontsize = \"" << edgeAttrs["label.size"].toString() << "\"\n";
+		edgeAttrs.remove("label.size");
+	}
+
+	if (edgeAttrs.contains("label.font")) {
+		ts << ",fontname = \"" << edgeAttrs["label.font"].value<QFont>().family() << "\"\n";
+		edgeAttrs.remove("label.font");
+	}
+
+	// custom attrs
+	for (auto it = edgeAttrs.constBegin(); it != edgeAttrs.constEnd(); ++it)
+	{
+		ts << "," << it.key() << " = \"" << it.value().toString() << "\"\n";
+	}
 }
+

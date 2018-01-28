@@ -37,6 +37,7 @@ It can be used freely, maintaining the information above.
 #include <QResizeEvent>
 #include <QDebug>
 #include <QPixmapCache>
+#include <QFileDialog>
 
 
 qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
@@ -91,7 +92,11 @@ void qvgeNodeEditorUIController::createMenus()
 	m_parent->getFileMenu()->insertAction(exportAction, exportActionPDF);
 	connect(exportActionPDF, &QAction::triggered, this, &qvgeNodeEditorUIController::exportPDF);
 
-	m_parent->getFileMenu()->insertSeparator(exportActionPDF);
+	QAction *exportActionDOT = new QAction(tr("Export to &DOT/GraphViz..."));
+	m_parent->getFileMenu()->insertAction(exportActionPDF, exportActionDOT);
+	connect(exportActionDOT, &QAction::triggered, this, &qvgeNodeEditorUIController::exportDOT);
+
+	m_parent->getFileMenu()->insertSeparator(exportActionDOT);
 
 
 	// add edit menu
@@ -360,6 +365,31 @@ void qvgeNodeEditorUIController::sceneOptions()
 void qvgeNodeEditorUIController::exportFile()
 {
 	if (CImageExport::write(*m_editorScene, m_parent->getCurrentFileName()))
+	{
+		m_parent->statusBar()->showMessage(tr("Export successful"));
+	}
+	else
+	{
+		m_parent->statusBar()->showMessage(tr("Export failed"));
+	}
+}
+
+
+void qvgeNodeEditorUIController::exportDOT()
+{
+	CFileSerializerDOT dot;
+
+	QString fileName = CUtils::cutLastSuffix(m_parent->getCurrentFileName());
+
+	QString path = QFileDialog::getSaveFileName(NULL,
+		QObject::tr("Export as GraphViz graph"), 
+		fileName,
+		dot.description() + " (" + dot.filters() + ")");
+
+	if (path.isEmpty())
+		return;
+
+	if (dot.save(path, *m_editorScene))
 	{
 		m_parent->statusBar()->showMessage(tr("Export successful"));
 	}

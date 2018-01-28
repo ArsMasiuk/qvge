@@ -40,6 +40,7 @@ public:
 private Q_SLOTS:
 	void exportFile();
 	void exportPDF();
+	void exportDOT();
 
 	void onSelectionChanged();
     void onSceneChanged();
