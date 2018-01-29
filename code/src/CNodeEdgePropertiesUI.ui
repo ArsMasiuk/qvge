@@ -288,7 +288,7 @@
            </size>
           </property>
           <property name="statusTip">
-           <string>Set shape of the selected nodes</string>
+           <string>Set direction of the selected edges</string>
           </property>
           <property name="text">
            <string>...</string>
@@ -512,10 +512,14 @@
   <tabstop>NodeColor</tabstop>
   <tabstop>NodeShape</tabstop>
   <tabstop>NodeSize</tabstop>
+  <tabstop>NodeId</tabstop>
+  <tabstop>NodeAttrBox</tabstop>
   <tabstop>EdgeColor</tabstop>
   <tabstop>EdgeStyle</tabstop>
   <tabstop>EdgeWeight</tabstop>
   <tabstop>EdgeDirection</tabstop>
+  <tabstop>EdgeId</tabstop>
+  <tabstop>EdgeAttrBox</tabstop>
   <tabstop>LabelColor</tabstop>
   <tabstop>LabelFont</tabstop>
   <tabstop>LabelSize</tabstop>
