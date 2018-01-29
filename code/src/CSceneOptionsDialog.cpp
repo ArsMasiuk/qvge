@@ -63,7 +63,9 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view)
 	scene.enableGrid(ui->GridVisible->isChecked());
 	scene.enableGridSnap(ui->GridSnap->isChecked());
 
-	view.setRenderHint(QPainter::Antialiasing, ui->Antialiasing->isChecked());
+	bool isAA = ui->Antialiasing->isChecked();
+	view.setRenderHint(QPainter::Antialiasing, isAA);
+	scene.setFontAntialiased(isAA);
 
 	QPixmapCache::setCacheLimit(ui->CacheSlider->value() * 1024);
 

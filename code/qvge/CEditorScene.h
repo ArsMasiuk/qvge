@@ -65,6 +65,9 @@ public:
 	bool itemLabelsEnabled() const		{ return m_labelsEnabled; }
 	bool itemLabelsNeedUpdate() const	{ return m_labelsUpdate; }
 
+	void setFontAntialiased(bool on);
+	bool isFontAntialiased() const		{ return m_isFontAntialiased;  }
+
 	// undo-redo
 	int availableUndoCount() const;
 	int availableRedoCount() const;
@@ -259,6 +262,8 @@ private:
 	// labels
 	QPainterPath m_usedLabelsRegion;
 	bool m_labelsEnabled, m_labelsUpdate;
+
+	bool m_isFontAntialiased = true;
 };
 
 

@@ -51,6 +51,13 @@ COGDFNewGraphDialog::~COGDFNewGraphDialog()
 }
 
 
+void COGDFNewGraphDialog::on_List_itemActivated(QListWidgetItem *item)
+{
+	if (item)
+		accept();
+}
+
+
 void COGDFNewGraphDialog::on_List_currentRowChanged(int currentRow)
 {
     // hide all items

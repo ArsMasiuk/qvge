@@ -206,9 +206,13 @@ void CItem::copyDataFrom(CItem* from)
 
 void CItem::updateLabelContent()
 {
+	auto scene = getScene();
+	if (!scene)
+		return;
+
 	if (!(m_internalStateFlags & IS_Attribute_Changed) && 
-		!(getScene()->itemLabelsEnabled()) &&
-		!(getScene()->itemLabelsNeedUpdate())
+		!(scene->itemLabelsEnabled()) &&
+		!(scene->itemLabelsNeedUpdate())
 	)
 		return;
 
@@ -232,16 +236,17 @@ void CItem::updateLabelContent()
 	{
 		labelToShow = visibleLabels.values().first();
 	}
-    else
-        if (visibleLabels.size() > 1)
-            for (auto it = visibleLabels.constBegin(); it != visibleLabels.constEnd(); ++it)
-            {
-                if (labelToShow.size())
-                    labelToShow += "\n";
+    else if (visibleLabels.size() > 1)
+	{
+        for (auto it = visibleLabels.constBegin(); it != visibleLabels.constEnd(); ++it)
+        {
+            if (labelToShow.size())
+                labelToShow += "\n";
 
-                labelToShow += QString("%1: %2").arg(QString(it.key())).arg(it.value());
-            }
-	
+            labelToShow += QString("%1: %2").arg(QString(it.key())).arg(it.value());
+        }
+	}
+
 	setLabelText(labelToShow);
 
     // label attrs
@@ -250,9 +255,10 @@ void CItem::updateLabelContent()
     bool ok = false;
     int s = getAttribute("label.size").toInt(&ok);
 	if (ok && s > 0)
-	{
 		f.setPointSize(s);
-	}
+
+	if (!scene->isFontAntialiased())
+		f.setStyleStrategy(QFont::NoAntialias);
 
     m_labelItem->setFont(f);
 

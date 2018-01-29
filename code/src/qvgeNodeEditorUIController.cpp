@@ -418,6 +418,7 @@ void qvgeNodeEditorUIController::doReadSettings(QSettings& settings)
 	bool isAA = m_editorView->renderHints().testFlag(QPainter::Antialiasing);
 	isAA = settings.value("antialiasing", isAA).toBool();
 	m_editorView->setRenderHint(QPainter::Antialiasing, isAA);
+	m_editorScene->setFontAntialiased(isAA);
 
 	int cacheRam = QPixmapCache::cacheLimit();
 	cacheRam = settings.value("cacheRam", cacheRam).toInt();

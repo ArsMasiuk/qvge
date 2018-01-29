@@ -13,5 +13,6 @@
         <file alias="AppIcon">Icons/AppIcon.png</file>
         <file alias="Navigator">Icons/Scroll-Navigator.png</file>
         <file alias="Settings">Icons/Settings.png</file>
+        <file alias="Unlink">Icons/Action-Unlink.png</file>
     </qresource>
 </RCC>

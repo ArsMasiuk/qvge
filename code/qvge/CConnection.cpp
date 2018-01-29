@@ -222,16 +222,18 @@ void CConnection::drawArrow(QPainter* painter, qreal shift, const QLineF& direct
 	if (arrowHead.isEmpty())
 		arrowHead << QPointF(0, 0) << QPointF(-ARROW_SIZE/2, ARROW_SIZE) << QPointF(ARROW_SIZE/2, ARROW_SIZE) << QPointF(0, 0);
 
+	QPen oldPen = painter->pen();
 	painter->save();
 
-	painter->setBrush(painter->pen().color());
+	painter->setPen(QPen(oldPen.color(), oldPen.widthF(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+	painter->setBrush(oldPen.color());
 
 	static QLineF hl(0, 0, 0, 100);
 	qreal a = direction.angleTo(hl);
 
 	painter->translate(direction.p2());
 	painter->rotate(180 + a);
-	painter->translate(QPointF(0, shift + painter->pen().widthF()));
+	painter->translate(QPointF(0, shift + oldPen.widthF()));
 	painter->drawPolygon(arrowHead);
 
 	painter->restore();

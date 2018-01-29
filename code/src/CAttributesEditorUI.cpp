@@ -164,6 +164,17 @@ void CAttributesEditorUI::on_AddButton_clicked()
 	// rebuild tree
 	setupFromItems(*m_scene, m_items);
 
+	// select item
+	QList<QtBrowserItem*> items = ui->Editor->topLevelItems();
+	for (auto item : items)
+	{
+		if (item->property()->propertyName().toLocal8Bit() == id)
+		{
+			ui->Editor->setCurrentItem(item);
+			break;
+		}
+	}
+
 	ui->Editor->setFocus();
 }
 

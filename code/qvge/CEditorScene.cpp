@@ -168,6 +168,16 @@ void CEditorScene::enableItemLabels(bool on)
 }
 
 
+void CEditorScene::setFontAntialiased(bool on)
+{
+	m_isFontAntialiased = on;
+
+	layoutItemLabels();
+
+	update();
+}
+
+
 // undo-redo
 
 void CEditorScene::undo()
@@ -213,7 +223,8 @@ void CEditorScene::addUndoState()
 	onSceneChanged();
 }
 
-int CEditorScene::availableUndoCount() const 
+
+int CEditorScene::availableUndoCount() const
 { 
 	return m_undoManager ? m_undoManager->availableUndoCount() : 0; 
 }
@@ -847,7 +858,6 @@ void CEditorScene::drawBackground(QPainter *painter, const QRectF &)
 		auto citems = getItems<CItem>();
 		for (auto citem : citems)
 		{
-			//citem->invalidate();
 			citem->updateCachedItems();
 			citem->getSceneItem()->update();
 		}

@@ -2,6 +2,7 @@
 #define COGDFNEWGRAPHDIALOG_H
 
 #include <QDialog>
+#include <QListWidgetItem>
 
 class CNodeEditorScene;
 
@@ -22,6 +23,7 @@ public:
 
 private Q_SLOTS:
     void on_List_currentRowChanged(int currentRow);
+	void on_List_itemActivated(QListWidgetItem *item);
 
 private:
     Ui::COGDFNewGraphDialog *ui;

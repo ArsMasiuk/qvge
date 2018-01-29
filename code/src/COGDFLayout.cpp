@@ -79,8 +79,8 @@ void COGDFLayout::doLayout(ogdf::LayoutModule &layout, CNodeEditorScene &scene)
     for (CNode* node : nodes)
     {
         ogdf::node n = G.newNode();
-//        GA.x(n) = node->getSceneItem()->pos().x();
-//        GA.y(n) = node->getSceneItem()->pos().y();
+//        GA.x(n) = node->pos().x();
+//        GA.y(n) = node->pos().y();
         GA.x(n) = 0;
         GA.y(n) = 0;
 
@@ -105,7 +105,7 @@ void COGDFLayout::doLayout(ogdf::LayoutModule &layout, CNodeEditorScene &scene)
         CNode* node = it.key();
         ogdf::node n = it.value();
 
-        node->getSceneItem()->setPos(GA.x(n), GA.y(n));
+        node->setPos(GA.x(n), GA.y(n));
     }
 
     // finalize
@@ -134,7 +134,7 @@ void COGDFLayout::graphTopologyToScene(const ogdf::Graph &G, const ogdf::GraphAt
 
         if (GA.has(GA.nodeGraphics))
         {
-            node->getSceneItem()->setPos(GA.x(n), GA.y(n));
+            node->setPos(GA.x(n), GA.y(n));
         }
     }
 
@@ -170,7 +170,7 @@ void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes
 
         if (GA.has(GA.nodeGraphics))
         {
-            node->getSceneItem()->setPos(GA.x(n), GA.y(n));
+            node->setPos(GA.x(n), GA.y(n));
             node->setAttribute("size", QSizeF(GA.width(n), GA.height(n)));
             node->setAttribute("shape", toVariant(GA.shape(n)));
         }

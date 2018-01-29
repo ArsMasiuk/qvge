@@ -241,6 +241,17 @@ void CClassAttributesEditorUI::on_AddButton_clicked()
     // rebuild tree
     rebuild();
 
+	// select item
+	QList<QtBrowserItem*> items = ui->Editor->topLevelItems();
+	for (auto item : items)
+	{
+		if (item->property()->propertyName().toLocal8Bit() == id)
+		{
+			ui->Editor->setCurrentItem(item);
+			break;
+		}
+	}
+
 	ui->Editor->setFocus();
 }
 
@@ -296,8 +307,6 @@ void CClassAttributesEditorUI::on_RemoveButton_clicked()
 	m_scene->addUndoState();
 
 	m_locked = false;
-	// rebuild tree
-	//rebuild();
 
 	ui->Editor->setFocus();
 }
