@@ -10,11 +10,13 @@ Please note that qvge is not a replacement for such a software like Gephi, Graph
 
 ### Main Features
 
-- Easy creation and parametrising of small-sized till middle-sized graphs
+- Easy creation and parameterising of small-sized till middle-sized graphs
 - Dynamically maintained list of commutations between nodes
 - Directed, undirected and mixed graphs supported
-- Loading GraphML and GEXF files (as well as native XGR format)
+- Auto-creation and auto-layout of graphs (via OGDF)
+- Reading GraphML and GEXF files (as well as native XGR format)
 - Export into PDF and popular image formats
+- Export into GraphViz DOT format
 
 ### Installation
 
@@ -26,13 +28,41 @@ Or you can get qvge's sources and build them by yourself. In this case you need 
 
 ~~~~
 cd <directory-with-qvgeapp.pro>
-qmake
-make (Linux) or nmake (Windows)
+qmake -r
 ~~~~
+
+Linux GCC:
+~~~~          
+make 
+~~~~
+
+or Windows MinGW:
+~~~~
+mingw32-make 
+~~~~
+
+or Windows MSVC:
+~~~~
+nmake 
+~~~~
+
+or by Jom:
+~~~~
+jom 
+~~~~
+
+### Supported compilers
+
+qvge has been built with:
+- Microsoft Visual Studio 2015 (Community Edition)
+- MinGW 5.3
+- GCC 4.8 & GCC 5.3
+
+Hopefully it will be compiled with others compilers, too. If not please do not hesitate to provide description of the issue.
 
 ### Supported OSes
 
-qvge has been tested on Microsoft Windows 10 and several Linux OSes. Theoretically it should run on (almost) any OS which have Qt 5.x installed.
+qvge has been tested on Microsoft Windows 10 and several Linux (Mint, Mageia etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
 
 ### Credits
 
