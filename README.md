@@ -1,4 +1,6 @@
-## Qt Visual Graph Editor [![Download qvge](https://img.shields.io/sourceforge/dm/qvge.svg)] [![Download qvge](https://img.shields.io/sourceforge/dt/qvge.svg)](https://sourceforge.net/projects/qvge/files)
+## Qt Visual Graph Editor 
+[![Download qvge](https://img.shields.io/sourceforge/dw/qvge.svg)](https://sourceforge.net/projects/qvge/files/latest/download)
+[![Download qvge](https://img.shields.io/sourceforge/dt/qvge.svg)](https://sourceforge.net/projects/qvge/files/latest/download)
 
 **qvge** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
 in a simple and intuitive way.
