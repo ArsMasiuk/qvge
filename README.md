@@ -1,4 +1,4 @@
-## Qt Visual Graph Editor  [![Download qvge](https://img.shields.io/sourceforge/dm/qvge.svg)](https://sourceforge.net/projects/qvge/files)
+## Qt Visual Graph Editor [![Download qvge](https://img.shields.io/sourceforge/dm/qvge.svg)] [![Download qvge](https://img.shields.io/sourceforge/dt/qvge.svg)](https://sourceforge.net/projects/qvge/files)
 
 **qvge** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
 in a simple and intuitive way.
@@ -20,7 +20,7 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 
 ### Installation
 
-Prebuild Windows binaries can be loaded here:
+Prebuild Windows binaries can be loaded from here:
 
 [![Download qvge](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/qvge/files)
 
@@ -74,3 +74,10 @@ Hopefully it will be compiled with others compilers, too. If not please do not h
 - [OGDF - Open Graph Drawing Framework](http://www.ogdf.net)
 - [Inkscape](https://inkscape.org) (SVG icons)
 - [read_proc library](https://daknuett.eu/personal) (c) Daniel Knuettel
+
+### Extenal Links
+
+**qvge** at [![Download qvge](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
+
+**qvge** at [OpenDesktop.org](https://www.opendesktop.org/p/1211078)
+
