@@ -122,10 +122,6 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 		item = m_startNode;
 		addItem(item);
 		item->setPos(getSnapped(pos));
-
-		// set default size (because it is mapped attribute)
-		QSizeF sz = getClassAttribute(m_startNode->classId(), "size", false).defaultValue.toSizeF();
-		m_startNode->resize(sz);
 	}
 
 	m_endNode = dynamic_cast<CNode*>(m_startNode->clone());

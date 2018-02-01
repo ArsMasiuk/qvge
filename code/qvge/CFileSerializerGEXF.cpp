@@ -198,7 +198,7 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
 	if (viz_size.size()) {
 		QDomElement viz_elem = viz_size.at(0).toElement();
 		float v = viz_elem.attribute("value", "5").toFloat();
-		node->resize(v);
+		node->setAttribute("size", v);
 	}
 
 	// shape

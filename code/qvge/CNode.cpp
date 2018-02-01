@@ -100,7 +100,7 @@ CItem* CNode::clone()
 
 bool CNode::hasLocalAttribute(const QByteArray& attrId) const
 {
-	if (attrId == "shape" || attrId == "size" || attrId == "pos" || 
+	if (/*attrId == "shape" || attrId == "size" ||*/ attrId == "pos" || 
 		attrId == "x" || attrId == "y" || attrId == "z") 
 		return true;
 
@@ -192,11 +192,6 @@ bool CNode::removeAttribute(const QByteArray& attrId)
 QVariant CNode::getAttribute(const QByteArray& attrId) const
 {
 	// virtual attributes
-	if (attrId == "size")
-	{
-		return getSize();
-	}
-
 	if (attrId == "x")
 	{
 		return x();
