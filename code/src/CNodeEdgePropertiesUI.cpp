@@ -46,7 +46,7 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
     ui->EdgeColor->setColorScheme(QSint::OpenOfficeColors());
     ui->EdgeColor->setColor(Qt::red);
 
-    ui->EdgeStyle->setUsedRange(Qt::SolidLine, Qt::DotLine);
+    ui->EdgeStyle->setUsedRange(Qt::SolidLine, Qt::DashDotDotLine);
 
     ui->EdgeAttrBox->setChecked(false);
 

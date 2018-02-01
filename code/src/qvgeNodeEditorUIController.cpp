@@ -466,6 +466,9 @@ bool qvgeNodeEditorUIController::saveToFile(const QString &fileName, const QStri
     if (format == "dot")
         return (CFileSerializerDOT().save(fileName, *m_editorScene));
 
+	if (format == "gexf")
+		return (CFileSerializerGEXF().save(fileName, *m_editorScene));
+
     return false;
 }
 

@@ -28,7 +28,7 @@ qvgeMainWindow::qvgeMainWindow()
     QApplication::setApplicationName("Qt Visual Graph Editor");
     QApplication::setApplicationVersion(qvgeVersion.toString() + tr(" (Beta)") + bitString);
 
-	CDocumentFormat gexf = { "GEXF", "*.gexf", {"gexf"}, false, true };
+	CDocumentFormat gexf = { "GEXF", "*.gexf", {"gexf"}, true, true };
 	CDocumentFormat graphml = { "GraphML", "*.graphml", {"graphml"}, false, true };
 //    CDocumentFormat gr = { "Old plain GR", "*.gr", false, true };
 	CDocumentFormat xgr = { "XML Graph", "*.xgr", {"xgr"}, true, true };

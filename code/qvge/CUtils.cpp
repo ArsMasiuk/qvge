@@ -2,6 +2,8 @@
 
 #include <QPoint>
 #include <QPointF>
+#include <QColor>
+#include <QFont>
 
 
 QVariant CUtils::textToVariant(const QString& text, int type)
@@ -14,11 +16,20 @@ QVariant CUtils::textToVariant(const QString& text, int type)
     case QVariant::Double:
         return text.toDouble();
 
+	case QMetaType::Float:
+		return text.toFloat();
+
     case QVariant::Bool:
         if (text.toLower() == "true")
             return true;
         else
             return false;
+
+	case QVariant::Color:
+		return QColor(text);
+
+	case QVariant::Font:
+		return QFont(text);
 
     default:
         return text;    // string

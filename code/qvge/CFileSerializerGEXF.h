@@ -40,12 +40,10 @@ public:
 	virtual bool load(const QString& fileName, CEditorScene& scene) const;
 
 	virtual bool saveSupported() const {
-		return false;
+		return true;
 	}
 
-	virtual bool save(const QString& /*fileName*/, const CEditorScene& /*scene*/) const {
-		return false;
-	}
+	virtual bool save(const QString& /*fileName*/, const CEditorScene& /*scene*/) const;
 
 private:
     struct AttrInfo {
@@ -58,6 +56,10 @@ private:
     bool readAttrs(int index, const QDomNode &domNode, CEditorScene& scene) const;
     bool readNode(int index, const QDomNode &domNode, const IdToAttrMap &idMap, CEditorScene& scene) const;
     bool readEdge(int index, const QDomNode &domNode, const IdToAttrMap &idMap, CEditorScene& scene) const;
+	void writeClassAttrs(QTextStream &ts, const CEditorScene& scene, const QByteArray &classId) const;
+	void writeNodes(QTextStream &ts, const CEditorScene& scene) const;
+	void writeEdges(QTextStream &ts, const CEditorScene& scene) const;
+	void writeAttValues(QTextStream &ts, const QMap<QByteArray, QVariant>& attvalues) const;
 
 	mutable QMap<QString, CNode*> m_nodeMap;
 

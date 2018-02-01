@@ -12,6 +12,7 @@ It can be used freely, maintaining the information above.
 #include "CDirectConnection.h"
 
 #include <QFile>
+#include <QDate>
 #include <QDebug>
 
 // reimp
@@ -72,13 +73,13 @@ bool CFileSerializerGEXF::load(const QString& fileName, CEditorScene& scene) con
 
 bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEditorScene &scene) const
 {
-    auto elem = domNode.toElement();
+    QDomElement elem = domNode.toElement();
     QByteArray classId = elem.attribute("class", "").toLatin1();
 
     auto attrs = elem.elementsByTagName("attribute");
     for (int i = 0; i < attrs.count(); ++i)
     {
-        auto attrElem = attrs.at(i).toElement();
+		QDomElement attrElem = attrs.at(i).toElement();
         QByteArray id = attrElem.attribute("id", "").toLatin1();
         if (id.isEmpty())
             continue;
@@ -89,34 +90,38 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
 
         AttrInfo attrInfo = {attrId, 0};
 
+		QString def;
+		auto defs = attrElem.elementsByTagName("default");
+		if (defs.size())
+			def = defs.at(0).toElement().text();
+
         if (type == "integer" || type == "long")
         {
             attrInfo.variantType = QVariant::Int;
-            QString def = attrElem.attribute("default", "0");
-            QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
-            scene.setClassAttribute(classId, attrId, v);
         }
         else if (type == "double" || type == "float")
         {
             attrInfo.variantType = QVariant::Double;
-            QString def = attrElem.attribute("default", "0.0");
-            QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
-            scene.setClassAttribute(classId, attrId, v);
         }
         else if (type == "boolean")
         {
             attrInfo.variantType = QVariant::Bool;
-            QString def = attrElem.attribute("default", "true");
-            QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
-            scene.setClassAttribute(classId, attrId, v);
         }
         else    // string
         {
             attrInfo.variantType = QVariant::String;
-            QString def = attrElem.attribute("default", "");
-            QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
-            scene.setClassAttribute(classId, attrId, v);
         }
+
+		QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
+
+		if (attrId == "size" && classId == "node")
+		{
+			v = QSizeF(v.toDouble(), v.toDouble());
+		}
+
+		CAttribute attr(attrId, attrId, v);
+		attr.userDefined = true;
+		scene.setClassAttribute(classId, attr);
 
         m_classIdMap[classId][id] = attrInfo;
     }
@@ -177,6 +182,17 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
 		node->resize(v);
 	}
 
+	// shape
+	QDomNodeList viz_shape = elem.elementsByTagName("viz:shape");   // v1.2
+	if (viz_shape.isEmpty())
+		viz_shape = elem.elementsByTagName("ns0:shape");    // v1.1
+
+	if (viz_shape.size()) {
+		QDomElement viz_elem = viz_shape.at(0).toElement();
+		QString v = viz_elem.attribute("value", "disc");
+		node->setAttribute("shape", v);
+	}
+
     // attrs
     QDomNodeList attrs = elem.elementsByTagName("attvalue");
     for (int i = 0; i < attrs.count(); ++i)
@@ -216,7 +232,7 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 	link->setAttribute("id", id);
 
 	QString label = elem.attribute("label", "");
-	link->setAttribute("label", id);
+	link->setAttribute("label", label);
 
 	QString source = elem.attribute("source", "");
 	QString target = elem.attribute("target", "");
@@ -232,11 +248,47 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 		link->setAttribute("weight", weight);
 
 	// direction
-	QString edgeType = elem.attribute("defaultedgetype", "");
+	QString edgeType = elem.attribute("edgetype", "");
 	if (edgeType.isEmpty())
 		edgeType = m_edgeType;
 
 	link->setAttribute("direction", edgeType);
+
+	// color
+	QDomNodeList viz_color = elem.elementsByTagName("viz:color");   // v1.2
+	if (viz_color.isEmpty())
+		viz_color = elem.elementsByTagName("ns0:color");    // v1.1
+
+	if (viz_color.size()) {
+		QDomElement viz_elem = viz_color.at(0).toElement();
+		int r = viz_elem.attribute("r", "0").toInt();
+		int g = viz_elem.attribute("g", "0").toInt();
+		int b = viz_elem.attribute("b", "0").toInt();
+		QColor color(r, g, b);
+		link->setAttribute("color", color);
+	}
+
+	// thickness
+	QDomNodeList viz_thickness = elem.elementsByTagName("viz:thickness");   // v1.2
+	if (viz_thickness.isEmpty())
+		viz_thickness = elem.elementsByTagName("ns0:thickness");    // v1.1
+
+	if (viz_thickness.size()) {
+		QDomElement viz_elem = viz_thickness.at(0).toElement();
+		float v = viz_elem.attribute("value", "1").toFloat();
+		link->setAttribute("thickness", v);
+	}
+
+	// shape
+	QDomNodeList viz_shape = elem.elementsByTagName("viz:shape");   // v1.2
+	if (viz_shape.isEmpty())
+		viz_shape = elem.elementsByTagName("ns0:shape");    // v1.1
+
+	if (viz_shape.size()) {
+		QDomElement viz_elem = viz_shape.at(0).toElement();
+		QString v = viz_elem.attribute("value", "solid");
+		link->setAttribute("style", v);
+	}
 
     // attrs
     QDomNodeList attrs = elem.elementsByTagName("attvalue");
@@ -260,3 +312,228 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 	return true;
 }
 
+
+bool CFileSerializerGEXF::save(const QString& fileName, const CEditorScene& scene) const
+{
+	QFile file(fileName);
+	if (!file.open(QIODevice::WriteOnly))
+		return false;
+
+	QTextStream ts(&file);
+
+	// header
+	ts << 
+		"<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n"
+		"<gexf xmlns = \"http://www.gexf.net/1.2draft\" version = \"1.2\"\n"
+		"    xmlns:viz = \"http://www.gexf.net/1.2draft/viz\"\n"
+		"    xmlns:xsi = \"http://www.w3.org/2001/XMLSchema-instance\"\n"
+		"    xsi:schemaLocation = \"http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd\">\n";
+
+	ts << 
+		"    <meta lastmodifieddate = \"" << QDate::currentDate().toString() << "\">\n"
+		"        <creator>QVGE 0.3.0</creator>\n"
+		"        <description></description>\n"
+		"    </meta>\n";
+
+	// graph
+	QString edgetype = scene.getClassAttribute("edge", "direction").toString();
+	ts << "    <graph mode=\"static\" defaultedgetype=\"" << edgetype << "\">\n";
+
+	// node attrs
+	writeClassAttrs(ts, scene, "node");
+
+	// edge attrs
+	writeClassAttrs(ts, scene, "edge");
+
+	// nodes
+	writeNodes(ts, scene);
+
+	// edges
+	writeEdges(ts, scene);
+
+	// footer
+	ts << "    </graph>\n";
+	ts << "</gexf>\n";
+
+	return true;
+}
+
+
+static QString typeToString(int valueType)
+{
+	switch (valueType)
+	{
+	case QMetaType::Bool:		
+		return "boolean";
+	case QMetaType::Int:
+	case QMetaType::UInt:
+		return "integer";
+	case QMetaType::Long:
+	case QMetaType::ULong:
+		return "long";
+	case QMetaType::Double:
+		return "double";
+	case QMetaType::Float:
+		return "float";
+
+	// liststring
+	// url
+
+	default:
+		return "string";
+	}
+}
+
+
+void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& scene, const QByteArray &classId) const
+{
+	auto attrs = scene.getClassAttributes(classId, false);
+	if (attrs.isEmpty())
+		return;
+
+	ts << "    <attributes class=\"" << classId << "\" mode=\"static\">\n";
+
+	for (auto it = attrs.constBegin(); it != attrs.constEnd(); ++it)
+	{
+		const auto &attr = it.value();
+		if (attr.noDefault)
+			continue;
+
+		// size
+		if (it.key() == "size")
+		{
+			ts << "        <attribute id=\"" << "size" << "\" title=\"" << "size" << "\" type=\"" << "float" << "\">\n";
+
+			if (attr.defaultValue.canConvert(QMetaType::QSizeF))
+			{
+				QSizeF size = attr.defaultValue.toSizeF();
+				ts << "            <default>" << qMax(size.width(), size.height()) << "</default>\n";
+			}
+			else
+				ts << "            <default>" << attr.defaultValue.toFloat() << "</default>\n";
+
+			ts << "        </attribute>\n";
+			continue;
+		}
+
+		// others (id = title)
+		ts << "        <attribute id=\"" << it.key() << "\" title=\"" << it.key() << "\" type=\"" << typeToString(attr.valueType) << "\">\n";
+		
+		if (!attr.noDefault && attr.defaultValue.isValid())
+		{
+			ts << "            <default>" << attr.defaultValue.toString() << "</default>\n";
+		}
+
+		ts << "        </attribute>\n";
+	}
+
+	ts << "    </attributes>\n";
+}
+
+
+void CFileSerializerGEXF::writeNodes(QTextStream &ts, const CEditorScene& scene) const
+{
+	ts << "    <nodes>\n";
+
+	auto nodes = scene.getItems<CNode>();
+	for (auto node : nodes)
+	{
+		QMap<QByteArray, QVariant> nodeAttrs = node->getLocalAttributes();
+
+		ts << "        <node id=\"" << node->getId() << "\" label=\"" << nodeAttrs.take("label").toString() << "\">\n";
+		ts << "            <viz:position x=\"" << node->pos().x() << "\" y=\"" << node->pos().y() << "\"/>\n";
+
+		if (nodeAttrs.contains("size"))
+		{
+			// size exported incompletely, only max. 
+			QVariant sizeV = nodeAttrs.take("size");
+			if (sizeV.canConvert(QMetaType::QSizeF))
+			{
+				QSizeF size = sizeV.toSizeF();
+				ts << "            <viz:size value=\"" << qMax(size.width(), size.height()) << "\"/>\n";
+			}
+			else
+				ts << "            <viz:size value=\"" << sizeV.toFloat() << "\"/>\n";
+		}
+
+		if (nodeAttrs.contains("color"))
+		{
+			QColor c = nodeAttrs.take("color").value<QColor>();
+			ts << "            <viz:color r=\"" << c.red() << "\" g=\"" << c.green() << "\" b=\"" << c.blue() << "\"/>\n";
+		}
+
+		if (nodeAttrs.contains("shape"))
+		{
+			QString shape = nodeAttrs.take("shape").toString();
+			ts << "            <viz:shape value=\"" << shape << "\"/>\n";
+		}
+
+		writeAttValues(ts, nodeAttrs);
+
+		ts << "        </node>\n";
+	}
+
+	ts << "    </nodes>\n";
+}
+
+
+void CFileSerializerGEXF::writeEdges(QTextStream &ts, const CEditorScene& scene) const
+{
+	ts << "    <edges>\n";
+
+	auto edges = scene.getItems<CConnection>();
+	for (auto edge : edges)
+	{
+		QMap<QByteArray, QVariant> edgeAttrs = edge->getLocalAttributes();
+
+		ts << "        <edge id=\"" << edge->getId() << "\" label=\"" << edgeAttrs.take("label").toString()
+			<< "\" source=\"" << edge->firstNode()->getId() << "\" target=\"" << edge->lastNode()->getId();
+		
+		QString edgetype = edgeAttrs.take("direction").toString();
+		if (edgetype.size())
+		{
+			ts << "\" edgetype=\"" << edgetype;
+		}
+		
+		ts << "\">\n";
+
+		if (edgeAttrs.contains("thickness"))
+		{
+			ts << "            <viz:thickness value=\"" << edgeAttrs.take("thickness").toFloat() << "\"/>\n";
+		}
+
+		if (edgeAttrs.contains("color"))
+		{
+			QColor c = edgeAttrs.take("color").value<QColor>();
+			ts << "            <viz:color r=\"" << c.red() << "\" g=\"" << c.green() << "\" b=\"" << c.blue() << "\"/>\n";
+		}
+
+		if (edgeAttrs.contains("style"))
+		{
+			QString shape = edgeAttrs.take("style").toString();
+			ts << "            <viz:shape value=\"" << shape << "\"/>\n";
+		}
+
+		writeAttValues(ts, edgeAttrs);
+
+		ts << "        </edge>\n";
+	}
+
+	ts << "    </edges>\n";
+}
+
+
+void CFileSerializerGEXF::writeAttValues(QTextStream &ts, const QMap<QByteArray, QVariant>& attvalues) const
+{
+	if (attvalues.size())
+	{
+		ts << "            <attvalues>\n";
+
+		for (auto it = attvalues.constBegin(); it != attvalues.constEnd(); ++it)
+		{
+			ts << "                <attvalue for=\"" << it.key() << "\" value=\"" << it.value().toString() << "\"/>\n";
+		}
+
+		ts << "            </attvalues>\n";
+	}
+}

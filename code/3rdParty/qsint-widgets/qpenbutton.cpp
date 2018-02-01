@@ -22,7 +22,7 @@ void QPenButton::init()
 
     for (int i = Qt::NoPen; i < Qt::CustomDashLine; i++)
     {
-        QPixmap pixmap(iconSize());
+        QPixmap pixmap(iconSize() * 2);
         pixmap.fill(QColor(Qt::transparent));
 
         pen.setStyle(Qt::PenStyle(i));
