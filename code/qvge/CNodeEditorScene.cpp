@@ -124,7 +124,7 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 		item->setPos(getSnapped(pos));
 
 		// set default size (because it is mapped attribute)
-		QSizeF sz = getClassAttribute(m_startNode->classId(), "size").toSizeF();
+		QSizeF sz = getClassAttribute(m_startNode->classId(), "size", false).defaultValue.toSizeF();
 		m_startNode->resize(sz);
 	}
 

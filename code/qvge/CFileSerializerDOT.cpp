@@ -115,7 +115,7 @@ void CFileSerializerDOT::doWriteNodeDefaults(QTextStream& ts, const CEditorScene
 }
 
 
-void CFileSerializerDOT::doWriteNode(QTextStream& ts, const CNode& node, const CEditorScene& scene) const
+void CFileSerializerDOT::doWriteNode(QTextStream& ts, const CNode& node, const CEditorScene& /*scene*/) const
 {
 	ts << "pos = \"" << node.pos().x() / 72.0  << "," << -node.pos().y() / 72.0 << "!\"\n";	//  / 72.0 -> point to inch; -y
 
@@ -199,7 +199,7 @@ void CFileSerializerDOT::doWriteEdgeDefaults(QTextStream& ts, const CEditorScene
 }
 
 
-void CFileSerializerDOT::doWriteEdge(QTextStream& ts, const CConnection& edge, const CEditorScene& scene) const
+void CFileSerializerDOT::doWriteEdge(QTextStream& ts, const CConnection& edge, const CEditorScene& /*scene*/) const
 {
 	const auto& edgeAttrs = edge.getLocalAttributes();
 

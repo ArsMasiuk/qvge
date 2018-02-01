@@ -99,18 +99,6 @@ public:
 	}
 
 	// attributes
-    QVariant getClassAttribute(const QByteArray& classId, const QByteArray& attrId) const {
-        return m_classAttributes[classId][attrId].defaultValue;
-    }
-
-	CAttribute getClassAttributeInfo(const QByteArray& classId, const QByteArray& attrId) const {
-		return m_classAttributes[classId][attrId];
-	}
-
-	QByteArrayList getClasses() const {
-		return m_classAttributes.keys();
-	}
-
 	QByteArray getSuperClassId(const QByteArray& classId) const {
 		if (m_classToSuperIds.contains(classId))
 			return m_classToSuperIds[classId];
@@ -118,7 +106,9 @@ public:
 		return QByteArray();
 	}
 
+	const CAttribute getClassAttribute(const QByteArray& classId, const QByteArray& attrId, bool inherited) const;
 	AttributesMap getClassAttributes(const QByteArray& classId, bool inherited) const;
+
 	bool removeClassAttribute(const QByteArray& classId, const QByteArray& attrId);
 
 	void setClassAttribute(const QByteArray& classId, const CAttribute& attr, bool vis = false);

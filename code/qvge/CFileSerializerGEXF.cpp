@@ -76,6 +76,8 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
     QDomElement elem = domNode.toElement();
     QByteArray classId = elem.attribute("class", "").toLatin1();
 
+	AttributesMap existingAttrs = scene.getClassAttributes(classId, true);
+
     auto attrs = elem.elementsByTagName("attribute");
     for (int i = 0; i < attrs.count(); ++i)
     {
@@ -112,16 +114,33 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
             attrInfo.variantType = QVariant::String;
         }
 
-		QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
 
-		if (attrId == "size" && classId == "node")
+		CAttribute attr = existingAttrs[attrId];
+		if (attr.id.isEmpty())
+		{	// no such attr
+			attr.id = attrId;
+			attr.classId = classId;
+			attr.userDefined = true;
+			attr.valueType = attrInfo.variantType;
+		}
+		else // exist
+			attrInfo.variantType = attr.valueType;
+
+
+		if (def.size())
 		{
-			v = QSizeF(v.toDouble(), v.toDouble());
+			QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
+
+			if (attrId == "size" && classId == "node")
+			{
+				v = QSizeF(v.toDouble(), v.toDouble());
+			}
+
+			attr.defaultValue = v;
 		}
 
-		CAttribute attr(attrId, attrId, v);
-		attr.userDefined = true;
 		scene.setClassAttribute(classId, attr);
+
 
         m_classIdMap[classId][id] = attrInfo;
     }
@@ -214,6 +233,8 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
 	scene.addItem(node);
 
 	m_nodeMap[id] = node;
+
+	node->onItemRestored();
 
 	return true;
 }
@@ -309,6 +330,8 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 
 	scene.addItem(link);
 
+	link->onItemRestored();
+
 	return true;
 }
 
@@ -336,7 +359,7 @@ bool CFileSerializerGEXF::save(const QString& fileName, const CEditorScene& scen
 		"    </meta>\n";
 
 	// graph
-	QString edgetype = scene.getClassAttribute("edge", "direction").toString();
+	QString edgetype = scene.getClassAttribute("edge", "direction", false).defaultValue.toString();
 	ts << "    <graph mode=\"static\" defaultedgetype=\"" << edgetype << "\">\n";
 
 	// node attrs

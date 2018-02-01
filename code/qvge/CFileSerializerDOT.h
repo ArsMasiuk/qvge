@@ -38,7 +38,7 @@ public:
         return false;
 	}
 
-    virtual bool load(const QString& fileName, CEditorScene& scene) const {
+    virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/) const {
         return false;
     }
 

@@ -119,7 +119,10 @@ QVariant CItem::getAttribute(const QByteArray& attrId) const
 	if (m_attributes.contains(attrId))
 		return m_attributes[attrId];
 
-	return getClassAttribute(attrId);
+	if (auto scene = getScene())
+		return scene->getClassAttribute(classId(), attrId, true).defaultValue;
+
+	return QVariant();
 }
 
 QSet<QByteArray> CItem::getVisibleAttributeIds(int flags) const
@@ -140,25 +143,6 @@ QSet<QByteArray> CItem::getVisibleAttributeIds(int flags) const
     return result;
 }
 
-QVariant CItem::getClassAttribute(const QByteArray& attrId) const
-{
-	auto scene = getScene();
-	if (scene)
-	{
-		QByteArray lookId = classId();
-
-		while (!lookId.isEmpty())
-		{
-			auto v = scene->getClassAttribute(lookId, attrId);
-			if (v.isValid()) 
-				return v;
-
-			lookId = scene->getSuperClassId(lookId);
-		}
-	}
-
-	return QVariant();
-}
 
 bool CItem::setDefaultId()
 {

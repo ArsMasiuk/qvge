@@ -604,6 +604,28 @@ QSet<QByteArray> CEditorScene::getVisibleClassAttributes(const QByteArray& class
 }
 
 
+const CAttribute CEditorScene::getClassAttribute(const QByteArray& classId, const QByteArray& attrId, bool inherited) const 
+{
+	CAttribute attr = m_classAttributes[classId][attrId];
+	if (attr.id.size() || !inherited)
+		return attr;
+
+	// else inherited
+	QByteArray superId = getSuperClassId(classId);
+	while (!superId.isEmpty())
+	{
+		CAttribute attr = m_classAttributes[classId][attrId];
+		if (attr.id.size())
+			return attr;
+
+		superId = getSuperClassId(superId);
+	}
+
+	// fail
+	return CAttribute();
+}
+
+
 AttributesMap CEditorScene::getClassAttributes(const QByteArray& classId, bool inherited) const
 {
 	AttributesMap result = m_classAttributes[classId];
