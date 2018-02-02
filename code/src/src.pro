@@ -42,6 +42,10 @@ win32{
     RC_FILE = $$PWD/../win32/icon.rc
 }
 
+cygwin*{
+    LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
+}
+
 
 # compiler stuff
 win32-msvc*{
