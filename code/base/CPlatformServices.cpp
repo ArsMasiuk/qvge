@@ -97,7 +97,7 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 #endif // windows
 
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) || defined(Q_OS_CYGWIN)
 
 #include <QX11Info>
 
