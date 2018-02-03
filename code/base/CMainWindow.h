@@ -131,6 +131,7 @@ protected:
 	QAction *m_windowsMenuAction;
 
     QString m_currentFileName;
+	QString m_lastPath;
     QByteArray m_currentDocType;
     bool m_isChanged;
 	QString m_mainTitleText;

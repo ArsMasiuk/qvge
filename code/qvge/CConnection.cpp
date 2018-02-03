@@ -151,12 +151,7 @@ void CConnection::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem
 	if (weight > 10) weight = 10;	// safety
 
 	// line style
-	Qt::PenStyle penStyle = Qt::SolidLine;
-	QString lineStyle = getAttribute("style").toString();
-	if (lineStyle == "dotted")
-		penStyle = Qt::DotLine;
-	else if (lineStyle == "dashed")
-		penStyle = Qt::DashLine;
+	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute("style").toString(), Qt::SolidLine);
 
 	// color & selection
 	bool isSelected = (option->state & QStyle::State_Selected);

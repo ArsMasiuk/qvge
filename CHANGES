@@ -1,0 +1,12 @@
+- added export to GEXF format
+- added import from GML format (via OGDF)
+- added support for Cygwin platform 
+- added editing of node outline 
+
+- corrected and improved import from GEXF format
+- fixed some issues with attribute inheritance
+- fixed some issues with files IO
+- fixed some issues with application UI
+- fixed issue when a node sometimes was created on a wrong place
+- fixed issue with cancelling of edge creation by right mouse button
+

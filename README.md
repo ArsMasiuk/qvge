@@ -16,9 +16,11 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 - Dynamically maintained list of commutations between nodes
 - Directed, undirected and mixed graphs supported
 - Auto-creation and auto-layout of graphs (via OGDF)
-- Reading GraphML and GEXF files (as well as native XGR format)
+- Native graph persistence format (XGR)
+- Reading GraphML, GML and GEXF files
 - Export into PDF and popular image formats
 - Export into GraphViz DOT format
+- Export into GEXF format
 
 ### Installation
 
@@ -58,13 +60,15 @@ jom
 **qvge** has been built with:
 - Microsoft Visual Studio 2015 (Community Edition)
 - MinGW 5.3
-- GCC 4.8 & GCC 5.3
+- GCC 4.8 & GCC 5.3 (Linux)
+- GCC 6.4.0 (Cygwin) 
 
 Hopefully it will be compiled with others compilers, too. If not please do not hesitate to provide description of the issue.
 
 ### Supported OSes
 
 **qvge** has been tested on Microsoft Windows 10 and several Linux (Mint, Mageia etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
+It can be compiled & started under Cygwin as well.
 
 ### Credits
 

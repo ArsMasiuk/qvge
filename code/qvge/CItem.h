@@ -51,9 +51,18 @@ enum ItemDragTestResult
 class CControlPoint;
 
 
+class Stub
+{
+public:
+	typedef Stub Super;
+	static QByteArray factoryId() { return ""; }
+};
+
 class CItem
 {
 public:
+	typedef Stub Super;
+
 	CItem();
 	virtual ~CItem();
 
@@ -79,6 +88,22 @@ public:
 	virtual bool setAttribute(const QByteArray& attrId, const QVariant& v);
 	virtual bool removeAttribute(const QByteArray& attrId);
 	virtual QVariant getAttribute(const QByteArray& attrId) const;
+
+	//template<class Class>
+	//QVariant getAttribute(const QByteArray& attrId) const
+	//{
+	//	if (attrId == "id")
+	//		return m_id;
+
+	//	if (m_attributes.contains(attrId))
+	//		return m_attributes[attrId];
+
+	//	if (auto scene = getScene())
+	//		return scene->getClassAttribute<Class>(attrId, true).defaultValue;
+
+	//	return QVariant();
+	//}
+
 
 	virtual QByteArray classId() const { return "item"; }
 	virtual QByteArray superClassId() const { return QByteArray(); }

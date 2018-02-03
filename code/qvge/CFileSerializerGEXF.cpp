@@ -360,6 +360,7 @@ bool CFileSerializerGEXF::save(const QString& fileName, const CEditorScene& scen
 
 	// graph
 	QString edgetype = scene.getClassAttribute("edge", "direction", false).defaultValue.toString();
+	//QString edgetype = scene.getClassAttribute<CConnection>("direction", false).defaultValue.toString();
 	ts << "    <graph mode=\"static\" defaultedgetype=\"" << edgetype << "\">\n";
 
 	// node attrs

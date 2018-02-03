@@ -536,7 +536,10 @@ QVariant CNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVari
 
 void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget*)
 {
+	bool isSelected = (option->state & QStyle::State_Selected);
+
 	painter->setClipRect(boundingRect());
+
 
 	// get color (to optimize!)
 	QVariant color = getAttribute("color");
@@ -545,11 +548,17 @@ void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 	else
 		painter->setBrush(Qt::cyan);
 
-	bool isSelected = (option->state & QStyle::State_Selected);
-	if (isSelected)
-		painter->setPen(QPen(QColor("orange"), 2));
-	else
-		painter->setPen(QPen(Qt::black, 1));
+
+	QColor strokeColor = isSelected ? QColor("orange") : getAttribute("stroke.color").value<QColor>();
+	
+	qreal strokeSize = getAttribute("stroke.size").toDouble();
+	strokeSize = qMax(1.0, strokeSize);
+	if (isSelected) strokeSize++;
+
+	int strokeStyle = CUtils::textToPenStyle(getAttribute("stroke.style").toString(), Qt::SolidLine);
+
+	painter->setPen(QPen(strokeColor, strokeSize, (Qt::PenStyle)strokeStyle));
+
 
 	// draw shape: disc if no cache
 	if (m_shapeCache.isEmpty())

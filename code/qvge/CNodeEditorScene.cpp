@@ -145,14 +145,18 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 
 void CNodeEditorScene::cancel(const QPointF& /*pos*/)
 {
-	// cancel current drag operation
-	Super::finishDrag(NULL, m_startDragItem, true);
-
-	// if no creating state: return
-	if (m_state != IS_Creating)
+	// if not cancelling already
+	if (m_state != IS_Cancelling)
 	{
-		m_state = IS_None;
-		return;
+		// cancel current drag operation
+		Super::finishDrag(NULL, m_startDragItem, true);
+
+		// if no creating state: return
+		if (m_state != IS_Creating)
+		{
+			m_state = IS_None;
+			return;
+		}
 	}
 
 	m_state = IS_None;
@@ -371,6 +375,10 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 
 bool CNodeEditorScene::onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos)
 {
+	// debug
+	if (clickPos == QPointF())
+		qDebug() << "bug";
+
 	// try to start new connection at click point
 	if (startNewConnection(clickPos))
 		return true;

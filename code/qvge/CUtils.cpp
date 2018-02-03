@@ -81,6 +81,18 @@ QString CUtils::variantToText(const QVariant& v)
 }
 
 
+int CUtils::textToPenStyle(const QString& text, int def)
+{
+	static QMap<QString, int> s_penStyles =
+	{ { "none",0}, { "solid",1 }, { "dashed",2 },{ "dotted",3 } ,{ "dashdot",4 } ,{ "dashdotdot",5 } };
+
+	if (s_penStyles.contains(text))
+		return s_penStyles[text];
+	else
+        return def;
+}
+
+
 QPointF CUtils::closestIntersection(const QLineF& line, const QPolygonF& endPolygon)
 {
 	QPointF intersectPoint;

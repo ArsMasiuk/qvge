@@ -338,7 +338,11 @@ void CMainWindow::on_actionOpen_triggered()
     QString filter = tr("Any File (*.*)");
     onOpenDocumentDialog(title, filter);
 
-    QString fileName = QFileDialog::getOpenFileName(NULL, title, m_currentFileName, filter, &m_lastOpenFilter);
+	QString loadName = m_currentFileName;
+	if (loadName.isEmpty())
+		loadName = m_lastPath;
+
+    QString fileName = QFileDialog::getOpenFileName(NULL, title, loadName, filter, &m_lastOpenFilter);
     if (fileName.isEmpty())
         return;
 
@@ -382,6 +386,7 @@ bool CMainWindow::doOpenDocument(const QString &fileName)
     {
         m_currentFileName = normalizedName;
         m_isChanged = false;
+		m_lastPath = QFileInfo(m_currentFileName).absolutePath();
 
         statusBar()->showMessage(tr("Opened successfully: %1").arg(fileName));
 
@@ -452,6 +457,16 @@ bool CMainWindow::save()
 }
 
 
+static QString cutLastSuffix(const QString& fileName)
+{
+	int idx = fileName.lastIndexOf(".");
+	if (idx < 0)
+		return fileName;
+	else
+		return fileName.left(idx);
+}
+
+
 bool CMainWindow::saveAs()
 {
     if (m_currentDocType.isEmpty())
@@ -477,11 +492,13 @@ bool CMainWindow::saveAs()
     QString title = tr("Save File");
     onSaveDocumentDialog(title, filter);
 
-	QString suffix = QFileInfo(m_currentFileName).suffix().toLower();
+	QString saveName = cutLastSuffix(m_currentFileName);
+	if (saveName.isEmpty())
+		saveName = m_lastPath;
 
     QString selectedFilter = m_lastSaveFilter;
 
-    QString fileName = QFileDialog::getSaveFileName(NULL, title, m_currentFileName, filter, &selectedFilter);
+    QString fileName = QFileDialog::getSaveFileName(NULL, title, saveName, filter, &selectedFilter);
     if (fileName.isEmpty())
         return false;
 
@@ -503,6 +520,7 @@ bool CMainWindow::doSaveDocument(const QString &fileName, const QString &selecte
         m_currentFileName = fileName;
         m_isChanged = false;
         m_lastSaveFilter = selectedFilter;
+		m_lastPath = QFileInfo(m_currentFileName).absolutePath();
 
         statusBar()->showMessage(tr("Document saved successfully."));
 
@@ -812,6 +830,11 @@ void CMainWindow::doReadSettings(QSettings& settings)
         showMaximized();
     else
         showNormal();
+
+
+
+	// path
+	m_lastPath = settings.value("lastPath").toString();
 }
 
 
@@ -828,4 +851,6 @@ void CMainWindow::doWriteSettings(QSettings& settings)
 	settings.setValue("windowState", saveState());
 	settings.setValue("geometry", saveGeometry());
 	settings.setValue("maximized", isMaximized());
+
+	settings.setValue("lastPath", m_lastPath);
 }

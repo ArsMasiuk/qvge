@@ -47,6 +47,7 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
     ui->EdgeColor->setColor(Qt::red);
 
     ui->EdgeStyle->setUsedRange(Qt::SolidLine, Qt::DashDotDotLine);
+	ui->StrokeStyle->setUsedRange(Qt::SolidLine, Qt::DashDotDotLine);
 
     ui->EdgeAttrBox->setChecked(false);
 
@@ -124,7 +125,16 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 
         ui->NodeColor->setColor(node->getAttribute("color").value<QColor>());
         ui->NodeShape->selectAction(node->getAttribute("shape"));
-        ui->NodeSize->setValue(node->getAttribute("size").toSize().width());
+		
+		QSize size = node->getAttribute("size").toSize();
+		ui->NodeSizeSwitch->setChecked(size.width() == size.height());
+		ui->NodeSizeY->setEnabled(size.width() != size.height());
+        ui->NodeSizeX->setValue(size.width());
+		ui->NodeSizeY->setValue(size.height());
+
+		ui->StrokeColor->setColor(node->getAttribute("stroke.color").value<QColor>());
+		ui->StrokeStyle->selectAction(node->getAttribute("stroke.style"));
+		ui->StrokeSize->setValue(node->getAttribute("stroke.size").toDouble());
     }
 
     if (nodes.count() == 1)
@@ -236,7 +246,7 @@ void CNodeEdgePropertiesUI::on_NodeShape_activated(QVariant data)
 }
 
 
-void CNodeEdgePropertiesUI::on_NodeSize_valueChanged(int value)
+void CNodeEdgePropertiesUI::on_NodeSizeX_valueChanged(int /*value*/)
 {
     if (m_updateLock || m_scene == NULL)
         return;
@@ -245,12 +255,41 @@ void CNodeEdgePropertiesUI::on_NodeSize_valueChanged(int value)
     if (nodes.isEmpty())
         return;
 
+	ui->NodeSizeX->blockSignals(true);
+	ui->NodeSizeY->blockSignals(true);
+
+	if (ui->NodeSizeSwitch->isChecked())
+		ui->NodeSizeY->setValue(ui->NodeSizeX->value());
+
     for (auto node: nodes)
     {
-        node->setAttribute("size", value);
+        node->setAttribute("size", QSize(ui->NodeSizeX->value(), ui->NodeSizeY->value()));
     }
 
+	ui->NodeSizeX->blockSignals(false);
+	ui->NodeSizeY->blockSignals(false);
+
     m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_NodeSizeY_valueChanged(int value)
+{
+	on_NodeSizeX_valueChanged(value);
+}
+
+
+void CNodeEdgePropertiesUI::on_NodeSizeSwitch_toggled(bool on)
+{
+	ui->NodeSizeY->setEnabled(!on);
+
+	if (on)
+	{
+		ui->NodeSizeY->setValue(ui->NodeSizeX->value());
+		ui->NodeSizeX->setFocus();
+	}
+	else
+		ui->NodeSizeY->setFocus();
 }
 
 
@@ -317,6 +356,60 @@ _again:
 
     nodes.first()->setId(newId);
     m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_StrokeColor_activated(const QColor &color)
+{
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CNode*> nodes = m_scene->getSelectedNodes();
+	if (nodes.isEmpty())
+		return;
+
+	for (auto node : nodes)
+	{
+		node->setAttribute("stroke.color", color);
+	}
+
+	m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_StrokeStyle_activated(QVariant data)
+{
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CNode*> nodes = m_scene->getSelectedNodes();
+	if (nodes.isEmpty())
+		return;
+
+	for (auto node : nodes)
+	{
+		node->setAttribute("stroke.style", data);
+	}
+
+	m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_StrokeSize_valueChanged(double value)
+{
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CNode*> nodes = m_scene->getSelectedNodes();
+	if (nodes.isEmpty())
+		return;
+
+	for (auto node : nodes)
+	{
+		node->setAttribute("stroke.size", value);
+	}
+
+	m_scene->addUndoState();
 }
 
 
