@@ -50,6 +50,7 @@ private Q_SLOTS:
 	void unzoom();
 	void resetZoom();
 
+	void sceneCrop();
     void sceneOptions();
 
     void onNavigatorShown();

@@ -37,3 +37,6 @@ Makefile*
 # QtCtreator CMake
 CMakeLists.txt.user*
 
+/code/3rdParty/qsint-properties
+/_builds_qvge_msvc
+/code/makevc.bat

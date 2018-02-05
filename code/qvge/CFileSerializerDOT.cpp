@@ -165,6 +165,21 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		ts << ",fontname = \"" << nodeAttrs["label.font"].value<QFont>().family() << "\"\n";
 		nodeAttrs.remove("label.font");
 	}
+
+	if (nodeAttrs.contains("stroke.color")) {
+		ts << ",color = \"" << nodeAttrs["stroke.color"].toString() << "\"\n";
+		nodeAttrs.remove("stroke.color");
+	}
+
+	if (nodeAttrs.contains("stroke.size")) {
+		ts << ",penwidth = \"" << nodeAttrs["stroke.size"].toString() << "\"\n";
+		nodeAttrs.remove("stroke.size");
+	}
+
+	if (nodeAttrs.contains("stroke.style")) {
+		ts << ",style = \"" << nodeAttrs["stroke.style"].toString() << "\"\n";
+		nodeAttrs.remove("stroke.style");
+	}
 	
 	// custom attrs
 	for (auto it = nodeAttrs.constBegin(); it != nodeAttrs.constEnd(); ++it)

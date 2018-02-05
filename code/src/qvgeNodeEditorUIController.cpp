@@ -145,6 +145,13 @@ void qvgeNodeEditorUIController::createMenus()
 	unlinkAction->setStatusTip(tr("Unlink selected nodes"));
 	connect(unlinkAction, &QAction::triggered, m_editorScene, &CNodeEditorScene::onActionUnlink);
 
+	// scene actions
+	editMenu->addSeparator();
+
+	QAction *sceneCropAction = editMenu->addAction(QIcon(":/Icons/Crop"), tr("&Crop to contents..."));
+	sceneCropAction->setStatusTip(tr("Crop document to contents"));
+	connect(sceneCropAction, &QAction::triggered, this, &qvgeNodeEditorUIController::sceneCrop);
+
 	// scene options
 	editMenu->addSeparator();
 
@@ -351,6 +358,19 @@ void qvgeNodeEditorUIController::unzoom()
 void qvgeNodeEditorUIController::resetZoom()
 {
 	m_editorView->zoomTo(1.0);
+}
+
+
+void qvgeNodeEditorUIController::sceneCrop()
+{
+	QRectF itemsRect = m_editorScene->itemsBoundingRect().adjusted(-20, -20, 20, 20);;
+	if (itemsRect == m_editorScene->sceneRect())
+		return;
+
+	// update scene rect
+	m_editorScene->setSceneRect(itemsRect);
+
+	m_editorScene->addUndoState();
 }
 
 
