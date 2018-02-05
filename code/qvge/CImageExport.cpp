@@ -10,6 +10,7 @@ It can be used freely, maintaining the information above.
 #include <QImageWriter>
 #include <QFileDialog> 
 #include <QPainter> 
+#include <QMap> 
 
 #include "CImageExport.h"
 #include "CUtils.h"
@@ -17,16 +18,58 @@ It can be used freely, maintaining the information above.
 
 bool CImageExport::write(/*const*/ CEditorScene &scene, const QString &startPath)
 {
-	QList<QByteArray> formats = QImageWriter::supportedImageFormats();
+	static QList<QByteArray> formats = QImageWriter::supportedImageFormats();
 	if (formats.isEmpty())
 		return false;
 
-	QString filter;
+	static QMap<QByteArray, QString> formatNames = { 
+		{ "bmp", "Windows Bitmap (*.bmp)" },
+		{ "ico", "Windows Icon (*.ico | *.cur)" },
+		{ "gif", "Graphic Interchange Format (*.gif)" },
+		{ "jpg", "Joint Photographic Experts Group (*.jpg | *.jpeg)" },
+		{ "png", "Portable Network Graphics (*.png)" },
+		{ "pbm", "Portable Bitmap (*.pbm)" },
+		{ "pgm", "Portable Graymap (*.pgm)" },
+		{ "ppm", "Portable Pixmap (*.ppm)" },
+		{ "svg", "Scalable Vector Graphics (*.svg)" },
+		{ "tif", "Tagged Image File Format (*.tif | *.tiff)" },
+		{ "xbm", "X11 Bitmap (*.xbm)" },
+		{ "xpm", "X11 Pixmap (*.xpm)" },
+		{ "wbmp", "Wireless Bitmap (*.wbmp)" },
+		{ "webp", "WebP (*.webp)" },
+		{ "icns", "Apple Icon Image (*.icns)"}
+	};
 
-	for (auto format : formats)
-		filter += format + "(*." + format + ");;";
+	static QMap<QByteArray, QByteArray> recodeMap = {
+		{ "jpeg", "jpg" },
+		{ "tiff", "tif" },
+		{ "cur", "ico" }
+	};
 
-	filter.chop(2);
+	static QString filter;
+	if (filter.isEmpty())
+	{
+		QSet<QByteArray> usedFormats;
+
+		for (auto format : formats)
+		{
+			auto suffix = format.toLower();
+			if (recodeMap.contains(suffix))
+				usedFormats << recodeMap[suffix];
+			else
+				usedFormats << suffix;
+		}
+
+		for (auto format: usedFormats)
+		{
+			if (formatNames.contains(format))
+				filter += formatNames[format] + ";;";
+			else
+				filter += format + " (*." + format + ");;";
+		}
+
+		filter.chop(2);
+	}
 
 	QString fileName = CUtils::cutLastSuffix(startPath);
 	QString selectedFilter;
