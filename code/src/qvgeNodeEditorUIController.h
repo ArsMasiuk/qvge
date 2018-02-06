@@ -19,6 +19,7 @@ class qvgeMainWindow;
 
 class CNodeEditorScene;
 class CEditorView;
+class IFileSerializer;
 
 
 class qvgeNodeEditorUIController : public QObject 
@@ -38,6 +39,7 @@ public:
     void onNewDocumentCreated();
 
 private Q_SLOTS:
+	bool doExport(const IFileSerializer &exporter);
 	void exportFile();
 	void exportPDF();
 	void exportDOT();
@@ -65,24 +67,28 @@ private:
 	CNodeEditorScene *m_editorScene;
 	CEditorView *m_editorView;
 
-    class COGDFLayoutUIController *m_ogdfController;
-
     class QSint::Slider2d *m_sliderView;
 
     QLabel *m_statusLabel;
+
+	QString m_lastExportPath;
 
 	QAction *cutAction;
 	QAction *copyAction;
 	QAction *pasteAction;
 	QAction *delAction;
+	QAction *linkAction;
 	QAction *unlinkAction;
 
 	QAction *zoomAction;
 	QAction *unzoomAction;
-	QAction *resetZoomAction, *resetZoomAction2;
+	QAction *resetZoomAction;
+	QAction *resetZoomAction2;
 	QAction *fitZoomAction;
 
     QAction *gridAction;
     QAction *gridSnapAction;
     QAction *actionShowLabels;
+
+	class COGDFLayoutUIController *m_ogdfController;
 };

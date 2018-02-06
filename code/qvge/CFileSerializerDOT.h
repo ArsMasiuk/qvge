@@ -9,8 +9,11 @@ It can be used freely, maintaining the information above.
 
 #pragma once
 
-#include "qvge/IFileSerializer.h"
+#include <QMap>
+#include <QByteArray>
+#include <QVariant>
 
+#include "qvge/IFileSerializer.h"
 
 class CNode;
 class CConnection;
@@ -27,7 +30,7 @@ public:
 	}
 
 	virtual QString filters() const {
-		return "*.gv;*.dot";
+		return "DOT/GraphViz graphs (*.gv *.dot)";
 	}
 
 	virtual QString defaultFileExtension() const {
@@ -46,7 +49,7 @@ public:
 		return true;
 	}
 
-	virtual bool save(const QString& fileName, const CEditorScene& scene) const;
+	virtual bool save(const QString& fileName, CEditorScene& scene) const;
 
 private:
 	void doWriteNodeDefaults(QTextStream& ts, const CEditorScene& scene) const;

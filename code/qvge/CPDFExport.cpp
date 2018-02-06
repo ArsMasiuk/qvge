@@ -12,30 +12,16 @@ It can be used freely, maintaining the information above.
 #include <QPrinter> 
 
 #include "CPDFExport.h"
+#include "CEditorScene.h"
 
 
-bool CPDFExport::write(/*const*/ CEditorScene &scene, const QString &startPath)
+bool CPDFExport::save(const QString& fileName, CEditorScene& scene) const
 {
-	QFileInfo fi(startPath);
-	QString fileName(startPath);
-	if (int ss = fi.completeSuffix().size()) {
-		fileName.chop(ss + 1); // .suffix
-	}
-	fileName += ".pdf";
-
-	QString selectedFilter;
-
-	QString path = QFileDialog::getSaveFileName(NULL,
-		QObject::tr("Export as PDF"), fileName, "*.pdf", &selectedFilter);
-
-	if (path.isEmpty())
-		return false;
-
 	QPrinter printer(QPrinter::HighResolution);
 	printer.setPageSize(QPrinter::A4);
 	printer.setOrientation(QPrinter::Portrait);
 	printer.setOutputFormat(QPrinter::PdfFormat);
-	printer.setOutputFileName(path);
+	printer.setOutputFileName(fileName);
 
 	QPainter painter(&printer);
 	painter.setRenderHint(QPainter::Antialiasing);

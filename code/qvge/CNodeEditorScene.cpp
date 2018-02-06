@@ -668,6 +668,22 @@ void CNodeEditorScene::prefetchSelection()
 
 // menu & actions
 
+void CNodeEditorScene::onActionLink()
+{
+	QList<CNode*> nodes = getSelectedItems<CNode>(true);
+	if (nodes.count() < 2)
+		return;
+
+	auto baseNode = nodes.takeFirst();
+	for (auto node : nodes)
+	{
+		baseNode->merge(node);
+	}
+
+	addUndoState();
+}
+
+
 void CNodeEditorScene::onActionUnlink()
 {
     QList<CNode*> nodes = getSelectedItems<CNode>(true);
@@ -792,7 +808,11 @@ bool CNodeEditorScene::populateMenu(QMenu& menu, QGraphicsItem* item, const QLis
 	// add default node actions
 	menu.addSeparator();
 
-	bool nodesSelected = getSelectedItems<CNode>(true).size();
+	int nodesCount = getSelectedItems<CNode>(true).size();
+	bool nodesSelected = (nodesCount > 0);
+
+	QAction *linkAction = menu.addAction(tr("Link"), this, SLOT(onActionLink()));
+	linkAction->setEnabled(nodesCount > 1);
 
 	QAction *unlinkAction = menu.addAction(tr("Unlink"), this, SLOT(onActionUnlink()));
 	unlinkAction->setEnabled(nodesSelected);

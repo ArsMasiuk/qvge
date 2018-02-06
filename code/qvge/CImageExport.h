@@ -11,11 +11,34 @@ It can be used freely, maintaining the information above.
 
 #include <QString>
 
-#include "CEditorScene.h"
+#include "qvge/IFileSerializer.h"
 
 
-class CImageExport
+class CImageExport : public IFileSerializer
 {
 public:
-	static bool write(/*const*/ CEditorScene &scene, const QString &startPath = "");
+	// reimp
+	virtual QString description() const {
+		return "Image Format";
+	}
+
+	virtual QString filters() const;
+
+	virtual QString defaultFileExtension() const {
+		return "bmp";
+	}
+
+	virtual bool loadSupported() const {
+		return false;
+	}
+
+	virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/) const {
+		return false;
+	}
+
+	virtual bool saveSupported() const {
+		return true;
+	}
+
+	virtual bool save(const QString& fileName, CEditorScene& scene) const;
 };

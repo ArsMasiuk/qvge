@@ -141,6 +141,10 @@ void qvgeNodeEditorUIController::createMenus()
 
 	editMenu->addSeparator();
 
+	linkAction = editMenu->addAction(QIcon(":/Icons/Link"), tr("&Link"));
+	linkAction->setStatusTip(tr("Link selected nodes together"));
+	connect(linkAction, &QAction::triggered, m_editorScene, &CNodeEditorScene::onActionLink);
+
 	unlinkAction = editMenu->addAction(QIcon(":/Icons/Unlink"), tr("&Unlink"));
 	unlinkAction->setStatusTip(tr("Unlink selected nodes"));
 	connect(unlinkAction, &QAction::triggered, m_editorScene, &CNodeEditorScene::onActionUnlink);
@@ -148,8 +152,8 @@ void qvgeNodeEditorUIController::createMenus()
 	// scene actions
 	editMenu->addSeparator();
 
-	QAction *sceneCropAction = editMenu->addAction(QIcon(":/Icons/Crop"), tr("&Crop to contents..."));
-	sceneCropAction->setStatusTip(tr("Crop document to contents"));
+	QAction *sceneCropAction = editMenu->addAction(QIcon(":/Icons/Crop"), tr("&Crop Area"));
+	sceneCropAction->setStatusTip(tr("Crop document area to contents"));
 	connect(sceneCropAction, &QAction::triggered, this, &qvgeNodeEditorUIController::sceneCrop);
 
 	// scene options
@@ -324,6 +328,7 @@ void qvgeNodeEditorUIController::onSelectionChanged()
 	delAction->setEnabled(selectionCount > 0);
 
 	auto nodes = m_editorScene->getSelectedItems<CNode>();
+	linkAction->setEnabled(nodes.size() > 1);
 	unlinkAction->setEnabled(nodes.size() > 0);
 }
 
@@ -388,54 +393,53 @@ void qvgeNodeEditorUIController::sceneOptions()
 }
 
 
-void qvgeNodeEditorUIController::exportFile()
+bool qvgeNodeEditorUIController::doExport(const IFileSerializer &exporter)
 {
-	if (CImageExport::write(*m_editorScene, m_parent->getCurrentFileName()))
+	QString fileName = CUtils::cutLastSuffix(m_parent->getCurrentFileName());
+	if (fileName.isEmpty())
+		fileName = m_lastExportPath;
+	else
+		fileName = QFileInfo(m_lastExportPath).absolutePath() + "/" + QFileInfo(fileName).fileName();
+
+	QString path = QFileDialog::getSaveFileName(NULL,
+		QObject::tr("Export as") + " " + exporter.description(),
+		fileName,
+		exporter.filters()
+	);
+
+	if (path.isEmpty())
+		return false;
+
+	m_lastExportPath = path;
+
+	if (exporter.save(path, *m_editorScene))
 	{
-		m_parent->statusBar()->showMessage(tr("Export successful"));
+		m_parent->statusBar()->showMessage(tr("Export successful (%1)").arg(path));
+		return true;
 	}
 	else
 	{
-		m_parent->statusBar()->showMessage(tr("Export failed"));
+		m_parent->statusBar()->showMessage(tr("Export failed (%1)").arg(path));
+		return false;
 	}
+}
+
+
+void qvgeNodeEditorUIController::exportFile()
+{
+	doExport(CImageExport());
 }
 
 
 void qvgeNodeEditorUIController::exportDOT()
 {
-	CFileSerializerDOT dot;
-
-	QString fileName = CUtils::cutLastSuffix(m_parent->getCurrentFileName());
-
-	QString path = QFileDialog::getSaveFileName(NULL,
-		QObject::tr("Export as GraphViz graph"), 
-		fileName,
-		dot.description() + " (" + dot.filters() + ")");
-
-	if (path.isEmpty())
-		return;
-
-	if (dot.save(path, *m_editorScene))
-	{
-		m_parent->statusBar()->showMessage(tr("Export successful"));
-	}
-	else
-	{
-		m_parent->statusBar()->showMessage(tr("Export failed"));
-	}
+	doExport(CFileSerializerDOT());
 }
 
 
 void qvgeNodeEditorUIController::exportPDF()
 {
-	if (CPDFExport::write(*m_editorScene, m_parent->getCurrentFileName()))
-	{
-		m_parent->statusBar()->showMessage(tr("Export successful"));
-	}
-	else
-	{
-		m_parent->statusBar()->showMessage(tr("Export failed"));
-	}
+	doExport(CPDFExport());
 }
 
 
@@ -449,6 +453,9 @@ void qvgeNodeEditorUIController::doReadSettings(QSettings& settings)
 	int cacheRam = QPixmapCache::cacheLimit();
 	cacheRam = settings.value("cacheRam", cacheRam).toInt();
 	QPixmapCache::setCacheLimit(cacheRam);
+
+
+	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
 }
 
 
@@ -459,6 +466,9 @@ void qvgeNodeEditorUIController::doWriteSettings(QSettings& settings)
 
 	int cacheRam = QPixmapCache::cacheLimit();
 	settings.setValue("cacheRam", cacheRam);
+
+
+	settings.setValue("lastExportPath", m_lastExportPath);
 }
 
 

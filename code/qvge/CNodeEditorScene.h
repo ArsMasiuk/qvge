@@ -45,6 +45,7 @@ public:
     const QList<CConnection*>& getSelectedEdges();
 
 public Q_SLOTS:
+	virtual void onActionLink();
 	virtual void onActionUnlink();
 	virtual void onActionNodeColor();
 	virtual void onActionEdgeColor();

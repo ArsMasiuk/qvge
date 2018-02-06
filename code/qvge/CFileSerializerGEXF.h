@@ -12,6 +12,9 @@ It can be used freely, maintaining the information above.
 #include "IFileSerializer.h"
 
 #include <QtXml/QDomDocument>
+#include <QByteArray>
+#include <QMap>
+#include <QVariant>
 
 class CNode;
 
@@ -43,7 +46,7 @@ public:
 		return true;
 	}
 
-	virtual bool save(const QString& /*fileName*/, const CEditorScene& /*scene*/) const;
+	virtual bool save(const QString& /*fileName*/, CEditorScene& /*scene*/) const;
 
 private:
     struct AttrInfo {
