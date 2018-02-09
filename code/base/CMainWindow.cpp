@@ -143,6 +143,13 @@ void CMainWindow::processParams(int argc, char *argv[])
         }
     }
 
+	// assotiated file?
+	if (argc == 2)
+	{
+		doOpenDocument(argv[1]);
+		return;
+	}
+
 	onCurrentFileChanged();
 }
 
