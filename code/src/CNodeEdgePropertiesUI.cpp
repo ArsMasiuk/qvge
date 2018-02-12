@@ -133,7 +133,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 		ui->NodeSizeY->setValue(size.height());
 
 		ui->StrokeColor->setColor(node->getAttribute("stroke.color").value<QColor>());
-		ui->StrokeStyle->selectAction(node->getAttribute("stroke.style"));
+		ui->StrokeStyle->setPenStyle(CUtils::textToPenStyle(node->getAttribute("stroke.style").toString()));
 		ui->StrokeSize->setValue(node->getAttribute("stroke.size").toDouble());
     }
 
@@ -164,7 +164,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 
         ui->EdgeColor->setColor(edge->getAttribute("color").value<QColor>());
         ui->EdgeWeight->setValue(edge->getAttribute("weight").toDouble());
-        ui->EdgeStyle->selectAction(edge->getAttribute("style"));
+		ui->EdgeStyle->setPenStyle(CUtils::textToPenStyle(edge->getAttribute("style").toString()));
 		ui->EdgeDirection->selectAction(edge->getAttribute("direction"));
     }
 
@@ -386,9 +386,11 @@ void CNodeEdgePropertiesUI::on_StrokeStyle_activated(QVariant data)
 	if (nodes.isEmpty())
 		return;
 
+	QString style = CUtils::penStyleToText(data.toInt());
+
 	for (auto node : nodes)
 	{
-		node->setAttribute("stroke.style", data);
+		node->setAttribute("stroke.style", style);
 	}
 
 	m_scene->addUndoState();
@@ -458,9 +460,11 @@ void CNodeEdgePropertiesUI::on_EdgeStyle_activated(QVariant data)
     if (edges.isEmpty())
         return;
 
+	QString style = CUtils::penStyleToText(data.toInt());
+
     for (auto edge: edges)
     {
-        edge->setAttribute("style", data);
+		edge->setAttribute("style", style);
     }
 
     m_scene->addUndoState();

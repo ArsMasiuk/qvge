@@ -11,6 +11,8 @@ namespace QSint
 QSplitButton::QSplitButton(QWidget *parent) : QToolButton(parent)
 {
     connect(this, SIGNAL(triggered(QAction*)), this, SLOT(onAction(QAction*)));
+
+	setMenu(m_localMenu = new QMenu());
 }
 
 
@@ -18,31 +20,31 @@ QAction* QSplitButton::addAction(const QString &text, const QVariant &v)
 {
     QAction* act = new QAction(text, parent());
     act->setData(v);
-    QToolButton::addAction(act);
+
+	m_localMenu->addAction(act);
+
+	if (m_localMenu->actions().count() == 1)
+		setDefaultAction(act);
+
     return act;
 }
 
 
 QAction* QSplitButton::addAction(const QIcon &icon, const QString &text, const QVariant &v)
 {
-    QAction* act = new QAction(icon, text, parent());
-    act->setData(v);
-    QToolButton::addAction(act);
+	QAction* act = addAction(text, v);
+	act->setIcon(icon);
     return act;
 }
 
 
 QAction* QSplitButton::selectAction(const QVariant &data)
 {
-    for (auto act: actions())
+    for (auto act: m_localMenu->actions())
     {
         if (act->data() == data && act->isEnabled() && act->isVisible())
         {
             setDefaultAction(act);
-
-            if (menu())
-                menu()->setDefaultAction(act);
-
             return act;
         }
     }
@@ -54,17 +56,13 @@ QAction* QSplitButton::selectAction(const QVariant &data)
 
 QAction *QSplitButton::selectActionByIndex(int index)
 {
-    if (index >= 0 && index < actions().count())
+    if (index >= 0 && index < m_localMenu->actions().count())
     {
-        auto act = actions()[index];
+        auto act = m_localMenu->actions()[index];
 
         if (act->isEnabled() && act->isVisible())
         {
             setDefaultAction(act);
-
-            if (menu())
-                menu()->setDefaultAction(act);
-
             return act;
         }
     }
@@ -81,15 +79,11 @@ void QSplitButton::actionEvent(QActionEvent *event)
     // set default action
     if (defaultAction() == NULL)
     {
-        for (auto act: actions())
+        for (auto act: m_localMenu->actions())
         {
             if (act->isEnabled() && act->isVisible())
             {
                 setDefaultAction(act);
-
-                if (menu())
-                    menu()->setDefaultAction(act);
-
                 return;
             }
         }
@@ -101,10 +95,20 @@ void QSplitButton::onAction(QAction* act)
 {
     setDefaultAction(act);
 
-    if (menu())
-        menu()->setDefaultAction(act);
-
     Q_EMIT activated(act->data());
+}
+
+
+void QSplitButton::setDefaultAction(QAction* act)
+{
+	// prevent status tip
+	QString oldStatusTip = statusTip();
+
+	QToolButton::setDefaultAction(act);
+	m_localMenu->setDefaultAction(act);
+
+	if (statusTip().isEmpty())
+		setStatusTip(oldStatusTip);
 }
 
 

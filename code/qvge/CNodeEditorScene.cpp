@@ -39,6 +39,15 @@ void CNodeEditorScene::initialize()
 {
 	Super::initialize();
 
+
+	// common constrains
+	static CAttributeConstrainsList *edgeStyles = new CAttributeConstrainsList();
+	if (edgeStyles->ids.isEmpty()) {
+		edgeStyles->names << "None" << "Solid" << "Dots" << "Dashes" << "Dash-Dot" << "Dash-Dot-Dot";
+		edgeStyles->ids << "none" << "solid" << "dotted" << "dashed" << "dashdot" << "dashdotdot";
+	}
+
+
 	// default node attr
     CAttribute nodeAttr("color", "Color", QColor(Qt::magenta));
 	setClassAttribute("node", nodeAttr);
@@ -51,6 +60,11 @@ void CNodeEditorScene::initialize()
 	//setClassAttributeConstrains("node", "size", new CDoubleConstrains(0.1, 1000.0));
 	//createClassAttribute("node", "size", "Size", 11.0, new CDoubleConstrains(0.1, 1000.0));
 	createClassAttribute("node", "size", "Size", QSizeF(11.0, 11.0));
+
+	createClassAttribute("node", "stroke.style", "Stroke Style", "solid");
+	setClassAttributeConstrains("node", "stroke.style", edgeStyles);
+	createClassAttribute("node", "stroke.size", "Stroke Size", 1.0);
+	createClassAttribute("node", "stroke.color", "Stroke Color", QColor(Qt::black));
 
     CAttribute posAttr("pos", "Position", QPointF());
 	posAttr.noDefault = true;
@@ -70,21 +84,22 @@ void CNodeEditorScene::initialize()
     setClassAttribute("edge", styleAttr);
 
 
-	CAttributeConstrainsList *edgeDirections = new CAttributeConstrainsList();
-	edgeDirections->names << "Directed (one end)" << "Mutual (both ends)" << "None (no ends)";
-	edgeDirections->ids << "directed" << "mutual" << "undirected";
-	edgeDirections->icons << QIcon(":/Icons/Edge-Directed") << QIcon(":/Icons/Edge-Mutual") << QIcon(":/Icons/Edge-Undirected");
+	static CAttributeConstrainsList *edgeDirections = new CAttributeConstrainsList();
+	if (edgeDirections->ids.isEmpty()) {
+		edgeDirections->names << "Directed (one end)" << "Mutual (both ends)" << "None (no ends)";
+		edgeDirections->ids << "directed" << "mutual" << "undirected";
+		edgeDirections->icons << QIcon(":/Icons/Edge-Directed") << QIcon(":/Icons/Edge-Mutual") << QIcon(":/Icons/Edge-Undirected");
+	}
 	setClassAttributeConstrains("edge", "direction", edgeDirections);
 
-	CAttributeConstrainsList *edgeStyles = new CAttributeConstrainsList();
-	edgeStyles->names << "Solid" << "Dots" << "Dashes";
-	edgeStyles->ids << "solid" << "dotted" << "dashed";
 	setClassAttributeConstrains("edge", "style", edgeStyles);
 
-	CAttributeConstrainsList *nodeShapes = new CAttributeConstrainsList();
-	nodeShapes->names << "Dics" << "Square" << "Triangle (up)" << "Triangle (down)" << "Diamond";
-	nodeShapes->ids << "disc" << "square" << "triangle" << "triangle2" << "diamond";
-	nodeShapes->icons << QIcon(":/Icons/Node-Disc") << QIcon(":/Icons/Node-Square") << QIcon(":/Icons/Node-Triangle") << QIcon(":/Icons/Node-Triangle-Down") << QIcon(":/Icons/Node-Diamond");
+	static CAttributeConstrainsList *nodeShapes = new CAttributeConstrainsList();
+	if (nodeShapes->ids.isEmpty()) {
+		nodeShapes->names << "Dics" << "Square" << "Triangle (up)" << "Triangle (down)" << "Diamond";
+		nodeShapes->ids << "disc" << "square" << "triangle" << "triangle2" << "diamond";
+		nodeShapes->icons << QIcon(":/Icons/Node-Disc") << QIcon(":/Icons/Node-Square") << QIcon(":/Icons/Node-Triangle") << QIcon(":/Icons/Node-Triangle-Down") << QIcon(":/Icons/Node-Diamond");
+	}
 	setClassAttributeConstrains("node", "shape", nodeShapes);
 }
 

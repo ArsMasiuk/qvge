@@ -24,7 +24,8 @@ public:
 	static QString variantToText(const QVariant& v);
     static QVariant textToVariant(const QString& text, int type = QVariant::String);
 
-    static int textToPenStyle(const QString& text, int def = Qt::NoPen);
+    static Qt::PenStyle textToPenStyle(const QString& text, Qt::PenStyle def = Qt::NoPen);
+	static QString penStyleToText(int style);
 
 	template<class X>
 	static void insertUnique(X& dest, const X& from);

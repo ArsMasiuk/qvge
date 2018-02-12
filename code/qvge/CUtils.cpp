@@ -81,15 +81,35 @@ QString CUtils::variantToText(const QVariant& v)
 }
 
 
-int CUtils::textToPenStyle(const QString& text, int def)
+Qt::PenStyle CUtils::textToPenStyle(const QString& text, Qt::PenStyle def)
 {
-	static QMap<QString, int> s_penStyles =
-	{ { "none",0}, { "solid",1 }, { "dashed",2 },{ "dotted",3 } ,{ "dashdot",4 } ,{ "dashdotdot",5 } };
+	static QMap<QString, Qt::PenStyle> s_penStyles =
+	{	{ "none", Qt::NoPen }, 
+		{ "solid", Qt::SolidLine }, 
+		{ "dashed", Qt::DashLine },
+		{ "dotted", Qt::DotLine },
+		{ "dashdot", Qt::DashDotLine },
+		{ "dashdotdot", Qt::DashDotDotLine } 
+	};
 
 	if (s_penStyles.contains(text))
 		return s_penStyles[text];
 	else
         return def;
+}
+
+
+QString CUtils::penStyleToText(int style)
+{
+	switch (style)
+	{
+		case Qt::SolidLine:         return QStringLiteral("solid");
+		case Qt::DashLine:          return QStringLiteral("dashed");
+		case Qt::DotLine:           return QStringLiteral("dotted");
+		case Qt::DashDotLine:       return QStringLiteral("dashdot");
+		case Qt::DashDotDotLine:    return QStringLiteral("dashdotdot");
+		default:					return QStringLiteral("none");
+	}
 }
 
 

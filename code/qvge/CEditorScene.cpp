@@ -84,7 +84,7 @@ void CEditorScene::initialize()
 
 	m_classAttributes.clear();
 	m_classAttributesVis.clear();
-	qDeleteAll(m_classAttributesConstrains);
+	//qDeleteAll(m_classAttributesConstrains);
 	m_classAttributesConstrains.clear();
 
 	// default item attrs
@@ -659,8 +659,8 @@ void CEditorScene::setClassAttributeConstrains(const QByteArray& classId, const 
 	ClassAttrIndex index(classId, attrId);
 
 	// do we need to clean up?
-	if (m_classAttributesConstrains.contains(index))
-		delete m_classAttributesConstrains[index];
+	//if (m_classAttributesConstrains.contains(index))
+	//	delete m_classAttributesConstrains[index];
 
 	if (cptr)
 		m_classAttributesConstrains[index] = cptr;
