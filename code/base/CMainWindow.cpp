@@ -62,6 +62,7 @@ void CMainWindow::addDocument(const CDocument& doc)
 void CMainWindow::init(int argc, char *argv[])
 {
     createMainMenu();
+
     createFileToolbar();
 
 	createWindowsMenu();

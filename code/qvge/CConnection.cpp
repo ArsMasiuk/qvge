@@ -14,6 +14,7 @@ It can be used freely, maintaining the information above.
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QDebug>
+#include <QGuiApplication>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -177,7 +178,16 @@ void CConnection::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem
 
 QLineF CConnection::calculateArrowLine(const QPainterPath &path, bool first, const QLineF &direction) const
 {
-	qreal len = path.length();
+	// optimization: disable during drag or pan
+	Qt::MouseButtons buttons = QGuiApplication::mouseButtons();
+	if ((buttons & Qt::LeftButton) || (buttons & Qt::RightButton))
+		return direction;
+
+	// optimization: disable during zoom
+	Qt::KeyboardModifiers keys = QGuiApplication::keyboardModifiers();
+	if (keys & Qt::ControlModifier)
+		return direction;
+
 
 	if (first && m_firstNode)
 	{
@@ -187,6 +197,7 @@ QLineF CConnection::calculateArrowLine(const QPainterPath &path, bool first, con
 	}
 	else if (!first && m_lastNode)
 	{
+		qreal len = path.length();
 		qreal shift = m_lastNode->getDistanceToLineEnd(direction);
 		qreal arrowStart = path.percentAtLength(len - shift - ARROW_SIZE);
 		return QLineF(path.pointAtPercent(arrowStart), direction.p2());
