@@ -93,7 +93,7 @@ bool CConnection::removeAttribute(const QByteArray& attrId)
 
 	if (attrId == "direction")
 	{
-		updateArrowFlags(getAttribute("direction").toString());
+		updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
 	}
 
 	if (res) update();
@@ -107,7 +107,7 @@ void CConnection::updateCachedItems()
 {
 	Super::updateCachedItems();
 
-	updateArrowFlags(getAttribute("direction").toString());
+	updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
 }
 
 
@@ -147,18 +147,18 @@ void CConnection::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem
 {
 	// weight
 	bool ok = false;
-	double weight = qMax(0.1, getAttribute("weight").toDouble(&ok));
+	double weight = qMax(0.1, getAttribute(QByteArrayLiteral("weight")).toDouble(&ok));
 	if (!ok) weight = 1;
 	if (weight > 10) weight = 10;	// safety
 
 	// line style
-	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute("style").toString(), Qt::SolidLine);
+	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("style")).toString(), Qt::SolidLine);
 
 	// color & selection
 	bool isSelected = (option->state & QStyle::State_Selected);
     if (isSelected)
     {
-		QPen p(QColor("orange"), weight + 1.0, penStyle, Qt::FlatCap, Qt::MiterJoin);
+		QPen p(QColor(QStringLiteral("orange")), weight + 1.0, penStyle, Qt::FlatCap, Qt::MiterJoin);
 		//p.setCosmetic(true);
 
         painter->setPen(p);
@@ -166,7 +166,7 @@ void CConnection::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem
     else
 	{
 		// get color (to optimize!)
-		QColor color = getAttribute("color").value<QColor>();
+		QColor color = getAttribute(QByteArrayLiteral("color")).value<QColor>();
 
 		QPen p(color, weight, penStyle, Qt::FlatCap, Qt::MiterJoin);
 		//p.setCosmetic(true);

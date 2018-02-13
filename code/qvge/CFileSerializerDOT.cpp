@@ -129,8 +129,13 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 {
 	// standard attrs
 	if (nodeAttrs.contains("color")) {
-		ts << ",fillcolor = \"" << nodeAttrs["color"].toString() << "\"";
-		ts << ",style = \"filled\"\n";
+		QColor c(nodeAttrs["color"].value<QColor>());
+		if (c.isValid())
+		{
+			ts << ",fillcolor = \"" << c.name() << "\"";
+			ts << ",style = \"filled\"\n";
+		}
+
 		nodeAttrs.remove("color");
 	}
 

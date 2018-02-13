@@ -1,6 +1,12 @@
+QVGE 0.4.1 (beta)
 -------------------------------------------------------------------------------
-- fixed issue with opening of associated files
 - mouse navigation speedup
+- more precise stroke & edge width (resolution of 0.1 px)
+- nodes can have no background (i.e. be transparent)
+
+- fixed potential memory leaks & crash when setting attributes constrains
+- fixed some default node & edge attributes
+- (Windows) fixed issue with opening of associated files by double click
 
 
 QVGE 0.4.0 (beta)
@@ -17,6 +23,7 @@ QVGE 0.4.0 (beta)
 - fixed issue when a node was sometimes created on a wrong place
 - fixed issue with cancelling of edge creation by right mouse button
 - fixed scene panning by right mouse button when initially clicked on an item
+
 
 QVGE 0.3.0 (alpha)
 -------------------------------------------------------------------------------- 

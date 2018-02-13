@@ -542,20 +542,22 @@ void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 
 	// get color (to optimize!)
-	QVariant color = getAttribute("color");
-	if (color.canConvert<QColor>())
-		painter->setBrush(color.value<QColor>());
+	QColor color = getAttribute(QByteArrayLiteral("color")).value<QColor>();
+	if (color.isValid())
+		painter->setBrush(color);
 	else
-		painter->setBrush(Qt::cyan);
+		painter->setBrush(Qt::NoBrush);
 
 
-	QColor strokeColor = isSelected ? QColor("orange") : getAttribute("stroke.color").value<QColor>();
+	QColor strokeColor = isSelected ? 
+		QColor(QStringLiteral("orange")) : 
+		getAttribute(QByteArrayLiteral("stroke.color")).value<QColor>();
 	
-	qreal strokeSize = getAttribute("stroke.size").toDouble();
-	strokeSize = qMax(1.0, strokeSize);
+	qreal strokeSize = getAttribute(QByteArrayLiteral("stroke.size")).toDouble();
+	strokeSize = qMax(0.1, strokeSize);
 	if (isSelected) strokeSize++;
 
-	int strokeStyle = CUtils::textToPenStyle(getAttribute("stroke.style").toString(), Qt::SolidLine);
+	int strokeStyle = CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("stroke.style")).toString(), Qt::SolidLine);
 
 	painter->setPen(QPen(strokeColor, strokeSize, (Qt::PenStyle)strokeStyle));
 

@@ -29,6 +29,7 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 
     ui->NodeColor->setColorScheme(QSint::OpenOfficeColors());
     ui->NodeColor->setColor(Qt::green);
+	ui->NodeColor->enableNoColor(true);
 
     ui->NodeShape->addAction(QIcon(":/Icons/Node-Disc"), tr("Disc"), "disc");
     ui->NodeShape->addAction(QIcon(":/Icons/Node-Square"), tr("Square"), "square");
