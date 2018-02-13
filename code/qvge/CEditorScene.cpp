@@ -10,6 +10,7 @@ It can be used freely, maintaining the information above.
 #include "CEditorScene.h"
 #include "CItem.h"
 #include "CSimpleUndoManager.h"
+#include "CDiffUndoManager.h"
 #include "IContextMenuProvider.h"
 
 #include <QPainter>
@@ -37,8 +38,9 @@ CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent),
     m_doubleClick(false),
     m_startDragItem(NULL),
     m_activeItemFactory(NULL),
-    m_undoManager(new CSimpleUndoManager(*this)),
-    m_menuTriggerItem(NULL),
+    //m_undoManager(new CSimpleUndoManager(*this)),
+	m_undoManager(new CDiffUndoManager(*this)),
+	m_menuTriggerItem(NULL),
     m_draggedItem(NULL),
 	m_dragInProgress(false),
     m_needUpdateItems(true)

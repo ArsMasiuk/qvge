@@ -1,8 +1,9 @@
 QVGE 0.4.1 (beta)
 -------------------------------------------------------------------------------
 - mouse navigation speedup
-- more precise stroke & edge width (resolution of 0.1 px)
+- more precise node outline & edge width (resolution of 0.1 px)
 - nodes can have no background (i.e. be transparent)
+- added cropping scene to contents
 
 - fixed potential memory leaks & crash when setting attributes constrains
 - fixed some default node & edge attributes

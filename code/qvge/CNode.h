@@ -88,6 +88,9 @@ public:
 	// calculates distance to the line's end point (used to draw connections to this item).
 	virtual double getDistanceToLineEnd(const QLineF& line) const;
 
+	// calculates point on the node's outline intersecting with line.
+	virtual QPointF getIntersectionPoint(const QLineF& line) const;
+
 	// callbacks
 	virtual void onConnectionAttach(CConnection *conn);
 	virtual void onConnectionDetach(CConnection *conn);

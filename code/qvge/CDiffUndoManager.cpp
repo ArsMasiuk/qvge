@@ -22,40 +22,68 @@ CDiffUndoManager::CDiffUndoManager(CEditorScene & scene)
 
 void CDiffUndoManager::reset()
 {
-	m_stackIndex = -1;
-	m_stateStack.clear();
+	m_redoStack.clear();
+	m_undoStack.clear();
+	m_redoStackTemp.clear();
+	m_undoStackTemp.clear();
+	m_lastState.clear();
 }
 
 void CDiffUndoManager::addState()
 {
+	// drop temp stacks
+	m_redoStack.clear();
+	m_undoStackTemp.clear();
+
 	// serialize & compress
 	QByteArray snap;
 	QDataStream ds(&snap, QIODevice::WriteOnly);
 	m_scene->storeTo(ds, false);
-	QByteArray compressedSnap = qCompress(snap);
 
-	// push state into stack
-	if (m_stateStack.size() == ++m_stackIndex)
+	// check if 1st store
+	if (m_lastState.isEmpty() && m_undoStack.isEmpty() && m_redoStack.isEmpty())
 	{
-		m_stateStack.append(compressedSnap);
+		m_lastState = snap;
+		return;
 	}
-	else
-	{
-		while (m_stateStack.size() > m_stackIndex)
-			m_stateStack.takeLast();
 
-		m_stateStack.append(compressedSnap);
-	}
+	// push states into stacks
+	int leftDiffIndex = 0;
+	int len = qMin(snap.size(), m_lastState.size());
+	while (leftDiffIndex < len && snap[leftDiffIndex] == m_lastState[leftDiffIndex])
+		++leftDiffIndex;
+
+	int rightDiffIndex1 = m_lastState.size() - 1;
+	int rightDiffIndex2 = snap.size() - 1;
+	while (rightDiffIndex1 >= 0 && rightDiffIndex2 >= 0 
+		&& rightDiffIndex1 > leftDiffIndex && rightDiffIndex2 > leftDiffIndex 
+		&& snap[rightDiffIndex2] == m_lastState[rightDiffIndex1])
+			--rightDiffIndex1, --rightDiffIndex2;
+
+	int len1 = rightDiffIndex1 - leftDiffIndex + 1;
+	int len2 = rightDiffIndex2 - leftDiffIndex + 1;
+
+	Command cUndo = { leftDiffIndex, len2, qCompress(m_lastState.mid(leftDiffIndex, len1)) };
+	Command cRedo = { leftDiffIndex, len1, qCompress(snap.mid(leftDiffIndex, len2)) };
+
+	m_undoStack << cUndo;
+	m_redoStackTemp << cRedo;
+
+	// write last state
+	m_lastState = snap;
 }
 
 void CDiffUndoManager::undo()
 {
 	if (availableUndoCount())
 	{
-		QByteArray &compressedSnap = m_stateStack[--m_stackIndex];
-		QByteArray snap = qUncompress(compressedSnap);
-		QDataStream ds(&snap, QIODevice::ReadOnly);
+		Command cUndo = m_undoStack.takeLast();
+		m_lastState.replace(cUndo.index, cUndo.sizeToReplace, qUncompress(cUndo.data));
+		QDataStream ds(&m_lastState, QIODevice::ReadOnly);
 		m_scene->restoreFrom(ds, false);
+
+		m_redoStack << m_redoStackTemp.takeLast();
+		m_undoStackTemp << cUndo;
 	}
 }
 
@@ -63,19 +91,22 @@ void CDiffUndoManager::redo()
 {
 	if (availableRedoCount())
 	{
-		QByteArray &compressedSnap = m_stateStack[++m_stackIndex];
-		QByteArray snap = qUncompress(compressedSnap);
-		QDataStream ds(&snap, QIODevice::ReadOnly);
+		Command cRedo = m_redoStack.takeLast();
+		m_lastState.replace(cRedo.index, cRedo.sizeToReplace, qUncompress(cRedo.data));
+		QDataStream ds(&m_lastState, QIODevice::ReadOnly);
 		m_scene->restoreFrom(ds, false);
+
+		m_undoStack << m_undoStackTemp.takeLast();
+		m_redoStackTemp << cRedo;
 	}
 }
 
 int CDiffUndoManager::availableUndoCount() const
 {
-	return (m_stackIndex > 0);
+	return m_undoStack.size();
 }
 
 int CDiffUndoManager::availableRedoCount() const
 {
-	return (m_stackIndex >= 0) && (m_stackIndex < m_stateStack.size() - 1);
+	return m_redoStack.size();
 }

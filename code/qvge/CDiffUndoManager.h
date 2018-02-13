@@ -31,7 +31,16 @@ public:
 	virtual int availableRedoCount() const;
 
 private:
+	struct Command
+	{
+		int index;
+		int sizeToReplace;
+		QByteArray data;
+	};
+
 	CEditorScene *m_scene;
-	QList<QByteArray> m_stateStack;
+	QList<Command> m_redoStack, m_undoStack;
+	QList<Command> m_redoStackTemp, m_undoStackTemp;
+	QByteArray m_lastState;
 	int m_stackIndex;
 };
