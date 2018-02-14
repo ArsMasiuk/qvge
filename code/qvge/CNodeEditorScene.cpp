@@ -86,7 +86,7 @@ void CNodeEditorScene::initialize()
 
 	static CAttributeConstrainsList *edgeDirections = new CAttributeConstrainsList();
 	if (edgeDirections->ids.isEmpty()) {
-		edgeDirections->names << "Directed (one end)" << "Mutual (both ends)" << "None (no ends)";
+		edgeDirections->names << tr("Directed (one end)") << tr("Mutual (both ends)") << tr("None (no ends)");
 		edgeDirections->ids << "directed" << "mutual" << "undirected";
 		edgeDirections->icons << QIcon(":/Icons/Edge-Directed") << QIcon(":/Icons/Edge-Mutual") << QIcon(":/Icons/Edge-Undirected");
 	}
@@ -96,8 +96,8 @@ void CNodeEditorScene::initialize()
 
 	static CAttributeConstrainsList *nodeShapes = new CAttributeConstrainsList();
 	if (nodeShapes->ids.isEmpty()) {
-		nodeShapes->names << "Dics" << "Square" << "Triangle (up)" << "Triangle (down)" << "Diamond";
-		nodeShapes->ids << "disc" << "square" << "triangle" << "triangle2" << "diamond";
+		nodeShapes->names << tr("Dics") << tr("Square") << tr("Triangle (up)") << tr("Triangle (down)") << tr("Diamond") << tr("Hexagon");
+		nodeShapes->ids << "disc" << "square" << "triangle" << "triangle2" << "diamond" << "hexagon";
 		nodeShapes->icons << QIcon(":/Icons/Node-Disc") << QIcon(":/Icons/Node-Square") << QIcon(":/Icons/Node-Triangle") << QIcon(":/Icons/Node-Triangle-Down") << QIcon(":/Icons/Node-Diamond");
 	}
 	setClassAttributeConstrains("node", "shape", nodeShapes);

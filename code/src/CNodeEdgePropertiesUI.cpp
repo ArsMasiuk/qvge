@@ -36,6 +36,7 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
     ui->NodeShape->addAction(QIcon(":/Icons/Node-Triangle"), tr("Triangle Up"), "triangle");
     ui->NodeShape->addAction(QIcon(":/Icons/Node-Diamond"), tr("Diamond"), "diamond");
     ui->NodeShape->addAction(QIcon(":/Icons/Node-Triangle-Down"), tr("Triangle Down"), "triangle2");
+	ui->NodeShape->addAction(QIcon(":/Icons/Node-Hexagon"), tr("Hexagon"), "hexagon");
 
     ui->NodeAttrBox->setChecked(false);
 

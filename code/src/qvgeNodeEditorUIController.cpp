@@ -368,7 +368,7 @@ void qvgeNodeEditorUIController::resetZoom()
 
 void qvgeNodeEditorUIController::sceneCrop()
 {
-	QRectF itemsRect = m_editorScene->itemsBoundingRect().adjusted(-20, -20, 20, 20);;
+	QRectF itemsRect = m_editorScene->itemsBoundingRect().adjusted(-20, -20, 20, 20);
 	if (itemsRect == m_editorScene->sceneRect())
 		return;
 

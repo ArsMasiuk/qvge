@@ -589,6 +589,15 @@ void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 	{
 		painter->drawPolygon(m_shapeCache);
 	}
+
+
+	// id inside ??
+	//if (m_labelItem /*&& getScene()->itemLabelsEnabled()*/)
+	//{
+	//	painter->setPen(m_labelItem->brush().color());
+	//	painter->setFont(m_labelItem->font());
+	//	painter->drawText(boundingRect(), Qt::AlignCenter, m_id);
+	//}
 }
 
 
@@ -664,6 +673,20 @@ void CNode::recalculateShape()
 			<< QPointF(rx, ry + r.height() / 2)
 			<< QPointF(rx - r.width() / 2, ry)
 			<< QPointF(rx, ry - r.height() / 2);
+	}
+	else if (shapeType == "hexagon")
+	{
+		float rx = r.center().x();
+		float ry = r.center().y();
+
+		m_shapeCache 
+			<< QPointF(r.left() + r.width() / 3, ry - r.height() / 2)
+			<< QPointF(r.left() + r.width() / 3 * 2, ry - r.height() / 2)
+			<< QPointF(rx + r.width() / 2, ry)
+			<< QPointF(r.left() + r.width() / 3 * 2, ry + r.height() / 2)
+			<< QPointF(r.left() + r.width() / 3, ry + r.height() / 2)
+			<< QPointF(r.left(), ry)
+			<< QPointF(r.left() + r.width() / 3, ry - r.height() / 2);
 	}
 	else if (shapeType == "triangle")
 	{

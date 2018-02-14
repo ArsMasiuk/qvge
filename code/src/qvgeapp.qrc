@@ -16,5 +16,6 @@
         <file alias="Unlink">Icons/Action-Unlink.png</file>
         <file alias="Crop">Icons/Action-Crop.png</file>
         <file alias="Link">Icons/Action-Link.png</file>
+        <file alias="Node-Hexagon">Icons/Node-Hexagon.png</file>
     </qresource>
 </RCC>
