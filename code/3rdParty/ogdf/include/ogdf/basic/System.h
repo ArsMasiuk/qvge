@@ -34,9 +34,9 @@
 
 #include <ogdf/basic/basic.h>
 
-#if defined(OGDF_SYSTEM_OSX)
+#if defined(OGDF_SYSTEM_OSX) || defined(OGDF_SYSTEM_UNIX)
 #include <stdlib.h>
-#elif defined(OGDF_SYSTEM_UNIX) || defined(__MINGW32__)
+#elif defined(__MINGW32__)
 #include <malloc.h>
 #endif
 
@@ -138,6 +138,11 @@ public:
 #elif defined(OGDF_SYSTEM_OSX)
 		// malloc returns 16 byte aligned memory on OS X.
 		return malloc(size);
+#elif defined(OGDF_SYSTEM_UNIX)
+		void *mem = NULL;
+		posix_memalign(&mem, 16, size);
+		return mem;
+
 #else
 		return memalign(16, size);
 #endif

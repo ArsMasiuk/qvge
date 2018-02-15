@@ -57,7 +57,8 @@
 #include <mach/mach.h>
 #include <mach/machine.h>
 #elif defined(OGDF_SYSTEM_UNIX)
-#include <malloc.h>
+//#include <malloc.h>
+#include <stdlib.h>
 #endif
 
 #if defined(_MSC_VER)
@@ -69,6 +70,11 @@
 #endif
 #ifdef __GNUC__
 # include <cpuid.h>
+#endif
+
+#if defined(__FreeBSD__)
+#include <sys/types.h>
+#include <sys/sysctl.h>
 #endif
 
 static inline void cpuid(int CPUInfo[4], int infoType)
@@ -298,7 +304,26 @@ long long System::physicalMemory()
 
 long long System::availablePhysicalMemory()
 {
+ #if !defined(__BSD__) && !defined(__DARWIN__) && !defined(__FreeBSD__)
 	return (long long)(sysconf(_SC_AVPHYS_PAGES)) * sysconf(_SC_PAGESIZE);
+ #else
+    long total_pages, free_pages, page_size;
+
+        size_t size = sizeof(long);
+        if(sysctlbyname("hw.pagesize", &page_size, &size, 0, 0) != 0 ||
+           size != sizeof(long)) return 0;
+
+        size = sizeof(long);
+        if(sysctlbyname("vm.stats.vm.v_page_count", &total_pages, &size, 0, 0) != 0 ||
+           size != sizeof(long)) return 0;
+
+        // this may not work under FreeBSD?
+        size = sizeof(long);
+        if(sysctlbyname("vm.stats.vm.v_free_count", &free_pages, &size, 0, 0) != 0 ||
+           size != sizeof(long)) return 0;
+
+        return page_size * free_pages;
+#endif
 }
 
 size_t System::memoryUsedByProcess()
@@ -374,12 +399,20 @@ size_t System::memoryInFreelistOfMalloc()
 
 size_t System::memoryAllocatedByMalloc()
 {
+#if defined(__FreeBSD__)
+            return 0;
+ #else
 	return mallinfo().uordblks;
+#endif
 }
 
 size_t System::memoryInFreelistOfMalloc()
 {
+#if defined(__FreeBSD__)
+            return 0;
+ #else
 	return mallinfo().fordblks;
+#endif
 }
 
 #endif

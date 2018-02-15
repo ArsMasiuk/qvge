@@ -97,7 +97,7 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 #endif // windows
 
 
-#ifdef Q_OS_LINUX
+#if defined Q_OS_LINUX || defined Q_OS_UNIX
 
 #include <QX11Info>
 
@@ -105,7 +105,11 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 #include <X11/Xutil.h>
 #include <X11/Xos.h>
 
+#ifdef Q_OS_FREEBSD
+#include <sys/sysctl.h>
+#else
 #include <sys/sysinfo.h>
+#endif
 
 extern "C" {
 #include <read_proc.h>
@@ -151,6 +155,20 @@ CPlatformServices::PIDs CPlatformServices::GetRunningPIDs()
 
 quint64 CPlatformServices::GetTotalRAMBytes()
 {
+#ifdef Q_OS_FREEBSD
+
+    int mib[2];
+    mib[0] = CTL_HW;
+    mib[1] = HW_REALMEM;
+    unsigned int size = 0;		/* 32-bit */
+    size_t len = sizeof( size );
+    if ( sysctl( mib, 2, &size, &len, NULL, 0 ) == 0 )
+        return (size_t)size;
+    else
+    return 0L;
+
+#else   // linux etc.
+
 	struct sysinfo info;
 
 	if (sysinfo(&info) == 0)
@@ -159,6 +177,8 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 	}
 	else
 		return 0;
+
+#endif
 }
 
 
