@@ -592,12 +592,12 @@ void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 
 	// id inside ??
-	//if (m_labelItem /*&& getScene()->itemLabelsEnabled()*/)
-	//{
-	//	painter->setPen(m_labelItem->brush().color());
-	//	painter->setFont(m_labelItem->font());
-	//	painter->drawText(boundingRect(), Qt::AlignCenter, m_id);
-	//}
+	if (m_labelItem /*&& getScene()->itemLabelsEnabled()*/)
+	{
+		painter->setPen(m_labelItem->brush().color());
+		painter->setFont(m_labelItem->font());
+		painter->drawText(boundingRect(), Qt::AlignCenter, m_id);
+	}
 }
 
 

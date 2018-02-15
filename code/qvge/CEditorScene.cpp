@@ -101,9 +101,6 @@ void CEditorScene::initialize()
 	CAttribute labelFontAttr("label.font", "Label Font", labelFont);
 	setClassAttribute("item", labelFontAttr);
 
-	CAttribute labelSizeAttr("label.size", "Label Size", labelFont.pointSize());
-	setClassAttribute("item", labelSizeAttr);
-
     CAttribute idAttr("id", "ID", "");
 	idAttr.noDefault = true;
 	setClassAttribute("item", idAttr, true);

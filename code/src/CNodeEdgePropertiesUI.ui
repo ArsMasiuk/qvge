@@ -633,37 +633,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="LabelSize">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>28</height>
-           </size>
-          </property>
-          <property name="statusTip">
-           <string>Set size of the selected abels</string>
-          </property>
-          <property name="correctionMode">
-           <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-          </property>
-          <property name="minimum">
-           <number>4</number>
-          </property>
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="value">
-           <number>10</number>
-          </property>
-         </widget>
-        </item>
-        <item>
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -730,7 +699,6 @@
   <tabstop>EdgeAttrBox</tabstop>
   <tabstop>LabelColor</tabstop>
   <tabstop>LabelFont</tabstop>
-  <tabstop>LabelSize</tabstop>
  </tabstops>
  <resources/>
  <connections>

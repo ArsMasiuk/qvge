@@ -154,7 +154,6 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     for (auto item: nodes) nodeItems << item;
     int attrCount = ui->NodeAttrEditor->setupFromItems(*m_scene, nodeItems);
 	ui->NodeAttrBox->setTitle(tr("Custom Attributes (%1)").arg(attrCount));
-	//ui->NodeAttrBox->setChecked(attrCount > 0);
 
 
     // edges
@@ -194,14 +193,11 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     for (auto item: itemList)
     {
         // skip empty labels
-        if (item->getAttribute("label").toString().isEmpty())
-            continue;
+        //if (item->getAttribute("label").toString().isEmpty())
+        //    continue;
 
 		QFont f(item->getAttribute("label.font").value<QFont>());
-		int s(item->getAttribute("label.size").toInt());
-		f.setPointSize(s);
         ui->LabelFont->setCurrentFont(f);
-        ui->LabelSize->setValue(s);
 
         ui->LabelColor->setColor(item->getAttribute("label.color").value<QColor>());
         break;
@@ -570,13 +566,11 @@ void CNodeEdgePropertiesUI::on_LabelFont_activated(const QFont &font)
 	for (auto edge: edges)
     {
         edge->setAttribute("label.font", font);
-		edge->setAttribute("label.size", font.pointSize());
     }
 
 	for (auto node : nodes)
 	{
 		node->setAttribute("label.font", font);
-		node->setAttribute("label.size", font.pointSize());
 	}
 
     m_scene->addUndoState();
@@ -601,30 +595,6 @@ void CNodeEdgePropertiesUI::on_LabelColor_activated(const QColor &color)
 	for (auto node : nodes)
 	{
 		node->setAttribute("label.color", color);
-	}
-
-	m_scene->addUndoState();
-}
-
-
-void CNodeEdgePropertiesUI::on_LabelSize_valueChanged(int size)
-{
-	if (m_updateLock || m_scene == NULL)
-		return;
-
-	QList<CConnection*> edges = m_scene->getSelectedEdges();
-	QList<CNode*> nodes = m_scene->getSelectedNodes();
-	if (nodes.isEmpty() && edges.isEmpty())
-		return;
-
-	for (auto edge : edges)
-	{
-		edge->setAttribute("label.size", size);
-	}
-
-	for (auto node : nodes)
-	{
-		node->setAttribute("label.size", size);
 	}
 
 	m_scene->addUndoState();

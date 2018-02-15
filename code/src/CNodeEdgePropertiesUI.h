@@ -58,7 +58,6 @@ protected Q_SLOTS:
 
     void on_LabelFont_activated(const QFont &font);
 	void on_LabelColor_activated(const QColor &color);
-	void on_LabelSize_valueChanged(int value);
 
 private:
     CNodeEditorScene *m_scene;

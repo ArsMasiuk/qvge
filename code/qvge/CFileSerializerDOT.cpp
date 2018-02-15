@@ -161,13 +161,10 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		nodeAttrs.remove("label.color");
 	}
 
-	if (nodeAttrs.contains("label.size")) {
-		ts << ",fontsize = \"" << nodeAttrs["label.size"].toString() << "\"\n";
-		nodeAttrs.remove("label.size");
-	}
-
 	if (nodeAttrs.contains("label.font")) {
-		ts << ",fontname = \"" << nodeAttrs["label.font"].value<QFont>().family() << "\"\n";
+		auto f = nodeAttrs["label.font"].value<QFont>();
+		ts << ",fontname = \"" << f.family() << "\"\n";
+		ts << ",fontsize = \"" << f.pointSizeF() << "\"\n";
 		nodeAttrs.remove("label.font");
 	}
 
@@ -263,13 +260,10 @@ void CFileSerializerDOT::doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		edgeAttrs.remove("label.color");
 	}
 
-	if (edgeAttrs.contains("label.size")) {
-		ts << ",fontsize = \"" << edgeAttrs["label.size"].toString() << "\"\n";
-		edgeAttrs.remove("label.size");
-	}
-
 	if (edgeAttrs.contains("label.font")) {
-		ts << ",fontname = \"" << edgeAttrs["label.font"].value<QFont>().family() << "\"\n";
+		auto f = edgeAttrs["label.font"].value<QFont>();
+		ts << ",fontname = \"" << f.family() << "\"\n";
+		ts << ",fontsize = \"" << f.pointSizeF() << "\"\n";
 		edgeAttrs.remove("label.font");
 	}
 

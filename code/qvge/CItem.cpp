@@ -236,11 +236,6 @@ void CItem::updateLabelContent()
     // label attrs
     QFont f = getAttribute("label.font").value<QFont>();
 
-    bool ok = false;
-    int s = getAttribute("label.size").toInt(&ok);
-	if (ok && s > 0)
-		f.setPointSize(s);
-
 	if (!scene->isFontAntialiased())
 		f.setStyleStrategy(QFont::NoAntialias);
 
