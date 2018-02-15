@@ -81,6 +81,38 @@ QString CUtils::variantToText(const QVariant& v)
 }
 
 
+Qt::PenStyle CUtils::textToPenStyle(const QString& text, Qt::PenStyle def)
+{
+	static QMap<QString, Qt::PenStyle> s_penStyles =
+	{	{ "none", Qt::NoPen }, 
+		{ "solid", Qt::SolidLine }, 
+		{ "dashed", Qt::DashLine },
+		{ "dotted", Qt::DotLine },
+		{ "dashdot", Qt::DashDotLine },
+		{ "dashdotdot", Qt::DashDotDotLine } 
+	};
+
+	if (s_penStyles.contains(text))
+		return s_penStyles[text];
+	else
+        return def;
+}
+
+
+QString CUtils::penStyleToText(int style)
+{
+	switch (style)
+	{
+		case Qt::SolidLine:         return QStringLiteral("solid");
+		case Qt::DashLine:          return QStringLiteral("dashed");
+		case Qt::DotLine:           return QStringLiteral("dotted");
+		case Qt::DashDotLine:       return QStringLiteral("dashdot");
+		case Qt::DashDotDotLine:    return QStringLiteral("dashdotdot");
+		default:					return QStringLiteral("none");
+	}
+}
+
+
 QPointF CUtils::closestIntersection(const QLineF& line, const QPolygonF& endPolygon)
 {
 	QPointF intersectPoint;

@@ -18,7 +18,7 @@ It can be used freely, maintaining the information above.
 
 // reimp
 
-bool CFileSerializerDOT::save(const QString& fileName, const CEditorScene& scene) const
+bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene) const
 {
 	QFile saveFile(fileName);
 	if (saveFile.open(QFile::WriteOnly))
@@ -129,8 +129,13 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 {
 	// standard attrs
 	if (nodeAttrs.contains("color")) {
-		ts << ",fillcolor = \"" << nodeAttrs["color"].toString() << "\"";
-		ts << ",style = \"filled\"\n";
+		QColor c(nodeAttrs["color"].value<QColor>());
+		if (c.isValid())
+		{
+			ts << ",fillcolor = \"" << c.name() << "\"";
+			ts << ",style = \"filled\"\n";
+		}
+
 		nodeAttrs.remove("color");
 	}
 
@@ -164,6 +169,21 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 	if (nodeAttrs.contains("label.font")) {
 		ts << ",fontname = \"" << nodeAttrs["label.font"].value<QFont>().family() << "\"\n";
 		nodeAttrs.remove("label.font");
+	}
+
+	if (nodeAttrs.contains("stroke.color")) {
+		ts << ",color = \"" << nodeAttrs["stroke.color"].toString() << "\"\n";
+		nodeAttrs.remove("stroke.color");
+	}
+
+	if (nodeAttrs.contains("stroke.size")) {
+		ts << ",penwidth = \"" << nodeAttrs["stroke.size"].toString() << "\"\n";
+		nodeAttrs.remove("stroke.size");
+	}
+
+	if (nodeAttrs.contains("stroke.style")) {
+		ts << ",style = \"" << nodeAttrs["stroke.style"].toString() << "\"\n";
+		nodeAttrs.remove("stroke.style");
 	}
 	
 	// custom attrs

@@ -14,6 +14,7 @@ It can be used freely, maintaining the information above.
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QDebug>
+#include <QGuiApplication>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -92,7 +93,7 @@ bool CConnection::removeAttribute(const QByteArray& attrId)
 
 	if (attrId == "direction")
 	{
-		updateArrowFlags(getAttribute("direction").toString());
+		updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
 	}
 
 	if (res) update();
@@ -106,7 +107,7 @@ void CConnection::updateCachedItems()
 {
 	Super::updateCachedItems();
 
-	updateArrowFlags(getAttribute("direction").toString());
+	updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
 }
 
 
@@ -146,23 +147,18 @@ void CConnection::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem
 {
 	// weight
 	bool ok = false;
-	double weight = qMax(0.1, getAttribute("weight").toDouble(&ok));
+	double weight = qMax(0.1, getAttribute(QByteArrayLiteral("weight")).toDouble(&ok));
 	if (!ok) weight = 1;
 	if (weight > 10) weight = 10;	// safety
 
 	// line style
-	Qt::PenStyle penStyle = Qt::SolidLine;
-	QString lineStyle = getAttribute("style").toString();
-	if (lineStyle == "dotted")
-		penStyle = Qt::DotLine;
-	else if (lineStyle == "dashed")
-		penStyle = Qt::DashLine;
+	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("style")).toString(), Qt::SolidLine);
 
 	// color & selection
 	bool isSelected = (option->state & QStyle::State_Selected);
     if (isSelected)
     {
-		QPen p(QColor("orange"), weight + 1.0, penStyle, Qt::FlatCap, Qt::MiterJoin);
+		QPen p(QColor(QStringLiteral("orange")), weight + 1.0, penStyle, Qt::FlatCap, Qt::MiterJoin);
 		//p.setCosmetic(true);
 
         painter->setPen(p);
@@ -170,7 +166,7 @@ void CConnection::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem
     else
 	{
 		// get color (to optimize!)
-		QColor color = getAttribute("color").value<QColor>();
+		QColor color = getAttribute(QByteArrayLiteral("color")).value<QColor>();
 
 		QPen p(color, weight, penStyle, Qt::FlatCap, Qt::MiterJoin);
 		//p.setCosmetic(true);
@@ -182,7 +178,16 @@ void CConnection::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem
 
 QLineF CConnection::calculateArrowLine(const QPainterPath &path, bool first, const QLineF &direction) const
 {
-	qreal len = path.length();
+	// optimization: disable during drag or pan
+	Qt::MouseButtons buttons = QGuiApplication::mouseButtons();
+	if ((buttons & Qt::LeftButton) || (buttons & Qt::RightButton))
+		return direction;
+
+	// optimization: disable during zoom
+	Qt::KeyboardModifiers keys = QGuiApplication::keyboardModifiers();
+	if (keys & Qt::ControlModifier)
+		return direction;
+
 
 	if (first && m_firstNode)
 	{
@@ -192,6 +197,7 @@ QLineF CConnection::calculateArrowLine(const QPainterPath &path, bool first, con
 	}
 	else if (!first && m_lastNode)
 	{
+		qreal len = path.length();
 		qreal shift = m_lastNode->getDistanceToLineEnd(direction);
 		qreal arrowStart = path.percentAtLength(len - shift - ARROW_SIZE);
 		return QLineF(path.pointAtPercent(arrowStart), direction.p2());

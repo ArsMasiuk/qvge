@@ -106,6 +106,23 @@ public:
 		return QByteArray();
 	}
 
+
+	//template<class Class>
+	//const CAttribute getClassAttribute(const QByteArray& attrId, bool inherited) const
+	//{
+	//	if (!Class::factoryId().size())
+	//		// fail
+	//		return CAttribute();
+
+	//	CAttribute attr = m_classAttributes[Class::classId()][attrId];
+	//	if (attr.id.size() || !inherited)
+	//		return attr;
+
+	//	// else inherited
+	//	return getClassAttribute<Class::Super>(attrId, inherited);
+	//}
+
+
 	const CAttribute getClassAttribute(const QByteArray& classId, const QByteArray& attrId, bool inherited) const;
 	AttributesMap getClassAttributes(const QByteArray& classId, bool inherited) const;
 
@@ -223,6 +240,7 @@ private:
 protected:
 	QPointF m_leftClickPos;
 	bool m_doubleClick;
+	bool m_dragInProgress;
 	QGraphicsItem *m_startDragItem;
 
 	QMap<QByteArray, CItem*> m_itemFactories;

@@ -104,6 +104,8 @@ void CEditorView::mouseMoveEvent(QMouseEvent *e)
 
 			setDragMode(ScrollHandDrag);
 
+			setInteractive(false);
+
 			QMouseEvent fake(e->type(), e->pos(), Qt::LeftButton, Qt::LeftButton, e->modifiers());
 			Super::mousePressEvent(&fake);
 		}
@@ -122,6 +124,8 @@ void CEditorView::mouseReleaseEvent(QMouseEvent *e)
 		Super::mouseReleaseEvent(&fake);
 
 		setDragMode(RubberBandDrag);
+
+		setInteractive(true);
 
 		QTimer::singleShot(100, this, SLOT(restoreContextMenu()));
 	}

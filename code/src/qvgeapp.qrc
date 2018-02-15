@@ -14,5 +14,7 @@
         <file alias="Navigator">Icons/Scroll-Navigator.png</file>
         <file alias="Settings">Icons/Settings.png</file>
         <file alias="Unlink">Icons/Action-Unlink.png</file>
+        <file alias="Crop">Icons/Action-Crop.png</file>
+        <file alias="Link">Icons/Action-Link.png</file>
     </qresource>
 </RCC>

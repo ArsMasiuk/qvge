@@ -20,6 +20,8 @@ public:
     QAction* addAction(const QString &text, const QVariant &data = QVariant());
     QAction* addAction(const QIcon &icon, const QString &text, const QVariant &data = QVariant());
 
+	void setDefaultAction(QAction* act);
+
 public Q_SLOTS:
     QAction* selectAction(const QVariant &data);
     QAction* selectActionByIndex(int index);
@@ -27,11 +29,13 @@ public Q_SLOTS:
 Q_SIGNALS:
     void activated(QVariant data);
 
+protected Q_SLOTS:
+	virtual void onAction(QAction* act);
+
 protected:
     virtual void actionEvent(QActionEvent *event);
 
-private Q_SLOTS:
-    void onAction(QAction* act);
+	QMenu *m_localMenu;
 };
 
 

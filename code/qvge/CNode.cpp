@@ -536,20 +536,31 @@ QVariant CNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVari
 
 void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget*)
 {
+	bool isSelected = (option->state & QStyle::State_Selected);
+
 	painter->setClipRect(boundingRect());
 
-	// get color (to optimize!)
-	QVariant color = getAttribute("color");
-	if (color.canConvert<QColor>())
-		painter->setBrush(color.value<QColor>());
-	else
-		painter->setBrush(Qt::cyan);
 
-	bool isSelected = (option->state & QStyle::State_Selected);
-	if (isSelected)
-		painter->setPen(QPen(QColor("orange"), 2));
+	// get color (to optimize!)
+	QColor color = getAttribute(QByteArrayLiteral("color")).value<QColor>();
+	if (color.isValid())
+		painter->setBrush(color);
 	else
-		painter->setPen(QPen(Qt::black, 1));
+		painter->setBrush(Qt::NoBrush);
+
+
+	QColor strokeColor = isSelected ? 
+		QColor(QStringLiteral("orange")) : 
+		getAttribute(QByteArrayLiteral("stroke.color")).value<QColor>();
+	
+	qreal strokeSize = getAttribute(QByteArrayLiteral("stroke.size")).toDouble();
+	strokeSize = qMax(0.1, strokeSize);
+	if (isSelected) strokeSize++;
+
+	int strokeStyle = CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("stroke.style")).toString(), Qt::SolidLine);
+
+	painter->setPen(QPen(strokeColor, strokeSize, (Qt::PenStyle)strokeStyle));
+
 
 	// draw shape: disc if no cache
 	if (m_shapeCache.isEmpty())

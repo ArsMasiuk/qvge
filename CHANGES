@@ -1,0 +1,30 @@
+QVGE 0.4.1 (beta)
+-------------------------------------------------------------------------------
+- mouse navigation speedup
+- more precise stroke & edge width (resolution of 0.1 px)
+- nodes can have no background (i.e. be transparent)
+
+- fixed potential memory leaks & crash when setting attributes constrains
+- fixed some default node & edge attributes
+- (Windows) fixed issue with opening of associated files by double click
+
+
+QVGE 0.4.0 (beta)
+-------------------------------------------------------------------------------
+- added export to GEXF format
+- added import from GML format (via OGDF)
+- added support for Cygwin platform (not all features yet)
+- added support for node outline 
+
+- corrected and improved import from GEXF format
+- fixed some issues with attribute inheritance
+- fixed some issues with files IO
+- fixed some issues with application UI
+- fixed issue when a node was sometimes created on a wrong place
+- fixed issue with cancelling of edge creation by right mouse button
+- fixed scene panning by right mouse button when initially clicked on an item
+
+
+QVGE 0.3.0 (alpha)
+-------------------------------------------------------------------------------- 
+- initial public release

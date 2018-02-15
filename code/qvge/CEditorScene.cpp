@@ -40,6 +40,7 @@ CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent),
     m_undoManager(new CSimpleUndoManager(*this)),
     m_menuTriggerItem(NULL),
     m_draggedItem(NULL),
+	m_dragInProgress(false),
     m_needUpdateItems(true)
 {
     m_gridSize = 25;
@@ -83,7 +84,7 @@ void CEditorScene::initialize()
 
 	m_classAttributes.clear();
 	m_classAttributesVis.clear();
-	qDeleteAll(m_classAttributesConstrains);
+	//qDeleteAll(m_classAttributesConstrains);
 	m_classAttributesConstrains.clear();
 
 	// default item attrs
@@ -606,23 +607,17 @@ QSet<QByteArray> CEditorScene::getVisibleClassAttributes(const QByteArray& class
 
 const CAttribute CEditorScene::getClassAttribute(const QByteArray& classId, const QByteArray& attrId, bool inherited) const 
 {
+	if (classId.isEmpty())
+		// fail
+		return CAttribute();
+
 	CAttribute attr = m_classAttributes[classId][attrId];
 	if (attr.id.size() || !inherited)
 		return attr;
 
 	// else inherited
 	QByteArray superId = getSuperClassId(classId);
-	while (!superId.isEmpty())
-	{
-		CAttribute attr = m_classAttributes[classId][attrId];
-		if (attr.id.size())
-			return attr;
-
-		superId = getSuperClassId(superId);
-	}
-
-	// fail
-	return CAttribute();
+	return getClassAttribute(superId, attrId, true);
 }
 
 
@@ -664,8 +659,8 @@ void CEditorScene::setClassAttributeConstrains(const QByteArray& classId, const 
 	ClassAttrIndex index(classId, attrId);
 
 	// do we need to clean up?
-	if (m_classAttributesConstrains.contains(index))
-		delete m_classAttributesConstrains[index];
+	//if (m_classAttributesConstrains.contains(index))
+	//	delete m_classAttributesConstrains[index];
 
 	if (cptr)
 		m_classAttributesConstrains[index] = cptr;
@@ -1011,6 +1006,7 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
 		m_draggedItem = NULL;
+		m_dragInProgress = false;
 
 		m_leftClickPos = mouseEvent->scenePos();
 	}
@@ -1030,13 +1026,15 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void CEditorScene::startDrag(QGraphicsItem* dragItem)
 {
 	m_startDragItem = dragItem;
+	m_dragInProgress = true;
 }
 
 
 void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool performDrag)
 {
-	m_leftClickPos = QPointF();
-	m_doubleClick = false;
+	//m_leftClickPos = QPointF();
+	//m_doubleClick = false;
+	m_dragInProgress = true;
 
 	if (dragItem)
 	{
@@ -1135,7 +1133,7 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	m_draggedItem = mouseGrabberItem();
 
-	if (mouseEvent->button() == Qt::LeftButton)
+	if (mouseEvent->button() == Qt::LeftButton && m_dragInProgress)
 	{
 		finishDrag(mouseEvent, prevGrabber, false);
 
@@ -1148,9 +1146,10 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			else
 				onLeftClick(mouseEvent, hoverItem);
 		}
-
-		m_doubleClick = false;
 	}
+
+	m_doubleClick = false;
+	m_dragInProgress = false;
 
 	// update curson on release
 	QGraphicsItem *hoverItem = itemAt(mouseEvent->scenePos(), QTransform());

@@ -336,7 +336,7 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 }
 
 
-bool CFileSerializerGEXF::save(const QString& fileName, const CEditorScene& scene) const
+bool CFileSerializerGEXF::save(const QString& fileName, CEditorScene& scene) const
 {
 	QFile file(fileName);
 	if (!file.open(QIODevice::WriteOnly))
@@ -360,6 +360,7 @@ bool CFileSerializerGEXF::save(const QString& fileName, const CEditorScene& scen
 
 	// graph
 	QString edgetype = scene.getClassAttribute("edge", "direction", false).defaultValue.toString();
+	//QString edgetype = scene.getClassAttribute<CConnection>("direction", false).defaultValue.toString();
 	ts << "    <graph mode=\"static\" defaultedgetype=\"" << edgetype << "\">\n";
 
 	// node attrs

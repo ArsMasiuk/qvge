@@ -11,7 +11,7 @@ It can be used freely, maintaining the information above.
 
 #include <QtCore/QString>
 
-#include "CEditorScene.h"
+class CEditorScene;
 
 
 /**
@@ -28,5 +28,5 @@ public:
 	virtual bool load(const QString& fileName, CEditorScene& scene) const = 0;
 
 	virtual bool saveSupported() const = 0;
-	virtual bool save(const QString& fileName, const CEditorScene& scene) const = 0;
+	virtual bool save(const QString& fileName, CEditorScene& scene) const = 0;
 };

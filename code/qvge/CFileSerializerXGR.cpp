@@ -8,6 +8,7 @@ It can be used freely, maintaining the information above.
 */
 
 #include "CFileSerializerXGR.h"
+#include "CEditorScene.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QDataStream>
@@ -32,7 +33,7 @@ bool CFileSerializerXGR::load(const QString& fileName, CEditorScene& scene) cons
 }
 
 
-bool CFileSerializerXGR::save(const QString& fileName, const CEditorScene& scene) const
+bool CFileSerializerXGR::save(const QString& fileName, CEditorScene& scene) const
 {
 	QFile saveFile(fileName);
 	if (saveFile.open(QFile::WriteOnly))

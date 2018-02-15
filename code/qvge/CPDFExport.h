@@ -11,11 +11,36 @@ It can be used freely, maintaining the information above.
 
 #include <QString>
 
-#include "CEditorScene.h"
+#include "qvge/IFileSerializer.h"
 
 
-class CPDFExport
+class CPDFExport : public IFileSerializer
 {
 public:
-	static bool write(/*const*/ CEditorScene &scene, const QString &startPath = "");
+	// reimp
+	virtual QString description() const {
+		return "Adobe Portable Document Format";
+	}
+
+	virtual QString filters() const {
+		return "Adobe Portable Document Format (*.pdf)";
+	}
+
+	virtual QString defaultFileExtension() const {
+		return "pdf";
+	}
+
+	virtual bool loadSupported() const {
+		return false;
+	}
+
+	virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/) const {
+		return false;
+	}
+
+	virtual bool saveSupported() const {
+		return true;
+	}
+
+	virtual bool save(const QString& fileName, CEditorScene& scene) const;
 };
