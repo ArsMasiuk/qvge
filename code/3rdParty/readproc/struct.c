@@ -191,7 +191,7 @@ struct Job * get_from_place( struct Root * root, unsigned long int place)
 	if(place>root->len)
 	{
 		printf("\nERROR: place too high!\n");
-		return;
+        return NULL;
 	}
 	unsigned long int count=0;
 	struct Knot * varknot=root->first;
@@ -210,7 +210,7 @@ struct Job * remove_from_place( struct Root * root, unsigned long int place)
 	if(place>root->len)
 	{
 		printf("\nERROR: place too high!\n");
-		return;
+        return NULL;
 	}
 	if(place==0)
 	{
