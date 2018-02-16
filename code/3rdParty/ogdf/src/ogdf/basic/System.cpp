@@ -56,9 +56,10 @@
 #include <mach/vm_statistics.h>
 #include <mach/mach.h>
 #include <mach/machine.h>
-#elif defined(OGDF_SYSTEM_UNIX)
-//#include <malloc.h>
+#elif defined(__FreeBSD__)
 #include <stdlib.h>
+#else
+#include <malloc.h>
 #endif
 
 #if defined(_MSC_VER)
