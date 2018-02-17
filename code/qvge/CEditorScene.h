@@ -188,6 +188,7 @@ public Q_SLOTS:
 
 	void onActionDelete();
 	void onActionSelectAll();
+	void onActionEditLabel(CItem *item);
 
 	void selectAll();
 	void deselectAll();

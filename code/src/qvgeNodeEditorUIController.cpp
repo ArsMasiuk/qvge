@@ -511,6 +511,9 @@ bool qvgeNodeEditorUIController::saveToFile(const QString &fileName, const QStri
 
 void qvgeNodeEditorUIController::onNewDocumentCreated()
 {
+	m_editorScene->setClassAttributeVisible("item", "id", true);
+	m_editorScene->setClassAttributeVisible("item", "label", true);
+
     COGDFNewGraphDialog dialog;
     if (dialog.exec(*m_editorScene))
     {

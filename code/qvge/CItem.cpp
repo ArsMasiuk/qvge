@@ -220,15 +220,23 @@ void CItem::updateLabelContent()
 	{
 		labelToShow = visibleLabels.values().first();
 	}
-    else if (visibleLabels.size() > 1)
+	else if (visibleLabels.size() > 1)
 	{
-        for (auto it = visibleLabels.constBegin(); it != visibleLabels.constEnd(); ++it)
-        {
-            if (labelToShow.size())
-                labelToShow += "\n";
+		// if label & id:
+		if (visibleLabels.size() == 2 && idsToShow.contains("id") && idsToShow.contains("label"))
+		{
+			labelToShow = QString("[%1]\n%2").arg(visibleLabels["id"]).arg(visibleLabels["label"]);
+		}
+		else
+		{
+			for (auto it = visibleLabels.constBegin(); it != visibleLabels.constEnd(); ++it)
+			{
+				if (labelToShow.size())
+					labelToShow += "\n";
 
-            labelToShow += QString("%1: %2").arg(QString(it.key())).arg(it.value());
-        }
+				labelToShow += QString("%1: %2").arg(QString(it.key())).arg(it.value());
+			}
+		}
 	}
 
 	setLabelText(labelToShow);

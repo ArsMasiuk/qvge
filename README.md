@@ -62,6 +62,7 @@ jom
 - MinGW 5.3
 - GCC 4.8 & GCC 5.3 (Linux)
 - GCC 6.4.0 (Cygwin) 
+- Clang C++ (FreeBSD)
 
 Hopefully it will be compiled with others compilers, too. If not please do not hesitate to provide description of the issue.
 

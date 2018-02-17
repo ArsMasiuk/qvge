@@ -142,12 +142,17 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     if (nodes.count() == 1)
     {
         ui->NodeId->setEnabled(true);
-        ui->NodeId->setText(tr("Node Id: %1").arg(nodes.first()->getId()));
+        ui->NodeId->setText(tr("Node id: %1").arg(nodes.first()->getId()));
+
+		ui->NodeLabel->setVisible(true);
+		//ui->NodeLabel->setText(tr("Node text: %1").arg(nodes.first()->getAttribute("label").toString()));
     }
     else
     {
         ui->NodeId->setEnabled(false);
-        ui->NodeId->setText(tr("Select single node to edit its Id"));
+        ui->NodeId->setText(tr("Select single node to edit its id && text"));
+
+		ui->NodeLabel->setVisible(false);
     }
 
     QList<CItem*> nodeItems;
@@ -172,12 +177,17 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     if (edges.count() == 1)
     {
         ui->EdgeId->setEnabled(true);
-        ui->EdgeId->setText(tr("Edge Id: %1").arg(edges.first()->getId()));
+        ui->EdgeId->setText(tr("Edge id: %1").arg(edges.first()->getId()));
+
+		ui->EdgeLabel->setVisible(true);
+		//ui->EdgeLabel->setText(tr("Edge text: %1").arg(edges.first()->getAttribute("label").toString()));
     }
     else
     {
         ui->EdgeId->setEnabled(false);
-        ui->EdgeId->setText(tr("Select single edge to edit its Id"));
+        ui->EdgeId->setText(tr("Select single edge to edit its id and text"));
+
+		ui->EdgeLabel->setVisible(false);
     }
 
     QList<CItem*> edgeItems;
@@ -192,13 +202,9 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     for (auto nodeItem: nodes) itemList << nodeItem;
     for (auto item: itemList)
     {
-        // skip empty labels
-        //if (item->getAttribute("label").toString().isEmpty())
-        //    continue;
-
 		QFont f(item->getAttribute("label.font").value<QFont>());
         ui->LabelFont->setCurrentFont(f);
-
+		ui->LabelFontSize->setValue(f.pointSize());
         ui->LabelColor->setColor(item->getAttribute("label.color").value<QColor>());
         break;
     }
@@ -288,6 +294,16 @@ void CNodeEdgePropertiesUI::on_NodeSizeSwitch_toggled(bool on)
 	}
 	else
 		ui->NodeSizeY->setFocus();
+}
+
+
+void CNodeEdgePropertiesUI::on_NodeLabel_clicked()
+{
+	QList<CNode*> nodes = m_scene->getSelectedNodes();
+	if (nodes.count() != 1)
+		return;
+
+	m_scene->onActionEditLabel(nodes.first());
 }
 
 
@@ -487,6 +503,16 @@ void CNodeEdgePropertiesUI::on_EdgeDirection_activated(QVariant data)
 }
 
 
+void CNodeEdgePropertiesUI::on_EdgeLabel_clicked()
+{
+	QList<CConnection*> edges = m_scene->getSelectedEdges();
+	if (edges.count() != 1)
+		return;
+
+	m_scene->onActionEditLabel(edges.first());
+}
+
+
 void CNodeEdgePropertiesUI::on_EdgeId_clicked()
 {
     QList<CConnection*> edges = m_scene->getSelectedEdges();
@@ -555,6 +581,10 @@ _again:
 
 void CNodeEdgePropertiesUI::on_LabelFont_activated(const QFont &font)
 {
+	ui->LabelFontSize->blockSignals(true);
+	ui->LabelFontSize->setValue(font.pointSize());
+	ui->LabelFontSize->blockSignals(false);
+
     if (m_updateLock || m_scene == NULL)
         return;
 
@@ -600,3 +630,14 @@ void CNodeEdgePropertiesUI::on_LabelColor_activated(const QColor &color)
 	m_scene->addUndoState();
 }
 
+
+void CNodeEdgePropertiesUI::on_LabelFontSize_valueChanged(int value)
+{
+	QFont f = ui->LabelFont->font();
+	if (f.pointSize() != value)
+	{
+		f.setPointSize(value);
+		ui->LabelFont->setFont(f);
+		on_LabelFont_activated(f);
+	}
+}

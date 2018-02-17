@@ -1132,11 +1132,13 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	m_draggedItem = mouseGrabberItem();
 
-	if (mouseEvent->button() == Qt::LeftButton && m_dragInProgress)
+	if (mouseEvent->button() == Qt::LeftButton)
 	{
-		finishDrag(mouseEvent, prevGrabber, false);
-
-		if (m_leftClickPos == mouseEvent->scenePos())
+		if (m_dragInProgress)
+		{
+			finishDrag(mouseEvent, prevGrabber, false);
+		}
+		else if (m_leftClickPos == mouseEvent->scenePos())
 		{
 			QGraphicsItem *hoverItem = itemAt(mouseEvent->scenePos(), QTransform());
 
@@ -1279,21 +1281,15 @@ void CEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIt
 
 void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem)
 {
-	if (CItem *item = dynamic_cast<CItem*>(clickedItem))
+	CItem *item = dynamic_cast<CItem*>(clickedItem);
+	if (!item) 
 	{
-		bool ok = false;
+		item = dynamic_cast<CItem*>(clickedItem->parentItem());	// if clicked on label
+	}
 
-		QString text = QInputDialog::getMultiLineText(NULL,
-			tr("Item Label"), tr("New label text:"), 
-			item->getAttribute("label").toString(),
-			&ok);
-
-		if (ok)
-		{
-			item->setAttribute("label", text);
-
-			addUndoState();
-		}
+	if (item)
+	{
+		onActionEditLabel(item);
 	}
 }
 
@@ -1470,6 +1466,24 @@ void CEditorScene::onActionDelete()
 void CEditorScene::onActionSelectAll()
 {
 	selectAll();
+}
+
+
+void CEditorScene::onActionEditLabel(CItem *item)
+{
+	bool ok = false;
+
+	QString text = QInputDialog::getMultiLineText(NULL,
+		tr("Item Label"), tr("New label text:"),
+		item->getAttribute("label").toString(),
+		&ok);
+
+	if (ok)
+	{
+		item->setAttribute("label", text);
+
+		addUndoState();
+	}
 }
 
 

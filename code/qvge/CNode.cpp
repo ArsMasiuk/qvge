@@ -589,15 +589,6 @@ void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 	{
 		painter->drawPolygon(m_shapeCache);
 	}
-
-
-	// id inside ??
-	if (m_labelItem /*&& getScene()->itemLabelsEnabled()*/)
-	{
-		painter->setPen(m_labelItem->brush().color());
-		painter->setFont(m_labelItem->font());
-		painter->drawText(boundingRect(), Qt::AlignCenter, m_id);
-	}
 }
 
 
@@ -641,8 +632,13 @@ void CNode::updateCachedItems()
 void CNode::updateLabelPosition()
 {
 	int w = m_labelItem->boundingRect().width();
+	int h = m_labelItem->boundingRect().height();
 
-    m_labelItem->setPos(-w / 2, boundingRect().height() / 2);
+	QRectF r = Shape::boundingRect();
+	if (r.width() < 30 || r.height() < 30)
+		m_labelItem->setPos(-w / 2, boundingRect().height() / 2);	// if too small: put label on bottom
+	else
+		m_labelItem->setPos(-w / 2, -h / 2);		// else center
 }
 
 
