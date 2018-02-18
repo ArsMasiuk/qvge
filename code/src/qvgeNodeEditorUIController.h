@@ -91,4 +91,5 @@ private:
     QAction *actionShowLabels;
 
 	class COGDFLayoutUIController *m_ogdfController;
+	bool m_showNewGraphDialog = true;
 };

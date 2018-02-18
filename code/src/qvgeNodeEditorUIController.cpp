@@ -382,11 +382,15 @@ void qvgeNodeEditorUIController::sceneCrop()
 void qvgeNodeEditorUIController::sceneOptions()
 {
     CSceneOptionsDialog dialog;
+	dialog.setShowNewGraphDialog(m_showNewGraphDialog);
+
     if (dialog.exec(*m_editorScene, *m_editorView))
     {
         gridAction->setChecked(m_editorScene->gridEnabled());
         gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
         actionShowLabels->setChecked(m_editorScene->itemLabelsEnabled());
+
+		m_showNewGraphDialog  = dialog.isShowNewGraphDialog();
 
 		m_parent->writeSettings();
     }
@@ -454,8 +458,8 @@ void qvgeNodeEditorUIController::doReadSettings(QSettings& settings)
 	cacheRam = settings.value("cacheRam", cacheRam).toInt();
 	QPixmapCache::setCacheLimit(cacheRam);
 
-
 	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
+	m_showNewGraphDialog  = settings.value("autoCreateGraphDialog", m_showNewGraphDialog ).toBool();
 }
 
 
@@ -467,8 +471,8 @@ void qvgeNodeEditorUIController::doWriteSettings(QSettings& settings)
 	int cacheRam = QPixmapCache::cacheLimit();
 	settings.setValue("cacheRam", cacheRam);
 
-
 	settings.setValue("lastExportPath", m_lastExportPath);
+	settings.setValue("autoCreateGraphDialog", m_showNewGraphDialog );
 }
 
 
@@ -514,10 +518,20 @@ void qvgeNodeEditorUIController::onNewDocumentCreated()
 	m_editorScene->setClassAttributeVisible("item", "id", true);
 	m_editorScene->setClassAttributeVisible("item", "label", true);
 
-    COGDFNewGraphDialog dialog;
-    if (dialog.exec(*m_editorScene))
-    {
-        // update scene info
-        //onSceneChanged();
-    }
+	if (m_showNewGraphDialog )
+	{
+		COGDFNewGraphDialog dialog;
+		if (dialog.exec(*m_editorScene))
+		{
+			// update scene info
+			//onSceneChanged();
+		}
+
+		bool show = dialog.isShowOnStart();
+		if (show != m_showNewGraphDialog )
+		{
+			m_showNewGraphDialog  = show;
+			m_parent->writeSettings();
+		}
+	}
 }

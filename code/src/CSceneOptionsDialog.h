@@ -28,6 +28,9 @@ public:
     explicit CSceneOptionsDialog(QWidget *parent = 0);
     ~CSceneOptionsDialog();
 
+	void setShowNewGraphDialog(bool);
+	bool isShowNewGraphDialog() const;
+
 public Q_SLOTS:
 	virtual int exec(CEditorScene &scene, CEditorView &view);
 

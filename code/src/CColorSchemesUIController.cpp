@@ -9,6 +9,7 @@ CColorSchemesUIController::CColorSchemesUIController(QObject *parent) : QObject(
     m_menu.addAction(tr("Inverse Grayscale"), this, SLOT(applyInverse()));
     m_menu.addAction(tr("Solarized Light"), this, SLOT(applySolarizedLight()));
 	m_menu.addAction(tr("Blue & Orange"), this, SLOT(applyBlueOrange()));
+	m_menu.addAction(tr("Forest"), this, SLOT(applyForest()));
 }
 
 
@@ -82,3 +83,23 @@ void CColorSchemesUIController::applyBlueOrange()
 		m_scene->addUndoState();
 	}
 }
+
+
+void CColorSchemesUIController::applyForest()
+{
+	if (m_scene)
+	{
+		m_scene->setBackgroundBrush(QColor("#e3e6bb"));
+		m_scene->setGridPen(QColor("#eeeeee"));
+
+		m_scene->setClassAttribute("node", "color", QColor("#aaff7f"));
+		m_scene->setClassAttribute("node", "stroke.color", QColor("#8d4600"));
+		m_scene->setClassAttribute("node", "label.color", QColor("#343400"));
+
+		m_scene->setClassAttribute("edge", "color", QColor("#aaaa7f"));
+		m_scene->setClassAttribute("edge", "label.color", QColor("#55aa00"));
+
+		m_scene->addUndoState();
+	}
+}
+

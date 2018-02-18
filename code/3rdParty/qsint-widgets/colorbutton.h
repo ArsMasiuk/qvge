@@ -130,6 +130,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *event);
 
     QColor m_color;
+	QString m_buttonText;
     PickMode m_mode;
     TextMode m_tooltipMode, m_labelMode;
 

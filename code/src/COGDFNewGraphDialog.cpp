@@ -51,6 +51,12 @@ COGDFNewGraphDialog::~COGDFNewGraphDialog()
 }
 
 
+bool COGDFNewGraphDialog::isShowOnStart() const 
+{
+	return ui->ShowOnStart->isChecked();
+}
+
+
 void COGDFNewGraphDialog::on_List_itemActivated(QListWidgetItem *item)
 {
 	if (item)

@@ -840,7 +840,6 @@ void CMainWindow::doReadSettings(QSettings& settings)
         showNormal();
 
 
-
 	// path
 	m_lastPath = settings.value("lastPath").toString();
 }

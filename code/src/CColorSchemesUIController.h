@@ -28,6 +28,7 @@ private Q_SLOTS:
     void applyInverse();
 	void applySolarizedLight();
 	void applyBlueOrange();
+	void applyForest();
 
 private:
     QMenu m_menu;

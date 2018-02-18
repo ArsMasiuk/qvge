@@ -31,6 +31,17 @@ CSceneOptionsDialog::~CSceneOptionsDialog()
 }
 
 
+bool CSceneOptionsDialog::isShowNewGraphDialog() const
+{
+	return ui->AutoCreateGraph->isChecked();
+}
+
+void CSceneOptionsDialog::setShowNewGraphDialog(bool on)
+{
+	ui->AutoCreateGraph->setChecked(on);
+}
+
+
 int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view)
 {
 	ui->BackgroundColor->setColor(scene.backgroundBrush().color());

@@ -60,7 +60,7 @@ ColorButton::~ColorButton()
 
 void ColorButton::setColor(const QColor& color)
 {
-    if (m_color != color)
+    if (m_color != color || text() != m_buttonText)
     {
         m_color = color;
 
@@ -68,7 +68,7 @@ void ColorButton::setColor(const QColor& color)
         drawColorItem(pm, m_color);
         setIcon(QIcon(pm));
 
-        setText(getColorName(m_labelMode, m_color));
+        setText(m_buttonText = getColorName(m_labelMode, m_color));
 
         if (m_tooltipMode != TM_NONE)
             setToolTip(getColorName(m_tooltipMode, m_color));

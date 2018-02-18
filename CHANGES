@@ -12,6 +12,7 @@ QVGE 0.4.1 (beta)
 - fixed potential memory leaks & crash when setting attributes constrains
 - fixed some default node & edge attributes
 - removed "label.size" subattribute (font's pointSize is used instead)
+- graph creation dialog made optional
 - (Windows) fixed issue with opening of associated files by double click
 - (Windows) added version info to the executable
 
