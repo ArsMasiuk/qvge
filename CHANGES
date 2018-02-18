@@ -6,6 +6,7 @@ QVGE 0.4.1 (beta)
 - added cropping scene to contents
 - added "hexagon" node shape
 - added editing of nodes & edges textual labels
+- added default color schemes
 - added support for FreeBSD platform
 
 - fixed potential memory leaks & crash when setting attributes constrains

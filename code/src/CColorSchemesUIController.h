@@ -2,6 +2,10 @@
 #define CCOLORSCHEMESUICONTROLLER_H
 
 #include <QObject>
+#include <QMenu>
+
+class CEditorScene;
+
 
 class CColorSchemesUIController : public QObject
 {
@@ -9,9 +13,25 @@ class CColorSchemesUIController : public QObject
 public:
     explicit CColorSchemesUIController(QObject *parent = nullptr);
 
-signals:
+    void setScene(CEditorScene* scene) {
+        m_scene = scene;
+    }
 
-public slots:
+    QMenu* getSchemesMenu() {
+        return &m_menu;
+    }
+
+Q_SIGNALS:
+
+private Q_SLOTS:
+    void applyBW();
+    void applyInverse();
+	void applySolarizedLight();
+	void applyBlueOrange();
+
+private:
+    QMenu m_menu;
+     CEditorScene *m_scene = NULL;
 };
 
 #endif // CCOLORSCHEMESUICONTROLLER_H

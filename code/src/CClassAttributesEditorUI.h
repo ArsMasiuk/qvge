@@ -57,6 +57,8 @@ private:
 
     CEditorScene *m_scene;
 
+    class CColorSchemesUIController *m_schemesController;
+
     bool m_locked;
 };
 

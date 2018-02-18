@@ -43,6 +43,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="statusTip">
+        <string>Choose element to edit default attributes</string>
+       </property>
        <item>
         <property name="text">
          <string>graph</string>
@@ -60,10 +63,35 @@
        </item>
       </widget>
      </item>
+     <item>
+      <widget class="QToolButton" name="ColorScheme">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="statusTip">
+        <string>Apply predefined color scheme to graph</string>
+       </property>
+       <property name="text">
+        <string>Color scheme</string>
+       </property>
+       <property name="popupMode">
+        <enum>QToolButton::InstantPopup</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
-    <widget class="QtTreePropertyBrowser" name="Editor"/>
+    <widget class="QtTreePropertyBrowser" name="Editor">
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">

@@ -34,7 +34,7 @@ BEGIN
         BLOCK "040904E4"
         BEGIN
             VALUE "CompanyName", "A.Masiuk"
-            VALUE "FileDescription", "Qt Visual Graph Editor WIn32 Executable"
+            VALUE "FileDescription", "Qt Visual Graph Editor Win32 Executable"
             VALUE "FileVersion", "0.4.1.0"
             VALUE "InternalName", "qvge"
             VALUE "LegalCopyright", "Copyright (C) 2016-2018 A.Masiuk"
