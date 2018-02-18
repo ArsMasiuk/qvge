@@ -85,13 +85,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QtTreePropertyBrowser" name="Editor">
-     <column>
-      <property name="text">
-       <string notr="true">1</string>
-      </property>
-     </column>
-    </widget>
+    <widget class="QtTreePropertyBrowser" name="Editor"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
