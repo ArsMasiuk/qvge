@@ -8,6 +8,7 @@
 
 TEMPLATE = app
 TARGET = qvgeapp
+VERSION = 0.4.1.0
 
 CONFIG(debug, debug|release){
         DESTDIR = $$OUT_PWD/../bin.debug
