@@ -27,6 +27,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CFileSerializerGraphML.h>
 #include <qvge/CFileSerializerXGR.h>
 #include <qvge/CFileSerializerDOT.h>
+#include <qvge/ISceneItemFactory.h>
 
 #include <QMenuBar>
 #include <QStatusBar>
@@ -476,10 +477,40 @@ void qvgeNodeEditorUIController::doWriteSettings(QSettings& settings)
 }
 
 
+class CDPSEReader : public ISceneItemFactory
+{
+public:
+	virtual CItem* createItemOfType(const QByteArray& typeId, const CEditorScene& scene) const
+	{
+		if (typeId == "CBranchNode")
+		{
+			auto node = scene.createItemOfType("CNode");
+			return node;
+		}
+
+		if (typeId == "CFanNode")
+		{
+			auto node = scene.createItemOfType("CNode");
+			return node;
+		}
+
+		if (typeId == "CBranchConnection")
+		{
+			auto edge = scene.createItemOfType("CDirectConnection");
+			return edge;
+		}
+
+		return NULL;
+	}
+};
+
+
 bool qvgeNodeEditorUIController::loadFromFile(const QString &fileName, const QString &format)
 {
     if (format == "xgr")
     {
+		static CDPSEReader tmp;
+		m_editorScene->setItemFactoryFilter(&tmp);
         return (CFileSerializerXGR().load(fileName, *m_editorScene));
     }
 

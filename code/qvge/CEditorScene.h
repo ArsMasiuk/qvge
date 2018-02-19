@@ -20,6 +20,7 @@ It can be used freely, maintaining the information above.
 
 class CItem;
 class IUndoManager;
+class ISceneItemFactory;
 
 
 class CItemsEvaluator
@@ -86,6 +87,10 @@ public:
 	}
 
 	bool addItemFactory(CItem *factoryItem);
+
+	void setItemFactoryFilter(ISceneItemFactory *filter) {
+		m_itemFactoryFilter = filter;
+	}
 
 	CItem* activateItemFactory(const QByteArray& factoryId);
 
@@ -246,6 +251,7 @@ protected:
 
 	QMap<QByteArray, CItem*> m_itemFactories;
 	CItem *m_activeItemFactory;
+	ISceneItemFactory *m_itemFactoryFilter = NULL;
 
 	QMap<QByteArray, QByteArray> m_classToSuperIds;
 

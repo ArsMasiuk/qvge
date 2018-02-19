@@ -105,6 +105,11 @@ int CAttributesEditorUI::setupFromItems(CEditorScene& scene, QList<CItem*> &item
 	{
         auto prop = m_manager.addProperty(it.value().dataType, it.key());
 		Q_ASSERT(prop != NULL);
+
+		// add as string if unknown
+		if (!prop)
+			prop = m_manager.addProperty(QMetaType::QString, it.key());
+
 		if (!prop)
 			continue;	// ignore
 

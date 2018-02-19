@@ -22,7 +22,7 @@ class CEditorView;
 class IFileSerializer;
 
 
-class qvgeNodeEditorUIController : public QObject 
+class qvgeNodeEditorUIController : public QObject
 {
 	Q_OBJECT
 

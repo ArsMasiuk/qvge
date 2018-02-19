@@ -3,6 +3,7 @@ QVGE 0.4.1 (beta)
 - mouse navigation speedup
 - more precise node outline & edge width (resolution of 0.1 px)
 - nodes can have no background (i.e. be transparent)
+- single nodes may be created by left double click on empty space
 - added cropping scene to contents
 - added "hexagon" node shape
 - added editing of nodes & edges textual labels

@@ -22,7 +22,7 @@ CNode::CNode(QGraphicsItem* parent) : QGraphicsRectItem(parent)
 	resize(9);
 
 	// default node flags
-	m_nodeFlags = 0;
+	m_nodeFlags = NF_OrphanAllowed;
 
 	// default flags: movable & selectable
 	auto flags = ItemIsMovable | ItemIsSelectable | ItemSendsGeometryChanges | ItemUsesExtendedStyleOption;

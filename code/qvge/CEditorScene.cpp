@@ -12,6 +12,7 @@ It can be used freely, maintaining the information above.
 #include "CSimpleUndoManager.h"
 #include "CDiffUndoManager.h"
 #include "IContextMenuProvider.h"
+#include "ISceneItemFactory.h"
 
 #include <QPainter>
 #include <QPaintEngine>
@@ -482,6 +483,14 @@ CItem* CEditorScene::activateItemFactory(const QByteArray &factoryId)
 
 CItem* CEditorScene::createItemOfType(const QByteArray &id) const
 {
+	// check for filter
+	if (m_itemFactoryFilter)
+	{
+		if (CItem* item = m_itemFactoryFilter->createItemOfType(id, *this))
+			return item;
+	}
+
+	// else default creation
 	if (m_itemFactories.contains(id))
 	{
 		return m_itemFactories[id]->create();
@@ -1281,6 +1290,13 @@ void CEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIt
 
 void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem)
 {
+	// clicked on empty space?
+	if (!clickedItem)
+	{
+		return;
+	}
+
+	// else check clicked item...
 	CItem *item = dynamic_cast<CItem*>(clickedItem);
 	if (!item) 
 	{

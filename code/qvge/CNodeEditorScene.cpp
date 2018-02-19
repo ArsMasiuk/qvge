@@ -480,6 +480,25 @@ void CNodeEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphics
 }
 
 
+void CNodeEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem)
+{
+	// clicked on empty space?
+	if (!clickedItem)
+	{
+		// create a node here
+		auto node = createNewNode();
+		addItem(node);
+		node->setPos(getSnapped(mouseEvent->scenePos()));
+		node->setSelected(true);
+
+		addUndoState();
+		return;
+	}
+
+	Super::onLeftDoubleClick(mouseEvent, clickedItem);
+}
+
+
 // movement
 
 void CNodeEditorScene::moveSelectedEdgesBy(const QPointF& d)
