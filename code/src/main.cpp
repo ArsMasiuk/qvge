@@ -18,6 +18,6 @@ int main(int argc, char *argv[])
 	a.setWindowIcon(QIcon(":/Icons/AppIcon"));
 	qvgeMainWindow w;
 	w.init(argc, argv);
-    w.showMaximized();
+    w.show();
 	return a.exec();
 }
