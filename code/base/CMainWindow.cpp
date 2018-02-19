@@ -69,7 +69,7 @@ void CMainWindow::init(int argc, char *argv[])
 
     createHelpMenu();
 
-	readSettings();
+    readSettings();
 
     processParams(argc, argv);
 }
@@ -829,16 +829,16 @@ void CMainWindow::doReadSettings(QSettings& settings)
 
     // toolbars & dock widgets
     QApplication::processEvents();
-
     restoreState(settings.value("windowState").toByteArray());
 
 
     // window state
-    if (settings.value("maximized", true).toBool())
-        showMaximized();
-    else
-        showNormal();
+    showNormal();
 
+    if (settings.value("maximized", true).toBool())
+    {
+        QTimer::singleShot(200, this, SLOT(showMaximized()));
+    }
 
 
 	// path
