@@ -833,12 +833,18 @@ void CMainWindow::doReadSettings(QSettings& settings)
 
 
     // window state
-    showNormal();
-
     if (settings.value("maximized", true).toBool())
     {
+#ifdef Q_OS_WIN32
+		showMaximized();
+#else
+		showNormal();
         QTimer::singleShot(200, this, SLOT(showMaximized()));
+#endif
     }
+	else
+		showNormal();
+
 
 	// path
 	m_lastPath = settings.value("lastPath").toString();
