@@ -5,101 +5,103 @@
 
 CColorSchemesUIController::CColorSchemesUIController(QObject *parent) : QObject(parent)
 {
-    m_menu.addAction(tr("Grayscale"), this, SLOT(applyBW()));
-    m_menu.addAction(tr("Inverse Grayscale"), this, SLOT(applyInverse()));
-    m_menu.addAction(tr("Solarized Light"), this, SLOT(applySolarizedLight()));
-	m_menu.addAction(tr("Blue & Orange"), this, SLOT(applyBlueOrange()));
-	m_menu.addAction(tr("Forest"), this, SLOT(applyForest()));
+	{	
+		Scheme scheme{ tr("Grayscale") };
+		scheme.bgColor = Qt::white;
+		scheme.gridColor = Qt::gray;
+		scheme.nodeColor = Qt::lightGray;
+		scheme.nodeStrokeColor = Qt::black;
+		scheme.nodeLabelColor = Qt::black;
+		scheme.edgeColor = Qt::darkGray;
+		scheme.edgeLabelColor = Qt::gray;
+
+		addScheme(scheme);
+	}
+
+	{	
+		Scheme scheme{ tr("Inverse Grayscale") };
+		scheme.bgColor = Qt::black;
+		scheme.gridColor = Qt::darkGray;
+		scheme.nodeColor = Qt::darkGray;
+		scheme.nodeStrokeColor = Qt::white;
+		scheme.nodeLabelColor = Qt::white;
+		scheme.edgeColor = Qt::gray;
+		scheme.edgeLabelColor = Qt::lightGray;
+
+		addScheme(scheme);
+	}
+
+	{
+		Scheme scheme{ tr("Solarized Light") };
+		scheme.bgColor = QColor("#fdf6e3");
+		scheme.gridColor = QColor("#eee8d5");
+		scheme.nodeColor = QColor("#e0dbcb");
+		scheme.nodeStrokeColor = QColor("#073642");
+		scheme.nodeLabelColor = QColor("#657b83");
+		scheme.edgeColor = QColor("#556058");
+		scheme.edgeLabelColor = QColor("#808000");
+
+		addScheme(scheme);
+	}
+
+	{
+		Scheme scheme{ tr("Blue && Orange") };
+		scheme.bgColor = QColor("#ffffff");
+		scheme.gridColor = QColor("#eeeeee");
+		scheme.nodeColor = QColor("#55aaff");
+		scheme.nodeStrokeColor = QColor("#ffffff");
+		scheme.nodeLabelColor = QColor("#444444");
+		scheme.edgeColor = QColor("#ffaa00");
+		scheme.edgeLabelColor = QColor("#55aa7f");
+
+		addScheme(scheme);
+	}
+
+	{
+		Scheme scheme{ tr("Forest") };
+		scheme.bgColor = QColor("#e3e6bb");
+		scheme.gridColor = QColor("#eeeeee");
+		scheme.nodeColor = QColor("#aaff7f");
+		scheme.nodeStrokeColor = QColor("#8d4600");
+		scheme.nodeLabelColor = QColor("#343400");
+		scheme.edgeColor = QColor("#aaaa7f");
+		scheme.edgeLabelColor = QColor("#55aa00");
+
+		addScheme(scheme);
+	}
+
+	connect(&m_menu, SIGNAL(triggered(QAction*)), this, SLOT(onMenuTriggered(QAction*)));
 }
 
 
-void CColorSchemesUIController::applyBW()
+void CColorSchemesUIController::onMenuTriggered(QAction *action)
 {
-    if (m_scene)
-    {
-        m_scene->setBackgroundBrush(Qt::white);
-        m_scene->setGridPen(QColor(Qt::gray));
-        m_scene->setClassAttribute("node", "color", QColor(Qt::lightGray));
-        m_scene->setClassAttribute("node", "stroke.color", QColor(Qt::black));
-        m_scene->setClassAttribute("node", "label.color", QColor(Qt::black));
-        m_scene->setClassAttribute("edge", "color", QColor(Qt::darkGray));
-        m_scene->setClassAttribute("edge", "label.color", QColor(Qt::gray));
-
-        m_scene->addUndoState();
-    }
+	int index = action->data().toInt();
+	applyScheme(m_schemes.at(index));
 }
 
 
-void CColorSchemesUIController::applyInverse()
+void CColorSchemesUIController::addScheme(const Scheme& scheme)
 {
-    if (m_scene)
-    {
-        m_scene->setBackgroundBrush(Qt::black);
-        m_scene->setGridPen(QColor(Qt::darkGray));
-        m_scene->setClassAttribute("node", "color", QColor(Qt::darkGray));
-        m_scene->setClassAttribute("node", "stroke.color", QColor(Qt::white));
-        m_scene->setClassAttribute("node", "label.color", QColor(Qt::white));
-        m_scene->setClassAttribute("edge", "color", QColor(Qt::gray));
-        m_scene->setClassAttribute("edge", "label.color", QColor(Qt::lightGray));
-
-        m_scene->addUndoState();
-    }
+	int index = m_schemes.size();
+	m_schemes << scheme;
+	auto action = m_menu.addAction(scheme.name);
+	action->setData(index);
 }
 
 
-void CColorSchemesUIController::applySolarizedLight()
+void CColorSchemesUIController::applyScheme(const Scheme& scheme)
 {
 	if (m_scene)
 	{
-		m_scene->setBackgroundBrush(QColor("#fdf6e3"));
-		m_scene->setGridPen(QColor("#eee8d5"));
-
-		m_scene->setClassAttribute("node", "color", QColor("#e0dbcb"));
-		m_scene->setClassAttribute("node", "stroke.color", QColor("#073642"));
-		m_scene->setClassAttribute("node", "label.color", QColor("#657b83"));
-
-		m_scene->setClassAttribute("edge", "color", QColor("#556058"));
-		m_scene->setClassAttribute("edge", "label.color", QColor("#808000"));
+		m_scene->setBackgroundBrush(scheme.bgColor);
+		m_scene->setGridPen(scheme.gridColor);
+		m_scene->setClassAttribute("node", "color", scheme.nodeColor);
+		m_scene->setClassAttribute("node", "stroke.color", scheme.nodeStrokeColor);
+		m_scene->setClassAttribute("node", "label.color", scheme.nodeLabelColor);
+		m_scene->setClassAttribute("edge", "color", scheme.edgeColor);
+		m_scene->setClassAttribute("edge", "label.color", scheme.edgeLabelColor);
 
 		m_scene->addUndoState();
 	}
 }
-
-
-void CColorSchemesUIController::applyBlueOrange()
-{
-	if (m_scene)
-	{
-		m_scene->setBackgroundBrush(QColor("#ffffff"));
-		m_scene->setGridPen(QColor("#eeeeee"));
-
-		m_scene->setClassAttribute("node", "color", QColor("#55aaff"));
-		m_scene->setClassAttribute("node", "stroke.color", QColor("#ffffff"));
-		m_scene->setClassAttribute("node", "label.color", QColor("#444444"));
-
-		m_scene->setClassAttribute("edge", "color", QColor("#ffaa00"));
-		m_scene->setClassAttribute("edge", "label.color", QColor("#55aa7f"));
-
-		m_scene->addUndoState();
-	}
-}
-
-
-void CColorSchemesUIController::applyForest()
-{
-	if (m_scene)
-	{
-		m_scene->setBackgroundBrush(QColor("#e3e6bb"));
-		m_scene->setGridPen(QColor("#eeeeee"));
-
-		m_scene->setClassAttribute("node", "color", QColor("#aaff7f"));
-		m_scene->setClassAttribute("node", "stroke.color", QColor("#8d4600"));
-		m_scene->setClassAttribute("node", "label.color", QColor("#343400"));
-
-		m_scene->setClassAttribute("edge", "color", QColor("#aaaa7f"));
-		m_scene->setClassAttribute("edge", "label.color", QColor("#55aa00"));
-
-		m_scene->addUndoState();
-	}
-}
-

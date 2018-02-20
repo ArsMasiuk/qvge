@@ -168,6 +168,8 @@ public:
 	}
 
 	virtual void moveSelectedItemsBy(const QPointF& d);
+
+	virtual QList<CItem*> cloneSelectedItems();
  
 	// callbacks
 	virtual void onItemDestroyed(CItem *citem);
@@ -228,6 +230,7 @@ protected:
 
 	// call from reimp
 	void moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool performDrag);
+	virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem);
 	void finishDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool dragCancelled);
 	virtual void updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem);
 

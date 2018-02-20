@@ -856,6 +856,46 @@ void CEditorScene::paste()
 }
 
 
+QList<CItem*> CEditorScene::cloneSelectedItems()
+{
+	CItem::CItemLinkMap idToItem;
+
+	QList<CItem*> allItems = getSelectedItems();
+
+	// clone items
+	for (CItem* item : allItems)
+	{
+		auto ptrId = (quint64)item;
+		idToItem[ptrId] = item->clone();
+	}
+
+	// link items
+	QSignalBlocker blocker(this);
+
+	QList<CItem*> clonedList;
+
+	for (CItem* item : idToItem.values())
+	{
+		if (item->linkAfterPaste(idToItem))
+		{
+			auto sceneItem = dynamic_cast<QGraphicsItem*>(item);
+			addItem(sceneItem);
+
+			clonedList << item;
+		}
+	}
+
+	for (CItem* item : idToItem.values())
+	{
+		item->onItemRestored();
+	}
+
+	blocker.unblock();
+
+	return clonedList;
+}
+
+
 // callbacks
 
 void CEditorScene::onItemDestroyed(CItem *citem)
@@ -1038,10 +1078,14 @@ void CEditorScene::startDrag(QGraphicsItem* dragItem)
 }
 
 
+void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem)
+{
+	dragItem->setPos(mouseEvent->scenePos());
+}
+
+
 void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool performDrag)
 {
-	//m_leftClickPos = QPointF();
-	//m_doubleClick = false;
 	m_dragInProgress = true;
 
 	if (dragItem)
@@ -1050,7 +1094,7 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 		{
 			if (performDrag)
 			{
-				dragItem->setPos(mouseEvent->scenePos());
+				processDrag(mouseEvent, dragItem);		
 			}
 
 			QSet<CItem*> oldHovers = m_acceptedHovers + m_rejectedHovers;

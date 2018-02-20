@@ -157,7 +157,7 @@ public:
 	virtual void onDraggedOver(const QSet<CItem*>& /*acceptedItems*/, const QSet<CItem*>& /*rejectedItems*/) {}
 	virtual void onDroppedOn(const QSet<CItem*>& /*acceptedItems*/, const QSet<CItem*>& /*rejectedItems*/) {}
 	virtual void onClick(QGraphicsSceneMouseEvent* /*mouseEvent*/) {}
-	virtual bool onClickDrag(QGraphicsSceneMouseEvent* /*mouseEvent*/, const QPointF& /*clickPos*/) { return false; }
+	virtual bool onClickDrag(QGraphicsSceneMouseEvent* /*mouseEvent*/, const QPointF& /*clickPos*/) { return true; }
 	virtual bool onDoubleClickDrag(QGraphicsSceneMouseEvent* /*mouseEvent*/, const QPointF& /*clickPos*/) { return false; }
 
 	// call from control points

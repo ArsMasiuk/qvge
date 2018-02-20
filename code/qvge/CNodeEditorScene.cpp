@@ -283,12 +283,12 @@ void CNodeEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			return;
 		}
 
-		// edges drag
-		if (isDragging && mouseGrabberItem())
-		{
-			QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
-			moveSelectedEdgesBy(d);
-		}
+		//// edges drag
+		//if (isDragging && mouseGrabberItem())
+		//{
+		//	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
+		//	moveSelectedEdgesBy(d);
+		//}
 
 		// call super
 		Super::mouseMoveEvent(mouseEvent);
@@ -337,7 +337,7 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		cancel(mouseEvent->scenePos());
 	}
 	else
-	if (m_state = IS_Finishing)
+	if (m_state == IS_Finishing)
 	{
 		m_connection->setSelected(true);
 	}
@@ -376,7 +376,21 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 
 		CItem *citem = dynamic_cast<CItem*>(item);
 		if (citem)
-			return citem->onClickDrag(mouseEvent, clickPos);
+		{
+			// clone?
+			//if (mouseEvent->modifiers() & Qt::ControlModifier)
+			//{
+			//	// clone selection
+			//	//citem = citem->clone();
+			//	QList<CItem*> clonedList = cloneSelectedItems();
+			//}
+
+			qDebug() << clickPos << citem;
+
+			// else handle by item
+			if (!citem->onClickDrag(mouseEvent, clickPos))
+				return false;
+		}
 
 		// else start drag of item
 		startDrag(item);
@@ -645,6 +659,13 @@ void CNodeEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, Q
 	}
 
 	return Super::updateMovedCursor(mouseEvent, hoverItem);
+}
+
+
+void CNodeEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem)
+{
+	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
+	moveSelectedItemsBy(d);
 }
 
 

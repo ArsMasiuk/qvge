@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QMenu>
+#include <QList>
 
 class CEditorScene;
 
@@ -24,15 +25,24 @@ public:
 Q_SIGNALS:
 
 private Q_SLOTS:
-    void applyBW();
-    void applyInverse();
-	void applySolarizedLight();
-	void applyBlueOrange();
-	void applyForest();
+	void onMenuTriggered(QAction *action);
 
 private:
     QMenu m_menu;
-     CEditorScene *m_scene = NULL;
+    CEditorScene *m_scene = NULL;
+
+	struct Scheme
+	{
+		QString name;
+		QColor bgColor, gridColor;
+		QColor nodeColor, nodeStrokeColor, nodeLabelColor;
+		QColor edgeColor, edgeLabelColor;
+	};
+
+	QList<Scheme> m_schemes;
+
+	void addScheme(const Scheme& scheme);
+	void applyScheme(const Scheme& scheme);
 };
 
 #endif // CCOLORSCHEMESUICONTROLLER_H
