@@ -63,10 +63,22 @@ bool CPolylineConnection::insertPointAt(const QPointF &pos)
 
 CConnection* CPolylineConnection::clone()
 {
-	CPolylineConnection* c = new CPolylineConnection();
-	c->setFirstNode(m_firstNode);
-	c->setLastNode(m_lastNode);
-	c->setPoints(m_polyPoints);
+	CPolylineConnection* c = new CPolylineConnection(parentItem());
+	//c->setFirstNode(m_firstNode);
+	//c->setLastNode(m_lastNode);
+	//c->setPoints(m_polyPoints);
+
+	// assign directly!
+	c->m_firstNode = m_firstNode;
+	c->m_lastNode = m_lastNode;
+	c->m_polyPoints = m_polyPoints;
+
+	if (scene())
+		scene()->addItem(c);
+
+	c->copyDataFrom(this);
+
+
 	return c;
 }
 

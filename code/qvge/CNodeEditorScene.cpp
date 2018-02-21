@@ -283,20 +283,13 @@ void CNodeEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			return;
 		}
 
-		//// edges drag
-		//if (isDragging && mouseGrabberItem())
-		//{
-		//	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
-		//	moveSelectedEdgesBy(d);
-		//}
-
 		// call super
 		Super::mouseMoveEvent(mouseEvent);
 		return;
 	}
 
 	// custom dragging
-	moveDrag(mouseEvent, m_startDragItem, true);
+	moveDrag(mouseEvent, m_startDragItem, isDragging);
 }
 
 
@@ -378,14 +371,22 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 		if (citem)
 		{
 			// clone?
-			//if (mouseEvent->modifiers() & Qt::ControlModifier)
-			//{
-			//	// clone selection
-			//	//citem = citem->clone();
-			//	QList<CItem*> clonedList = cloneSelectedItems();
-			//}
+			if (mouseEvent->modifiers() & Qt::ControlModifier)
+			{
+				// clone selection
+				QList<CItem*> clonedList = cloneSelectedItems();
+				if (clonedList.isEmpty())
+					return false;
+				
+				selectItems(clonedList);
+				
+				// start drag via 1st item
+				startDrag(clonedList.first()->getSceneItem());
 
-			qDebug() << clickPos << citem;
+				return true;
+			}
+
+			//qDebug() << clickPos << citem;
 
 			// else handle by item
 			if (!citem->onClickDrag(mouseEvent, clickPos))

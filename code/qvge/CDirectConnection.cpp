@@ -34,9 +34,20 @@ void CDirectConnection::setBendFactor(int bf)
 
 CConnection* CDirectConnection::clone()
 {
-	CDirectConnection* c = new CDirectConnection();
-	c->setFirstNode(m_firstNode);
-	c->setLastNode(m_lastNode);
+	CDirectConnection* c = new CDirectConnection(parentItem());
+
+	//c->setFirstNode(m_firstNode);
+	//c->setLastNode(m_lastNode);
+
+	// assign directly!
+	c->m_firstNode = m_firstNode;
+	c->m_lastNode = m_lastNode;
+
+	if (scene())
+		scene()->addItem(c);
+
+	c->copyDataFrom(this);
+
 	return c;
 }
 

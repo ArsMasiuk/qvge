@@ -860,34 +860,41 @@ QList<CItem*> CEditorScene::cloneSelectedItems()
 {
 	CItem::CItemLinkMap idToItem;
 
-	QList<CItem*> allItems = getSelectedItems();
+	auto allItems = copyPasteItems();
 
 	// clone items
-	for (CItem* item : allItems)
+	for (auto item : allItems)
 	{
-		auto ptrId = (quint64)item;
-		idToItem[ptrId] = item->clone();
+		if (auto citem = dynamic_cast<CItem*>(item))
+		{
+			auto ptrId = (quint64)citem;
+			idToItem[ptrId] = citem->clone();
+		}
 	}
 
 	// link items
+	CItem::beginRestore();
+
 	QSignalBlocker blocker(this);
 
 	QList<CItem*> clonedList;
 
-	for (CItem* item : idToItem.values())
+	for (CItem* citem : idToItem.values())
 	{
-		if (item->linkAfterPaste(idToItem))
+		if (citem->linkAfterPaste(idToItem))
 		{
-			auto sceneItem = dynamic_cast<QGraphicsItem*>(item);
-			addItem(sceneItem);
+			//auto sceneItem = dynamic_cast<QGraphicsItem*>(citem);
+			//addItem(sceneItem);
 
-			clonedList << item;
+			clonedList << citem;
 		}
 	}
 
-	for (CItem* item : idToItem.values())
+	CItem::endRestore();
+
+	for (CItem* citem : clonedList)
 	{
-		item->onItemRestored();
+		citem->onItemRestored();
 	}
 
 	blocker.unblock();
@@ -1450,6 +1457,15 @@ void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 		keyEvent->accept();
 		return;
 	}
+
+	// test
+	//if (keyEvent->modifiers() == Qt::ControlModifier && !m_leftClickPos.isNull() && !m_doubleClick)
+	//{
+	//	setSceneCursor(Qt::SizeHorCursor);
+
+	//	keyEvent->accept();
+	//	return;
+	//}
 }
 
 
@@ -1561,6 +1577,16 @@ void CEditorScene::deselectAll()
 {
 	QPainterPath path;
 	setSelectionArea(path, QTransform());
+}
+
+
+void CEditorScene::selectItems(const QList<CItem*>& items, bool exclusive)
+{
+	if (exclusive)
+		deselectAll();
+
+	for (auto item : items)
+		item->getSceneItem()->setSelected(true);
 }
 
 

@@ -199,6 +199,7 @@ public Q_SLOTS:
 
 	void selectAll();
 	void deselectAll();
+	void selectItems(const QList<CItem*>& items, bool exclusive = true);
 
 	// copy-paste
 	void cut();

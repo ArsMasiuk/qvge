@@ -79,12 +79,14 @@ bool CFileSerializerGraphML::readAttrKey(int /*index*/, const QDomNode & domNode
 	QString valueId = elem.attribute("attr.name", "");
 	QString valueType = elem.attribute("attr.type", "");
 
-	if (key.isEmpty() || classId.isEmpty() || valueId.isEmpty())
+	if (key.isEmpty() || valueId.isEmpty())
 		return false;
 
 	CAttribute attr;
 	attr.id = valueId.toLower().toLatin1();
 	QByteArray attrclassId = classId.toLower().toLatin1();
+	if (attrclassId.isEmpty())
+		attrclassId = "item";
 	attr.name = valueId; // ?
 
 	if (valueType == "integer")			
