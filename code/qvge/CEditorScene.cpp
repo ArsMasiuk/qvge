@@ -168,7 +168,6 @@ void CEditorScene::enableItemLabels(bool on)
 	layoutItemLabels();
 }
 
-
 void CEditorScene::setFontAntialiased(bool on)
 {
 	m_isFontAntialiased = on;
@@ -1072,9 +1071,14 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	Super::mouseMoveEvent(mouseEvent);
 
+	m_mousePos = mouseEvent->scenePos();
+
 	m_draggedItem = mouseGrabberItem();
 
 	moveDrag(mouseEvent, m_draggedItem, false);
+
+
+	updateCursorState();
 }
 
 
@@ -1082,6 +1086,7 @@ void CEditorScene::startDrag(QGraphicsItem* dragItem)
 {
 	m_startDragItem = dragItem;
 	m_dragInProgress = true;
+	m_lastDragPos = m_leftClickPos;
 }
 
 
@@ -1093,10 +1098,10 @@ void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsIt
 
 void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool performDrag)
 {
-	m_dragInProgress = true;
-
 	if (dragItem)
 	{
+		m_dragInProgress = true;
+
 		if (dragItem->flags() & dragItem->ItemIsMovable)
 		{
 			if (performDrag)
@@ -1211,10 +1216,6 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	m_doubleClick = false;
 	m_dragInProgress = false;
-
-	// update curson on release
-	QGraphicsItem *hoverItem = itemAt(mouseEvent->scenePos(), QTransform());
-	updateMovedCursor(mouseEvent, hoverItem);
 }
 
 
@@ -1254,7 +1255,9 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 		{
 			// snap after drop if dragItem still alive (can die after onDroppedOn??)
 			if (items().contains(dragItem))
+			{
 				onDropped(mouseEvent, dragItem);
+			}
 
 			// update undo manager
 			addUndoState();
@@ -1262,22 +1265,73 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 	}
 
 	m_startDragItem = NULL;
-
-	if (mouseEvent)
-	{
-		QGraphicsItem *hoverItem = itemAt(mouseEvent->scenePos(), QTransform());
-		updateMovedCursor(mouseEvent, hoverItem);
-	}
+	m_dragInProgress = false;
 }
 
 
 void CEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
 {
+}
+
+
+void CEditorScene::onMoving(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
+{
+	updateCursorState();
+}
+
+
+void CEditorScene::onDragging(QGraphicsItem* /*dragItem*/, const QSet<CItem*>& acceptedItems, const QSet<CItem*>& rejectedItems)
+{
+	updateCursorState();
+}
+
+
+void CEditorScene::updateCursorState()
+{
+	auto keys = qApp->queryKeyboardModifiers();
+	auto mouseButtons = qApp->mouseButtons();
+
+	QGraphicsItem *hoverItem = itemAt(m_mousePos, QTransform());
+
+	// drag?
+	if (m_dragInProgress)
+	{
+		if (m_acceptedHovers.size())
+		{
+			setSceneCursor(Qt::CrossCursor);
+			return;
+		}
+
+		if (m_rejectedHovers.size())
+		{
+			setSceneCursor(Qt::ForbiddenCursor);
+			return;
+		}
+
+		// clone?
+		if (keys == Qt::ControlModifier)
+		{
+			setSceneCursor(Qt::DragCopyCursor);
+			return;
+		}
+
+		setSceneCursor(Qt::SizeAllCursor);
+		return;
+	}
+
+	// can drag a hover item?
 	if (hoverItem)
 	{
 		if (hoverItem->isEnabled() && (hoverItem->flags() & hoverItem->ItemIsMovable))
 		{
-			if (mouseEvent->buttons() == Qt::NoButton)
+			// clone?
+			if (keys == Qt::ControlModifier)
+			{
+				setSceneCursor(Qt::DragCopyCursor);
+				return;
+			}
+
+			if (mouseButtons == Qt::NoButton)
 			{
 				setSceneCursor(Qt::SizeAllCursor);
 				return;
@@ -1285,31 +1339,8 @@ void CEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGrap
 		}
 	}
 
+	// default scene cursor
 	setSceneCursor(Qt::ArrowCursor);
-}
-
-
-void CEditorScene::onMoving(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
-{
-	updateMovedCursor(mouseEvent, hoverItem);
-}
-
-
-void CEditorScene::onDragging(QGraphicsItem* /*dragItem*/, const QSet<CItem*>& acceptedItems, const QSet<CItem*>& rejectedItems)
-{
-	if (acceptedItems.size())
-	{
-		setSceneCursor(Qt::CrossCursor);
-		return;
-	}
-
-	if (rejectedItems.size())
-	{
-		setSceneCursor(Qt::ForbiddenCursor);
-		return;
-	}
-
-	setSceneCursor(Qt::SizeAllCursor);
 }
 
 
@@ -1400,9 +1431,20 @@ void CEditorScene::setSceneCursor(const QCursor& c)
 
 // keys
 
+void CEditorScene::keyReleaseEvent(QKeyEvent *keyEvent)
+{
+	Super::keyReleaseEvent(keyEvent);
+
+	updateCursorState();
+}
+
+
 void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
 	Super::keyPressEvent(keyEvent);
+
+	updateCursorState();
+
 	if (keyEvent->isAccepted())
 		return;
 
@@ -1459,6 +1501,7 @@ void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 	}
 
 	// test
+	
 	//if (keyEvent->modifiers() == Qt::ControlModifier && !m_leftClickPos.isNull() && !m_doubleClick)
 	//{
 	//	setSceneCursor(Qt::SizeHorCursor);

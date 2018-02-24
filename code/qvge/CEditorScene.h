@@ -223,6 +223,7 @@ protected:
 	virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent);
 	virtual void keyPressEvent(QKeyEvent *keyEvent);
+	virtual void keyReleaseEvent(QKeyEvent *keyEvent);
 	virtual void focusInEvent(QFocusEvent *focusEvent);
 
 	// to reimplement
@@ -234,6 +235,8 @@ protected:
 	virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem);
 	void finishDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool dragCancelled);
 	virtual void updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem);
+
+	void updateCursorState();
 
 	// callbacks
 	virtual void onDragging(QGraphicsItem* dragItem, const QSet<CItem*>& acceptedItems, const QSet<CItem*>& rejectedItems);
@@ -249,9 +252,11 @@ private:
 
 protected:
 	QPointF m_leftClickPos;
+	QPointF m_mousePos;
 	bool m_doubleClick;
 	bool m_dragInProgress;
 	QGraphicsItem *m_startDragItem;
+	QPointF m_lastDragPos;
 
 	QMap<QByteArray, CItem*> m_itemFactories;
 	CItem *m_activeItemFactory;

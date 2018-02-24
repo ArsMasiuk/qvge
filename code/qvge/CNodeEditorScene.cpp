@@ -252,7 +252,7 @@ CConnection* CNodeEditorScene::activateConnectionFactory(const QByteArray& facto
 
 void CNodeEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-	setSceneCursor(Qt::SizeAllCursor);
+	//setSceneCursor(Qt::SizeAllCursor);
 
 	Super::mouseDoubleClickEvent(mouseEvent);
 }
@@ -371,7 +371,7 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 		if (citem)
 		{
 			// clone?
-			if (mouseEvent->modifiers() & Qt::ControlModifier)
+			if (mouseEvent->modifiers() == Qt::ControlModifier)
 			{
 				// clone selection
 				QList<CItem*> clonedList = cloneSelectedItems();
@@ -650,21 +650,48 @@ void CNodeEditorScene::drawItems(QPainter *painter, int numItems, QGraphicsItem 
 
 void CNodeEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
 {
-	if (mouseEvent->buttons() == Qt::NoButton)
-	{
-		if (dynamic_cast<CControlPoint*>(hoverItem))
-		{
-			setSceneCursor(Qt::CrossCursor);
-			return;
-		}
-	}
+	//if (mouseEvent->buttons() == Qt::NoButton)
+	//{
+	//	if (dynamic_cast<CControlPoint*>(hoverItem))
+	//	{
+	//		setSceneCursor(Qt::CrossCursor);
+	//		return;
+	//	}
+	//}
 
 	return Super::updateMovedCursor(mouseEvent, hoverItem);
 }
 
 
-void CNodeEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem)
+void CNodeEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* /*dragItem*/)
 {
+	if (m_startDragItem)
+	{
+		auto keys = qApp->queryKeyboardModifiers();
+
+		if (keys == Qt::ShiftModifier)
+		{
+			auto hpos = mouseEvent->scenePos();
+			auto delta = hpos - m_leftClickPos;
+			if (qAbs(delta.x()) > qAbs(delta.y()))
+				hpos.setY(m_leftClickPos.y());
+			else
+				hpos.setX(m_leftClickPos.x());
+
+			QPointF d = hpos - m_lastDragPos;
+			m_lastDragPos = hpos;
+			moveSelectedItemsBy(d);
+		}
+		else
+		{
+			QPointF d = mouseEvent->scenePos() - m_lastDragPos;	// delta pos
+			m_lastDragPos = mouseEvent->scenePos();
+			moveSelectedItemsBy(d);
+		}
+
+		return;
+	}
+
 	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
 	moveSelectedItemsBy(d);
 }
