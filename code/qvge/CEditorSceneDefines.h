@@ -9,7 +9,8 @@ It can be used freely, maintaining the information above.
 
 #pragma once
 
-static enum SceneInfoState
+
+enum SceneInfoState
 {
 	SIS_Select = 0,
 	SIS_Hover,

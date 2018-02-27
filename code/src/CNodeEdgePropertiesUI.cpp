@@ -14,8 +14,9 @@ It can be used freely, maintaining the information above.
 #include "ui_CNodeEdgePropertiesUI.h"
 
 #include <qvge/CNodeEditorScene.h>
-#include <qvge/CConnection.h>
 #include <qvge/CNode.h>
+#include <qvge/CConnection.h>
+#include <qvge/CDirectConnection.h>
 #include <qvge/CAttribute.h>
 
 
@@ -25,6 +26,10 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
     m_updateLock(false),
     ui(new Ui::CNodeEdgePropertiesUI)
 {
+	m_nodeFactory = new CNode;
+	m_edgeFactory = new CDirectConnection;
+
+
     ui->setupUi(this);
 
     ui->NodeColor->setColorScheme(QSint::OpenOfficeColors());
@@ -61,6 +66,7 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 
 CNodeEdgePropertiesUI::~CNodeEdgePropertiesUI()
 {
+	delete m_nodeFactory;
     delete ui;
 }
 
@@ -88,6 +94,9 @@ void CNodeEdgePropertiesUI::connectSignals(CEditorScene* scene)
 
 void CNodeEdgePropertiesUI::onSceneAttached(CEditorScene* scene)
 {
+	scene->setActiveItemFactory(m_nodeFactory);
+	scene->setActiveItemFactory(m_edgeFactory);
+
     connectSignals(scene);
 
     onSceneChanged();
@@ -145,7 +154,6 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
         ui->NodeId->setText(tr("Node id: %1").arg(nodes.first()->getId()));
 
 		ui->NodeLabel->setVisible(true);
-		//ui->NodeLabel->setText(tr("Node text: %1").arg(nodes.first()->getAttribute("label").toString()));
     }
     else
     {
@@ -180,7 +188,6 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
         ui->EdgeId->setText(tr("Edge id: %1").arg(edges.first()->getId()));
 
 		ui->EdgeLabel->setVisible(true);
-		//ui->EdgeLabel->setText(tr("Edge text: %1").arg(edges.first()->getAttribute("label").toString()));
     }
     else
     {
@@ -214,66 +221,70 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 }
 
 
+void CNodeEdgePropertiesUI::setNodesAttribute(const QByteArray& attrId, const QVariant& v)
+{
+	if (m_nodeFactory)
+		m_nodeFactory->setAttribute(attrId, v);
+
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CNode*> nodes = m_scene->getSelectedNodes();
+	if (nodes.isEmpty())
+		return;
+
+	for (auto node : nodes)
+		node->setAttribute(attrId, v);
+
+	m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::setEdgesAttribute(const QByteArray& attrId, const QVariant& v)
+{
+	if (m_edgeFactory)
+		m_edgeFactory->setAttribute(attrId, v);
+
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CConnection*> edges = m_scene->getSelectedEdges();
+	if (edges.isEmpty())
+		return;
+
+	for (auto edge : edges)
+		edge->setAttribute(attrId, v);
+
+	m_scene->addUndoState();
+}
+
+
 void CNodeEdgePropertiesUI::on_NodeColor_activated(const QColor &color)
 {
-    if (m_updateLock || m_scene == NULL)
-        return;
-
-    QList<CNode*> nodes = m_scene->getSelectedNodes();
-    if (nodes.isEmpty())
-        return;
-
-    for (auto node: nodes)
-    {
-        node->setAttribute("color", color);
-    }
-
-    m_scene->addUndoState();
+	setNodesAttribute("color", color);
 }
 
 
 void CNodeEdgePropertiesUI::on_NodeShape_activated(QVariant data)
 {
-    if (m_updateLock || m_scene == NULL)
-        return;
-
-    QList<CNode*> nodes = m_scene->getSelectedNodes();
-    if (nodes.isEmpty())
-        return;
-
-    for (auto node: nodes)
-    {
-        node->setAttribute("shape", data);
-    }
-
-    m_scene->addUndoState();
+	setNodesAttribute("shape", data);
 }
 
 
 void CNodeEdgePropertiesUI::on_NodeSizeX_valueChanged(int /*value*/)
 {
-    if (m_updateLock || m_scene == NULL)
-        return;
-
-    QList<CNode*> nodes = m_scene->getSelectedNodes();
-    if (nodes.isEmpty())
-        return;
-
 	ui->NodeSizeX->blockSignals(true);
 	ui->NodeSizeY->blockSignals(true);
 
 	if (ui->NodeSizeSwitch->isChecked())
 		ui->NodeSizeY->setValue(ui->NodeSizeX->value());
 
-    for (auto node: nodes)
-    {
-        node->setAttribute("size", QSize(ui->NodeSizeX->value(), ui->NodeSizeY->value()));
-    }
+	QSize size(ui->NodeSizeX->value(), ui->NodeSizeY->value());
 
-	ui->NodeSizeX->blockSignals(false);
+	setNodesAttribute("size", size);
+
+ 	ui->NodeSizeX->blockSignals(false);
 	ui->NodeSizeY->blockSignals(false);
-
-    m_scene->addUndoState();
 }
 
 
@@ -375,131 +386,46 @@ _again:
 
 void CNodeEdgePropertiesUI::on_StrokeColor_activated(const QColor &color)
 {
-	if (m_updateLock || m_scene == NULL)
-		return;
-
-	QList<CNode*> nodes = m_scene->getSelectedNodes();
-	if (nodes.isEmpty())
-		return;
-
-	for (auto node : nodes)
-	{
-		node->setAttribute("stroke.color", color);
-	}
-
-	m_scene->addUndoState();
+	setNodesAttribute("stroke.color", color);
 }
 
 
 void CNodeEdgePropertiesUI::on_StrokeStyle_activated(QVariant data)
 {
-	if (m_updateLock || m_scene == NULL)
-		return;
-
-	QList<CNode*> nodes = m_scene->getSelectedNodes();
-	if (nodes.isEmpty())
-		return;
-
 	QString style = CUtils::penStyleToText(data.toInt());
 
-	for (auto node : nodes)
-	{
-		node->setAttribute("stroke.style", style);
-	}
-
-	m_scene->addUndoState();
+	setNodesAttribute("stroke.style", style);
 }
 
 
 void CNodeEdgePropertiesUI::on_StrokeSize_valueChanged(double value)
 {
-	if (m_updateLock || m_scene == NULL)
-		return;
-
-	QList<CNode*> nodes = m_scene->getSelectedNodes();
-	if (nodes.isEmpty())
-		return;
-
-	for (auto node : nodes)
-	{
-		node->setAttribute("stroke.size", value);
-	}
-
-	m_scene->addUndoState();
+	setNodesAttribute("stroke.size", value);
 }
 
 
 void CNodeEdgePropertiesUI::on_EdgeColor_activated(const QColor &color)
 {
-    if (m_updateLock || m_scene == NULL)
-        return;
-
-    QList<CConnection*> edges = m_scene->getSelectedEdges();
-    if (edges.isEmpty())
-        return;
-
-    for (auto edge: edges)
-    {
-        edge->setAttribute("color", color);
-    }
-
-    m_scene->addUndoState();
+	setEdgesAttribute("color", color);
 }
 
 
 void CNodeEdgePropertiesUI::on_EdgeWeight_valueChanged(double value)
 {
-    if (m_updateLock || m_scene == NULL)
-        return;
-
-    QList<CConnection*> edges = m_scene->getSelectedEdges();
-    if (edges.isEmpty())
-        return;
-
-    for (auto edge: edges)
-    {
-        edge->setAttribute("weight", value);
-    }
-
-    m_scene->addUndoState();
+	setEdgesAttribute("weight", value);
 }
 
 
 void CNodeEdgePropertiesUI::on_EdgeStyle_activated(QVariant data)
 {
-    if (m_updateLock || m_scene == NULL)
-        return;
-
-    QList<CConnection*> edges = m_scene->getSelectedEdges();
-    if (edges.isEmpty())
-        return;
-
 	QString style = CUtils::penStyleToText(data.toInt());
-
-    for (auto edge: edges)
-    {
-		edge->setAttribute("style", style);
-    }
-
-    m_scene->addUndoState();
+	setEdgesAttribute("style", style);
 }
 
 
 void CNodeEdgePropertiesUI::on_EdgeDirection_activated(QVariant data)
 {
-	if (m_updateLock || m_scene == NULL)
-		return;
-
-	QList<CConnection*> edges = m_scene->getSelectedEdges();
-	if (edges.isEmpty())
-		return;
-
-	for (auto edge : edges)
-	{
-		edge->setAttribute("direction", data);
-	}
-
-    m_scene->addUndoState();
+	setEdgesAttribute("direction", data);
 }
 
 

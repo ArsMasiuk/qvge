@@ -8,6 +8,7 @@ It can be used freely, maintaining the information above.
 */
 
 #include "CEditorScene.h"
+#include "CEditorSceneDefines.h"
 #include "CItem.h"
 #include "CSimpleUndoManager.h"
 #include "CDiffUndoManager.h"
@@ -37,13 +38,13 @@ const char* versionId = "VersionId";
 
 CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent), 
     m_doubleClick(false),
+	m_dragInProgress(false),
     m_startDragItem(NULL),
-    m_activeItemFactory(NULL),
+	m_infoStatus(-1),
     //m_undoManager(new CSimpleUndoManager(*this)),
 	m_undoManager(new CDiffUndoManager(*this)),
 	m_menuTriggerItem(NULL),
     m_draggedItem(NULL),
-	m_dragInProgress(false),
     m_needUpdateItems(true)
 {
     m_gridSize = 25;
@@ -440,7 +441,7 @@ bool CEditorScene::restoreFrom(QDataStream& out, bool readOptions)
 
 // factorization
 
-bool CEditorScene::addItemFactory(CItem *factoryItem)
+bool CEditorScene::setItemFactory(CItem *factoryItem, const QByteArray& typeId)
 {
 	if (factoryItem)
 	{
@@ -449,14 +450,7 @@ bool CEditorScene::addItemFactory(CItem *factoryItem)
 		QByteArray superClassId = factoryItem->superClassId();
 		m_classToSuperIds[classId] = superClassId;
 
-		QByteArray id = factoryItem->typeId();
-
-		// already registered?
-		if (m_itemFactories.contains(id))
-		{
-			return (m_itemFactories[id] == factoryItem);
-		}
-
+		QByteArray id = typeId.isEmpty() ? factoryItem->typeId() : typeId;
 		m_itemFactories[id] = factoryItem;
 		return true;
 	}
@@ -465,19 +459,34 @@ bool CEditorScene::addItemFactory(CItem *factoryItem)
 }
 
 
-CItem* CEditorScene::activateItemFactory(const QByteArray &factoryId)
+CItem* CEditorScene::getItemFactory(const QByteArray& typeId) const 
 {
-	if (factoryId.isEmpty() || !m_itemFactories.contains(factoryId))
+	return m_itemFactories.contains(typeId) ? m_itemFactories[typeId] : NULL;
+}
+
+
+bool CEditorScene::setActiveItemFactory(CItem *factoryItem, const QByteArray& typeId)
+{
+	if (typeId.isEmpty() && factoryItem == NULL)
+		return false;
+
+	if (factoryItem)
 	{
-		m_activeItemFactory = NULL;
+		QByteArray id = typeId.isEmpty() ? factoryItem->typeId() : typeId;
+		m_activeItemFactory[id] = factoryItem;
 	}
 	else
-	{
-		m_activeItemFactory = m_itemFactories[factoryId];
-	}
+		m_activeItemFactory[typeId] = NULL;
 
-	return NULL;
+	return true;
 }
+
+
+CItem* CEditorScene::getActiveItemFactory(const QByteArray& typeId) const
+{
+	return m_activeItemFactory.contains(typeId) ? m_activeItemFactory[typeId] : NULL;
+}
+
 
 
 CItem* CEditorScene::createItemOfType(const QByteArray &id) const
@@ -1092,7 +1101,38 @@ void CEditorScene::startDrag(QGraphicsItem* dragItem)
 
 void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem)
 {
-	dragItem->setPos(mouseEvent->scenePos());
+	if (m_startDragItem)
+	{
+		auto keys = qApp->queryKeyboardModifiers();
+
+		if (keys & Qt::ShiftModifier)
+		{
+			auto hpos = mouseEvent->scenePos();
+			auto delta = hpos - m_leftClickPos;
+			if (qAbs(delta.x()) > qAbs(delta.y()))
+				hpos.setY(m_leftClickPos.y());
+			else
+				hpos.setX(m_leftClickPos.x());
+
+			QPointF d = hpos - m_lastDragPos;
+			m_lastDragPos = hpos;
+			moveSelectedItemsBy(d);
+		}
+		else
+		{
+			QPointF d = mouseEvent->scenePos() - m_lastDragPos;	// delta pos
+			m_lastDragPos = mouseEvent->scenePos();
+			moveSelectedItemsBy(d);
+		}
+
+		return;
+	}
+
+	// fallback
+	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
+	moveSelectedItemsBy(d);
+
+	//dragItem->setPos(mouseEvent->scenePos());
 }
 
 
@@ -1277,12 +1317,30 @@ void CEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGrap
 void CEditorScene::onMoving(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
 {
 	updateCursorState();
+
+	if (hoverItem)
+		setInfoStatus(SIS_Hover);
+	else
+		setInfoStatus(SIS_Select);
 }
 
 
 void CEditorScene::onDragging(QGraphicsItem* /*dragItem*/, const QSet<CItem*>& acceptedItems, const QSet<CItem*>& rejectedItems)
 {
 	updateCursorState();
+
+	setInfoStatus(SIS_Drag);
+}
+
+
+void CEditorScene::setInfoStatus(int status)
+{
+	if (m_infoStatus != status)
+	{
+		m_infoStatus = status;
+
+		Q_EMIT infoStatusChanged(status);
+	}
 }
 
 
@@ -1309,11 +1367,11 @@ void CEditorScene::updateCursorState()
 		}
 
 		// clone?
-		if (keys == Qt::ControlModifier)
-		{
-			setSceneCursor(Qt::DragCopyCursor);
-			return;
-		}
+		//if (keys == Qt::ControlModifier)
+		//{
+		//	setSceneCursor(Qt::DragCopyCursor);
+		//	return;
+		//}
 
 		setSceneCursor(Qt::SizeAllCursor);
 		return;

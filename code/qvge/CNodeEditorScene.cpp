@@ -13,11 +13,11 @@
 
 
 CNodeEditorScene::CNodeEditorScene(QObject *parent) : Super(parent),
+	m_editMode(EM_Default),
 	m_startNode(NULL),
 	m_endNode(NULL),
 	m_connection(NULL),
 	m_realStart(false),
-	m_activeConnectionFactory(NULL),
 	m_state(IS_None)
 {
 	// default factories
@@ -112,6 +112,17 @@ void CNodeEditorScene::initializeOnce()
 
 // nodes creation
 
+void CNodeEditorScene::setEditMode(EditMode mode)
+{
+	if (m_editMode != mode)
+	{
+		m_editMode = mode;
+
+		Q_EMIT editModeChanged(m_editMode);
+	}
+}
+
+
 bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 {
 	QGraphicsItem* item = itemAt(pos, QTransform());
@@ -197,54 +208,33 @@ void CNodeEditorScene::cancel(const QPointF& /*pos*/)
 
 CNode* CNodeEditorScene::createNewNode() const
 {
-	if (getActiveItemFactory()) 
+	auto nodeFactory = getActiveItemFactory("CNode");
+	if (nodeFactory)
 	{
-		CItem* nodeItem = getActiveItemFactory()->create();
-		if (nodeItem) 
-		{
-			if (CNode* node = dynamic_cast<CNode*>(nodeItem))
-				return node;
-
-			delete nodeItem;
-		}
+		auto node = dynamic_cast<CNode*>(nodeFactory->create());
+		Q_ASSERT(node);
+		node->copyDataFrom(nodeFactory);
+		return node;
 	}
 
 	// here default
-	return new CNode();
+	return new CNode;
 }
 
 
 CConnection* CNodeEditorScene::createNewConnection() const
 {
-	if (m_activeConnectionFactory)
+	auto edgeFactory = getActiveItemFactory("CDirectConnection");
+	if (edgeFactory)
 	{
-		CItem* connItem = m_activeConnectionFactory->create();
-		if (connItem) 
-		{
-			if (CConnection* conn = dynamic_cast<CConnection*>(connItem))
-				return conn;
-
-			delete connItem;
-		}
+		auto edge = dynamic_cast<CDirectConnection*>(edgeFactory->create());
+		Q_ASSERT(edge);
+		edge->copyDataFrom(edgeFactory);
+		return edge;
 	}
 
 	// here default
 	return new CDirectConnection();
-}
-
-
-CConnection* CNodeEditorScene::activateConnectionFactory(const QByteArray& factoryId)
-{
-	if (factoryId.isEmpty() || !m_itemFactories.contains(factoryId))
-	{
-		m_activeConnectionFactory = NULL;
-	}
-	else
-	{
-		m_activeConnectionFactory = dynamic_cast<CConnection*>(m_itemFactories[factoryId]);
-	}
-
-	return NULL;
 }
 
 
@@ -332,7 +322,7 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	else
 	if (m_state == IS_Finishing)
 	{
-		m_connection->setSelected(true);
+		//m_connection->setSelected(true);
 	}
 
 	m_state = IS_None;
@@ -387,6 +377,13 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 			}
 
 			//qDebug() << clickPos << citem;
+
+			// add nodes?
+			if (m_editMode == EM_AddNodes)
+			{
+				setEditMode(EM_Default);
+				return startNewConnection(clickPos);
+			}
 
 			// else handle by item
 			if (!citem->onClickDrag(mouseEvent, clickPos))
@@ -492,6 +489,23 @@ void CNodeEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphics
 	}
 
 	Super::onDropped(mouseEvent, dragItem);
+}
+
+
+void CNodeEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem)
+{
+	if (m_editMode == EM_AddNodes)
+	{
+		// clicked on empty space?
+		if (!clickedItem)
+		{
+			setEditMode(EM_Default);			
+			onLeftDoubleClick(mouseEvent, clickedItem);
+			return;
+		}
+	}
+
+	Super::onLeftClick(mouseEvent, clickedItem);
 }
 
 
@@ -647,54 +661,21 @@ void CNodeEditorScene::drawItems(QPainter *painter, int numItems, QGraphicsItem 
 
 }
 
+//
+//void CNodeEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
+//{
+//	if (mouseEvent->buttons() == Qt::NoButton)
+//	{
+//		if (dynamic_cast<CControlPoint*>(hoverItem))
+//		{
+//			setSceneCursor(Qt::CrossCursor);
+//			return;
+//		}
+//	}
+//
+//	return Super::updateMovedCursor(mouseEvent, hoverItem);
+//}
 
-void CNodeEditorScene::updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
-{
-	//if (mouseEvent->buttons() == Qt::NoButton)
-	//{
-	//	if (dynamic_cast<CControlPoint*>(hoverItem))
-	//	{
-	//		setSceneCursor(Qt::CrossCursor);
-	//		return;
-	//	}
-	//}
-
-	return Super::updateMovedCursor(mouseEvent, hoverItem);
-}
-
-
-void CNodeEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* /*dragItem*/)
-{
-	if (m_startDragItem)
-	{
-		auto keys = qApp->queryKeyboardModifiers();
-
-		if (keys == Qt::ShiftModifier)
-		{
-			auto hpos = mouseEvent->scenePos();
-			auto delta = hpos - m_leftClickPos;
-			if (qAbs(delta.x()) > qAbs(delta.y()))
-				hpos.setY(m_leftClickPos.y());
-			else
-				hpos.setX(m_leftClickPos.x());
-
-			QPointF d = hpos - m_lastDragPos;
-			m_lastDragPos = hpos;
-			moveSelectedItemsBy(d);
-		}
-		else
-		{
-			QPointF d = mouseEvent->scenePos() - m_lastDragPos;	// delta pos
-			m_lastDragPos = mouseEvent->scenePos();
-			moveSelectedItemsBy(d);
-		}
-
-		return;
-	}
-
-	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
-	moveSelectedItemsBy(d);
-}
 
 
 // selections

@@ -17,5 +17,7 @@
         <file alias="Crop">Icons/Action-Crop.png</file>
         <file alias="Link">Icons/Action-Link.png</file>
         <file alias="Node-Hexagon">Icons/Node-Hexagon.png</file>
+        <file alias="Mode-AddNodes">Icons/Mode-AddNodes.png</file>
+        <file alias="Mode-Select">Icons/Mode-Select.png</file>
     </qresource>
 </RCC>

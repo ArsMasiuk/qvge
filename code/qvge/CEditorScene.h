@@ -83,24 +83,22 @@ public:
 	template<class T>
 	bool registerItemFactory() {
 		static T f;
-		return addItemFactory(&f);
+		return setItemFactory(&f);
 	}
 
-	bool addItemFactory(CItem *factoryItem);
+	bool setItemFactory(CItem *factoryItem, const QByteArray& typeId = "");
+	CItem* getItemFactory(const QByteArray& typeId) const;
 
-	void setItemFactoryFilter(ISceneItemFactory *filter) {
-		m_itemFactoryFilter = filter;
-	}
-
-	CItem* activateItemFactory(const QByteArray& factoryId);
+	bool setActiveItemFactory(CItem *factoryItem, const QByteArray& typeId = "");
+	CItem* getActiveItemFactory(const QByteArray& typeId) const;
 
 	virtual CItem* createItemOfType(const QByteArray& typeId) const;
 
 	template<class T>
 	T* createItemOfType(QPointF* at = NULL) const;
 
-	CItem* getActiveItemFactory() const {
-		return m_activeItemFactory;
+	void setItemFactoryFilter(ISceneItemFactory *filter) {
+		m_itemFactoryFilter = filter;
 	}
 
 	// attributes
@@ -171,9 +169,6 @@ public:
 
 	virtual QList<CItem*> cloneSelectedItems();
  
-	// callbacks
-	virtual void onItemDestroyed(CItem *citem);
-
 	// operations
 	void startDrag(QGraphicsItem* dragItem);
 
@@ -184,6 +179,13 @@ public:
 	void needUpdate();
 
 	virtual QPointF getSnapped(const QPointF& pos) const;
+
+	int getInfoStatus() const {
+		return m_infoStatus;
+	}
+
+	// callbacks
+	virtual void onItemDestroyed(CItem *citem);
 
 public Q_SLOTS:
     void enableGrid(bool on = true);
@@ -213,7 +215,12 @@ Q_SIGNALS:
 
 	void sceneChanged();
 
+	void infoStatusChanged(int status);
+
 protected:
+	void updateCursorState();
+	void setInfoStatus(int status);
+
 	// reimp
 	virtual void drawBackground(QPainter *painter, const QRectF &rect);
 	virtual void drawForeground(QPainter *painter, const QRectF &rect);
@@ -236,8 +243,6 @@ protected:
 	void finishDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool dragCancelled);
 	virtual void updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem);
 
-	void updateCursorState();
-
 	// callbacks
 	virtual void onDragging(QGraphicsItem* dragItem, const QSet<CItem*>& acceptedItems, const QSet<CItem*>& rejectedItems);
 	virtual void onMoving(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* hoverItem);
@@ -258,8 +263,10 @@ protected:
 	QGraphicsItem *m_startDragItem;
 	QPointF m_lastDragPos;
 
+	int m_infoStatus;
+
 	QMap<QByteArray, CItem*> m_itemFactories;
-	CItem *m_activeItemFactory;
+	QMap<QByteArray, CItem*> m_activeItemFactory;
 	ISceneItemFactory *m_itemFactoryFilter = NULL;
 
 	QMap<QByteArray, QByteArray> m_classToSuperIds;

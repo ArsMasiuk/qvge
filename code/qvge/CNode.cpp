@@ -30,6 +30,7 @@ CNode::CNode(QGraphicsItem* parent) : QGraphicsRectItem(parent)
 
 	// accept hovers
 	setAcceptHoverEvents(true);
+	setFiltersChildEvents(true);
 
 	// cache
 	setCacheMode(DeviceCoordinateCache);
@@ -39,12 +40,8 @@ CNode::CNode(QGraphicsItem* parent) : QGraphicsRectItem(parent)
 	m_labelItem->setFlags(0);
 	m_labelItem->setCacheMode(DeviceCoordinateCache);
 	m_labelItem->setPen(Qt::NoPen);
-
-
-	// test
-	//auto effect = new QGraphicsDropShadowEffect();
-	//effect->setBlurRadius(10);
-	//setGraphicsEffect(effect);
+	m_labelItem->setAcceptedMouseButtons(Qt::NoButton);
+	m_labelItem->setAcceptHoverEvents(false);
 }
 
 

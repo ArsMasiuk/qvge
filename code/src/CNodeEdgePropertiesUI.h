@@ -15,6 +15,8 @@ It can be used freely, maintaining the information above.
 
 class CEditorScene;
 class CNodeEditorScene;
+class CNode;
+class CDirectConnection;
 
 
 namespace Ui {
@@ -63,8 +65,14 @@ protected Q_SLOTS:
 	void on_LabelFontSize_valueChanged(int value);
 
 private:
+	void setNodesAttribute(const QByteArray& attrId, const QVariant& v);
+	void setEdgesAttribute(const QByteArray& attrId, const QVariant& v);
+
     CNodeEditorScene *m_scene;
     bool m_updateLock;
+
+	CNode *m_nodeFactory;
+	CDirectConnection *m_edgeFactory;
 
     Ui::CNodeEdgePropertiesUI *ui;
 };

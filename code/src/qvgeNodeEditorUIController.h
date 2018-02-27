@@ -46,6 +46,10 @@ private Q_SLOTS:
 
 	void onSelectionChanged();
     void onSceneChanged();
+	void onSceneHint(const QString& text);
+	void onSceneStatusChanged(int status);
+	void sceneEditMode(QAction*);
+	void onEditModeChanged(int mode);
 
 	void onZoomChanged(double currentZoom);
 	void zoom();
@@ -79,6 +83,11 @@ private:
 	QAction *delAction;
 	QAction *linkAction;
 	QAction *unlinkAction;
+
+	QActionGroup *m_editModesGroup;
+	QAction *modeDefaultAction;
+	QAction *modeNodesAction;
+	QAction *modeEdgesAction;
 
 	QAction *zoomAction;
 	QAction *unzoomAction;

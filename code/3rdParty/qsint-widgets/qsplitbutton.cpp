@@ -94,21 +94,25 @@ void QSplitButton::actionEvent(QActionEvent *event)
 void QSplitButton::onAction(QAction* act)
 {
     setDefaultAction(act);
-
-    Q_EMIT activated(act->data());
 }
 
 
 void QSplitButton::setDefaultAction(QAction* act)
 {
-	// prevent status tip
-	QString oldStatusTip = statusTip();
+	if (act != defaultAction())
+	{
+		// prevent status tip
+		QString oldStatusTip = statusTip();
 
-	QToolButton::setDefaultAction(act);
-	m_localMenu->setDefaultAction(act);
+		QToolButton::setDefaultAction(act);
+		m_localMenu->setDefaultAction(act);
 
-	if (statusTip().isEmpty())
-		setStatusTip(oldStatusTip);
+		if (statusTip().isEmpty())
+			setStatusTip(oldStatusTip);
+	}
+
+	if (act)
+		Q_EMIT activated(act->data());
 }
 
 

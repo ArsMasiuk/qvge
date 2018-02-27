@@ -22,6 +22,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CImageExport.h>
 #include <qvge/CPDFExport.h>
 #include <qvge/CNodeEditorScene.h>
+#include <qvge/CEditorSceneDefines.h>
 #include <qvge/CEditorView.h>
 #include <qvge/CFileSerializerGEXF.h>
 #include <qvge/CFileSerializerGraphML.h>
@@ -55,6 +56,9 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
     connect(m_editorScene, &CEditorScene::sceneChanged, this, &qvgeNodeEditorUIController::onSceneChanged);
 	connect(m_editorScene, &CEditorScene::selectionChanged, this, &qvgeNodeEditorUIController::onSelectionChanged);
 
+	connect(m_editorScene, &CEditorScene::infoStatusChanged, this, &qvgeNodeEditorUIController::onSceneStatusChanged);
+	connect(m_editorScene, &CNodeEditorScene::editModeChanged, this, &qvgeNodeEditorUIController::onEditModeChanged);
+
 	// connect view
 	connect(m_editorView, SIGNAL(scaleChanged(double)), this, SLOT(onZoomChanged(double)));
 
@@ -75,6 +79,7 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
     onSceneChanged();
     onSelectionChanged();
     onZoomChanged(1);
+	onSceneStatusChanged(m_editorScene->getInfoStatus());
 
     // OGDF
     m_ogdfController = new COGDFLayoutUIController(parent, m_editorScene);
@@ -150,6 +155,37 @@ void qvgeNodeEditorUIController::createMenus()
 	unlinkAction->setStatusTip(tr("Unlink selected nodes"));
 	connect(unlinkAction, &QAction::triggered, m_editorScene, &CNodeEditorScene::onActionUnlink);
 
+
+	// edit modes
+	editMenu->addSeparator();
+
+	m_editModesGroup = new QActionGroup(this);
+	m_editModesGroup->setExclusive(true);
+	connect(m_editModesGroup, &QActionGroup::triggered, this, &qvgeNodeEditorUIController::sceneEditMode);
+
+	modeDefaultAction = editMenu->addAction(QIcon(":/Icons/Mode-Select"), tr("Select Items"));
+	modeDefaultAction->setToolTip(tr("Items selection mode"));
+	modeDefaultAction->setStatusTip(tr("Select/deselect items in the document"));
+	modeDefaultAction->setCheckable(true);
+	modeDefaultAction->setActionGroup(m_editModesGroup);
+	modeDefaultAction->setChecked(m_editorScene->getEditMode() == EM_Default);
+	modeDefaultAction->setData(EM_Default);
+
+	modeNodesAction = editMenu->addAction(QIcon(":/Icons/Mode-AddNodes"), tr("Create Nodes"));
+	modeNodesAction->setToolTip(tr("Adding new nodes mode"));
+	modeNodesAction->setStatusTip(tr("Quickly add nodes & edges"));
+	modeNodesAction->setCheckable(true);
+	modeNodesAction->setActionGroup(m_editModesGroup);
+	modeNodesAction->setChecked(m_editorScene->getEditMode() == EM_AddNodes);
+	modeNodesAction->setData(EM_AddNodes);
+
+	//modeEdgesAction = editMenu->addAction(tr("Add edges mode"));
+	//modeEdgesAction->setCheckable(true);
+	//modeEdgesAction->setActionGroup(m_editModesGroup);
+	//modeEdgesAction->setChecked(m_editorScene->getEditMode() == EM_AddEdges);
+	//modeEdgesAction->setData(EM_AddEdges);
+
+
 	// scene actions
 	editMenu->addSeparator();
 
@@ -179,6 +215,16 @@ void qvgeNodeEditorUIController::createMenus()
 	editToolbar->addAction(copyAction);
 	editToolbar->addAction(pasteAction);
 	editToolbar->addAction(delAction);
+
+	editToolbar->addSeparator();
+
+	// add edit modes toolbar
+	QToolBar *editModesToolbar = m_parent->addToolBar(tr("Edit Modes"));
+	editModesToolbar->setObjectName("editModesToolbar");
+	editModesToolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+	editModesToolbar->addAction(modeDefaultAction);
+	editModesToolbar->addAction(modeNodesAction);
 
 
 	// add view menu
@@ -343,6 +389,28 @@ void qvgeNodeEditorUIController::onSceneChanged()
 }
 
 
+void qvgeNodeEditorUIController::onSceneHint(const QString& text)
+{
+	m_parent->statusBar()->showMessage(text);
+}
+
+
+void qvgeNodeEditorUIController::onSceneStatusChanged(int status)
+{
+	switch (status)
+	{
+	case SIS_Hover:
+		onSceneHint(tr("Ctrl+Click - (un)select item | Click & drag - move selected items | Ctrl+Click & drag - clone selected items"));
+		return;
+	case SIS_Drag:
+		onSceneHint(tr("Shift - horizontal or vertical snap | Alt - toggle grid snap"));
+		return;
+	default:
+		onSceneHint(tr("Click & drag - select an area"));
+	}
+}
+
+
 void qvgeNodeEditorUIController::onZoomChanged(double currentZoom)
 {
 	resetZoomAction2->setText(QString("%1%").arg((int)(currentZoom * 100)));
@@ -395,6 +463,22 @@ void qvgeNodeEditorUIController::sceneOptions()
 
 		m_parent->writeSettings();
     }
+}
+
+
+void qvgeNodeEditorUIController::sceneEditMode(QAction* act)
+{
+	int mode = act->data().toInt();
+	m_editorScene->setEditMode((EditMode)mode);
+}
+
+
+void qvgeNodeEditorUIController::onEditModeChanged(int mode)
+{
+	if (mode == EM_AddNodes)
+		modeNodesAction->setChecked(true);
+	else
+		modeDefaultAction->setChecked(true);
 }
 
 

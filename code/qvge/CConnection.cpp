@@ -49,6 +49,7 @@ CConnection::CConnection(QGraphicsItem *parent): Shape(parent)
 	m_labelItem->setFlags(0);
 	m_labelItem->setCacheMode(DeviceCoordinateCache);
 	m_labelItem->setPen(Qt::NoPen);
+	m_labelItem->setAcceptedMouseButtons(Qt::NoButton);
 }
 
 

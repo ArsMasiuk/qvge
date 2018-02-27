@@ -47,6 +47,7 @@ public:
 	// reimp
 	virtual CItem* create() const		{ return new CNode(parentItem()); }
 	virtual CItem* clone();
+	virtual void copyDataFrom(CItem* from);
 
 	virtual QSizeF getSize() const		{ return rect().size(); }
 	virtual void resize(float size)		{ setRect(-size / 2, -size / 2, size, size); }
@@ -106,8 +107,6 @@ public:
 	virtual QRectF boundingRect() const;
 
 protected:
-	virtual void copyDataFrom(CItem* from);
-
 	// reimp 
 	virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);

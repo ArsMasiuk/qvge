@@ -15,6 +15,14 @@ class CNode;
 class CConnection;
 
 
+enum EditMode 
+{
+	EM_Default,
+	EM_AddNodes,
+	EM_AddEdges
+};
+
+
 class CNodeEditorScene : public CEditorScene
 {
 	Q_OBJECT
@@ -32,6 +40,10 @@ public:
 	bool startNewConnection(const QPointF& pos);
 	void cancel(const QPointF& pos = QPointF());
 
+	EditMode getEditMode() const {
+		return m_editMode;
+	}
+
 	// factorizations
 	virtual CNode* createNewNode() const;
 	virtual CConnection* createNewConnection() const;
@@ -44,6 +56,9 @@ public:
     const QList<CNode*>& getSelectedNodes();
     const QList<CConnection*>& getSelectedEdges();
 
+Q_SIGNALS:
+	void editModeChanged(int mode);
+
 public Q_SLOTS:
 	virtual void onActionLink();
 	virtual void onActionUnlink();
@@ -55,6 +70,8 @@ public Q_SLOTS:
 	void onActionEdgeUndirected();
 
     void onSceneOrSelectionChanged();
+
+	void setEditMode(EditMode mode);
 
 protected:
 	void moveSelectedEdgesBy(const QPointF& d);
@@ -71,11 +88,12 @@ protected:
 	// called on drag after double click; returns true if handled
 	virtual bool onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos);
 	virtual void onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem);
+	virtual void onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem);
 	virtual void onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem);
 
 	// reimp
-	virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem);
-	virtual void updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem);
+	//virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem);
+	//virtual void updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem);
 	virtual bool populateMenu(QMenu& menu, QGraphicsItem* item, const QList<QGraphicsItem*>& selectedItems);
 	virtual QList<QGraphicsItem*> copyPasteItems() const;
 
@@ -86,11 +104,13 @@ protected:
                            const QStyleOptionGraphicsItem options[],
                            QWidget *widget = Q_NULLPTR);
 protected:
+	// edit mode
+	EditMode m_editMode;
+
+	// creating
 	CNode *m_startNode, *m_endNode;
 	CConnection *m_connection;
 	bool m_realStart;
-
-	CConnection *m_activeConnectionFactory;
 
 	enum InternState {
 		IS_None, IS_Creating, IS_Finishing, IS_Cancelling
