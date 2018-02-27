@@ -146,17 +146,20 @@ public:
 	CAttributeConstrains* getClassAttributeConstrains(const QByteArray& classId, const QByteArray& attrId) const;
 	void setClassAttributeConstrains(const QByteArray& classId, const QByteArray& attrId, CAttributeConstrains* cptr);
 
-	// selections
-	QList<QGraphicsItem*> createSelectedList(const CItemsEvaluator&) const;
-
-	template<class T = CItem, class L = T>
-	QList<T*> getSelectedItems(bool triggeredIfEmpty = false) const;
-
+	// items
 	template<class T = CItem, class L = T>
 	QList<T*> getItems() const;
 
 	template<class T = CItem>
 	QList<T*> getItemsById(const QString& id) const;
+
+	QGraphicsItem* getItemAt(const QPointF& pos) const;
+
+	// selections
+	QList<QGraphicsItem*> createSelectedList(const CItemsEvaluator&) const;
+
+	template<class T = CItem, class L = T>
+	QList<T*> getSelectedItems(bool triggeredIfEmpty = false) const;
 
 	virtual void beginSelection();
 	virtual void endSelection();

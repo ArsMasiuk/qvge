@@ -1,3 +1,14 @@
+QVGE 0.4.2 (beta)
+-------------------------------------------------------------------------------
+- added new color scheme (Sunny Spring)
+- added common editor modes to simplify the editing
+- default node & edge properties set to UI when new scene is attached
+- auto-assign of currently selected node & edge properties to the newly created items
+- more tool- & status tips displayed
+
+- fixed issue with dragging items over their labels
+
+
 QVGE 0.4.1 (beta)
 -------------------------------------------------------------------------------
 - mouse navigation speedup

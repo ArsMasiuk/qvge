@@ -125,7 +125,7 @@ void CNodeEditorScene::setEditMode(EditMode mode)
 
 bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 {
-	QGraphicsItem* item = itemAt(pos, QTransform());
+	QGraphicsItem* item = getItemAt(pos);
 	if (item)
 	{
 		if (!item->isEnabled())
@@ -348,7 +348,7 @@ void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos)
 {
-	QGraphicsItem* item = itemAt(clickPos, QTransform());
+	QGraphicsItem* item = getItemAt(clickPos);
 	if (item)
 	{
 		if (!item->isEnabled())
@@ -411,7 +411,7 @@ bool CNodeEditorScene::onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent, c
 		return true;
 
 	// else handle by object under mouse
-	QGraphicsItem* item = itemAt(clickPos, QTransform());
+	QGraphicsItem* item = getItemAt(clickPos);
 	if (item)
 	{
 		if (!item->isEnabled())

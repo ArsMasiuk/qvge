@@ -487,7 +487,6 @@ CItem* CEditorScene::getActiveItemFactory(const QByteArray& typeId) const
 }
 
 
-
 CItem* CEditorScene::createItemOfType(const QByteArray &id) const
 {
 	// check for filter
@@ -1209,7 +1208,7 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 	}
 	else	// no drag, just hover
 	{	
-		QGraphicsItem *hoverItem = itemAt(mouseEvent->scenePos(), QTransform());
+		QGraphicsItem *hoverItem = getItemAt(mouseEvent->scenePos());
 
 		// inform the scene
 		onMoving(mouseEvent, hoverItem);
@@ -1244,7 +1243,7 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		}
 		else if (m_leftClickPos == mouseEvent->scenePos())
 		{
-			QGraphicsItem *hoverItem = itemAt(mouseEvent->scenePos(), QTransform());
+			QGraphicsItem *hoverItem = getItemAt(mouseEvent->scenePos());
 
 			if (m_doubleClick)
 				onLeftDoubleClick(mouseEvent, hoverItem);
@@ -1332,6 +1331,57 @@ void CEditorScene::onDragging(QGraphicsItem* /*dragItem*/, const QSet<CItem*>& a
 }
 
 
+void CEditorScene::onDropped(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* dragItem)
+{
+	if (m_gridSnap)
+	{
+		auto pos = getSnapped(dragItem->pos());
+		auto d = pos - dragItem->pos();
+		dragItem->setPos(pos);
+
+		for (auto item : selectedItems())
+		{
+			if (item != dragItem)
+				item->moveBy(d.x(), d.y());
+		}
+	}
+}
+
+
+void CEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem)
+{
+	if (CItem *item = dynamic_cast<CItem*>(clickedItem))
+	{
+		item->onClick(mouseEvent);
+	}
+}
+
+
+void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem)
+{
+	// clicked on empty space?
+	if (!clickedItem)
+	{
+		return;
+	}
+
+	// else check clicked item...
+	CItem *item = dynamic_cast<CItem*>(clickedItem);
+	if (!item) 
+	{
+		item = dynamic_cast<CItem*>(clickedItem->parentItem());	// if clicked on label
+	}
+
+	if (item)
+	{
+		onActionEditLabel(item);
+	}
+}
+
+
+
+// scene
+
 void CEditorScene::setInfoStatus(int status)
 {
 	if (m_infoStatus != status)
@@ -1348,7 +1398,7 @@ void CEditorScene::updateCursorState()
 	auto keys = qApp->queryKeyboardModifiers();
 	auto mouseButtons = qApp->mouseButtons();
 
-	QGraphicsItem *hoverItem = itemAt(m_mousePos, QTransform());
+	QGraphicsItem *hoverItem = getItemAt(m_mousePos);
 
 	// drag?
 	if (m_dragInProgress)
@@ -1401,54 +1451,6 @@ void CEditorScene::updateCursorState()
 }
 
 
-void CEditorScene::onDropped(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* dragItem)
-{
-	if (m_gridSnap)
-	{
-		auto pos = getSnapped(dragItem->pos());
-		auto d = pos - dragItem->pos();
-		dragItem->setPos(pos);
-
-		for (auto item : selectedItems())
-		{
-			if (item != dragItem)
-				item->moveBy(d.x(), d.y());
-		}
-	}
-}
-
-
-void CEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem)
-{
-	if (CItem *item = dynamic_cast<CItem*>(clickedItem))
-	{
-		item->onClick(mouseEvent);
-	}
-}
-
-
-void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem)
-{
-	// clicked on empty space?
-	if (!clickedItem)
-	{
-		return;
-	}
-
-	// else check clicked item...
-	CItem *item = dynamic_cast<CItem*>(clickedItem);
-	if (!item) 
-	{
-		item = dynamic_cast<CItem*>(clickedItem->parentItem());	// if clicked on label
-	}
-
-	if (item)
-	{
-		onActionEditLabel(item);
-	}
-}
-
-
 QPointF CEditorScene::getSnapped(const QPointF& pos) const
 {
 	if (m_gridSnap)
@@ -1472,6 +1474,20 @@ QPointF CEditorScene::getSnapped(const QPointF& pos) const
 	}
 	else
 		return pos;
+}
+
+
+QGraphicsItem* CEditorScene::getItemAt(const QPointF& pos) const
+{
+	QGraphicsItem *hoverItem = itemAt(pos, QTransform());
+	
+	// if label: return parent insteam
+	if (dynamic_cast<QGraphicsSimpleTextItem*>(hoverItem) != NULL)
+	{
+		return hoverItem->parentItem();
+	}
+	else
+		return hoverItem;
 }
 
 
@@ -1592,7 +1608,7 @@ void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuE
 {
 	QMenu sceneMenu;
 
-	m_menuTriggerItem = itemAt(contextMenuEvent->scenePos(), QTransform()); //Get the item at the position
+	m_menuTriggerItem = getItemAt(contextMenuEvent->scenePos()); //Get the item at the position
 
 	// check if item provides own menu
 	auto menuItem = dynamic_cast<IContextMenuProvider*>(m_menuTriggerItem);
