@@ -38,7 +38,7 @@ void CDiffUndoManager::addState()
 	// serialize & compress
 	QByteArray snap;
 	QDataStream ds(&snap, QIODevice::WriteOnly);
-	m_scene->storeTo(ds, false);
+	m_scene->storeTo(ds, true);
 
 	// check if 1st store
 	if (m_lastState.isEmpty() && m_undoStack.isEmpty() && m_redoStack.isEmpty())
@@ -80,7 +80,7 @@ void CDiffUndoManager::undo()
 		Command cUndo = m_undoStack.takeLast();
 		m_lastState.replace(cUndo.index, cUndo.sizeToReplace, qUncompress(cUndo.data));
 		QDataStream ds(&m_lastState, QIODevice::ReadOnly);
-		m_scene->restoreFrom(ds, false);
+		m_scene->restoreFrom(ds, true);
 
 		m_redoStack << m_redoStackTemp.takeLast();
 		m_undoStackTemp << cUndo;
@@ -94,7 +94,7 @@ void CDiffUndoManager::redo()
 		Command cRedo = m_redoStack.takeLast();
 		m_lastState.replace(cRedo.index, cRedo.sizeToReplace, qUncompress(cRedo.data));
 		QDataStream ds(&m_lastState, QIODevice::ReadOnly);
-		m_scene->restoreFrom(ds, false);
+		m_scene->restoreFrom(ds, true);
 
 		m_undoStack << m_undoStackTemp.takeLast();
 		m_redoStackTemp << cRedo;

@@ -33,7 +33,6 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
     ui->setupUi(this);
 
     ui->NodeColor->setColorScheme(QSint::OpenOfficeColors());
-    ui->NodeColor->setColor(Qt::green);
 	ui->NodeColor->enableNoColor(true);
 
     ui->NodeShape->addAction(QIcon(":/Icons/Node-Disc"), tr("Disc"), "disc");
@@ -51,7 +50,6 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Undirected"), tr("None (no ends)"), "undirected");
 
     ui->EdgeColor->setColorScheme(QSint::OpenOfficeColors());
-    ui->EdgeColor->setColor(Qt::red);
 
     ui->EdgeStyle->setUsedRange(Qt::SolidLine, Qt::DashDotDotLine);
 	ui->StrokeStyle->setUsedRange(Qt::SolidLine, Qt::DashDotDotLine);
@@ -94,9 +92,36 @@ void CNodeEdgePropertiesUI::connectSignals(CEditorScene* scene)
 
 void CNodeEdgePropertiesUI::onSceneAttached(CEditorScene* scene)
 {
+	// factories for new items
 	scene->setActiveItemFactory(m_nodeFactory);
 	scene->setActiveItemFactory(m_edgeFactory);
 
+	// default attrs
+	auto nodeAttrs = scene->getClassAttributes("node", false);
+	ui->NodeColor->setColor(nodeAttrs["color"].defaultValue.value<QColor>());
+	ui->NodeShape->selectAction(nodeAttrs["shape"].defaultValue);
+	QSize size = nodeAttrs["size"].defaultValue.toSize();
+	ui->NodeSizeSwitch->setChecked(size.width() == size.height());
+	ui->NodeSizeY->setEnabled(size.width() != size.height());
+	ui->NodeSizeX->setValue(size.width());
+	ui->NodeSizeY->setValue(size.height());
+	ui->StrokeColor->setColor(nodeAttrs["stroke.color"].defaultValue.value<QColor>());
+	ui->StrokeStyle->setPenStyle(CUtils::textToPenStyle(nodeAttrs["stroke.style"].defaultValue.toString()));
+	ui->StrokeSize->setValue(nodeAttrs["stroke.size"].defaultValue.toDouble());
+
+	auto edgeAttrs = scene->getClassAttributes("edge", false);
+	ui->EdgeColor->setColor(edgeAttrs["color"].defaultValue.value<QColor>());
+	ui->EdgeWeight->setValue(edgeAttrs["weight"].defaultValue.toDouble());
+	ui->EdgeStyle->setPenStyle(CUtils::textToPenStyle(edgeAttrs["style"].defaultValue.toString()));
+	ui->EdgeDirection->selectAction(edgeAttrs["direction"].defaultValue);
+
+	QFont f(edgeAttrs["label.font"].defaultValue.value<QFont>());
+	ui->LabelFont->setCurrentFont(f);
+	ui->LabelFontSize->setValue(f.pointSize());
+	ui->LabelColor->setColor(edgeAttrs["label.color"].defaultValue.value<QColor>());
+
+
+	// connect & go
     connectSignals(scene);
 
     onSceneChanged();

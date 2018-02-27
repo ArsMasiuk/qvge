@@ -224,7 +224,6 @@ void CEditorScene::addUndoState()
 	onSceneChanged();
 }
 
-
 int CEditorScene::availableUndoCount() const
 { 
 	return m_undoManager ? m_undoManager->availableUndoCount() : 0; 

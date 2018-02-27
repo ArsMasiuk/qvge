@@ -70,6 +70,19 @@ CColorSchemesUIController::CColorSchemesUIController(QObject *parent) : QObject(
 		addScheme(scheme);
 	}
 
+	{
+		Scheme scheme{ tr("Sunny Spring") };
+		scheme.bgColor = QColor("#f3ffe1");
+		scheme.gridColor = QColor("#eeeeee");
+		scheme.nodeColor = QColor("#b4ba00");
+		scheme.nodeStrokeColor = QColor("#b4ba00");
+		scheme.nodeLabelColor = QColor("#111111");
+		scheme.edgeColor = QColor("#ba4400");
+		scheme.edgeLabelColor = QColor("#267536");
+
+		addScheme(scheme);
+	}
+
 	connect(&m_menu, SIGNAL(triggered(QAction*)), this, SLOT(onMenuTriggered(QAction*)));
 }
 
