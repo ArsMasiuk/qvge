@@ -1,8 +1,5 @@
 ## Qt Visual Graph Editor 
-[![Download qvge](https://img.shields.io/sourceforge/dw/qvge.svg)](https://sourceforge.net/projects/qvge/files/latest/download)
-[![Download qvge](https://img.shields.io/sourceforge/dt/qvge.svg)](https://sourceforge.net/projects/qvge/files/latest/download)
-
-![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)
+[![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)](https://github.com/ArsMasiuk/qvge/releases/latest)
 
 
 **qvge** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
@@ -29,7 +26,7 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 
 Prebuild Windows binaries can be loaded from here:
 
-[![Download qvge](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/qvge/files)
+[![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)](https://github.com/ArsMasiuk/qvge/releases/latest)
 
 Or you can get qvge's sources and build them by yourself. In this case you need to have installed Qt 5.x toolkit and corresponding C++ compiler with C++11 support. qvge uses native Qt build system (main project file is qvgeapp.pro) so it should look like:
 
