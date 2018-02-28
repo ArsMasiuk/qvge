@@ -2,6 +2,9 @@
 [![Download qvge](https://img.shields.io/sourceforge/dw/qvge.svg)](https://sourceforge.net/projects/qvge/files/latest/download)
 [![Download qvge](https://img.shields.io/sourceforge/dt/qvge.svg)](https://sourceforge.net/projects/qvge/files/latest/download)
 
+![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)
+
+
 **qvge** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
 in a simple and intuitive way.
 
