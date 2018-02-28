@@ -224,6 +224,9 @@ protected:
 	void updateCursorState();
 	void setInfoStatus(int status);
 
+	// internal call
+	void onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
+
 	// reimp
 	virtual void drawBackground(QPainter *painter, const QRectF &rect);
 	virtual void drawForeground(QPainter *painter, const QRectF &rect);

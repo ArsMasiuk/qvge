@@ -240,11 +240,24 @@ CConnection* CNodeEditorScene::createNewConnection() const
 
 // events
 
-void CNodeEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void CNodeEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-	//setSceneCursor(Qt::SizeAllCursor);
+	// add nodes?
+	if (m_editMode == EM_AddNodes)
+	{
+		if (mouseEvent->button() == Qt::LeftButton)
+		{
+			deselectAll();
 
-	Super::mouseDoubleClickEvent(mouseEvent);
+			onLeftButtonPressed(mouseEvent);
+
+			// skip calling super to avoid auto selection
+			mouseEvent->accept();
+			return;
+		}
+	}
+
+	Super::mousePressEvent(mouseEvent);
 }
 
 
@@ -316,9 +329,11 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 	// add nodes?
 	if (m_editMode == EM_AddNodes)
 	{
-		setEditMode(EM_Default);
 		if (startNewConnection(clickPos))
+		{
+			setEditMode(EM_Default);
 			return true;
+		}
 	}
 
 	// else super
@@ -334,7 +349,10 @@ bool CNodeEditorScene::onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent, c
 
 	// try to start new connection at click point
 	if (startNewConnection(clickPos))
+	{
+		//mouseEvent->accept();
 		return true;
+	}
 
 	// else call super
 	return Super::onDoubleClickDrag(mouseEvent, clickPos);
@@ -410,8 +428,8 @@ void CNodeEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphi
 		// clicked on empty space?
 		if (!clickedItem)
 		{
-			setEditMode(EM_Default);			
 			onLeftDoubleClick(mouseEvent, clickedItem);
+			setEditMode(EM_Default);
 			return;
 		}
 	}

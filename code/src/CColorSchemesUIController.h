@@ -23,6 +23,7 @@ public:
     }
 
 Q_SIGNALS:
+	void colorSchemeApplied(CEditorScene* scene);
 
 private Q_SLOTS:
 	void onMenuTriggered(QAction *action);

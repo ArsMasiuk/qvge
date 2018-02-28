@@ -315,6 +315,9 @@ void qvgeNodeEditorUIController::createPanels()
     CClassAttributesEditorUI *defaultsPanel = new CClassAttributesEditorUI(defaultsDock);
     defaultsPanel->setScene(m_editorScene);
     defaultsDock->setWidget(defaultsPanel);
+
+	// connect color schemes
+	connect(defaultsPanel, &CClassAttributesEditorUI::colorSchemeApplied, propertiesPanel, &CNodeEdgePropertiesUI::updateFromScene);
 }
 
 

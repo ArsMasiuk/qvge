@@ -90,12 +90,8 @@ void CNodeEdgePropertiesUI::connectSignals(CEditorScene* scene)
 }
 
 
-void CNodeEdgePropertiesUI::onSceneAttached(CEditorScene* scene)
+void CNodeEdgePropertiesUI::updateFromScene(CEditorScene* scene)
 {
-	// factories for new items
-	scene->setActiveItemFactory(m_nodeFactory);
-	scene->setActiveItemFactory(m_edgeFactory);
-
 	// default attrs
 	auto nodeAttrs = scene->getClassAttributes("node", false);
 	ui->NodeColor->setColor(nodeAttrs["color"].defaultValue.value<QColor>());
@@ -119,7 +115,17 @@ void CNodeEdgePropertiesUI::onSceneAttached(CEditorScene* scene)
 	ui->LabelFont->setCurrentFont(f);
 	ui->LabelFontSize->setValue(f.pointSize());
 	ui->LabelColor->setColor(edgeAttrs["label.color"].defaultValue.value<QColor>());
+}
 
+
+void CNodeEdgePropertiesUI::onSceneAttached(CEditorScene* scene)
+{
+	// factories for new items
+	scene->setActiveItemFactory(m_nodeFactory);
+	scene->setActiveItemFactory(m_edgeFactory);
+
+	// default attrs
+	updateFromScene(scene);
 
 	// connect & go
     connectSignals(scene);

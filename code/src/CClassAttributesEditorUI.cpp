@@ -39,8 +39,9 @@ CClassAttributesEditorUI::CClassAttributesEditorUI(QWidget *parent) :
 	//qDebug() << objs
 
     // color schemes
-    m_schemesController = new CColorSchemesUIController();
+    m_schemesController = new CColorSchemesUIController(this);
     ui->ColorScheme->setMenu(m_schemesController->getSchemesMenu());
+	connect(m_schemesController, &CColorSchemesUIController::colorSchemeApplied, this, &CClassAttributesEditorUI::colorSchemeApplied);
 }
 
 CClassAttributesEditorUI::~CClassAttributesEditorUI()

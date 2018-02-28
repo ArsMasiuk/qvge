@@ -32,6 +32,9 @@ public:
 
     void setScene(CEditorScene* scene);
 
+Q_SIGNALS:
+	void colorSchemeApplied(CEditorScene* scene);
+
 protected:
     void connectSignals(CEditorScene* scene);
     void onSceneAttached(CEditorScene* scene);

@@ -78,7 +78,7 @@ protected:
     void prefetchSelection();
 
 	// scene events
-	virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
+	virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void keyPressEvent(QKeyEvent *keyEvent);
 
@@ -91,8 +91,6 @@ protected:
 	virtual void onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem);
 
 	// reimp
-	//virtual void processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem);
-	//virtual void updateMovedCursor(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem);
 	virtual bool populateMenu(QMenu& menu, QGraphicsItem* item, const QList<QGraphicsItem*>& selectedItems);
 	virtual QList<QGraphicsItem*> copyPasteItems() const;
 

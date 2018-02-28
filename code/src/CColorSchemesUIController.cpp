@@ -116,5 +116,7 @@ void CColorSchemesUIController::applyScheme(const Scheme& scheme)
 		m_scene->setClassAttribute("edge", "label.color", scheme.edgeLabelColor);
 
 		m_scene->addUndoState();
+
+		Q_EMIT colorSchemeApplied(m_scene);
 	}
 }

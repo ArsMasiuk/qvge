@@ -33,6 +33,9 @@ public:
 
     void setScene(CNodeEditorScene* scene);
 
+public Q_SLOTS:
+	void updateFromScene(CEditorScene* scene);
+
 protected:
     void connectSignals(CEditorScene* scene);
     void onSceneAttached(CEditorScene* scene);

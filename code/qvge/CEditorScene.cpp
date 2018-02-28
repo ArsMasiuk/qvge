@@ -1056,8 +1056,17 @@ void CEditorScene::needUpdate()
 void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	// workaround: do not deselect selected items by RMB
-	if (mouseEvent->button() != Qt::LeftButton)
-	{
+	if (mouseEvent->button() == Qt::RightButton)
+	{	
+		if (auto item = getItemAt(mouseEvent->scenePos()))
+		{
+			if (!item->isSelected())
+			{
+				deselectAll();
+				item->setSelected(true);
+			}
+		}
+
 		mouseEvent->accept();
 		return;
 	}
@@ -1066,11 +1075,17 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
-		m_draggedItem = NULL;
-		m_dragInProgress = false;
-
-		m_leftClickPos = mouseEvent->scenePos();
+		onLeftButtonPressed(mouseEvent);
 	}
+}
+
+
+void CEditorScene::onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent)
+{
+	m_draggedItem = NULL;
+	m_dragInProgress = false;
+
+	m_leftClickPos = mouseEvent->scenePos();
 }
 
 
@@ -1158,8 +1173,6 @@ void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsIt
 	// fallback
 	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
 	moveSelectedItemsBy(d);
-
-	//dragItem->setPos(mouseEvent->scenePos());
 }
 
 
@@ -1275,7 +1288,9 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			QGraphicsItem *hoverItem = getItemAt(mouseEvent->scenePos());
 
 			if (m_doubleClick)
+			{
 				onLeftDoubleClick(mouseEvent, hoverItem);
+			}
 			else
 				onLeftClick(mouseEvent, hoverItem);
 		}
@@ -1395,13 +1410,7 @@ void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, Q
 	}
 
 	// else check clicked item...
-	CItem *item = dynamic_cast<CItem*>(clickedItem);
-	if (!item) 
-	{
-		item = dynamic_cast<CItem*>(clickedItem->parentItem());	// if clicked on label
-	}
-
-	if (item)
+	if (CItem *item = dynamic_cast<CItem*>(clickedItem))
 	{
 		onActionEditLabel(item);
 	}
