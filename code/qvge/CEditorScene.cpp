@@ -1076,16 +1076,45 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-	Super::mouseMoveEvent(mouseEvent);
-
 	m_mousePos = mouseEvent->scenePos();
 
-	m_draggedItem = mouseGrabberItem();
+	bool isDragging = (mouseEvent->buttons() & Qt::LeftButton);
 
-	moveDrag(mouseEvent, m_draggedItem, false);
+	if (m_doubleClick)
+	{
+		m_doubleClick = false;
 
+		// moved after double click?
+		if (isDragging && !onDoubleClickDrag(mouseEvent, m_leftClickPos))
+		{
+			return;
+		}
+	}
 
-	updateCursorState();
+	// no double click and no drag
+	if (m_startDragItem == NULL)
+	{
+		// moved after single click?
+		if (isDragging && onClickDrag(mouseEvent, m_leftClickPos))
+		{
+			moveDrag(mouseEvent, m_startDragItem, true);
+			return;
+		}
+
+		// call super
+		Super::mouseMoveEvent(mouseEvent);
+
+		m_draggedItem = mouseGrabberItem();
+
+		moveDrag(mouseEvent, m_draggedItem, false);
+
+		updateCursorState();
+
+		return;
+	}
+
+	// custom dragging
+	moveDrag(mouseEvent, m_startDragItem, isDragging);
 }
 
 
@@ -1378,6 +1407,74 @@ void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, Q
 	}
 }
 
+
+bool CEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos)
+{
+	QGraphicsItem* item = getItemAt(clickPos);
+	if (item)
+	{
+		if (!item->isEnabled())
+			return false;
+
+		if (!item->flags() & item->ItemIsMovable)
+			return false;
+
+		CItem *citem = dynamic_cast<CItem*>(item);
+		if (citem)
+		{
+			// clone?
+			if (mouseEvent->modifiers() == Qt::ControlModifier)
+			{
+				// clone selection
+				QList<CItem*> clonedList = cloneSelectedItems();
+				if (clonedList.isEmpty())
+					return false;
+
+				selectItems(clonedList);
+
+				// start drag via 1st item
+				startDrag(clonedList.first()->getSceneItem());
+
+				return true;
+			}
+
+			//qDebug() << clickPos << citem;
+
+			// else handle by item
+			if (!citem->onClickDrag(mouseEvent, clickPos))
+				return false;
+		}
+
+		// else start drag of item
+		startDrag(item);
+		return true;
+	}
+
+	// nothing to do
+	return false;
+}
+
+
+bool CEditorScene::onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos)
+{
+	// handle by object under mouse
+	QGraphicsItem* item = getItemAt(clickPos);
+	if (item)
+	{
+		if (!item->isEnabled())
+			return false;
+
+		if (!item->flags() & item->ItemIsMovable)
+			return false;
+
+		CItem *citem = dynamic_cast<CItem*>(item);
+		if (citem)
+			return citem->onDoubleClickDrag(mouseEvent, clickPos);
+	}
+
+	// nothing to do
+	return false;
+}
 
 
 // scene

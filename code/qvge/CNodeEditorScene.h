@@ -79,7 +79,6 @@ protected:
 
 	// scene events
 	virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
-	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void keyPressEvent(QKeyEvent *keyEvent);
 

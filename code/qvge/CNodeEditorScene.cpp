@@ -248,41 +248,6 @@ void CNodeEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEven
 }
 
 
-void CNodeEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-	bool isDragging = (mouseEvent->buttons() & Qt::LeftButton);
-
-	if (m_doubleClick)
-	{
-		m_doubleClick = false;
-
-		// moved after double click?
-		if (isDragging && !onDoubleClickDrag(mouseEvent, m_leftClickPos))
-		{
-			return;
-		}
-	}
-
-	// no double click and no drag
-	if (m_startDragItem == NULL)
-	{
-		// moved after single click?
-		if (isDragging && onClickDrag(mouseEvent, m_leftClickPos))
-		{
-			moveDrag(mouseEvent, m_startDragItem, true);
-			return;
-		}
-
-		// call super
-		Super::mouseMoveEvent(mouseEvent);
-		return;
-	}
-
-	// custom dragging
-	moveDrag(mouseEvent, m_startDragItem, isDragging);
-}
-
-
 void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	//if (m_state == IS_None)
@@ -348,55 +313,16 @@ void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPointF &clickPos)
 {
-	QGraphicsItem* item = getItemAt(clickPos);
-	if (item)
+	// add nodes?
+	if (m_editMode == EM_AddNodes)
 	{
-		if (!item->isEnabled())
-			return false;
-
-		if (!item->flags() & item->ItemIsMovable)
-			return false;
-
-		CItem *citem = dynamic_cast<CItem*>(item);
-		if (citem)
-		{
-			// clone?
-			if (mouseEvent->modifiers() == Qt::ControlModifier)
-			{
-				// clone selection
-				QList<CItem*> clonedList = cloneSelectedItems();
-				if (clonedList.isEmpty())
-					return false;
-				
-				selectItems(clonedList);
-				
-				// start drag via 1st item
-				startDrag(clonedList.first()->getSceneItem());
-
-				return true;
-			}
-
-			//qDebug() << clickPos << citem;
-
-			// add nodes?
-			if (m_editMode == EM_AddNodes)
-			{
-				setEditMode(EM_Default);
-				return startNewConnection(clickPos);
-			}
-
-			// else handle by item
-			if (!citem->onClickDrag(mouseEvent, clickPos))
-				return false;
-		}
-
-		// else start drag of item
-		startDrag(item);
-		return true;
+		setEditMode(EM_Default);
+		if (startNewConnection(clickPos))
+			return true;
 	}
 
-	// nothing to do
-	return false;
+	// else super
+	return Super::onClickDrag(mouseEvent, clickPos);
 }
 
 
@@ -410,23 +336,8 @@ bool CNodeEditorScene::onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent, c
 	if (startNewConnection(clickPos))
 		return true;
 
-	// else handle by object under mouse
-	QGraphicsItem* item = getItemAt(clickPos);
-	if (item)
-	{
-		if (!item->isEnabled())
-			return false;
-
-		if (!item->flags() & item->ItemIsMovable)
-			return false;
-
-		CItem *citem = dynamic_cast<CItem*>(item);
-		if (citem)
-			return citem->onDoubleClickDrag(mouseEvent, clickPos);
-	}
-
-	// nothing to do
-	return false;
+	// else call super
+	return Super::onDoubleClickDrag(mouseEvent, clickPos);
 }
 
 
