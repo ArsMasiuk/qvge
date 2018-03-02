@@ -1058,24 +1058,38 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	// workaround: do not deselect selected items by RMB
 	if (mouseEvent->button() == Qt::RightButton)
 	{	
-		if (auto item = getItemAt(mouseEvent->scenePos()))
-		{
-			if (!item->isSelected())
-			{
-				deselectAll();
-				item->setSelected(true);
-			}
-		}
+		selectUnderMouse(mouseEvent);
 
 		mouseEvent->accept();
 		return;
 	}
 
+	// call super
 	Super::mousePressEvent(mouseEvent);
 
+	// check LMB
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
 		onLeftButtonPressed(mouseEvent);
+
+		// select under mouse if clone
+		if (mouseEvent->modifiers() == Qt::ControlModifier)
+		{
+			selectUnderMouse(mouseEvent);
+		}
+	}
+}
+
+
+void CEditorScene::selectUnderMouse(QGraphicsSceneMouseEvent *mouseEvent)
+{
+	if (auto item = getItemAt(mouseEvent->scenePos()))
+	{
+		if (!item->isSelected())
+		{
+			deselectAll();
+			item->setSelected(true);
+		}
 	}
 }
 

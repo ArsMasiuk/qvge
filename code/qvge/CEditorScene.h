@@ -226,6 +226,7 @@ protected:
 
 	// internal call
 	void onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
+	void selectUnderMouse(QGraphicsSceneMouseEvent *mouseEvent);
 
 	// reimp
 	virtual void drawBackground(QPainter *painter, const QRectF &rect);
