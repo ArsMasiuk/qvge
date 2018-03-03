@@ -5,6 +5,7 @@ QVGE 0.4.2 (beta)
 - default node & edge properties set to UI when new scene is attached
 - auto-assign of currently selected node & edge properties to the newly created items
 - more tool- & status tips displayed
+- some common operations made more intuitive (clone items with pressed Ctrl etc.)
 
 - fixed issue with dragging items over their labels
 
