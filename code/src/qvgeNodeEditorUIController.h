@@ -36,6 +36,8 @@ public:
 	bool loadFromFile(const QString &fileName, const QString &format);
 	bool saveToFile(const QString &fileName, const QString &format);
 
+public Q_SLOTS:
+    // callback
     void onNewDocumentCreated();
 
 private Q_SLOTS:

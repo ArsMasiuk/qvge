@@ -9,6 +9,8 @@
 #include <ogdf/misclayout/CircularLayout.h>
 #include <ogdf/planarity/PlanarizationLayout.h>
 
+#include <QTimer>
+
 
 enum GraphTypes
 {
@@ -99,6 +101,8 @@ void COGDFNewGraphDialog::on_List_currentRowChanged(int currentRow)
 
 bool COGDFNewGraphDialog::exec(CNodeEditorScene &scene)
 {
+    QTimer::singleShot(0, this, SLOT(raise()));
+
     if (QDialog::exec() == Rejected)
         return false;
 

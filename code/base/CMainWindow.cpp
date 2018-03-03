@@ -349,6 +349,8 @@ void CMainWindow::on_actionOpen_triggered()
 	QString loadName = m_currentFileName;
 	if (loadName.isEmpty())
 		loadName = m_lastPath;
+    if (loadName.isEmpty())
+        loadName = QDir::homePath();
 
     QString fileName = QFileDialog::getOpenFileName(NULL, title, loadName, filter, &m_lastOpenFilter);
     if (fileName.isEmpty())
@@ -503,6 +505,8 @@ bool CMainWindow::saveAs()
 	QString saveName = cutLastSuffix(m_currentFileName);
 	if (saveName.isEmpty())
 		saveName = m_lastPath;
+    if (saveName.isEmpty())
+        saveName = QDir::homePath();
 
     QString selectedFilter = m_lastSaveFilter;
 
@@ -829,7 +833,9 @@ void CMainWindow::doReadSettings(QSettings& settings)
 
     // toolbars & dock widgets
     QApplication::processEvents();
-    restoreState(settings.value("windowState").toByteArray());
+    const QByteArray state = settings.value("windowState").toByteArray();
+    if (!state.isEmpty())
+        restoreState(state);
 
 
     // window state
@@ -839,7 +845,7 @@ void CMainWindow::doReadSettings(QSettings& settings)
 		showMaximized();
 #else
 		showNormal();
-        QTimer::singleShot(200, this, SLOT(showMaximized()));
+        QTimer::singleShot(0, this, SLOT(showMaximized()));
 #endif
     }
 	else

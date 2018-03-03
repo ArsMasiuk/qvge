@@ -15,8 +15,7 @@ It can be used freely, maintaining the information above.
 
 
 CDiffUndoManager::CDiffUndoManager(CEditorScene & scene)
-	: m_scene(&scene),
-	m_stackIndex(-1)
+    : m_scene(&scene)
 {
 }
 

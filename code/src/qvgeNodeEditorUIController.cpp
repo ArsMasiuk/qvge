@@ -40,6 +40,7 @@ It can be used freely, maintaining the information above.
 #include <QDebug>
 #include <QPixmapCache>
 #include <QFileDialog>
+#include <QTimer>
 
 
 qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
@@ -83,6 +84,15 @@ qvgeNodeEditorUIController::qvgeNodeEditorUIController(qvgeMainWindow *parent) :
 
     // OGDF
     m_ogdfController = new COGDFLayoutUIController(parent, m_editorScene);
+
+    // workaround for full screen
+#ifndef Q_OS_WIN32
+    if (parent->isMaximized())
+    {
+        parent->showNormal();
+        QTimer::singleShot(0, parent, SLOT(showMaximized()));
+    }
+#endif
 }
 
 
@@ -636,7 +646,7 @@ void qvgeNodeEditorUIController::onNewDocumentCreated()
 	m_editorScene->setClassAttributeVisible("item", "id", true);
 	m_editorScene->setClassAttributeVisible("item", "label", true);
 
-	if (m_showNewGraphDialog )
+    if (m_showNewGraphDialog)
 	{
 		COGDFNewGraphDialog dialog;
 		if (dialog.exec(*m_editorScene))
@@ -646,7 +656,7 @@ void qvgeNodeEditorUIController::onNewDocumentCreated()
 		}
 
 		bool show = dialog.isShowOnStart();
-		if (show != m_showNewGraphDialog )
+        if (show != m_showNewGraphDialog)
 		{
 			m_showNewGraphDialog  = show;
 			m_parent->writeSettings();

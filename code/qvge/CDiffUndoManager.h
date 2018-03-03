@@ -42,5 +42,4 @@ private:
 	QList<Command> m_redoStack, m_undoStack;
 	QList<Command> m_redoStackTemp, m_undoStackTemp;
 	QByteArray m_lastState;
-	int m_stackIndex;
 };
