@@ -2,7 +2,7 @@
 
 #include <qvge/CNodeEditorScene.h>
 #include <qvge/CNode.h>
-#include <qvge/CConnection.h>
+#include <qvge/CDirectConnection.h>
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
@@ -127,7 +127,7 @@ void COGDFLayout::graphTopologyToScene(const ogdf::Graph &G, const ogdf::GraphAt
 
     for (auto n: G.nodes)
     {
-        CNode* node = scene.createNewNode();
+        CNode* node = new CNode;
         scene.addItem(node);
 
         nodeMap[n] = node;
@@ -140,7 +140,7 @@ void COGDFLayout::graphTopologyToScene(const ogdf::Graph &G, const ogdf::GraphAt
 
     for (auto e: G.edges)
     {
-        CConnection* edge = scene.createNewConnection();
+        CConnection* edge = new CDirectConnection;
         scene.addItem(edge);
 
         edge->setFirstNode(nodeMap[e->source()]);
