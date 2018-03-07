@@ -48,13 +48,11 @@ public:
 	virtual CNode* createNewNode() const;
 	virtual CConnection* createNewConnection() const;
 
-	CConnection* activateConnectionFactory(const QByteArray& factoryId);
-
     // selections
     virtual void moveSelectedItemsBy(const QPointF& d);
 
-    const QList<CNode*>& getSelectedNodes();
-    const QList<CConnection*>& getSelectedEdges();
+    const QList<CNode*>& getSelectedNodes() const;
+    const QList<CConnection*>& getSelectedEdges() const;
 
 Q_SIGNALS:
 	void editModeChanged(int mode);
@@ -69,13 +67,14 @@ public Q_SLOTS:
 	void onActionEdgeMutual();
 	void onActionEdgeUndirected();
 
-    void onSceneOrSelectionChanged();
-
 	void setEditMode(EditMode mode);
+
+protected Q_SLOTS:
+	virtual void onSelectionChanged();
 
 protected:
 	void moveSelectedEdgesBy(const QPointF& d);
-    void prefetchSelection();
+    void prefetchSelection() const;
 
 	// scene events
 	virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -93,6 +92,7 @@ protected:
 	// reimp
 	virtual bool populateMenu(QMenu& menu, QGraphicsItem* item, const QList<QGraphicsItem*>& selectedItems);
 	virtual QList<QGraphicsItem*> copyPasteItems() const;
+	virtual QList<QGraphicsItem*> transformableItems() const;
 
     // draw
     virtual void drawBackground(QPainter *painter, const QRectF &);
@@ -115,8 +115,8 @@ protected:
 	InternState m_state;
 
     // cached selections
-    QList<CNode*> m_selNodes;
-    QList<CConnection*> m_selEdges;
+    mutable QList<CNode*> m_selNodes;
+	mutable QList<CConnection*> m_selEdges;
 
     // drawing
     int m_nextIndex = 0;

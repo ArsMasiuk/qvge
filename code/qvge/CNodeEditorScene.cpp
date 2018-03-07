@@ -26,10 +26,6 @@ CNodeEditorScene::CNodeEditorScene(QObject *parent) : Super(parent),
 
 	// go
 	initialize();
-
-    // connections
-    connect(this, SIGNAL(selectionChanged()), this, SLOT(onSceneOrSelectionChanged()));
-    //connect(this, SIGNAL(sceneChanged()), this, SLOT(onSceneOrSelectionChanged()));
 }
 
 
@@ -547,6 +543,18 @@ QList<QGraphicsItem*> CNodeEditorScene::copyPasteItems() const
 }
 
 
+QList<QGraphicsItem*> CNodeEditorScene::transformableItems() const
+{
+	QList<QGraphicsItem*> result;
+	
+	auto nodes = getSelectedNodes();
+	for (auto node : nodes)
+		result << node;
+
+	return result;
+}
+
+
 void CNodeEditorScene::drawBackground(QPainter *painter, const QRectF &r)
 {
     Super::drawBackground(painter, r);
@@ -610,7 +618,7 @@ void CNodeEditorScene::drawItems(QPainter *painter, int numItems, QGraphicsItem 
 
 // selections
 
-const QList<CNode*>& CNodeEditorScene::getSelectedNodes()
+const QList<CNode*>& CNodeEditorScene::getSelectedNodes() const
 {
     if (m_selNodes.isEmpty())
         prefetchSelection();
@@ -619,7 +627,7 @@ const QList<CNode*>& CNodeEditorScene::getSelectedNodes()
 }
 
 
-const QList<CConnection*>& CNodeEditorScene::getSelectedEdges()
+const QList<CConnection*>& CNodeEditorScene::getSelectedEdges() const
 {
     if (m_selEdges.isEmpty())
         prefetchSelection();
@@ -628,15 +636,17 @@ const QList<CConnection*>& CNodeEditorScene::getSelectedEdges()
 }
 
 
-void CNodeEditorScene::onSceneOrSelectionChanged()
+void CNodeEditorScene::onSelectionChanged()
 {
     // drop cached selections
     m_selNodes.clear();
     m_selEdges.clear();
+
+	Super::onSelectionChanged();
 }
 
 
-void CNodeEditorScene::prefetchSelection()
+void CNodeEditorScene::prefetchSelection() const
 {
     m_selNodes.clear();
     m_selEdges.clear();

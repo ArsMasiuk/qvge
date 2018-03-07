@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 #define CEDITORSCENE_H
 
 #include <QGraphicsScene>
+#include <QGraphicsRectItem>
 #include <QSet>
 #include <QMenu>
 #include <QByteArrayList>
@@ -108,24 +109,7 @@ public:
 
 		return QByteArray();
 	}
-
-
-	//template<class Class>
-	//const CAttribute getClassAttribute(const QByteArray& attrId, bool inherited) const
-	//{
-	//	if (!Class::factoryId().size())
-	//		// fail
-	//		return CAttribute();
-
-	//	CAttribute attr = m_classAttributes[Class::classId()][attrId];
-	//	if (attr.id.size() || !inherited)
-	//		return attr;
-
-	//	// else inherited
-	//	return getClassAttribute<Class::Super>(attrId, inherited);
-	//}
-
-
+	
 	const CAttribute getClassAttribute(const QByteArray& classId, const QByteArray& attrId, bool inherited) const;
 	AttributesMap getClassAttributes(const QByteArray& classId, bool inherited) const;
 
@@ -224,6 +208,9 @@ protected:
 	void updateCursorState();
 	void setInfoStatus(int status);
 
+	void calculateTransformRect();
+	void drawTransformRect(QPainter *painter);
+
 	// internal call
 	void onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
 	void selectUnderMouse(QGraphicsSceneMouseEvent *mouseEvent);
@@ -243,6 +230,7 @@ protected:
 	// to reimplement
 	virtual bool populateMenu(QMenu& menu, QGraphicsItem* item, const QList<QGraphicsItem*>& selectedItems);
 	virtual QList<QGraphicsItem*> copyPasteItems() const;
+	virtual QList<QGraphicsItem*> transformableItems() const;
 
 	// call from reimp
 	void moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem, bool performDrag);
@@ -263,6 +251,9 @@ protected:
 
 	virtual void onSceneChanged();
 
+protected Q_SLOTS:
+	virtual void onSelectionChanged();
+
 private:
 	void removeItems();
 	void checkUndoState();
@@ -275,6 +266,7 @@ protected:
 	QGraphicsItem *m_startDragItem;
 	QPointF m_lastDragPos;
 
+private:
 	int m_infoStatus;
 
 	QMap<QByteArray, CItem*> m_itemFactories;
@@ -289,7 +281,6 @@ protected:
     QMap<QByteArray, QSet<QByteArray>> m_classAttributesVis;
 	AttributeConstrainsMap m_classAttributesConstrains;
 
-private:
     int m_gridSize;
     bool m_gridEnabled;
     bool m_gridSnap;
@@ -307,6 +298,9 @@ private:
 	bool m_labelsEnabled, m_labelsUpdate;
 
 	bool m_isFontAntialiased = true;
+
+	// selector
+	QRectF m_transformRect;
 };
 
 

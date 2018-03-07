@@ -10,6 +10,7 @@ QVGE 0.4.2 (beta)
 - fixed issue with dragging items over their labels
 - (Linux) fixed issue with default IO directory
 - (FreeBSD) fixed restoring of maximized windows (Qt issue)
+- (Windows) added uninstaller to the setup packages
 
 
 QVGE 0.4.1 (beta)

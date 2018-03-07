@@ -65,6 +65,9 @@ CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent),
 	setMinimumRenderSize(5);
 
 	QPixmapCache::setCacheLimit(200000);
+
+	// connections
+	connect(this, SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()), Qt::DirectConnection);
 }
 
 CEditorScene::~CEditorScene()
@@ -909,6 +912,48 @@ QList<CItem*> CEditorScene::cloneSelectedItems()
 }
 
 
+// transform
+
+QList<QGraphicsItem*> CEditorScene::transformableItems() const
+{
+	return selectedItems();
+}
+
+
+void CEditorScene::calculateTransformRect()
+{
+	auto items = transformableItems();
+
+	if (items.isEmpty())
+	{
+		m_transformRect = QRectF();
+	}
+	else
+	{
+		QRectF r;
+		for (const auto item : items)
+		{
+			r |= item->sceneBoundingRect();
+		}
+
+		invalidate(r | m_transformRect);
+
+		m_transformRect = r;
+	}
+}
+
+
+void CEditorScene::drawTransformRect(QPainter *painter)
+{
+	if (m_transformRect.isValid())
+	{
+		painter->setBrush(Qt::transparent);
+		painter->setPen(QPen(Qt::red, 0, Qt::DashLine));
+		painter->drawRect(m_transformRect);
+	}
+}
+
+
 // callbacks
 
 void CEditorScene::onItemDestroyed(CItem *citem)
@@ -922,6 +967,12 @@ void CEditorScene::onSceneChanged()
 	Q_EMIT sceneChanged();
 
 	layoutItemLabels();
+}
+
+
+void CEditorScene::onSelectionChanged()
+{
+	calculateTransformRect();
 }
 
 
@@ -988,6 +1039,9 @@ void CEditorScene::drawForeground(QPainter *painter, const QRectF &r)
 
 	// drop label update flag
 	m_labelsUpdate = false;
+
+	// draw transformer
+	drawTransformRect(painter);
 }
 
 
@@ -1071,12 +1125,6 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
 		onLeftButtonPressed(mouseEvent);
-
-		// select under mouse if clone
-		if (mouseEvent->modifiers() == Qt::ControlModifier)
-		{
-			selectUnderMouse(mouseEvent);
-		}
 	}
 }
 
@@ -1362,6 +1410,9 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 
 	m_startDragItem = NULL;
 	m_dragInProgress = false;
+
+	// transform resume
+	calculateTransformRect();
 }
 
 
@@ -1442,12 +1493,18 @@ bool CEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPoin
 		if (!item->flags() & item->ItemIsMovable)
 			return false;
 
+		// transform reset
+		m_transformRect = QRectF();
+
 		CItem *citem = dynamic_cast<CItem*>(item);
 		if (citem)
 		{
 			// clone?
 			if (mouseEvent->modifiers() == Qt::ControlModifier)
 			{
+				// select under mouse if clone
+				selectUnderMouse(mouseEvent);
+
 				// clone selection
 				QList<CItem*> clonedList = cloneSelectedItems();
 				if (clonedList.isEmpty())
