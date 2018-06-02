@@ -317,6 +317,9 @@ void CMainWindow::doCreateNewDocument(const QByteArray &docType)
     // no document - create in place
     if (createDocument(docType))
     {
+		// restore settings for this instance
+		readSettings();
+
         m_currentDocType = docType;
         m_isChanged = false;
 
@@ -394,6 +397,9 @@ bool CMainWindow::doOpenDocument(const QString &fileName)
     // no document - open in place
     if (openDocument(normalizedName, m_currentDocType))
     {
+		// restore settings for this instance
+		readSettings();
+
         m_currentFileName = normalizedName;
         m_isChanged = false;
 		m_lastPath = QFileInfo(m_currentFileName).absolutePath();

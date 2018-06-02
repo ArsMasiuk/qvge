@@ -60,9 +60,6 @@ bool qvgeMainWindow::createDocument(const QByteArray &docType)
     {
 		m_graphEditController = new qvgeNodeEditorUIController(this);
 
-        // restore settings for this instance
-        readSettings();
-
         return true;
     }
 
@@ -73,9 +70,6 @@ bool qvgeMainWindow::createDocument(const QByteArray &docType)
         setCentralWidget(m_textEditor);
 
         connect(m_textEditor, &QPlainTextEdit::textChanged, this, &CMainWindow::onDocumentChanged);
-
-        // restore settings for this instance
-        readSettings();
 
         return true;
     }
