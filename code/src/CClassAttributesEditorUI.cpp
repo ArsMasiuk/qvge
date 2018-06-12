@@ -48,6 +48,7 @@ CClassAttributesEditorUI::~CClassAttributesEditorUI()
 {
 	// important to avoid crash
 	ui->Editor->disconnect(this);
+	disconnect(this);
 
 	delete ui;
 }
@@ -154,6 +155,10 @@ void CClassAttributesEditorUI::rebuild()
 			Q_ASSERT(prop != NULL);
 			if (!prop)
 				continue;	// ignore
+
+			// add 13 commas if double
+			if (type == QMetaType::Double)
+				prop->setAttribute("decimals", 13);
 
 			prop->setValue(it.value().defaultValue);
 		}

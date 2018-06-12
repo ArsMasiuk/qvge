@@ -116,7 +116,6 @@ class QT_QTPROPERTYBROWSER_EXPORT QtAbstractPropertyManager : public QObject
 {
     Q_OBJECT
 public:
-
     explicit QtAbstractPropertyManager(QObject *parent = 0);
     ~QtAbstractPropertyManager();
 
@@ -124,13 +123,14 @@ public:
     void clear() const;
 
     QtProperty *addProperty(const QString &name = QString());
-Q_SIGNALS:
 
+Q_SIGNALS:
     void propertyInserted(QtProperty *property,
                 QtProperty *parent, QtProperty *after);
     void propertyChanged(QtProperty *property);
     void propertyRemoved(QtProperty *property, QtProperty *parent);
     void propertyDestroyed(QtProperty *property);
+
 protected:
     virtual bool hasValue(const QtProperty *property) const;
     virtual QIcon valueIcon(const QtProperty *property) const;
@@ -140,6 +140,7 @@ protected:
     virtual void initializeProperty(QtProperty *property) = 0;
     virtual void uninitializeProperty(QtProperty *property);
     virtual QtProperty *createProperty();
+
 private:
     friend class QtProperty;
     QtAbstractPropertyManagerPrivate *d_ptr;
@@ -298,21 +299,19 @@ Q_SIGNALS:
     void currentItemChanged(QtBrowserItem *);
 
 public Q_SLOTS:
-
     QtBrowserItem *addProperty(QtProperty *property);
     QtBrowserItem *insertProperty(QtProperty *property, QtProperty *afterProperty);
     void removeProperty(QtProperty *property);
 
 protected:
-
     virtual void itemInserted(QtBrowserItem *item, QtBrowserItem *afterItem) = 0;
     virtual void itemRemoved(QtBrowserItem *item) = 0;
     // can be tooltip, statustip, whatsthis, name, icon, text.
     virtual void itemChanged(QtBrowserItem *item) = 0;
 
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent);
-private:
 
+private:
     bool addFactory(QtAbstractPropertyManager *abstractManager,
                 QtAbstractEditorFactoryBase *abstractFactory);
 
@@ -325,7 +324,6 @@ private:
                             QtProperty *))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDataChanged(QtProperty *))
-
 };
 
 #if QT_VERSION >= 0x040400

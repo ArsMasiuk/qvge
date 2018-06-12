@@ -31,6 +31,10 @@ CAttributesEditorUI::CAttributesEditorUI(QWidget *parent) :
 
 CAttributesEditorUI::~CAttributesEditorUI()
 {
+	// important to avoid crash
+	ui->Editor->disconnect(this);
+	disconnect(this);
+
 	delete ui;
 }
 
@@ -112,6 +116,10 @@ int CAttributesEditorUI::setupFromItems(CEditorScene& scene, QList<CItem*> &item
 
 		if (!prop)
 			continue;	// ignore
+
+		// add 13 commas if double
+		if (it.value().dataType == QMetaType::Double)
+			prop->setAttribute("decimals", 13);
 
         prop->setValue(it.value().data);
         auto item = ui->Editor->addProperty(prop);
