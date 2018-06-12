@@ -215,6 +215,22 @@ QString QtPropertyBrowserUtils::fontValueText(const QFont &f)
            .arg(f.family()).arg(f.pointSize());
 }
 
+QString QtPropertyBrowserUtils::trimDecimalZeros(const QChar &point, const QString &text)
+{
+	int idx = text.indexOf(point);
+	if (idx >= 0)
+	{
+		QString corrText(text);
+		while (corrText.endsWith('0'))
+			corrText.chop(1);
+		if (corrText.endsWith(point))
+			corrText.chop(1);
+		return corrText;
+	}
+	else
+		return text;
+}
+
 
 QtBoolEdit::QtBoolEdit(QWidget *parent) :
     QWidget(parent),

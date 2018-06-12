@@ -97,6 +97,7 @@ public:
     static QPixmap fontValuePixmap(const QFont &f);
     static QIcon fontValueIcon(const QFont &f);
     static QString fontValueText(const QFont &f);
+	static QString trimDecimalZeros(const QChar &point, const QString &text);
 };
 
 class QtBoolEdit : public QWidget {

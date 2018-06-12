@@ -375,7 +375,7 @@ void QtPropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewIt
     }
     QItemDelegate::paint(painter, opt, index);
     if (option.type)
-    m_disablePainting = false;
+		m_disablePainting = false;
 
     opt.palette.setCurrentColorGroup(QPalette::Active);
     QColor color = static_cast<QRgb>(QApplication::style()->styleHint(QStyle::SH_Table_GridLineColor, &opt));
