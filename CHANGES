@@ -1,11 +1,8 @@
 QVGE 0.4.3 (beta)
 -------------------------------------------------------------------------------
-- fixed a crash when leaving property editor after changing a value
+- fixed a crash when leaving property editor after value change
 - fixed editing of string and numerical values after typing next character
 - fixed a couple of editing & display issues of double values
-
-- fixed issue with restoring of scene interactive state
-- fixed issue with document change notification when a new document is created
 
 
 QVGE 0.4.2 (beta)
