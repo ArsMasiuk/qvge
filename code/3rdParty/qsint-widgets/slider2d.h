@@ -86,10 +86,7 @@ public:
     QToolButton* makeAsButton();
 
     // reimp
-    virtual QSize minimumSizeHint() const
-    {
-        return QSize(64,64);
-    }
+    virtual QSize minimumSizeHint() const    {   return QSize(64,64);    }
 
 Q_SIGNALS:
     void scrollHorizontal(int value);
@@ -98,6 +95,8 @@ Q_SIGNALS:
     void aboutToShow();
 
 public Q_SLOTS:
+	void onAboutToShow();
+
     void setHorizontalRange(int min, int max);
     void setHorizontalValue(int value);
     void setHorizontalViewSize(int size);
@@ -118,7 +117,7 @@ protected:
     virtual bool eventFilter(QObject *, QEvent *);
     virtual void mousePressEvent(QMouseEvent *);
     virtual void mouseMoveEvent(QMouseEvent *);
-    virtual bool event(QEvent *);
+	virtual bool event(QEvent *);
 
     virtual void drawBackground(QPainter& p, QRect r);
     virtual void drawSlider(QPainter& p, QRect r);

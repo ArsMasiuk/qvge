@@ -176,7 +176,9 @@ QToolButton *Slider2d::makeAsButton()
     sliderMenu->addAction(sliderAction);
     sliderMenu->setDefaultAction(sliderAction);
 
-    connect(sliderMenu, SIGNAL(aboutToShow()), this, SIGNAL(aboutToShow()));
+    connect(sliderMenu, SIGNAL(aboutToShow()), this, SLOT(onAboutToShow()));
+
+	sliderMenu->installEventFilter(this);
 
     return sliderButton;
 }
@@ -254,6 +256,11 @@ void Slider2d::enablePanning(bool on)
     m_panning = on;
 }
 
+void QSint::Slider2d::onAboutToShow()
+{
+	Q_EMIT aboutToShow();
+}
+
 void QSint::Slider2d::mousePressEvent(QMouseEvent *event)
 {
     if (m_panning && event->buttons() & Qt::LeftButton)
@@ -286,7 +293,7 @@ void QSint::Slider2d::mouseMoveEvent(QMouseEvent *event)
             m_valueXpan = width()-m_sizeXpan;
         double dx = double(width()) / double(m_sizeX);
         int viewX = double(m_valueXpan) / dx + m_minX;
-        emit scrollHorizontal(viewX);
+        Q_EMIT scrollHorizontal(viewX);
 
         m_valueYpan = event->pos().y() + m_oldY;
         if (m_valueYpan < 0)
@@ -296,7 +303,7 @@ void QSint::Slider2d::mouseMoveEvent(QMouseEvent *event)
             m_valueYpan = height()-m_sizeYpan;
         double dy = double(height()) / double(m_sizeY);
         int viewY = double(m_valueYpan) / dy + m_minY;
-        emit scrollVertical(viewY);
+        Q_EMIT scrollVertical(viewY);
     }
 }
 
@@ -352,46 +359,49 @@ bool Slider2d::eventFilter(QObject *obj, QEvent *event)
 {
     bool b = QObject::eventFilter(obj, event);
 
-    if (event->type() == QEvent::Resize)
+    QAbstractSlider *sl = dynamic_cast<QAbstractSlider*>(obj);
+    if (sl && event->type() == QEvent::Resize)
     {
-        QAbstractSlider *sl = dynamic_cast<QAbstractSlider*>(obj);
-        if (sl)
-        {
-            if (sl == m_sliderX)
-            {
-                setHorizontalViewSize(sl->pageStep());
-            } else
-            if (sl == m_sliderY)
-            {
-                setVerticalViewSize(sl->pageStep());
-            }
-        }
-    }
+        if (sl == m_sliderX)
+            setHorizontalViewSize(sl->pageStep());
+		else
+        if (sl == m_sliderY)
+            setVerticalViewSize(sl->pageStep());
+
+		return b;
+	}
+
+	QMenu *tb = dynamic_cast<QMenu*>(obj);
+	if (tb && event->type() == QEvent::MouseMove)
+	{
+		this->mouseMoveEvent((QMouseEvent*)event);
+		return b;
+	}
 
     return b;
 }
 
- bool Slider2d::event(QEvent *e)
- {
-     if (e->type() == QEvent::Paint)
-     {
-         if (m_sliderX)
-         {
-             setHorizontalRange(m_sliderX->minimum(), m_sliderX->maximum());
-             setHorizontalViewSize(m_sliderX->pageStep());
-             setHorizontalValue(m_sliderX->value());
-         }
+bool Slider2d::event(QEvent *e)
+{
+    if (e->type() == QEvent::Paint)
+    {
+        if (m_sliderX)
+        {
+            setHorizontalRange(m_sliderX->minimum(), m_sliderX->maximum());
+            setHorizontalViewSize(m_sliderX->pageStep());
+            setHorizontalValue(m_sliderX->value());
+        }
 
-         if (m_sliderY)
-         {
-             setVerticalRange(m_sliderY->minimum(), m_sliderY->maximum());
-             setVerticalViewSize(m_sliderY->pageStep());
-             setVerticalValue(m_sliderY->value());
-         }
-     }
+        if (m_sliderY)
+        {
+            setVerticalRange(m_sliderY->minimum(), m_sliderY->maximum());
+            setVerticalViewSize(m_sliderY->pageStep());
+            setVerticalValue(m_sliderY->value());
+        }
+    }
 
-     return QWidget::event(e);
- }
+    return QWidget::event(e);
+}
 
 
 } // namespace QSint

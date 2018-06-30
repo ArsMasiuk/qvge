@@ -320,15 +320,18 @@ void CItem::onItemSelected(bool state)
 void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 {
 	// update tooltip
-	QString tooltipToShow;
+	QString tooltipToShow("<table columns=2>");
 
-	auto idsToShow = getVisibleAttributeIds(CItem::VF_TOOLTIP);
+	auto idsToShow = getVisibleAttributeIds(CItem::VF_TOOLTIP).toList();
+	qSort(idsToShow);
+
 	for (const QByteArray& id : idsToShow)
 	{
         QString text = CUtils::variantToText(getAttribute(id));
-		if (tooltipToShow.size()) tooltipToShow += "\n";
-		tooltipToShow += QString("%1: \t%2").arg(QString(id)).arg(text);
+		tooltipToShow += QString("<tr><td><b>%1</b>: </td> <td> %2</td>").arg(QString(id)).arg(text);
 	}
+
+	tooltipToShow += "</table>";
 
 	sceneItem->setToolTip(tooltipToShow);
 }
