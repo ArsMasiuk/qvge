@@ -4,7 +4,6 @@
 ![GitHub Release Date](https://img.shields.io/github/release-date/SubtitleEdit/subtitleedit.svg?style=for-the-badge)
 
 
-
 **qvge** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
 in a simple and intuitive way.
 
