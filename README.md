@@ -16,8 +16,10 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 ### Main Features
 
 - Easy creation and parameterising of small-sized till middle-sized graphs
+- Hierarchical attribute model for nodes and edges
 - Dynamically maintained list of commutations between nodes
 - Directed, undirected and mixed graphs supported
+- Node ports supported as well
 - Auto-creation and auto-layout of graphs (via OGDF)
 - Native graph persistence format (XGR)
 - Reading GraphML, GML and GEXF files

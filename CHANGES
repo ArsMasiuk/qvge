@@ -1,3 +1,29 @@
+QVGE 0.5.0 (beta)
+-------------------------------------------------------------------------------
+- changed project directory structure
+- globally renamed: CConnection -> CEdge etc.
+- some menu texts corrected & tooltips added
+
+- added basic support of node ports
+- added buttons to change attribute's name & type 
+- color schemes menu moved into Edit
+- added "Factor Nodes" dialog
+- added zoom/fit to selection
+- added custom columns to the Topology editor
+- added "Search" feature
+
+- fixed issue with document change notification when a new document is created
+- fixed issue with putting empty states into the undo/redo stack after editing
+	of complex attributes (color, font etc)
+- fixed generation of the default ids for nodes/edges
+- fixed opening of documents with unicode names
+- fixed writing non-latin symbols to GEXF files as well as description & version number (#33)
+- fixed writing graph attributes to GEXF files
+
+DPSE changes:
+- added node models conversion via context menu for selected nodes
+
+
 QVGE 0.4.3 (beta)
 -------------------------------------------------------------------------------
 - item tooltips visually improved
@@ -6,7 +32,7 @@ QVGE 0.4.3 (beta)
 - fixed issue with restoring of scene interactive state after panning
 - fixed a crash when leaving property editor after changing a value
 - fixed editing of string and numerical values after typing next character
-- fixed a couple of editing & display issues of double values
+- fixed a couple of visual issues with double values
 
 
 QVGE 0.4.2 (beta)

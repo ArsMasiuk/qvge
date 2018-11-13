@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file alias="Edge-Mutual">Icons/Direction-Both.png</file>
+        <file alias="Edge-Directed">Icons/Direction-One.png</file>
+        <file alias="Edge-Undirected">Icons/Direction-None.png</file>
+        <file alias="Grid-Show">Icons/Grid.png</file>
+        <file alias="Grid-Snap">Icons/Grid-Snap.png</file>
+        <file alias="Node-Diamond">Icons/Node-Romb.png</file>
+        <file alias="Node-Disc">Icons/Node-Round.png</file>
+        <file alias="Node-Square">Icons/Node-Square.png</file>
+        <file alias="Node-Triangle">Icons/Node-Triangle.png</file>
+        <file alias="Node-Triangle-Down">Icons/Node-Triangle-Down.png</file>
+        <file alias="Navigator">Icons/Scroll-Navigator.png</file>
+        <file alias="Settings">Icons/Settings.png</file>
+        <file alias="Unlink">Icons/Action-Unlink.png</file>
+        <file alias="Crop">Icons/Action-Crop.png</file>
+        <file alias="Link">Icons/Action-Link.png</file>
+        <file alias="Node-Hexagon">Icons/Node-Hexagon.png</file>
+        <file alias="Mode-AddNodes">Icons/Mode-AddNodes.png</file>
+        <file alias="Mode-Select">Icons/Mode-Select.png</file>
+
+      <file alias="Copy">Icons/edit-copy.png</file>
+      <file alias="Cut">Icons/edit-cut.png</file>
+      <file alias="Paste">Icons/edit-paste.png</file>
+      <file alias="Redo">Icons/edit-redo.png</file>
+      <file alias="Undo">Icons/edit-undo.png</file>
+      <file alias="Zoom">Icons/zoom.png</file>
+      <file alias="ZoomFit">Icons/zoom-fit-items.png</file>
+      <file alias="ZoomFitSelected">Icons/zoom-fit-selection.png</file>
+      <file alias="ZoomIn">Icons/zoom-in.png</file>
+      <file alias="ZoomReset">Icons/zoom-original.png</file>
+      <file alias="ZoomOut">Icons/zoom-out.png</file>
+      <file alias="Delete">Icons/edit-delete.png</file>
+      <file alias="Label">Icons/text-label.png</file>
+    </qresource>
+</RCC>
