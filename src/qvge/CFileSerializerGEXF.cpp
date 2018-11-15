@@ -212,8 +212,18 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
 
 	if (viz_size.size()) {
 		QDomElement viz_elem = viz_size.at(0).toElement();
-		float v = viz_elem.attribute("value", "5").toFloat();
-		node->setAttribute("size", v);
+		if (viz_elem.hasAttribute("value")) {
+			float v = viz_elem.attribute("value", "5").toFloat();
+			node->setAttribute("size", v);
+		}
+		else {
+			QSizeF sz = node->getSize();
+			if (viz_elem.hasAttribute("x"))
+				sz.setWidth(viz_elem.attribute("x").toFloat());
+			if (viz_elem.hasAttribute("y"))
+				sz.setHeight(viz_elem.attribute("y").toFloat());
+			node->setAttribute("size", sz);
+		}
 	}
 
 	// shape
@@ -494,7 +504,7 @@ void CFileSerializerGEXF::writeNodes(QTextStream &ts, const CEditorScene& scene)
 				if (size.width() == size.height())
 					ts << "            <viz:size value=\"" << size.width() << "\"/>\n";
 				else
-					ts << "            <viz:size x=\"" << size.width() << " y=\"" << size.height() << "\"/>\n";		// non-standard extension
+					ts << "            <viz:size x=\"" << size.width() << "\" y=\"" << size.height() << "\"/>\n";		// non-standard extension
 			}
 			else
 				ts << "            <viz:size value=\"" << sizeV.toFloat() << "\"/>\n";

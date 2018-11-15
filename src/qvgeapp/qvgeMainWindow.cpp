@@ -21,7 +21,7 @@ It can be used freely, maintaining the information above.
 
 qvgeMainWindow::qvgeMainWindow()
 {
-	QString bitString;
+    QString bitString;
 	int bits = CPlatformServices::GetPlatformBits();
 	if (bits > 0) bitString = QString("%1bit").arg(bits);
 

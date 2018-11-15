@@ -431,9 +431,13 @@ void CEdge::onNodePortDeleted(CNode *node, const QByteArray& portId)
 }
 
 
-void CEdge::onNodePortRenamed(CNode *node, const QByteArray& portId, const QByteArray& oldId)
+void CEdge::onNodePortRenamed(CNode *node, const QByteArray& portId, const QByteArray& oldPortId)
 {
-	reattach(node, oldId, portId);
+	if (m_firstNode == node && m_firstPortId == oldPortId)
+		m_firstPortId = portId;
+
+	if (m_lastNode == node && m_lastPortId == oldPortId)
+		m_lastPortId = portId;
 }
 
 

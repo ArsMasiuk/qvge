@@ -1,3 +1,9 @@
+QVGE 0.5.1 (bugfix beta)
+-------------------------------------------------------------------------------
+- some GEXF format IO fixes
+- port renaming optimizations
+
+
 QVGE 0.5.0 (beta)
 -------------------------------------------------------------------------------
 - changed project directory structure
