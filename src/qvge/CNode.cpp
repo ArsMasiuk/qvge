@@ -286,6 +286,32 @@ bool CNode::movePort(const QByteArray& portId, int align, double xoff, double yo
 }
 
 
+bool CNode::renamePort(const QByteArray& portId, const QByteArray& newId)
+{
+	if (!m_ports.contains(portId))
+		return false;
+
+	if (portId == newId)
+		return true;
+
+	if (!m_ports.contains(newId))
+	{
+		CNodePort *port = m_ports[portId];
+		m_ports[newId] = port;
+		m_ports.remove(portId);
+
+		port->setId(newId);
+
+		updateCachedItems();
+
+		return true;
+	}
+
+	// port exists: bail out for now...
+	return false;
+}
+
+
 CNodePort* CNode::getPort(const QByteArray& portId) const
 {
 	if (portId.isEmpty() || !m_ports.contains(portId))
@@ -617,9 +643,20 @@ void CNode::onConnectionDeleted(CEdge *conn)
 void CNode::onPortDeleted(CNodePort *port)
 {
 	for (auto edge : m_connections)
+	{
 		edge->onNodePortDeleted(this, port->getId());
+	}
 
 	m_ports.remove(port->getId());
+}
+
+
+void CNode::onPortRenamed(CNodePort *port, const QByteArray& oldId)
+{
+	for (auto edge : m_connections)
+	{
+		edge->onNodePortRenamed(this, port->getId(), oldId);
+	}
 }
 
 

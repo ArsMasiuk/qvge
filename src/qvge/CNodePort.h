@@ -31,6 +31,7 @@ public:
 	double getX() const					{ return m_xoff; }
 	double getY() const					{ return m_yoff; }
 
+	void setId(const QByteArray& portId);
 	void setAlign(int newAlign);
 	void setOffset(double xoff, double yoff);
 

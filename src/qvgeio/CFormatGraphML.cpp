@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 
 #include <QFile>
 #include <QDebug>
+//#include <QMessageBox>
 
 
 // reimp
@@ -22,10 +23,19 @@ bool CFormatGraphML::load(const QString& fileName, Graph& graph) const
 	if (!file.open(QIODevice::ReadOnly))
 		return false;
 
+	QString errorString;
+	int errorLine, errorColumn;
+
 	QDomDocument doc("graphml");
-	if (!doc.setContent(&file)) 
+	if (!doc.setContent(&file, false, &errorString, &errorLine, &errorColumn))
 	{
 		file.close();
+
+		//QMessageBox::critical(NULL,
+		//	QObject::tr("Cannot open document"),
+		//	QObject::tr("%1\nline: %2, column: %3")
+		//	.arg(errorString).arg(errorLine).arg(errorColumn));
+
 		return false;
 	}
 

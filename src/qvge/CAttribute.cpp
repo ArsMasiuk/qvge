@@ -46,6 +46,7 @@ bool CAttribute::restoreFrom(QDataStream& out, quint64 version64)
 		out >> classId;	// dummy value
 
     out >> name >> defaultValue >> userDefined >> dummy;
+	userDefined = true;
 
 	// size must be converted
 	if (version64 < 7)

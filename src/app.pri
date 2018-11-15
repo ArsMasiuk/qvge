@@ -1,5 +1,5 @@
 # includes & libs
-INCLUDEPATH += $$PWD/3rdParty/qtpropertybrowser $$PWD/3rdParty/qsint-widgets
+INCLUDEPATH += $$PWD $$PWD/3rdParty/qtpropertybrowser $$PWD/3rdParty/qsint-widgets
 
 
 CONFIG(debug, debug|release){
@@ -20,8 +20,6 @@ USE_OGDF{
 
 win32{
     LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
-
-    RC_FILE = $$PWD/win32/icon.rc
 }
 
 cygwin*{

@@ -64,6 +64,21 @@ void CNodePort::onParentGeometryChanged()
 }
 
 
+void CNodePort::setId(const QByteArray& portId)
+{
+	if (m_id == portId)
+		return;
+
+	auto oldId = m_id;
+	m_id = portId;
+
+	setToolTip(portId);
+
+	if (m_node)
+		m_node->onPortRenamed(this, oldId);
+}
+
+
 void CNodePort::setAlign(int newAlign)
 {
 	m_align = newAlign;
@@ -137,5 +152,7 @@ bool CNodePort::storeTo(QDataStream& out, quint64 version64) const
 
 //bool CNodePort::restoreFrom(QDataStream& out, quint64 version64)
 //{
-//
+//	out >> m_id;
+//	out >> m_align >> m_xoff >> m_yoff;
+//	return out.status() == QDataStream::Ok;
 //}

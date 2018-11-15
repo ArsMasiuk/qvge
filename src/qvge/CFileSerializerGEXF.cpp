@@ -15,6 +15,7 @@ It can be used freely, maintaining the information above.
 #include <QDate>
 #include <QDebug>
 #include <QApplication>
+#include <QMessageBox>
 
 
 // reimp
@@ -26,10 +27,19 @@ bool CFileSerializerGEXF::load(const QString& fileName, CEditorScene& scene) con
 	if (!file.open(QIODevice::ReadOnly))
 		return false;
 	
+	QString errorString;
+	int errorLine, errorColumn;
+
 	QDomDocument doc("gexf");
-	if (!doc.setContent(&file))
+	if (!doc.setContent(&file, false, &errorString, &errorLine, &errorColumn))
 	{
 		file.close();
+
+		QMessageBox::critical(NULL, 
+			QObject::tr("Cannot open document"), 
+			QObject::tr("%1\nline: %2, column: %3")
+			.arg(errorString).arg(errorLine).arg(errorColumn));
+
 		return false;
 	}
 	

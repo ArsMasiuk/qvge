@@ -212,8 +212,8 @@ void CClassAttributesEditorUI::on_ChangeButton_clicked()
 		return;
 
 	QByteArray attrId = ui->Editor->getCurrentTopPropertyName().toLatin1();
-	if (attrId.isEmpty())
-		return;
+	//if (attrId.isEmpty())
+	//	return;
 
 	QByteArray classId = getClassId();
 	auto attr = m_scene->getClassAttribute(classId, attrId, false);

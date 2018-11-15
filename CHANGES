@@ -19,6 +19,7 @@ QVGE 0.5.0 (beta)
 - fixed opening of documents with unicode names
 - fixed writing non-latin symbols to GEXF files as well as description & version number (#33)
 - fixed writing graph attributes to GEXF files
+- fixed storing of default class attributes
 
 DPSE changes:
 - added node models conversion via context menu for selected nodes

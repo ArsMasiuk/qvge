@@ -28,22 +28,20 @@ qvgeMainWindow::qvgeMainWindow()
     QApplication::setOrganizationName("qvge");
     QApplication::setApplicationName("Qt Visual Graph Editor");
 	QApplication::setApplicationVersion(qvgeVersion.toString());
-    QApplication::setApplicationDisplayName(QString("%1 %2 %3")
+    QApplication::setApplicationDisplayName(QString("%1 %2 (%3)")
 		.arg(QApplication::applicationName(), QApplication::applicationVersion(), bitString));
 
 	CDocumentFormat gexf = { "GEXF", "*.gexf", {"gexf"}, true, true };
 	CDocumentFormat graphml = { "GraphML", "*.graphml", {"graphml"}, false, true };
-//    CDocumentFormat gr = { "Old plain GR", "*.gr", false, true };
-	CDocumentFormat xgr = { "XML Graph", "*.xgr", {"xgr"}, true, true };
+	CDocumentFormat xgr = { "XGR binary graph format", "*.xgr", {"xgr"}, true, true };
     CDocumentFormat gml = { "GML", "*.gml", { "gml" }, false, true };
-    //CDocumentFormat dot = { "DOT", "*.dot *.gv", { "dot","gv" }, true, true };
-    CDocumentFormat csv = { "CSV Text File", "*.csv", { "csv" }, false, true };
+    CDocumentFormat csv = { "CSV text file", "*.csv", { "csv" }, false, true };
 
     CDocument graph = { tr("Graph Document"), tr("Directed or undirected graph"), "graph", true,
                         {gexf, graphml, gml, xgr, csv} };
     addDocument(graph);
 
-    CDocumentFormat txt = { tr("Plain Text"), "*.txt", { "txt" }, true, true };
+    CDocumentFormat txt = { tr("Plain text file"), "*.txt", { "txt" }, true, true };
     CDocument text = { tr("Text Document"), tr("Simple text document"), "text", true, {txt} };
     addDocument(text);
 }

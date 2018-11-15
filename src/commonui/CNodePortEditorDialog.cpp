@@ -28,8 +28,8 @@ CNodePortEditorDialog::~CNodePortEditorDialog()
 
 int CNodePortEditorDialog::exec(CNodePort &port)
 {
-	m_port = &port;
-	m_node = port.getNode();
+	m_port = nullptr;
+	m_node = nullptr;
 
 	ui->PortId->setText(port.getId());
 
@@ -41,7 +41,17 @@ int CNodePortEditorDialog::exec(CNodePort &port)
 	ui->OffsetX->setValue(port.getX());
 	ui->OffsetY->setValue(port.getY());
 
-	return QDialog::exec();
+	// set here in order to make interactive during editing
+	m_port = &port;
+	m_node = port.getNode();
+
+	int result = QDialog::exec();
+	if (result == QDialog::Accepted)
+	{
+		m_node->renamePort(m_port->getId(), ui->PortId->text().toLocal8Bit());
+	}
+
+	return result;
 }
 
 

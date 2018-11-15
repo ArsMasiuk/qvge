@@ -67,6 +67,7 @@ public:
 	virtual CNodePort* addPort(const QByteArray& portId = "", int align = Qt::AlignCenter, double xoff = 0, double yoff = 0);
 	virtual bool removePort(const QByteArray& portId);
 	virtual bool movePort(const QByteArray& portId, int align = Qt::AlignCenter, double xoff = 0, double yoff = 0);
+	virtual bool renamePort(const QByteArray& portId, const QByteArray& newId);
 	virtual CNodePort* getPort(const QByteArray& portId) const;
 
 	// serialization 
@@ -111,6 +112,7 @@ public:
 	virtual void onConnectionDeleted(CEdge *conn);
 
 	virtual void onPortDeleted(CNodePort *port);
+	virtual void onPortRenamed(CNodePort *port, const QByteArray& oldId);
 
 	virtual void onItemMoved(const QPointF& delta);
 	virtual void onItemRestored();

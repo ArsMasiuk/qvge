@@ -285,7 +285,7 @@ bool CEditorScene::storeTo(QDataStream& out, bool storeOptions) const
 	{
 		out << classAttrsIt.key();
 		out << classAttrsIt.value().size();
-		for (auto attr : classAttrsIt.value())
+		for (const auto &attr : classAttrsIt.value())
 		{
 			attr.storeTo(out, version64);
 		}
@@ -531,29 +531,34 @@ void CEditorScene::setClassAttribute(const QByteArray& classId, const CAttribute
 
 void CEditorScene::setClassAttribute(const QByteArray& classId, const QByteArray& attrId, const QVariant& defaultValue)
 {
-	// clone from super if not found
-	if (!m_classAttributes[classId].contains(attrId))
+	if (m_classAttributes[classId].contains(attrId))
 	{
-		auto superId = getSuperClassId(classId);
-		while (!superId.isEmpty() && !m_classAttributes[superId].contains(attrId))
-		{
-			superId = getSuperClassId(superId);
-		}
-
-		if (!superId.isEmpty())
-		{
-			auto attr = m_classAttributes[superId][attrId];
-			attr.defaultValue = defaultValue;
-			m_classAttributes[classId][attrId] = attr;
-			
-			needUpdate();
-			return;
-		}
+		// just update the value
+		m_classAttributes[classId][attrId].defaultValue = defaultValue;
+		needUpdate();
+		return;
 	}
 
-	// else just update the value
-	m_classAttributes[classId][attrId].defaultValue = defaultValue;
+	// clone from super if not found
+	auto superId = getSuperClassId(classId);
+	while (!superId.isEmpty() && !m_classAttributes[superId].contains(attrId))
+	{
+		superId = getSuperClassId(superId);
+	}
 
+	if (!superId.isEmpty())
+	{
+		auto attr = m_classAttributes[superId][attrId];
+		attr.defaultValue = defaultValue;
+		m_classAttributes[classId][attrId] = attr;
+			
+		needUpdate();
+		return;
+	}
+
+	// else create new attribute with name = id
+	CAttribute attr(attrId, attrId, defaultValue);
+	m_classAttributes[classId][attrId] = attr;
 	needUpdate();
 }
 

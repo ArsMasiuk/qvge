@@ -79,6 +79,7 @@ public:
 	virtual void onNodeDetached(CNode *node);
 	virtual void onNodeDeleted(CNode *node);
 	virtual void onNodePortDeleted(CNode *node, const QByteArray& portId);
+	virtual void onNodePortRenamed(CNode *node, const QByteArray& portId, const QByteArray& oldId);
 	virtual void onParentGeometryChanged() = 0;
 	virtual void onItemRestored();
 
