@@ -20,6 +20,14 @@ namespace Ui {
 class CSceneOptionsDialog;
 }
 
+
+struct OptionsData
+{
+	bool newGraphDialogOnStart = true;
+	int backupPeriod = 10;
+};
+
+
 class CSceneOptionsDialog : public QDialog
 {
     Q_OBJECT
@@ -28,11 +36,8 @@ public:
     explicit CSceneOptionsDialog(QWidget *parent = 0);
     ~CSceneOptionsDialog();
 
-	void setShowNewGraphDialog(bool);
-	bool isShowNewGraphDialog() const;
-
 public Q_SLOTS:
-	virtual int exec(CEditorScene &scene, CEditorView &view);
+	virtual int exec(CEditorScene &scene, CEditorView &view, OptionsData &data);
 
 private:
     Ui::CSceneOptionsDialog *ui;

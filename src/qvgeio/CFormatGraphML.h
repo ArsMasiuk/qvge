@@ -13,6 +13,7 @@ It can be used freely, maintaining the information above.
 #include <QMap>
 #include <QByteArray>
 #include <QVariant>
+#include <QXmlStreamWriter>
 
 #include <qvgeio/CGraphBase.h>
 
@@ -20,10 +21,8 @@ It can be used freely, maintaining the information above.
 class CFormatGraphML
 {
 public:
-	bool load(const QString& fileName, Graph& graph) const;
-	bool save(const QString& /*fileName*/, Graph& /*graph*/) const {
-		return false;
-	}
+	bool load(const QString& fileName, Graph& graph, QString* lastError = nullptr) const;
+	bool save(const QString& fileName, Graph& graph, QString* lastError = nullptr) const;
 
 private:
 	typedef QPair<QByteArray, QByteArray> ClassAttrId;
@@ -32,6 +31,8 @@ private:
 	bool readAttrKey(int index, const QDomNode &domNode, Graph& graph, KeyAttrMap& cka) const;
 	bool readNode(int index, const QDomNode &domNode, Graph& graph, const KeyAttrMap& cka) const;
 	bool readEdge(int index, const QDomNode &domNode, Graph& graph, const KeyAttrMap& cka) const;
+
+	void writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos &attrs, const QByteArray &classId) const;
 
 	enum EdgeType {
 		Directed,

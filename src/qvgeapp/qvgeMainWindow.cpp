@@ -14,6 +14,7 @@ It can be used freely, maintaining the information above.
 #include <QTextStream>
 #include <QApplication>
 #include <QFileInfo>
+#include <QMessageBox>
 
 #include <appbase/CPlatformServices.h>
 #include <commonui/CNodeEditorUIController.h>
@@ -27,23 +28,24 @@ qvgeMainWindow::qvgeMainWindow()
 
     QApplication::setOrganizationName("qvge");
     QApplication::setApplicationName("Qt Visual Graph Editor");
-	QApplication::setApplicationVersion(qvgeVersion.toString());
+	QApplication::setApplicationVersion(qvgeVersionString);
     QApplication::setApplicationDisplayName(QString("%1 %2 (%3)")
 		.arg(QApplication::applicationName(), QApplication::applicationVersion(), bitString));
 
+	CDocumentFormat xgr = { "XGR binary graph format", "*.xgr",{ "xgr" }, true, true };
 	CDocumentFormat gexf = { "GEXF", "*.gexf", {"gexf"}, true, true };
-	CDocumentFormat graphml = { "GraphML", "*.graphml", {"graphml"}, false, true };
-	CDocumentFormat xgr = { "XGR binary graph format", "*.xgr", {"xgr"}, true, true };
+	CDocumentFormat graphml = { "GraphML", "*.graphml", {"graphml"}, true, true };
     CDocumentFormat gml = { "GML", "*.gml", { "gml" }, false, true };
     CDocumentFormat csv = { "CSV text file", "*.csv", { "csv" }, false, true };
+	CDocumentFormat dot = { "DOT/GraphViz", "*.dot *.gv",{ "dot", "gv" }, true, true };
 
     CDocument graph = { tr("Graph Document"), tr("Directed or undirected graph"), "graph", true,
-                        {gexf, graphml, gml, xgr, csv} };
+                        { xgr, gexf, graphml, gml, csv, dot} };
     addDocument(graph);
 
-    CDocumentFormat txt = { tr("Plain text file"), "*.txt", { "txt" }, true, true };
-    CDocument text = { tr("Text Document"), tr("Simple text document"), "text", true, {txt} };
-    addDocument(text);
+    //CDocumentFormat txt = { tr("Plain text file"), "*.txt", { "txt" }, true, true };
+    //CDocument text = { tr("Text Document"), tr("Simple text document"), "text", true, {txt} };
+    //addDocument(text);
 }
 
 
@@ -96,14 +98,22 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 	QString format = QFileInfo(fileName).suffix().toLower();
 
 	// graph formats
-    if (format == "graphml" || format == "gexf" || format == "xgr" || format == "gml"
-            || /*format == "dot" || */ format == "csv")
+    if (docType == "graph")
 	{
-		docType = "graph";
+		QString lastError;
 
-        if (createDocument(docType) && m_graphEditController->loadFromFile(fileName, format))
+        if (createDocument(docType))
 		{
-			return true;
+			if (m_graphEditController->loadFromFile(fileName, format, &lastError))
+			{
+				m_graphEditController->onDocumentLoaded(fileName);
+				return true;
+			}
+		}
+
+		if (lastError.size())
+		{
+			QMessageBox::critical(NULL, fileName, lastError);
 		}
 
 		return false;
@@ -152,7 +162,9 @@ bool qvgeMainWindow::saveDocument(const QString &fileName, const QString &/*sele
 	{
 		QString extType = QFileInfo(fileName).suffix().toLower();
 
-        return m_graphEditController->saveToFile(fileName, extType);
+		QString lastError;	// TODO
+
+        return m_graphEditController->saveToFile(fileName, extType, &lastError);
 	}
 
     // unknown type

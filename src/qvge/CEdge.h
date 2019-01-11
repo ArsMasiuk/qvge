@@ -111,6 +111,7 @@ protected:
 	QByteArray m_firstPortId, m_lastPortId;
 
 	QPainterPath m_selectionShapePath;
+	QPainterPath m_shapeCachePath;
 };
 
 

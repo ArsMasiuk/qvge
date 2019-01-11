@@ -141,9 +141,9 @@ QSet<QByteArray> CItem::getVisibleAttributeIds(int flags) const
 	if (auto scene = getScene())
 	{
 		if (flags == VF_ANY || flags == VF_TOOLTIP)
-			result += scene->getClassAttributes(classId(), true).keys().toSet();
+			result += scene->getClassAttributes(classId(), false).keys().toSet();
 		else
-			result += scene->getVisibleClassAttributes(classId(), true);
+			result += scene->getVisibleClassAttributes(classId(), false);
 	}
 
     return result;
@@ -168,8 +168,8 @@ CEditorScene* CItem::getScene() const
 {
 	if (auto sceneItem = getSceneItem())
 		return dynamic_cast<CEditorScene*>(sceneItem->scene());
-
-	return NULL;
+	else
+		return NULL;
 }
 
 
@@ -223,41 +223,43 @@ void CItem::updateLabelContent()
 			visibleLabels[id] = text;
 	}
 
-	if (visibleLabels.size() == 1)
+	// ids first
+	if (idsToShow.contains("id"))
 	{
-		labelToShow = visibleLabels.values().first();
+		labelToShow = "[" + visibleLabels["id"] + "]";
+		visibleLabels.remove("id");
 	}
-	else if (visibleLabels.size() > 1)
-	{
-		// if label & id:
-		if (visibleLabels.size() == 2 && idsToShow.contains("id") && idsToShow.contains("label"))
-		{
-			labelToShow = QString("[%1]\n%2").arg(visibleLabels["id"]).arg(visibleLabels["label"]);
-		}
-		else
-		{
-			for (auto it = visibleLabels.constBegin(); it != visibleLabels.constEnd(); ++it)
-			{
-				if (labelToShow.size())
-					labelToShow += "\n";
 
-				labelToShow += QString("%1: %2").arg(QString(it.key())).arg(it.value());
-			}
+	// other labels
+	if (visibleLabels.size() == 1 && idsToShow.contains("label"))
+	{
+		if (labelToShow.size())
+			labelToShow += "\n";
+
+		labelToShow += visibleLabels.values().first();
+	}
+	else
+	{
+		for (auto it = visibleLabels.constBegin(); it != visibleLabels.constEnd(); ++it)
+		{
+			if (labelToShow.size())
+				labelToShow += "\n";
+
+			labelToShow += QString("%1: %2").arg(QString(it.key())).arg(it.value());
 		}
 	}
 
 	setLabelText(labelToShow);
 
     // label attrs
-    QFont f = getAttribute("label.font").value<QFont>();
+    QFont f(getAttribute(QByteArrayLiteral("label.font")).value<QFont>());
 
 	if (!scene->isFontAntialiased())
 		f.setStyleStrategy(QFont::NoAntialias);
 
     m_labelItem->setFont(f);
 
-    QColor c = getAttribute("label.color").value<QColor>();
-    m_labelItem->setBrush(c);
+	m_labelItem->setBrush(getAttribute(QByteArrayLiteral("label.color")).value<QColor>());
 }
 
 
@@ -267,13 +269,14 @@ void CItem::updateLabelDecoration()
 		return;
 
 	if (m_internalStateFlags & IS_Selected)
-		m_labelItem->setBrush(QColor("orange"));
+		m_labelItem->setOpacity(0.6);
 	else
-	{
-		QColor c = getAttribute("label.color").value<QColor>();
-		//if (c.isValid())
-			m_labelItem->setBrush(c);
-	}
+		m_labelItem->setOpacity(1.0);
+
+	//if (m_internalStateFlags & IS_Selected)
+	//	m_labelItem->setBrush(QColor(QStringLiteral("orange")));
+	//else
+	//	m_labelItem->setBrush(getAttribute(QByteArrayLiteral("label.color")).value<QColor>());
 }
 
 
@@ -300,8 +303,20 @@ QRectF CItem::getSceneLabelRect() const
 {
 	if (!m_labelItem)
 		return QRectF();
-	
-	return m_labelItem->mapRectToScene(m_labelItem->boundingRect());
+	else
+		return m_labelItem->mapRectToScene(m_labelItem->boundingRect());
+}
+
+
+QPointF CItem::getLabelCenter() const
+{
+	if (m_labelItem)
+		return getSceneLabelRect().center();
+	else 
+	if (auto sceneItem = getSceneItem())
+		return sceneItem->boundingRect().center();
+	else
+		return QPointF();
 }
 
 
@@ -342,3 +357,4 @@ void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 
 	sceneItem->setToolTip(tooltipToShow);
 }
+

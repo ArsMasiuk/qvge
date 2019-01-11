@@ -41,6 +41,8 @@ int CNodePortEditorDialog::exec(CNodePort &port)
 	ui->OffsetX->setValue(port.getX());
 	ui->OffsetY->setValue(port.getY());
 
+	ui->Color->setColor(port.getColor());
+
 	// set here in order to make interactive during editing
 	m_port = &port;
 	m_node = port.getNode();
@@ -63,7 +65,14 @@ void CNodePortEditorDialog::doUpdate()
 		int xv = ui->OffsetX->value();
 		int yv = ui->OffsetY->value();
 		m_node->movePort(m_port->getId(), align, xv, yv);
+		m_port->setColor(ui->Color->color());
 	}
+}
+
+
+void CNodePortEditorDialog::on_Color_activated(const QColor &)
+{
+	doUpdate();
 }
 
 

@@ -111,6 +111,7 @@ public:
 	void setLabelText(const QString& text);
 	void showLabel(bool on);
 	QRectF getSceneLabelRect() const;
+	virtual QPointF getLabelCenter() const;
 
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;

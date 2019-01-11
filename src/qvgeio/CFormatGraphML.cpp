@@ -11,12 +11,77 @@ It can be used freely, maintaining the information above.
 
 #include <QFile>
 #include <QDebug>
-//#include <QMessageBox>
 
 
 // reimp
 
-bool CFormatGraphML::load(const QString& fileName, Graph& graph) const
+bool CFormatGraphML::save(const QString& fileName, Graph& graph, QString* lastError) const
+{
+	QFile file(fileName);
+	if (!file.open(QIODevice::WriteOnly))
+		return false;
+
+	QXmlStreamWriter xsw(&file);
+	xsw.setCodec("UTF-8");
+	xsw.setAutoFormatting(true);
+	xsw.setAutoFormattingIndent(4);
+
+	xsw.writeStartDocument();
+	xsw.writeStartElement("graphml");
+	xsw.writeAttribute("xmlns", "http://graphml.graphdrawing.org/xmlns");
+	xsw.writeAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+	xsw.writeAttribute("xsi:schemaLocation", "http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd");
+
+	// attrs
+	writeAttributes(xsw, graph.graphAttrs, "");
+	writeAttributes(xsw, graph.nodeAttrs, "node");
+	writeAttributes(xsw, graph.edgeAttrs, "edge");
+
+	xsw.writeStartElement("graph");
+
+	// TO DO: Nodes & Edges
+
+	xsw.writeEndElement();	// graph
+
+	xsw.writeEndElement();	// graphml
+	xsw.writeEndDocument();
+
+	return true;
+}
+
+
+void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos &attrs, const QByteArray &classId) const
+{
+	for (auto& attr : attrs)
+	{
+		xsw.writeStartElement("key");
+		xsw.writeAttribute("attr.name", attr.name);
+		xsw.writeAttribute("attr.id", attr.id);
+
+		if (classId.size())
+			xsw.writeAttribute("for", classId);
+
+		switch (attr.valueType)
+		{
+		case QVariant::Int:			xsw.writeAttribute("attr.type", "integer"); break;
+		case QVariant::Double:		xsw.writeAttribute("attr.type", "double"); break;
+		case QMetaType::Float:		xsw.writeAttribute("attr.type", "float"); break;
+		case QMetaType::Bool:		xsw.writeAttribute("attr.type", "boolen"); break;
+		case QMetaType::QString:	xsw.writeAttribute("attr.type", "string"); break;
+		default:;
+		}
+
+		if (attr.defaultValue.isValid())
+		{
+			xsw.writeTextElement("default", attr.defaultValue.toString());
+		}
+
+		xsw.writeEndElement();	// key
+	}
+}
+
+
+bool CFormatGraphML::load(const QString& fileName, Graph& graph, QString* lastError) const
 {
 	// read file into document
 	QFile file(fileName);
@@ -31,10 +96,8 @@ bool CFormatGraphML::load(const QString& fileName, Graph& graph) const
 	{
 		file.close();
 
-		//QMessageBox::critical(NULL,
-		//	QObject::tr("Cannot open document"),
-		//	QObject::tr("%1\nline: %2, column: %3")
-		//	.arg(errorString).arg(errorLine).arg(errorColumn));
+		if (lastError)
+			*lastError = QObject::tr("%1\nline: %2, column: %3").arg(errorString).arg(errorLine).arg(errorColumn);
 
 		return false;
 	}

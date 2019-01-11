@@ -31,18 +31,7 @@ CSceneOptionsDialog::~CSceneOptionsDialog()
 }
 
 
-bool CSceneOptionsDialog::isShowNewGraphDialog() const
-{
-	return ui->AutoCreateGraph->isChecked();
-}
-
-void CSceneOptionsDialog::setShowNewGraphDialog(bool on)
-{
-	ui->AutoCreateGraph->setChecked(on);
-}
-
-
-int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view)
+int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsData &data)
 {
 	ui->BackgroundColor->setColor(scene.backgroundBrush().color());
 
@@ -60,6 +49,12 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view)
 	ram /= 2;	// 50%
     ui->CacheSlider->setMaximum((int)ram);
     ui->CacheSlider->setUnitText(tr("MB"));
+
+	ui->EnableBackups->setChecked(data.backupPeriod > 0);
+	ui->BackupPeriod->setValue(data.backupPeriod);
+
+	ui->AutoCreateGraph->setChecked(data.newGraphDialogOnStart);
+
 
 	if (QDialog::exec() == QDialog::Rejected)
 		return QDialog::Rejected;
@@ -79,6 +74,10 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view)
 	scene.setFontAntialiased(isAA);
 
 	QPixmapCache::setCacheLimit(ui->CacheSlider->value() * 1024);
+
+	data.backupPeriod = ui->EnableBackups->isChecked() ? ui->BackupPeriod->value() : 0;
+
+	data.newGraphDialogOnStart = ui->AutoCreateGraph->isChecked();
 
 	return QDialog::Accepted;
 }

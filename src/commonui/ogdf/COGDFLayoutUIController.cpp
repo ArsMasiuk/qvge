@@ -14,6 +14,7 @@
 //#include <ogdf/tree/RadialTreeLayout.h>
 #include <ogdf/energybased/FMMMLayout.h>
 #include <ogdf/planarlayout/PlanarStraightLayout.h>
+#include <ogdf/layered/SugiyamaLayout.h>
 
 #include <QMenuBar>
 #include <QMenu>
@@ -31,8 +32,9 @@ COGDFLayoutUIController::COGDFLayoutUIController(CMainWindow *parent, CNodeEdito
     layoutMenu->addAction(tr("Balloon Layout"), this, SLOT(doBalloonLayout()));
     layoutMenu->addAction(tr("Circular Layout"), this, SLOT(doCircularLayout()));
     layoutMenu->addAction(tr("FMMM Layout"), this, SLOT(doFMMMLayout()));
-	/*QAction *planarLayoutAction = */layoutMenu->addAction(tr("Planar Layout"), this, SLOT(doPlanarLayout()));
+	layoutMenu->addAction(tr("Planar Layout"), this, SLOT(doPlanarLayout()));
 	//layoutMenu->addAction(tr("PSL Layout"), this, SLOT(doPSLLayout()));
+	layoutMenu->addAction(tr("Sugiyama Layout"), this, SLOT(doSugiyamaLayout()));
 }
 
 
@@ -77,5 +79,12 @@ void COGDFLayoutUIController::doFMMMLayout()
 void COGDFLayoutUIController::doPSLLayout()
 {
 	ogdf::PlanarStraightLayout layout;	// freezing
+	COGDFLayout::doLayout(layout, *m_scene);
+}
+
+
+void COGDFLayoutUIController::doSugiyamaLayout()
+{
+	ogdf::SugiyamaLayout layout;
 	COGDFLayout::doLayout(layout, *m_scene);
 }

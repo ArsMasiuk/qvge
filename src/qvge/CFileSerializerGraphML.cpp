@@ -20,14 +20,26 @@ It can be used freely, maintaining the information above.
 
 // reimp
 
-bool CFileSerializerGraphML::load(const QString& fileName, CEditorScene& scene) const
+bool CFileSerializerGraphML::load(const QString& fileName, CEditorScene& scene, QString* lastError) const
 {
 	CFormatGraphML graphML;
 	Graph graphModel;
-	if (graphML.load(fileName, graphModel))
-	{
+
+	if (graphML.load(fileName, graphModel, lastError))
 		return scene.fromGraph(graphModel);
-	}
 	else
 		return false;
 }
+
+
+bool CFileSerializerGraphML::save(const QString& fileName, CEditorScene& scene, QString* lastError) const
+{
+	CFormatGraphML graphML;
+	Graph graphModel;
+
+	if (scene.toGraph(graphModel))
+		return graphML.save(fileName, graphModel, lastError);
+	else
+		return false;
+}
+

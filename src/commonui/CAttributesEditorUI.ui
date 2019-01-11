@@ -56,6 +56,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="ChangeButton">
+       <property name="toolTip">
+        <string>Change selected attribute's id and type</string>
+       </property>
        <property name="text">
         <string>Change...</string>
        </property>

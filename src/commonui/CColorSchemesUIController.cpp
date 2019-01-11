@@ -83,6 +83,19 @@ CColorSchemesUIController::CColorSchemesUIController(QObject *parent) : QObject(
 		addScheme(scheme);
 	}
 
+    {
+        Scheme scheme{ tr("Night Sky") };
+        scheme.bgColor = QColor("#000640");
+        scheme.gridColor = QColor("#070f5a");
+        scheme.nodeColor = QColor("#000000");
+        scheme.nodeStrokeColor = QColor("#6f73c0");
+        scheme.nodeLabelColor = QColor("#dcdcdc");
+        scheme.edgeColor = QColor("#6f73c0");
+        scheme.edgeLabelColor = QColor("#aad6ff");
+
+        addScheme(scheme);
+    }
+
 	connect(&m_menu, SIGNAL(triggered(QAction*)), this, SLOT(onMenuTriggered(QAction*)));
 }
 

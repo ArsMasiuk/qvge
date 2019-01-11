@@ -20,6 +20,7 @@ private Q_SLOTS:
     void doCircularLayout();
     void doFMMMLayout();
 	void doPSLLayout();
+	void doSugiyamaLayout();
 
 private:
     CMainWindow *m_parent;

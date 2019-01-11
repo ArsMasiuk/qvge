@@ -159,9 +159,8 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *opti
 	bool isSelected = (option->state & QStyle::State_Selected);
     if (isSelected)
     {
-		QPen p(QColor(QStringLiteral("orange")), weight + 1.0, penStyle, Qt::FlatCap, Qt::MiterJoin);
-		//p.setCosmetic(true);
-
+		QPen p(QColor(Qt::darkCyan), weight + 1.0, penStyle, Qt::FlatCap, Qt::MiterJoin);
+		painter->setOpacity(0.5);
         painter->setPen(p);
     }
     else
@@ -170,8 +169,8 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *opti
 		QColor color = getAttribute(QByteArrayLiteral("color")).value<QColor>();
 
 		QPen p(color, weight, penStyle, Qt::FlatCap, Qt::MiterJoin);
-		//p.setCosmetic(true);
 
+		painter->setOpacity(1.0);
 		painter->setPen(p);
 	}
 }
@@ -179,28 +178,26 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
 QLineF CEdge::calculateArrowLine(const QPainterPath &path, bool first, const QLineF &direction) const
 {
-	// optimization: disable during drag or pan
-	Qt::MouseButtons buttons = QGuiApplication::mouseButtons();
-	if ((buttons & Qt::LeftButton) || (buttons & Qt::RightButton))
-		return direction;
+	//// optimization: disable during drag or pan
+	//Qt::MouseButtons buttons = QGuiApplication::mouseButtons();
+	//if ((buttons & Qt::LeftButton) || (buttons & Qt::RightButton))
+	//	return direction;
 
-	// optimization: disable during zoom
-	Qt::KeyboardModifiers keys = QGuiApplication::keyboardModifiers();
-	if (keys & Qt::ControlModifier)
-		return direction;
+	//// optimization: disable during zoom
+	//Qt::KeyboardModifiers keys = QGuiApplication::keyboardModifiers();
+	//if (keys & Qt::ControlModifier)
+	//	return direction;
 
 
 	if (first && m_firstNode)
 	{
-		qreal shift = m_firstNode->getDistanceToLineEnd(direction, m_firstPortId);
-		qreal arrowStart = path.percentAtLength(shift + ARROW_SIZE);
+		qreal arrowStart = path.percentAtLength(ARROW_SIZE);
 		return QLineF(path.pointAtPercent(arrowStart), direction.p2());
 	}
 	else if (!first && m_lastNode)
 	{
 		qreal len = path.length();
-		qreal shift = m_lastNode->getDistanceToLineEnd(direction, m_lastPortId);
-		qreal arrowStart = path.percentAtLength(len - shift - ARROW_SIZE);
+		qreal arrowStart = path.percentAtLength(len - ARROW_SIZE);
 		return QLineF(path.pointAtPercent(arrowStart), direction.p2());
 	}
 
@@ -212,18 +209,16 @@ void CEdge::drawArrow(QPainter* painter, const QStyleOptionGraphicsItem* /*optio
 {
 	if (first && m_firstNode)
 	{
-		qreal shift = m_firstNode->getDistanceToLineEnd(direction, m_firstPortId);
-		drawArrow(painter, shift, direction);
+		drawArrow(painter, 0, direction);
 	}
 	else if (!first && m_lastNode)
 	{
-		qreal shift = m_lastNode->getDistanceToLineEnd(direction, m_lastPortId);
-		drawArrow(painter, shift, direction);
+		drawArrow(painter, 0, direction);
 	}
 }
 
 
-void CEdge::drawArrow(QPainter* painter, qreal shift, const QLineF& direction) const
+void CEdge::drawArrow(QPainter* painter, qreal /*shift*/, const QLineF& direction) const
 {
 	static QPolygonF arrowHead;
 	if (arrowHead.isEmpty())
@@ -240,7 +235,7 @@ void CEdge::drawArrow(QPainter* painter, qreal shift, const QLineF& direction) c
 
 	painter->translate(direction.p2());
 	painter->rotate(180 + a);
-	painter->translate(QPointF(0, shift + oldPen.widthF()));
+	painter->translate(QPointF(0, oldPen.widthF()));
 	painter->drawPolygon(arrowHead);
 
 	painter->restore();
@@ -281,8 +276,8 @@ bool CEdge::restoreFrom(QDataStream &out, quint64 version64)
 
 bool CEdge::linkAfterRestore(const CItemLinkMap &idToItem)
 {
-    CNode *node1 = dynamic_cast<CNode*>(idToItem.value(m_tempFirstNodeId));
-    CNode *node2 = dynamic_cast<CNode*>(idToItem.value(m_tempLastNodeId));
+    CNode *node1 = dynamic_cast<CNode*>(idToItem.value((quintptr)m_tempFirstNodeId));
+    CNode *node2 = dynamic_cast<CNode*>(idToItem.value((quintptr)m_tempLastNodeId));
 
 	m_firstNode = m_lastNode = NULL;
 
@@ -396,6 +391,7 @@ QString CEdge::createNewId() const
 
 void CEdge::onNodeMoved(CNode *node)
 {
+	Q_UNUSED(node);
 	Q_ASSERT(node == m_firstNode || node == m_lastNode);
 	Q_ASSERT(node != NULL);
 

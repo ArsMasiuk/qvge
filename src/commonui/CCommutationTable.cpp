@@ -16,6 +16,8 @@ It can be used freely, maintaining the information above.
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QInputDialog>
+#include <QScrollBar>
+#include <QMessageBox>
 
 
 // NumSortItem: numeric sorting by ids
@@ -54,6 +56,8 @@ CCommutationTable::CCommutationTable(QWidget *parent)
 {
 	ui.setupUi(this);
 	ui.Table->setUniformRowHeights(true);
+
+	ui.Table->header()->setSortIndicator(2, Qt::AscendingOrder);
 
 	ui.Table->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(ui.Table, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onCustomContextMenu(const QPoint &)));
@@ -142,7 +146,7 @@ void CCommutationTable::onSceneChanged()
 	ui.Table->setColumnCount(m_extraSectionIds.size() + CustomId);
 
 	int extraSectionIndex = CustomId;
-	for (auto paramId : m_extraSectionIds)
+	for (const auto& paramId : m_extraSectionIds)
 	{
 		ui.Table->headerItem()->setText(extraSectionIndex++, paramId);
 	}
@@ -168,7 +172,7 @@ void CCommutationTable::onSceneChanged()
 		item->setText(EdgeId, edge->getId());
 
 		int extraSectionIndex = CustomId;
-		for (auto paramId : m_extraSectionIds)
+		for (const auto& paramId : m_extraSectionIds)
 		{
 			QString val = edge->getAttribute(paramId).toString();
 			item->setText(extraSectionIndex++, val);
@@ -304,26 +308,89 @@ void CCommutationTable::onCustomContextMenu(const QPoint& pos)
 	if (sectionIndex >= CustomId) 
 	{
 		QAction* act = contextMenu.addAction(
-			tr("Remove Column (%1)").arg(ui.Table->headerItem()->text(sectionIndex)), 
+			tr("Remove Column [%1]").arg(ui.Table->headerItem()->text(sectionIndex)), 
 			this, 
 			SLOT(onRemoveSection()));
 
 		act->setData(sectionIndex - CustomId);
+
+		contextMenu.addSeparator();
 	}
 
-	contextMenu.addAction(tr("Add Column..."), this, SLOT(onAddSection()));
+	QAction* act = contextMenu.addAction(tr("Add Column..."), this, SLOT(onAddSection()));
+	act->setData(pos);
 
 	contextMenu.exec(ui.Table->mapToGlobal(pos));
 }
 
 
+void CCommutationTable::on_AddColumnButton_clicked()
+{
+	onAddSection();
+}
+
+
+void CCommutationTable::on_RestoreButton_clicked()
+{
+	if (!m_extraSectionIds.isEmpty()) {
+		int r = QMessageBox::question(NULL, tr("Restore Default Columns"), tr("Are you sure to reset all the custom columns?"));
+		if (r == QMessageBox::Yes)
+		{
+			m_extraSectionIds.clear();
+			onSceneChanged();
+		}
+		else
+			return;
+	}
+
+	for (int i = 0; i < ui.Table->header()->count(); ++i)
+		ui.Table->header()->moveSection(ui.Table->header()->visualIndex(i), i);
+
+	ui.Table->header()->setSortIndicator(2, Qt::AscendingOrder);
+}
+
+
 void CCommutationTable::onAddSection()
 {
-	QString paramId = QInputDialog::getText(NULL, tr("Add Column"), tr("Enter edge parameter ID:"));
-	if (paramId.size() && !m_extraSectionIds.contains(paramId.toLocal8Bit()))
+	QByteArrayList paramIdsList = m_scene->getClassAttributes("edge", true).keys();
+	QStringList paramIds;
+	for (const auto& id : paramIdsList)
+		if (!m_extraSectionIds.contains(id))
+			paramIds << id;
+
+	QInputDialog dialog;
+	dialog.setComboBoxItems(paramIds);
+	dialog.setComboBoxEditable(true);
+	dialog.setWindowTitle(tr("Add Column"));
+	dialog.setLabelText(tr("Enter edge attribute ID:"));
+	dialog.setInputMode(QInputDialog::TextInput);
+	
+	if (dialog.exec() != QDialog::Accepted)
+		return;
+
+	QByteArray paramId = dialog.textValue().toLocal8Bit();
+	if (paramId.size() && !m_extraSectionIds.contains(paramId))
 	{
-		m_extraSectionIds.append(paramId.toLocal8Bit());
+		int sectionIndex = ui.Table->header()->count() - 1;
+
+		QAction* act = dynamic_cast<QAction*>(sender());
+		if (act)
+		{
+			QPoint pos = act->data().toPoint();
+			sectionIndex = ui.Table->header()->logicalIndexAt(pos);
+		}
+		
+		int listIndex = sectionIndex - CustomId;
+
+		m_extraSectionIds.insert(listIndex+1, paramId);
+
 		onSceneChanged();
+
+		if (ui.Table->horizontalScrollBar())
+		{
+			int x = ui.Table->header()->sectionPosition(sectionIndex+1);
+			ui.Table->horizontalScrollBar()->setSliderPosition(x);
+		}
 	}
 }
 

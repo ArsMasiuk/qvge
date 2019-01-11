@@ -32,7 +32,7 @@ public:
 		return false;
 	}
 
-	virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/) const {
+	virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/, QString* /*lastError = nullptr*/) const {
 		return false;
 	}
 
@@ -40,5 +40,5 @@ public:
 		return true;
 	}
 
-	virtual bool save(const QString& fileName, CEditorScene& scene) const;
+	virtual bool save(const QString& fileName, CEditorScene& scene, QString* lastError = nullptr) const;
 };

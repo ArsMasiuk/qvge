@@ -24,6 +24,7 @@ private Q_SLOTS:
 	void on_Anchor_currentIndexChanged(int index);
 	void on_OffsetX_valueChanged(int v);
 	void on_OffsetY_valueChanged(int v);
+	void on_Color_activated(const QColor &color);
 
 private:
 	void doUpdate();

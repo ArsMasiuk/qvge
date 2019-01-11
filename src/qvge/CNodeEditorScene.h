@@ -62,6 +62,7 @@ public:
 
     const QList<CNode*>& getSelectedNodes() const;
     const QList<CEdge*>& getSelectedEdges() const;
+	const QList<CItem*>& getSelectedNodesEdges() const;
 
 Q_SIGNALS:
 	void editModeChanged(int mode);
@@ -124,6 +125,7 @@ protected:
     // cached selections
     mutable QList<CNode*> m_selNodes;
 	mutable QList<CEdge*> m_selEdges;
+	mutable QList<CItem*> m_selItems;
 
     // drawing
     int m_nextIndex = 0;

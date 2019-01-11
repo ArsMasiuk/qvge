@@ -9,6 +9,10 @@ It can be used freely, maintaining the information above.
 
 #pragma once
 
+#include <QByteArray>
+
+
+// common scene states
 
 enum SceneInfoState
 {
@@ -18,3 +22,13 @@ enum SceneInfoState
 	SIS_Hover_Port
 };
 
+
+// common scene attributes
+const QByteArray class_scene = QByteArrayLiteral("");
+const QByteArray class_item = QByteArrayLiteral("item");
+const QByteArray class_node = QByteArrayLiteral("node");
+const QByteArray class_edge = QByteArrayLiteral("edge");
+
+const QByteArray attr_id = QByteArrayLiteral("id");
+const QByteArray attr_label = QByteArrayLiteral("label");
+const QByteArray attr_labels_policy = QByteArrayLiteral("labels.policy");

@@ -20,7 +20,7 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 - Node ports supported as well
 - Auto-creation and auto-layout of graphs (via OGDF)
 - Native graph persistence format (XGR)
-- Reading GraphML, GML and GEXF files
+- Reading GraphML, GML, GraphViz DOT (partially) and GEXF files
 - Export into PDF and popular image formats
 - Export into GraphViz DOT format
 - Export into GEXF format

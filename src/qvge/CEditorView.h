@@ -18,6 +18,7 @@ class CEditorScene;
 class CEditorView : public QGraphicsView
 {
 	Q_OBJECT
+
 public:
 	typedef QGraphicsView Super;
 
@@ -51,7 +52,13 @@ public:
 Q_SIGNALS:
 	void scaleChanged(double);
 
+private Q_SLOTS:
+	void restoreContextMenu();
+
 private:
+	void onLeftClickMouseMove(QMouseEvent *e);
+	void doClamp(QPointF &value);
+
 	Qt::ContextMenuPolicy m_menuModeTmp;
 	bool m_interactiveTmp = false;
 	bool m_moved = false;
@@ -59,8 +66,7 @@ private:
 
 	double m_currentZoom;
 
-private Q_SLOTS:
-	void restoreContextMenu();
+	float m_scrollThreshold = 30;
 };
 
 #endif // CEDITORVIEW_H

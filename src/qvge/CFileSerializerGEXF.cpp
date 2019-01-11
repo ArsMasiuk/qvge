@@ -20,7 +20,7 @@ It can be used freely, maintaining the information above.
 
 // reimp
 
-bool CFileSerializerGEXF::load(const QString& fileName, CEditorScene& scene) const
+bool CFileSerializerGEXF::load(const QString& fileName, CEditorScene& scene, QString* lastError) const
 {
 	// read file into document
 	QFile file(fileName);
@@ -35,11 +35,9 @@ bool CFileSerializerGEXF::load(const QString& fileName, CEditorScene& scene) con
 	{
 		file.close();
 
-		QMessageBox::critical(NULL, 
-			QObject::tr("Cannot open document"), 
-			QObject::tr("%1\nline: %2, column: %3")
-			.arg(errorString).arg(errorLine).arg(errorColumn));
-
+		if (lastError)
+			*lastError = QObject::tr("%1\nline: %2, column: %3").arg(errorString).arg(errorLine).arg(errorColumn);
+			
 		return false;
 	}
 	
@@ -124,6 +122,10 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
         {
             attrInfo.variantType = QVariant::Bool;
         }
+		else if (type == "liststring")
+		{
+			attrInfo.variantType = QVariant::StringList;
+		}
         else    // string
         {
             attrInfo.variantType = QVariant::String;
@@ -144,6 +146,23 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
 
 		if (def.size())
 		{
+			// visibility attr
+			if (attrId == "_vis_")
+			{
+				auto visList = def.splitRef('|');
+				for (auto& id : visList)
+					scene.setClassAttributeVisible(classId, id.toLatin1());
+				continue;
+			}
+
+			// stringlists
+			if (attrInfo.variantType == QVariant::StringList)
+			{
+				attr.defaultValue = def.split('|');
+				continue;
+			}
+
+			// other attrs
 			QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
 
 			if (attrId == "size" && classId == "node")
@@ -155,7 +174,6 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
 		}
 
 		scene.setClassAttribute(classId, attr);
-
 
         m_classIdMap[classId][id] = attrInfo;
     }
@@ -361,7 +379,7 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 }
 
 
-bool CFileSerializerGEXF::save(const QString& fileName, CEditorScene& scene) const
+bool CFileSerializerGEXF::save(const QString& fileName, CEditorScene& scene, QString* lastError) const
 {
 	QFile file(fileName);
 	if (!file.open(QIODevice::WriteOnly))
@@ -381,7 +399,7 @@ bool CFileSerializerGEXF::save(const QString& fileName, CEditorScene& scene) con
 	ts << 
 		"    <meta lastmodifieddate = \"" << QDate::currentDate().toString(Qt::ISODate) << "\">\n"
 		"        <creator>" << QApplication::applicationDisplayName() << "</creator>\n"
-		"        <description>" << scene.getClassAttribute("", "comment", false).defaultValue.toString() << "</description>\n"
+		"        <description>" << scene.getClassAttribute("", "comment", false).defaultValue.toString().toHtmlEscaped() << "</description>\n"
 		"    </meta>\n";
 
 	// graph
@@ -417,18 +435,24 @@ static QString typeToString(int valueType)
 	{
 	case QMetaType::Bool:		
 		return "boolean";
+
 	case QMetaType::Int:
 	case QMetaType::UInt:
 		return "integer";
+
 	case QMetaType::Long:
 	case QMetaType::ULong:
 		return "long";
+
 	case QMetaType::Double:
 		return "double";
+
 	case QMetaType::Float:
 		return "float";
 
-	// liststring
+	case QMetaType::QStringList:
+		return "liststring";
+
 	// url
 
 	default:
@@ -440,6 +464,37 @@ static QString typeToString(int valueType)
 void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& scene, const QByteArray &classId) const
 {
 	auto attrs = scene.getClassAttributes(classId, false);
+
+	// add local attributes if any
+	if (classId.size())
+	{
+		auto items = (classId == "node") ? 
+			scene.getItems<CItem, CNode>(): 
+			scene.getItems<CItem, CEdge>();
+
+		for (auto item : items)
+		{
+			auto itemAttrs = item->getLocalAttributes();
+			for (auto it = itemAttrs.constBegin(); it != itemAttrs.constEnd(); ++it)
+			{
+				auto id = it.key();
+				if (!attrs.contains(id))
+					attrs[id] = CAttribute(id);
+			}
+		}
+	}
+
+	// add visible state if any
+	QSet<QByteArray> visSet = scene.getVisibleClassAttributes(classId, false);
+	if (!visSet.isEmpty())
+	{
+		QStringList visList;
+		for (auto& id : visSet)
+			visList << id;
+		CAttribute visAttr("_vis_", "Visibility", visList);
+		attrs["_vis_"] = visAttr;
+	}
+
 	if (attrs.isEmpty())
 		return;
 
@@ -448,7 +503,7 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 	for (auto it = attrs.constBegin(); it != attrs.constEnd(); ++it)
 	{
 		const auto &attr = it.value();
-		if (attr.noDefault)
+		if (attr.isVirtual)
 			continue;
 
 		// size
@@ -473,7 +528,14 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 		
 		if (!attr.noDefault && attr.defaultValue.isValid())
 		{
-			ts << "            <default>" << attr.defaultValue.toString() << "</default>\n";
+			ts << "            <default>";
+
+			if (attr.valueType == QMetaType::QStringList)
+				ts << attr.defaultValue.toStringList().join('|');
+			else
+				ts << attr.defaultValue.toString();
+
+			ts << "</default>\n";
 		}
 
 		ts << "        </attribute>\n";
@@ -492,7 +554,7 @@ void CFileSerializerGEXF::writeNodes(QTextStream &ts, const CEditorScene& scene)
 	{
 		QMap<QByteArray, QVariant> nodeAttrs = node->getLocalAttributes();
 
-		ts << "        <node id=\"" << node->getId() << "\" label=\"" << nodeAttrs.take("label").toString() << "\">\n";
+		ts << "        <node id=\"" << node->getId() << "\" label=\"" << nodeAttrs.take("label").toString().toHtmlEscaped() << "\">\n";
 		ts << "            <viz:position x=\"" << node->pos().x() << "\" y=\"" << node->pos().y() << "\"/>\n";
 
 		if (nodeAttrs.contains("size"))
@@ -540,7 +602,7 @@ void CFileSerializerGEXF::writeEdges(QTextStream &ts, const CEditorScene& scene)
 	{
 		QMap<QByteArray, QVariant> edgeAttrs = edge->getLocalAttributes();
 
-		ts << "        <edge id=\"" << edge->getId() << "\" label=\"" << edgeAttrs.take("label").toString()
+		ts << "        <edge id=\"" << edge->getId() << "\" label=\"" << edgeAttrs.take("label").toString().toHtmlEscaped()
 			<< "\" source=\"" << edge->firstNode()->getId() << "\" target=\"" << edge->lastNode()->getId();
 		
 		QString edgetype = edgeAttrs.take("direction").toString();
@@ -585,7 +647,7 @@ void CFileSerializerGEXF::writeAttValues(QTextStream &ts, const QMap<QByteArray,
 
 		for (auto it = attvalues.constBegin(); it != attvalues.constEnd(); ++it)
 		{
-			ts << "                <attvalue for=\"" << it.key() << "\" value=\"" << it.value().toString() << "\"/>\n";
+			ts << "                <attvalue for=\"" << it.key() << "\" value=\"" << it.value().toString().toHtmlEscaped() << "\"/>\n";
 		}
 
 		ts << "            </attvalues>\n";

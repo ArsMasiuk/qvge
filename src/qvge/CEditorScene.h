@@ -68,13 +68,18 @@ public:
     void setGridPen(const QPen& gridPen);
     const QPen& getGridPen() const      { return m_gridPen; }
 
-	void setSceneCursor(const QCursor& c);
-
+	void setFontAntialiased(bool on);
+	bool isFontAntialiased() const { return m_isFontAntialiased; }
+	
 	bool itemLabelsEnabled() const		{ return m_labelsEnabled; }
 	bool itemLabelsNeedUpdate() const	{ return m_labelsUpdate; }
 
-	void setFontAntialiased(bool on);
-	bool isFontAntialiased() const		{ return m_isFontAntialiased;  }
+	enum LabelsPolicy {
+		Auto, AlwaysOn, AlwaysOff
+	};
+
+	LabelsPolicy getLabelsPolicy() const;
+	void setLabelsPolicy(LabelsPolicy v);
 
 	// undo-redo
 	int availableUndoCount() const;
@@ -137,6 +142,7 @@ public:
 
 	QSet<QByteArray> getVisibleClassAttributes(const QByteArray& classId, bool inherited) const;
 	void setClassAttributeVisible(const QByteArray& classId, const QByteArray& attrId, bool vis = true);
+	bool isClassAttributeVisible(const QByteArray& classId, const QByteArray& attrId) const;
 
 	CAttributeConstrains* getClassAttributeConstrains(const QByteArray& classId, const QByteArray& attrId) const;
 	void setClassAttributeConstrains(const QByteArray& classId, const QByteArray& attrId, CAttributeConstrains* cptr);
@@ -235,11 +241,14 @@ Q_SIGNALS:
 	void redoAvailable(bool);
 
 	void sceneChanged();
+	void sceneDoubleClicked(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem);
 
 	void infoStatusChanged(int status);
 
 protected:
 	void setInfoStatus(int status);
+
+	void setSceneCursor(const QCursor& c);
 	void updateCursorState();
 	virtual bool doUpdateCursorState(Qt::KeyboardModifiers keys, Qt::MouseButtons buttons, QGraphicsItem *hoverItem);
 
@@ -289,6 +298,7 @@ protected:
 
 protected Q_SLOTS:
 	virtual void onSelectionChanged();
+	void onFocusItemChanged(QGraphicsItem *newFocusItem, QGraphicsItem *oldFocusItem, Qt::FocusReason reason);
 
 private:
 	void removeItems();
@@ -329,14 +339,17 @@ private:
 
 	bool m_needUpdateItems;
 
+	// selector
+	QRectF m_transformRect;
+
 	// labels
 	QPainterPath m_usedLabelsRegion;
 	bool m_labelsEnabled, m_labelsUpdate;
 
 	bool m_isFontAntialiased = true;
 
-	// selector
-	QRectF m_transformRect;
+	// pimpl
+	struct CEditorScene_p* m_pimpl = nullptr;
 };
 
 

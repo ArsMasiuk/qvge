@@ -30,6 +30,10 @@ public:
 	virtual CItem* create() const { return new CDirectEdge(parentItem()); }
 	CEdge* clone();
 
+	virtual QPointF getLabelCenter() const {
+		return m_controlPoint;
+	}
+
 protected:
 	// reimp
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);

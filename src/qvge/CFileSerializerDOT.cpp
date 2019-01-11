@@ -18,7 +18,7 @@ It can be used freely, maintaining the information above.
 
 // reimp
 
-bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene) const
+bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QString* lastError) const
 {
 	QFile saveFile(fileName);
 	if (saveFile.open(QFile::WriteOnly))
@@ -28,6 +28,10 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene) cons
         QString graphId = QFileInfo(fileName).completeBaseName();
 
         ts << "digraph \"" << graphId << "\" {\n";
+
+		// we'll output points, not inches
+		//ts << "\n\n";
+		//ts << "inputscale = 72;";
 
 		ts << "\n\n";
 
@@ -99,6 +103,11 @@ void CFileSerializerDOT::doWriteNodeDefaults(QTextStream& ts, const CEditorScene
 			nodeAttrs[attr.id] = attr.defaultValue;
 	}
 
+	// add visible state if any
+	QSet<QByteArray> visSet = scene.getVisibleClassAttributes("node", false);
+	if (!visSet.isEmpty())
+		nodeAttrs["_vis_"] = visSet.toList().join('|');
+
 	// write it down
 	if (nodeAttrs.size())
 	{
@@ -114,7 +123,7 @@ void CFileSerializerDOT::doWriteNodeDefaults(QTextStream& ts, const CEditorScene
 
 void CFileSerializerDOT::doWriteNode(QTextStream& ts, const CNode& node, const CEditorScene& /*scene*/) const
 {
-	ts << node.getId();
+	ts << "\"" << node.getId() << "\"";
 	ts << " [\n";
 
 	ts << "pos = \"" << node.pos().x() / 72.0  << "," << -node.pos().y() / 72.0 << "!\"\n";	//  / 72.0 -> point to inch; -y
@@ -129,6 +138,8 @@ void CFileSerializerDOT::doWriteNode(QTextStream& ts, const CNode& node, const C
 
 void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVariant> nodeAttrs) const
 {
+	bool styleUsed = false;	// to avoid duplicated setting of node style
+
 	// standard attrs
 	if (nodeAttrs.contains("color")) {
 		QColor c(nodeAttrs["color"].value<QColor>());
@@ -136,6 +147,7 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		{
 			ts << ",fillcolor = \"" << c.name() << "\"";
 			ts << ",style = \"filled\"\n";
+			styleUsed = true;
 		}
 
 		nodeAttrs.remove("color");
@@ -181,7 +193,10 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 	}
 
 	if (nodeAttrs.contains("stroke.style")) {
-		ts << ",style = \"" << nodeAttrs["stroke.style"].toString() << "\"\n";
+		if (!styleUsed) {
+			ts << ",style = \"" << nodeAttrs["stroke.style"].toString() << "\"\n";
+			styleUsed = true;
+		}
 		nodeAttrs.remove("stroke.style");
 	}
 	
@@ -205,6 +220,11 @@ void CFileSerializerDOT::doWriteEdgeDefaults(QTextStream& ts, const CEditorScene
 			edgeAttrs[attr.id] = attr.defaultValue;
 	}
 
+	// add visible state if any
+	QSet<QByteArray> visSet = scene.getVisibleClassAttributes("edge", false);
+	if (!visSet.isEmpty())
+		edgeAttrs["_vis_"] = visSet.toList().join('|');
+
 	// write it down
 	if (edgeAttrs.size())
 	{
@@ -222,13 +242,13 @@ void CFileSerializerDOT::doWriteEdge(QTextStream& ts, const CEdge& edge, const C
 {
 	const auto& edgeAttrs = edge.getLocalAttributes();
 
-	ts << edge.firstNode()->getId();
+	ts << "\"" << edge.firstNode()->getId() << "\"";
 	if (edge.firstPortId().size())
 		ts << ":" << "\"" << edge.firstPortId() << "\"";
 
 	ts << " -> ";
 
-	ts << edge.lastNode()->getId();
+	ts << "\"" << edge.lastNode()->getId() << "\"";
 	if (edge.lastPortId().size())
 		ts << ":" << "\"" << edge.lastPortId() << "\"";
 

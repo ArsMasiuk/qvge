@@ -22,18 +22,20 @@ class CNodePort : public QGraphicsRectItem, public IInteractive
 public:
 	typedef QGraphicsRectItem Shape;
 
-	explicit CNodePort(CNode *node, const QByteArray& portId, int align, double xoff = 0, double yoff = 0);
+	explicit CNodePort(CNode *node, const QByteArray& portId = QByteArray(), int align = 0, double xoff = 0, double yoff = 0);
 	virtual ~CNodePort();
 
 	CNode* getNode() const				{ return m_node;	}
 	const QByteArray& getId() const		{ return m_id;		}
 	int getAlign() const				{ return m_align;	}
-	double getX() const					{ return m_xoff; }
-	double getY() const					{ return m_yoff; }
+	double getX() const					{ return m_xoff;	}
+	double getY() const					{ return m_yoff;	}
+	QColor getColor() const;
 
 	void setId(const QByteArray& portId);
 	void setAlign(int newAlign);
 	void setOffset(double xoff, double yoff);
+	void setColor(const QColor& color);
 
 	void copyDataFrom(const CNodePort &port);
 

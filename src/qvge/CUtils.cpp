@@ -29,7 +29,11 @@ QVariant CUtils::textToVariant(const QString& text, int type)
 		return QColor(text);
 
 	case QVariant::Font:
-		return QFont(text);
+	{
+		QFont f;
+		f.fromString(text);
+		return f;
+	}
 
     default:
         return text;    // string

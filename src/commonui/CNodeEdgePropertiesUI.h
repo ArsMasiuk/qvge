@@ -54,8 +54,6 @@ protected Q_SLOTS:
     void on_NodeSizeX_valueChanged(int value);
 	void on_NodeSizeY_valueChanged(int value);
 	void on_NodeSizeSwitch_toggled(bool on);
-    void on_NodeId_clicked();
-	void on_NodeLabel_clicked();
 	void on_StrokeColor_activated(const QColor &color);
 	void on_StrokeStyle_activated(QVariant data);
 	void on_StrokeSize_valueChanged(double value);
@@ -64,12 +62,13 @@ protected Q_SLOTS:
     void on_EdgeWeight_valueChanged(double value);
     void on_EdgeStyle_activated(QVariant data);
 	void on_EdgeDirection_activated(QVariant data);
-    void on_EdgeId_clicked();
-	void on_EdgeLabel_clicked();
 
     void on_LabelFont_activated(const QFont &font);
 	void on_LabelColor_activated(const QColor &color);
 	void on_LabelFontSize_valueChanged(int value);
+	void on_LabelFontBold_toggled(bool on);
+	void on_LabelFontItalic_toggled(bool on);
+	void on_LabelFontUnderline_toggled(bool on);
 
 private:
 	void setNodesAttribute(const QByteArray& attrId, const QVariant& v);

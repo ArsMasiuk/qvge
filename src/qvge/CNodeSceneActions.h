@@ -12,6 +12,8 @@ It can be used freely, maintaining the information above.
 #include <QObject>
 
 class CNodeEditorScene;
+class CNode;
+class CEdge;
 
 
 class CNodeSceneActions : public QObject 
@@ -20,9 +22,11 @@ class CNodeSceneActions : public QObject
 
 public:
 	CNodeSceneActions(CNodeEditorScene *scene);
-	~CNodeSceneActions();
 
 public Q_SLOTS:
+	bool editNodeId(CNode* node);
+	bool editEdgeId(CEdge* edge);
+
 	void onActionNodeColor();
 	void onActionLink();
 	void onActionUnlink();

@@ -83,11 +83,22 @@ void CNode::copyDataFrom(CItem* from)
 	CNode* fromNode = dynamic_cast<CNode*>(from);
 	if (fromNode)
 	{
+		// shape & position
 		resize(fromNode->getSize());
 		setPos(fromNode->pos());
 		setZValue(fromNode->zValue());
 
-		// to do: ports...
+		// ports
+		qDeleteAll(m_ports);
+		m_ports.clear();
+		for (auto it = fromNode->m_ports.begin(); it != fromNode->m_ports.end(); ++it)
+		{
+			CNodePort* port = new CNodePort(this);
+			port->copyDataFrom(**it);
+			m_ports[it.key()] = port;
+		}
+
+		updatePortsLayout();
 	}
 
 	updateCachedItems();
@@ -223,6 +234,11 @@ QVariant CNode::getAttribute(const QByteArray& attrId) const
 	if (attrId == "pos")
 	{
 		return pos();
+	}
+
+	if (attrId == "degree")
+	{
+		return m_connections.size();
 	}
 
 	return Super::getAttribute(attrId);
@@ -382,6 +398,13 @@ bool CNode::restoreFrom(QDataStream& out, quint64 version64)
 			CNodePort *port = new CNodePort(this, id, align, xoff, yoff);
 			m_ports[id] = port;
 
+			if (version64 >= 12)
+			{
+				QBrush br; out >> br; port->setBrush(br);
+				QPen pn; out >> pn; port->setPen(pn);
+				QRectF r; out >> r; port->setRect(r);
+			}
+
 			// update
 			port->onParentGeometryChanged();
 		}
@@ -529,14 +552,25 @@ double CNode::getDistanceToLineEnd(const QLineF& line, const QByteArray& portId)
 }
 
 
-QPointF CNode::getIntersectionPoint(const QLineF& line) const
+QPointF CNode::getIntersectionPoint(const QLineF& line, const QByteArray& portId) const
 {
+	// port
+	if (portId.size())
+	{
+		if (CNodePort* port = getPort(portId))
+		{
+			double shift = (port->boundingRect().width() / 2);
+			auto angle = qDegreesToRadians(line.angle());
+			return port->scenePos() + QPointF(shift * qCos(angle), - shift * qSin(angle));
+		}
+	}
+
 	// circle 
 	if (m_shapeCache.isEmpty())
 	{
 		auto shift = qMax(rect().width() / 2, rect().height() / 2);
 		auto angle = qDegreesToRadians(line.angle());
-		return pos() + QPointF(shift * qCos(angle), shift * qSin(angle));
+		return pos() + QPointF(shift * qCos(angle), - shift * qSin(angle));
 	}
 
 	// polygon (must be cashed)
@@ -768,26 +802,40 @@ void CNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 	if (color.isValid())
 		painter->setBrush(color);
 	else
-		painter->setBrush(getScene()->backgroundBrush());	// fake to fill with "transparent" brush
+		painter->setBrush(Qt::NoBrush);
 
-
-	QColor strokeColor = isSelected ? 
-		QColor(QStringLiteral("orange")) : 
-		getAttribute(QByteArrayLiteral("stroke.color")).value<QColor>();
-	
 	qreal strokeSize = getAttribute(QByteArrayLiteral("stroke.size")).toDouble();
 	strokeSize = qMax(0.1, strokeSize);
-	if (isSelected) strokeSize++;
+
+	QColor strokeColor = getAttribute(QByteArrayLiteral("stroke.color")).value<QColor>();
 
 	int strokeStyle = CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("stroke.style")).toString(), Qt::SolidLine);
 
-	painter->setPen(QPen(strokeColor, strokeSize, (Qt::PenStyle)strokeStyle));
+	// selection background outline
+	if (isSelected)
+	{
+		painter->setPen(QPen(Qt::darkCyan, strokeSize+5, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
+		painter->setOpacity(0.3);
 
-
+		// draw shape: disc if no cache
+		if (m_shapeCache.isEmpty())
+		{
+			QRectF r = Shape::boundingRect();
+			painter->drawEllipse(r);
+		}
+		else
+		{
+			painter->drawPolygon(m_shapeCache);
+		}
+	}
+	
 	// hover opacity
 	if (itemStateFlags() & IS_Drag_Accepted)
 		painter->setOpacity(0.6);
+	else
+		painter->setOpacity(1.0);
 
+	painter->setPen(QPen(strokeColor, strokeSize, (Qt::PenStyle)strokeStyle));
 
 	// draw shape: disc if no cache
 	if (m_shapeCache.isEmpty())
@@ -860,8 +908,8 @@ void CNode::updateLabelPosition()
 	int h = m_labelItem->boundingRect().height();
 
 	QRectF r = Shape::boundingRect();
-	if (r.width() < 30 || r.height() < 30)
-		m_labelItem->setPos(-w / 2, boundingRect().height() / 2);	// if too small: put label on bottom
+	if (r.width() < 16 || r.height() < 16)
+		m_labelItem->setPos(-w / 2, boundingRect().height() / 2);	// if too small: put label at the bottom
 	else
 		m_labelItem->setPos(-w / 2, -h / 2);		// else center
 }

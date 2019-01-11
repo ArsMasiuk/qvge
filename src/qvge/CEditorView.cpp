@@ -132,6 +132,12 @@ void CEditorView::mouseMoveEvent(QMouseEvent *e)
 		}
 	}
 
+	// else check LMB selection
+	//if (e->buttons() == Qt::LeftButton)
+	//{
+	//	onLeftClickMouseMove(e);
+	//}
+
 	Super::mouseMoveEvent(e);
 }
 
@@ -191,6 +197,12 @@ void CEditorView::mouseMoveEvent(QMouseEvent *e)
 	m_moved = true;
 
 	Super::mouseMoveEvent(e);
+
+	// check LMB selection
+	//if (e->buttons() == Qt::LeftButton)
+	//{
+	//	onLeftClickMouseMove(e);
+	//}
 }
 
 
@@ -274,5 +286,70 @@ void CEditorView::wheelEvent(QWheelEvent *e)
 		/* no scrolling while control is held */
 		Super::wheelEvent(e);
 	}
+}
+
+
+void CEditorView::onLeftClickMouseMove(QMouseEvent *e)
+{
+	if (dragMode() == QGraphicsView::RubberBandDrag)
+	{
+		QPointF loc = e->pos();
+		QPointF d;
+		const QRect& vp = viewport()->geometry();
+
+		qDebug() << e->pos() << viewport()->geometry();
+
+		if (loc.x() > vp.right())
+		{
+			scrollContentsBy(-5, 0);
+			QTimer::singleShot(10, this, SLOT(repaint()));
+		}
+
+		//if ((loc.x() <= rect().center().x()) && (loc.y() <= rect().center().y()))
+		//{
+		//	//top left
+		//	d.setX(frameGeometry().left() + loc.x());
+		//	d.setY(loc.y());
+		//	doClamp(d);
+		//	if (d.x() || d.y()) scrollContentsBy(d.x() / 2, d.y() / 2);
+		//	repaint();
+		//}
+		//else if ((loc.x() <= rect().center().x()) && (loc.y() > rect().center().y()))
+		//{
+		//	//bottom left
+		//	d.setX(frameGeometry().left() + loc.x());
+		//	d.setY(frameGeometry().bottom() - loc.y() - m_scrollThreshold);
+		//	doClamp(d);
+		//	if (d.x() || d.y()) scrollContentsBy(d.x() / 2, -(d.y() / 2));
+		//	repaint();
+		//}
+		//else if ((loc.x() > rect().center().x()) && (loc.y() > rect().center().y()))
+		//{
+		//	//bottom right
+		//	d.setX(frameGeometry().right() - loc.x());
+		//	d.setY(frameGeometry().bottom() - loc.y() - m_scrollThreshold);
+		//	doClamp(d);
+		//	if (d.x() || d.y()) scrollContentsBy(-(d.x() / 2), -(d.y() / 2));
+		//	repaint();
+		//}
+		//else
+		//{
+		//	//top right
+		//	d.setX(frameGeometry().right() - loc.x());
+		//	d.setY(loc.y());
+		//	doClamp(d);
+		//	if (d.x() || d.y()) scrollContentsBy(-(d.x() / 2), d.y() / 2);
+		//	repaint();
+		//}
+	}
+}
+
+
+void CEditorView::doClamp(QPointF &value)
+{
+	if ((value.x() > m_scrollThreshold) || (value.x() < 0)) value.rx() = 0;
+	else value.rx() = qAbs(value.x() - m_scrollThreshold);
+	if ((value.y() > m_scrollThreshold) || (value.y() < 0)) value.ry() = 0;
+	else value.ry() = qAbs(value.y() - m_scrollThreshold);
 }
 

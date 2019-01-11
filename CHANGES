@@ -1,3 +1,36 @@
+QVGE 0.5.2
+-------------------------------------------------------------------------------
+- View Menu: added Toolbars & Panels submenu (#52) 
+- View Menu: item ids can be shown/hidded separately from labels (#47)
+- added in-place label editing (by double click)
+- added node port colors 
+- added timed auto backups (#60)
+- added basic import from GraphViz/DOT format via OGDF (#53)
+- added Sugiyama graph layout (via OGDF)
+
+- more diagnostic shown if file reading failed
+- selection of global attributes made more convenient
+- logic of movement of the selected items made more intuitive (#48)
+- snap to grid enabled by default (#45)
+- label font editor extended a little
+- item painting optimizations and corrections
+- item ids are now editable via context menu only (by right click)
+- double click on a node port shows its properties
+- newly started application instance now overtakes the parent's instance settings
+- Commutation Table: when adding a column, a list with available attribute ids is shown
+- Commutation Table: added button bar
+
+- fixed font reading/setting issue
+- fixed bug with changing style of selected items after applying a new scheme
+- fixed drawing of transparent items
+- fixed storing/applying of grid snap properties (#49)
+- fixed placement of edge labels (#50)
+- fixed some GEXF-related issues (#51)
+- fixed canvas expansion after changing item IDs (#44)
+- (32-bit-version): fixed crash while cloning the selection
+- fixed issue with storing DOT format if ids include spaces 
+
+
 QVGE 0.5.1 (bugfix beta)
 -------------------------------------------------------------------------------
 - some GEXF format IO fixes

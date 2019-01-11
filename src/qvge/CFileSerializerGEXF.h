@@ -40,13 +40,13 @@ public:
 		return true;
 	}
 
-	virtual bool load(const QString& fileName, CEditorScene& scene) const;
+	virtual bool load(const QString& fileName, CEditorScene& scene, QString* lastError = nullptr) const;
 
 	virtual bool saveSupported() const {
 		return true;
 	}
 
-	virtual bool save(const QString& /*fileName*/, CEditorScene& /*scene*/) const;
+	virtual bool save(const QString& fileName, CEditorScene& scene, QString* lastError = nullptr) const;
 
 private:
     struct AttrInfo {

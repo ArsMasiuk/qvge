@@ -30,10 +30,9 @@ CClassAttributesEditorUI::CClassAttributesEditorUI(QWidget *parent) :
     connect(&m_manager, SIGNAL(valueChanged(QtProperty*, const QVariant&)), 
 		this, SLOT(onValueChanged(QtProperty*, const QVariant&)));
 
-    //ui->ClassId->setCurrentIndex(1);    // node by def.
-
-	//const QObjectList& objs = ui->Editor->children();
-	//qDebug() << objs
+	connect(ui->NodeButton, SIGNAL(clicked()), this, SLOT(rebuild()));
+	connect(ui->EdgeButton, SIGNAL(clicked()), this, SLOT(rebuild()));
+	connect(ui->GraphButton, SIGNAL(clicked()), this, SLOT(rebuild()));
 }
 
 
@@ -100,11 +99,11 @@ void CClassAttributesEditorUI::onSceneChanged()
     rebuild();
 }
 
-
-void CClassAttributesEditorUI::on_ClassId_currentIndexChanged(int)
-{
-    rebuild();
-}
+//
+//void CClassAttributesEditorUI::on_ClassId_currentIndexChanged(int)
+//{
+//    rebuild();
+//}
 
 
 void CClassAttributesEditorUI::onValueChanged(QtProperty *property, const QVariant &val)
@@ -127,14 +126,28 @@ void CClassAttributesEditorUI::onValueChanged(QtProperty *property, const QVaria
 
 	// check for constrains
 	auto conn = m_scene->getClassAttributeConstrains(classId, attrId);
-	if (conn) {
-		auto connList = dynamic_cast<CAttributeConstrainsList*>(conn);
-		if (connList) {
+	if (conn) 
+	{	
+		if (auto connList = dynamic_cast<CAttributeConstrainsList*>(conn)) 
+		{
 			int index = val.toInt();
 			if (index >= 0 && index < connList->ids.size())
 				m_scene->setClassAttribute(classId, attrId, connList->ids[index]);
 			else
 				m_scene->setClassAttribute(classId, attrId, connList->ids.first());
+
+			isSet = true;
+		}
+
+		else 
+			
+		if (auto enumList = dynamic_cast<CAttributeConstrainsEnum*>(conn)) 
+		{
+			int index = val.toInt();
+			if (index >= 0 && index < enumList->ids.size())
+				m_scene->setClassAttribute(classId, attrId, (QVariant) enumList->ids[index]);
+			else
+				m_scene->setClassAttribute(classId, attrId, (QVariant) enumList->ids.first());
 
 			isSet = true;
 		}
@@ -328,15 +341,27 @@ void CClassAttributesEditorUI::rebuild()
 
 		// check for constrains
 		auto conn = m_scene->getClassAttributeConstrains(classId, it.key());
-		if (conn) {
-			auto connList = dynamic_cast<CAttributeConstrainsList*>(conn);
-			if (connList) {
+		if (conn) 
+		{
+			if (auto connList = dynamic_cast<CAttributeConstrainsList*>(conn)) 
+			{
 				prop = m_manager.addProperty(QtVariantPropertyManager::enumTypeId(), it.key());
-				prop->setAttribute(QLatin1String("enumNames"), connList->ids);
+				prop->setAttribute(QLatin1String("enumNames"), connList->names);
 				QVariant v;
 				qVariantSetValue(v, connList->iconsAsMap());
 				prop->setAttribute(QLatin1String("enumIcons"), v);
 				int index = connList->ids.indexOf(it.value().defaultValue.toString());
+				prop->setValue(index);
+			}
+			else
+			if (auto enumList = dynamic_cast<CAttributeConstrainsEnum*>(conn))
+			{
+				prop = m_manager.addProperty(QtVariantPropertyManager::enumTypeId(), it.key());
+				prop->setAttribute(QLatin1String("enumNames"), enumList->names);
+				QVariant v;
+				qVariantSetValue(v, enumList->iconsAsMap());
+				prop->setAttribute(QLatin1String("enumIcons"), v);
+				int index = enumList->ids.indexOf(it.value().defaultValue.toInt());
 				prop->setValue(index);
 			}
 		}
@@ -384,10 +409,13 @@ void CClassAttributesEditorUI::rebuild()
 
 QByteArray CClassAttributesEditorUI::getClassId() const
 {
-	if (ui->ClassId->currentIndex() > 0)
-		return ui->ClassId->currentText().toLatin1();
+	if (ui->NodeButton->isChecked())
+		return QByteArrayLiteral("node");
 	else
-		return QByteArray();
+	if (ui->EdgeButton->isChecked())
+		return QByteArrayLiteral("edge");
+	else
+		return QByteArrayLiteral("");
 }
 
 

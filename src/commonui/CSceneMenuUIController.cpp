@@ -39,15 +39,21 @@ void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphic
 	auto sceneActions = scene->getActions();
 	auto nodeScene = dynamic_cast<CNodeEditorScene*>(scene);
 
+	int nodesCount = nodeScene->getSelectedNodes().size();
+	bool nodesSelected = (nodesCount > 0);
+
+	int edgesCount = nodeScene->getSelectedEdges().size();
+	bool edgesSelected = (edgesCount > 0);
+
 	// add default actions
+	QAction *changeIdAction = menu.addAction(tr("Change Id..."), parent(), SLOT(changeItemId()));
+	changeIdAction->setEnabled((nodesCount + edgesCount) == 1);
+
 	QAction *deleteAction = menu.addAction(tr("Delete"), scene, SLOT(onActionDelete()));
 	deleteAction->setEnabled(scene->createSelectedList(CDeletableItems()).size());
 
 	// add default node actions
 	menu.addSeparator();
-
-	int nodesCount = nodeScene->getSelectedNodes().size();
-	bool nodesSelected = (nodesCount > 0);
 
 	QAction *linkAction = menu.addAction(tr("Link"), sceneActions, SLOT(onActionLink()));
 	linkAction->setEnabled(nodesCount > 1);
@@ -71,8 +77,6 @@ void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphic
 
 	// add default edge actions
 	menu.addSeparator();
-
-	bool edgesSelected = nodeScene->getSelectedEdges().size();
 
 	QAction *edgeColorAction = menu.addAction(tr("Edge(s) Color..."), sceneActions, SLOT(onActionEdgeColor()));
 	edgeColorAction->setEnabled(edgesSelected);

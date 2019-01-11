@@ -200,21 +200,6 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 		ui->StrokeSize->setValue(node->getAttribute("stroke.size").toDouble());
     }
 
-    if (nodes.count() == 1)
-    {
-        ui->NodeId->setEnabled(true);
-        ui->NodeId->setText(tr("Node id: %1").arg(nodes.first()->getId()));
-
-		ui->NodeLabel->setVisible(true);
-    }
-    else
-    {
-        ui->NodeId->setEnabled(false);
-        ui->NodeId->setText(tr("Select single node to edit its id && text"));
-
-		ui->NodeLabel->setVisible(false);
-    }
-
     QList<CItem*> nodeItems;
     for (auto item: nodes) nodeItems << item;
     int attrCount = ui->NodeAttrEditor->setupFromItems(*m_scene, nodeItems);
@@ -234,21 +219,6 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 		ui->EdgeDirection->selectAction(edge->getAttribute("direction"));
     }
 
-    if (edges.count() == 1)
-    {
-        ui->EdgeId->setEnabled(true);
-        ui->EdgeId->setText(tr("Edge id: %1").arg(edges.first()->getId()));
-
-		ui->EdgeLabel->setVisible(true);
-    }
-    else
-    {
-        ui->EdgeId->setEnabled(false);
-        ui->EdgeId->setText(tr("Select single edge to edit its id and text"));
-
-		ui->EdgeLabel->setVisible(false);
-    }
-
     QList<CItem*> edgeItems;
     for (auto item: edges) edgeItems << item;
 	attrCount = ui->EdgeAttrEditor->setupFromItems(*m_scene, edgeItems);
@@ -264,7 +234,10 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 		QFont f(item->getAttribute("label.font").value<QFont>());
         ui->LabelFont->setCurrentFont(f);
 		ui->LabelFontSize->setValue(f.pointSize());
-        ui->LabelColor->setColor(item->getAttribute("label.color").value<QColor>());
+		ui->LabelFontBold->setChecked(f.bold());
+		ui->LabelFontItalic->setChecked(f.italic());
+		ui->LabelFontUnderline->setChecked(f.underline());
+		ui->LabelColor->setColor(item->getAttribute("label.color").value<QColor>());
         break;
     }
 
@@ -360,82 +333,6 @@ void CNodeEdgePropertiesUI::on_NodeSizeSwitch_toggled(bool on)
 }
 
 
-void CNodeEdgePropertiesUI::on_NodeLabel_clicked()
-{
-	QList<CNode*> nodes = m_scene->getSelectedNodes();
-	if (nodes.count() != 1)
-		return;
-
-	m_scene->onActionEditLabel(nodes.first());
-}
-
-
-void CNodeEdgePropertiesUI::on_NodeId_clicked()
-{
-    QList<CNode*> nodes = m_scene->getSelectedNodes();
-    if (nodes.count() != 1)
-        return;
-
-    QString id = nodes.first()->getId();
-    QString editId = id;
-
-_again:
-
-    QString newId = QInputDialog::getText(this, tr("Change node Id"),
-        tr("Specify new node Id:"), QLineEdit::Normal, editId);
-
-    if (newId.isEmpty() || newId == id)
-        return;
-
-    auto items = m_scene->getItemsById(newId);
-    for (auto item: items)
-    {
-        CNode* node = dynamic_cast<CNode*>(item);
-        if (node == NULL || node == nodes.first())
-            continue;
-
-        if (node->getId() == newId)
-        {
-            int count = 0;
-            QString nextFreeId = newId + QString::number(count++);
-            while (m_scene->getItemsById(nextFreeId).count())
-            {
-                nextFreeId = newId + QString::number(count++);
-            }
-
-            QString autoId = QString(tr("Suggested Id: %1").arg(nextFreeId));
-
-            int r = QMessageBox::warning(this, tr("Warning: Id is in use"),
-                                 tr("Id %1 is already used by another node.").arg(newId),
-                                 autoId,
-                                 tr("Swap node Ids"),
-                                 tr("Continue editing"), 0, 2);
-
-            if (r == 2)
-            {
-                editId = newId;
-                goto _again;
-            }
-
-            if (r == 1)
-            {
-                nodes.first()->setId(newId);
-                node->setId(id);
-                m_scene->addUndoState();
-                return;
-            }
-
-            // r = 0
-            editId = nextFreeId;
-            goto _again;
-        }
-    }
-
-    nodes.first()->setId(newId);
-    m_scene->addUndoState();
-}
-
-
 void CNodeEdgePropertiesUI::on_StrokeColor_activated(const QColor &color)
 {
 	setNodesAttribute("stroke.color", color);
@@ -481,82 +378,6 @@ void CNodeEdgePropertiesUI::on_EdgeDirection_activated(QVariant data)
 }
 
 
-void CNodeEdgePropertiesUI::on_EdgeLabel_clicked()
-{
-	QList<CEdge*> edges = m_scene->getSelectedEdges();
-	if (edges.count() != 1)
-		return;
-
-	m_scene->onActionEditLabel(edges.first());
-}
-
-
-void CNodeEdgePropertiesUI::on_EdgeId_clicked()
-{
-    QList<CEdge*> edges = m_scene->getSelectedEdges();
-    if (edges.count() != 1)
-        return;
-
-    QString id = edges.first()->getId();
-    QString editId = id;
-
-_again:
-
-    QString newId = QInputDialog::getText(this, tr("Change edge Id"),
-        tr("Specify new edge Id:"), QLineEdit::Normal, editId);
-
-    if (newId.isEmpty() || newId == id)
-        return;
-
-    auto items = m_scene->getItemsById(newId);
-    for (auto item: items)
-    {
-        CEdge* edge = dynamic_cast<CEdge*>(item);
-        if (edge == NULL || edge == edges.first())
-            continue;
-
-        if (edge->getId() == newId)
-        {
-            int count = 0;
-            QString nextFreeId = newId + QString::number(count++);
-            while (m_scene->getItemsById(nextFreeId).count())
-            {
-                nextFreeId = newId + QString::number(count++);
-            }
-
-            QString autoId = QString(tr("Suggested Id: %1").arg(nextFreeId));
-
-            int r = QMessageBox::warning(this, tr("Warning: Id is in use"),
-                                 tr("Id %1 is already used by another edge.").arg(newId),
-                                 autoId,
-                                 tr("Swap edge Ids"),
-                                 tr("Continue editing"), 0, 2);
-
-            if (r == 2)
-            {
-                editId = newId;
-                goto _again;
-            }
-
-            if (r == 1)
-            {
-                edges.first()->setId(newId);
-                edge->setId(id);
-                m_scene->addUndoState();
-                return;
-            }
-
-            // r = 0
-            editId = nextFreeId;
-            goto _again;
-        }
-    }
-
-    edges.first()->setId(newId);
-    m_scene->addUndoState();
-}
-
-
 void CNodeEdgePropertiesUI::on_LabelFont_activated(const QFont &font)
 {
 	ui->LabelFontSize->blockSignals(true);
@@ -566,19 +387,13 @@ void CNodeEdgePropertiesUI::on_LabelFont_activated(const QFont &font)
     if (m_updateLock || m_scene == NULL)
         return;
 
-    QList<CEdge*> edges = m_scene->getSelectedEdges();
-	QList<CNode*> nodes = m_scene->getSelectedNodes();
-	if (nodes.isEmpty() && edges.isEmpty())
+	QList<CItem*> items = m_scene->getSelectedNodesEdges();
+	if (items.isEmpty())
 		return;
 
-	for (auto edge: edges)
-    {
-        edge->setAttribute("label.font", font);
-    }
-
-	for (auto node : nodes)
+	for (auto item : items)
 	{
-		node->setAttribute("label.font", font);
+		item->setAttribute("label.font", font);
 	}
 
     m_scene->addUndoState();
@@ -590,19 +405,13 @@ void CNodeEdgePropertiesUI::on_LabelColor_activated(const QColor &color)
 	if (m_updateLock || m_scene == NULL)
 		return;
 
-	QList<CEdge*> edges = m_scene->getSelectedEdges();
-	QList<CNode*> nodes = m_scene->getSelectedNodes();
-	if (nodes.isEmpty() && edges.isEmpty())
+	QList<CItem*> items = m_scene->getSelectedNodesEdges();
+	if (items.isEmpty())
 		return;
 
-	for (auto edge : edges)
+	for (auto item : items)
 	{
-		edge->setAttribute("label.color", color);
-	}
-
-	for (auto node : nodes)
-	{
-		node->setAttribute("label.color", color);
+		item->setAttribute("label.color", color);
 	}
 
 	m_scene->addUndoState();
@@ -611,11 +420,107 @@ void CNodeEdgePropertiesUI::on_LabelColor_activated(const QColor &color)
 
 void CNodeEdgePropertiesUI::on_LabelFontSize_valueChanged(int value)
 {
-	QFont f = ui->LabelFont->font();
-	if (f.pointSize() != value)
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CItem*> items = m_scene->getSelectedNodesEdges();
+	if (items.isEmpty())
+		return;
+
+	bool set = false;
+
+	for (auto item : items)
 	{
-		f.setPointSize(value);
-		ui->LabelFont->setFont(f);
-		on_LabelFont_activated(f);
+		QFont font = item->getAttribute("label.font").value<QFont>();
+		if (font.pointSize() != value)
+		{
+			font.setPointSize(value);
+			item->setAttribute("label.font", font);
+			set = true;
+		}
 	}
+
+	if (set)
+		m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_LabelFontBold_toggled(bool on)
+{
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CItem*> items = m_scene->getSelectedNodesEdges();
+	if (items.isEmpty())
+		return;
+
+	bool set = false;
+
+	for (auto item : items)
+	{
+		QFont font = item->getAttribute("label.font").value<QFont>();
+		if (font.bold() != on)
+		{
+			font.setBold(on);
+			item->setAttribute("label.font", font);
+			set = true;
+		}
+	}
+
+	if (set)
+		m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_LabelFontItalic_toggled(bool on)
+{
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CItem*> items = m_scene->getSelectedNodesEdges();
+	if (items.isEmpty())
+		return;
+
+	bool set = false;
+
+	for (auto item : items)
+	{
+		QFont font = item->getAttribute("label.font").value<QFont>();
+		if (font.italic() != on)
+		{
+			font.setItalic(on);
+			item->setAttribute("label.font", font);
+			set = true;
+		}
+	}
+
+	if (set)
+		m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_LabelFontUnderline_toggled(bool on)
+{
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CItem*> items = m_scene->getSelectedNodesEdges();
+	if (items.isEmpty())
+		return;
+
+	bool set = false;
+
+	for (auto item : items)
+	{
+		QFont font = item->getAttribute("label.font").value<QFont>();
+		if (font.underline() != on)
+		{
+			font.setUnderline(on);
+			item->setAttribute("label.font", font);
+			set = true;
+		}
+	}
+
+	if (set)
+		m_scene->addUndoState();
 }

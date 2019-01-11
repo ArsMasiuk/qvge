@@ -21,7 +21,7 @@ It can be used freely, maintaining the information above.
 
 // reimp
 
-bool CFileSerializerCSV::load(const QString& fileName, CEditorScene& scene) const
+bool CFileSerializerCSV::load(const QString& fileName, CEditorScene& scene, QString* lastError) const
 {
     CNodeEditorScene* nodeScene = dynamic_cast<CNodeEditorScene*>(&scene);
     if (nodeScene == nullptr)

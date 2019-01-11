@@ -8,6 +8,7 @@ It can be used freely, maintaining the information above.
 */
 
 #include "CEditorScene.h"
+#include "CEditorScene_p.h"
 #include "CEditorSceneDefines.h"
 #include "CItem.h"
 #include "CControlPoint.h"
@@ -34,7 +35,7 @@ It can be used freely, maintaining the information above.
 #include <qopengl.h>
 
 
-const quint64 version64 = 11;	// build
+const quint64 version64 = 12;	// build
 const char* versionId = "VersionId";
 
 
@@ -47,17 +48,18 @@ CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent),
 	m_undoManager(new CDiffUndoManager(*this)),
 	m_menuTriggerItem(NULL),
     m_draggedItem(NULL),
-    m_needUpdateItems(true)
+    m_needUpdateItems(true),
+	m_isFontAntialiased(true),
+	m_labelsEnabled(true),
+	m_labelsUpdate(false),
+	m_pimpl(new CEditorScene_p)
 {
     m_gridSize = 25;
     m_gridEnabled = true;
-    m_gridSnap = false;
+    m_gridSnap = true;
     m_gridPen = QPen(Qt::gray, 0, Qt::DotLine);
 
-	m_labelsEnabled = true;
-	m_labelsUpdate = false;
-
-	setBackgroundBrush(QColor("#f3ffe1"));
+	setBackgroundBrush(Qt::white);
 
     setSceneRect(-500, -500, 1000, 1000);
 
@@ -69,13 +71,16 @@ CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent),
 	QPixmapCache::setCacheLimit(200000);
 
 	// connections
-	connect(this, SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()), Qt::DirectConnection);
+	connect(this, &CEditorScene::selectionChanged, this, &CEditorScene::onSelectionChanged, Qt::DirectConnection);
+	connect(this, &CEditorScene::focusItemChanged, this, &CEditorScene::onFocusItemChanged);
 }
 
 CEditorScene::~CEditorScene()
 {
 	disconnect();
 	clear();
+
+	delete m_pimpl;
 }
 
 void CEditorScene::reset()
@@ -99,18 +104,31 @@ void CEditorScene::initialize()
 	// default item attrs
     CAttribute labelAttr("label", "Label", "");
 	labelAttr.noDefault = true;
-	setClassAttribute("item", labelAttr, true);
+	setClassAttribute(class_item, labelAttr, true);
 
 	CAttribute labelColorAttr("label.color", "Label Color", QColor(Qt::black));
-	setClassAttribute("item", labelColorAttr);
+	setClassAttribute(class_item, labelColorAttr);
 
 	QFont labelFont;
 	CAttribute labelFontAttr("label.font", "Label Font", labelFont);
-	setClassAttribute("item", labelFontAttr);
+	setClassAttribute(class_item, labelFontAttr);
 
     CAttribute idAttr("id", "ID", "");
 	idAttr.noDefault = true;
-	setClassAttribute("item", idAttr, true);
+	setClassAttribute(class_item, idAttr, true);
+
+
+	// labels policy
+	static CAttributeConstrainsEnum *labelsPolicy = new CAttributeConstrainsEnum();
+	if (labelsPolicy->ids.isEmpty()) {
+		labelsPolicy->names << tr("Auto") << tr("Always On") << tr("Always Off");
+		labelsPolicy->ids << Auto << AlwaysOn << AlwaysOff;
+	}
+
+	CAttribute labelsPolicyAttr(attr_labels_policy, "Labels Policy", Auto);
+	labelsPolicyAttr.userDefined = false;
+	setClassAttribute(class_scene, labelsPolicyAttr);
+	setClassAttributeConstrains(class_scene, attr_labels_policy, labelsPolicy);
 }
 
 void CEditorScene::removeItems()
@@ -204,9 +222,11 @@ void CEditorScene::redo()
 
 void CEditorScene::addUndoState()
 {
+	onSceneChanged();
+
 	// canvas size
     QRectF minRect(sceneRect());
-    minRect |= itemsBoundingRect().adjusted(-20, -20, 20, 20);
+    minRect |= itemsBoundingRect().adjusted(-10, -10, 10, 10);
     setSceneRect(minRect);
 
 	// undo-redo
@@ -216,8 +236,6 @@ void CEditorScene::addUndoState()
 
 		checkUndoState();
 	}
-
-	onSceneChanged();
 }
 
 void CEditorScene::revertUndoState()
@@ -577,6 +595,9 @@ bool CEditorScene::removeClassAttribute(const QByteArray& classId, const QByteAr
 
 void CEditorScene::setClassAttributeVisible(const QByteArray& classId, const QByteArray& attrId, bool vis)
 {
+	if (vis == m_classAttributesVis[classId].contains(attrId))
+		return;
+
 	if (vis)
 		m_classAttributesVis[classId].insert(attrId);
 	else
@@ -587,6 +608,12 @@ void CEditorScene::setClassAttributeVisible(const QByteArray& classId, const QBy
 
 	// schedule update
 	invalidate();
+}
+
+
+bool CEditorScene::isClassAttributeVisible(const QByteArray& classId, const QByteArray& attrId) const
+{
+	return m_classAttributesVis[classId].contains(attrId);
 }
 
 
@@ -962,6 +989,11 @@ void CEditorScene::onSelectionChanged()
 }
 
 
+void CEditorScene::onFocusItemChanged(QGraphicsItem *newFocusItem, QGraphicsItem *oldFocusItem, Qt::FocusReason reason)
+{
+}
+
+
 // drawing
 
 void CEditorScene::drawBackground(QPainter *painter, const QRectF &)
@@ -1044,6 +1076,19 @@ bool CEditorScene::checkLabelRegion(const QRectF &r)
 }
 
 
+CEditorScene::LabelsPolicy CEditorScene::getLabelsPolicy() const
+{
+	int labelPolicy = getClassAttribute(class_scene, attr_labels_policy, false).defaultValue.toInt();
+	return (CEditorScene::LabelsPolicy) labelPolicy;
+}
+
+
+void CEditorScene::setLabelsPolicy(CEditorScene::LabelsPolicy v)
+{
+	setClassAttribute(class_scene, attr_labels_policy, (QVariant) v);
+}
+
+
 void CEditorScene::layoutItemLabels()
 {
 	// reset region
@@ -1051,8 +1096,11 @@ void CEditorScene::layoutItemLabels()
 
 	QList<CItem*> allItems = getItems<CItem>();
 
+	// get labeling policy
+	auto labelPolicy = getLabelsPolicy();
+
 	// hide all if disabled
-	if (!m_labelsEnabled)
+	if (!m_labelsEnabled || labelPolicy == AlwaysOff)
 	{
 		for (auto citem : allItems)
 		{
@@ -1069,13 +1117,17 @@ void CEditorScene::layoutItemLabels()
 	for (auto citem : allItems)
 	{
 		citem->updateLabelContent();
-
 		citem->updateLabelPosition();
 
-		QRectF labelRect = citem->getSceneLabelRect();
-		QRectF reducedRect(labelRect.topLeft() / 10, labelRect.size() / 10);
-		
-		citem->showLabel(checkLabelRegion(reducedRect));
+		if (labelPolicy == AlwaysOn)
+			citem->showLabel(true);
+		else
+		{
+			QRectF labelRect = citem->getSceneLabelRect();
+			QRectF reducedRect(labelRect.topLeft() / 10, labelRect.size() / 10);
+
+			citem->showLabel(checkLabelRegion(reducedRect));
+		}
 	}
 
 	//qDebug() << "layout labels: " << tm.elapsed();
@@ -1384,9 +1436,7 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			QGraphicsItem *hoverItem = getItemAt(mouseEvent->scenePos());
 
 			if (m_doubleClick)
-			{
 				onLeftDoubleClick(mouseEvent, hoverItem);
-			}
 			else
 				onLeftClick(mouseEvent, hoverItem);
 		}
@@ -1501,18 +1551,20 @@ void CEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIt
 }
 
 
-void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem)
+void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem)
 {
+	// emit signals
+	Q_EMIT sceneDoubleClicked(mouseEvent, clickedItem);
+
 	// clicked on empty space?
 	if (!clickedItem)
-	{
 		return;
-	}
 
 	// else check clicked item...
 	if (CItem *item = dynamic_cast<CItem*>(clickedItem))
 	{
 		onActionEditLabel(item);
+		//item->onDoubleClick(mouseEvent);
 	}
 }
 
@@ -1862,19 +1914,21 @@ void CEditorScene::onActionSelectAll()
 
 void CEditorScene::onActionEditLabel(CItem *item)
 {
-	bool ok = false;
+	m_pimpl->m_labelEditor.startEdit(item);
 
-	QString text = QInputDialog::getMultiLineText(NULL,
-		tr("Item Label"), tr("New label text:"),
-		item->getAttribute("label").toString(),
-		&ok);
+	//bool ok = false;
 
-	if (ok)
-	{
-		item->setAttribute("label", text);
+	//QString text = QInputDialog::getMultiLineText(NULL,
+	//	tr("Item Label"), tr("New label text:"),
+	//	item->getAttribute("label").toString(),
+	//	&ok);
 
-		addUndoState();
-	}
+	//if (ok)
+	//{
+	//	item->setAttribute("label", text);
+
+	//	addUndoState();
+	//}
 }
 
 

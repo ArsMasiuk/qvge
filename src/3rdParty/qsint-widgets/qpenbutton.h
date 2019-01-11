@@ -18,6 +18,8 @@ public:
 
     void setUsedRange(Qt::PenStyle start, Qt::PenStyle end);
 
+	static QPixmap drawPixmap(Qt::PenStyle style, int width = 2, QSize size = QSize(24,24));
+
 public Q_SLOTS:
 	void setPenStyle(Qt::PenStyle style);
 

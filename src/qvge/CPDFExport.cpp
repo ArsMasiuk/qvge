@@ -15,7 +15,7 @@ It can be used freely, maintaining the information above.
 #include "CEditorScene.h"
 
 
-bool CPDFExport::save(const QString& fileName, CEditorScene& scene) const
+bool CPDFExport::save(const QString& fileName, CEditorScene& scene, QString* lastError) const
 {
 	QPrinter printer(QPrinter::HighResolution);
 	printer.setPageSize(QPrinter::A4);

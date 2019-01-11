@@ -41,14 +41,13 @@ protected:
     void onSceneAttached(CEditorScene* scene);
     void onSceneDetached(CEditorScene* scene);
 
-    void rebuild();
-
 	QByteArray getClassId() const;
 
 protected Q_SLOTS:
     void onSceneChanged();
-    void on_ClassId_currentIndexChanged(int);
+    //void on_ClassId_currentIndexChanged(int);
 	void on_Editor_currentItemChanged(QtBrowserItem*);
+	void rebuild();
 
 private Q_SLOTS:
     void on_AddButton_clicked();

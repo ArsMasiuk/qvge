@@ -29,7 +29,10 @@ public:
     static void graphTopologyToScene(const ogdf::Graph &G, const ogdf::GraphAttributes &GA, CNodeEditorScene &scene);
     static void graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes &GA, CNodeEditorScene &scene);
 
-    static bool loadGraph(const std::string &filename, CNodeEditorScene &scene);
+    static bool loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError = nullptr);
+
+private:
+	static bool autoLayoutIfNone(const ogdf::Graph &G, ogdf::GraphAttributes &GA);
 };
 
 #endif // COGDFLAYOUT_H
