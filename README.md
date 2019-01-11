@@ -8,8 +8,8 @@ in a simple and intuitive way.
 
 Please note that **qvge** is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor :)
 
-![Screenshot1](https://a.fsdn.com/con/app/proj/qvge/screenshots/qvge%20screenshot.PNG/245/183/2)
-![Screenshot2](https://a.fsdn.com/con/app/proj/qvge/screenshots/qvge%20screenshot%202.PNG/245/183/2)
+![Screenshot1](https://a.fsdn.com/con/app/proj/qvge/screenshots/qvge-117.PNG/245/183/1)
+![Screenshot2](https://a.fsdn.com/con/app/proj/qvge/screenshots/qvge%20-%20search.PNG/245/183/1)
 
 ### Main Features
 
@@ -18,6 +18,7 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 - Dynamically maintained list of commutations between nodes
 - Directed, undirected and mixed graphs supported
 - Node ports supported as well
+- Search among the graph elements and their attributes
 - Auto-creation and auto-layout of graphs (via OGDF)
 - Native graph persistence format (XGR)
 - Reading GraphML, GML, GraphViz DOT (partially) and GEXF files
