@@ -26,6 +26,16 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 - Export into GraphViz DOT format
 - Export into GEXF format
 
+### Some users' feedback
+
+>"Qt Visual Graph Editor is a fairly straightforward, open-source tool that enables users to design relatively simple graphs for their >projects. It comes with a decent set of features and is very intuitive." 
+
+>"It seems to me that my development have become more efficient after when I began using QVGE. This is much more useful than UML, because that I don't have to change sheets and to remember several usages and I can draw graphs swiftly."
+
+>"Lightweight, multi-platform graph editor that allows users to edit two-dimensional graphs in a quick and intuitive way, as an alternative to more complex software."
+
+> "It's user experience is very good. It's because how to operate is sophisticated so intuitive and very simple. Because of that, it's easy to begin using. A user can entirely concentrate to essence of content the whole time. Because of simpleness, the content is not noisy and easy to understand, and usable much generally to design, refactor and output a structure such as a organization, a software, logic, routes and all other relationships without learning usage separately."
+
 ### Installation
 
 Prebuild Windows binaries can be loaded from here:
@@ -90,5 +100,4 @@ It can be compiled & started under Cygwin as well.
 
 **qvge** at [![Download qvge](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
 
-**qvge** at [OpenDesktop.org](https://www.opendesktop.org/p/1211078)
-
+**qvge** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml)
