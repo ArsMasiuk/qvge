@@ -1,6 +1,7 @@
 #include "CExtListInputDialog.h"
 #include "ui_CExtListInputDialog.h"
 
+#include <QAbstractItemView>
 
 CExtListInputDialog::CExtListInputDialog(QWidget *parent) :
     QDialog(parent),
