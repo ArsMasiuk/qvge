@@ -9,17 +9,20 @@ It can be used freely, maintaining the information above.
 
 #pragma once
 
-#include <QtCore/QByteArray>
+#include <QAction>
 
-class CItem;
+
 class CEditorScene;
 
 
-/**
-	Common interface to scene item creation filters.
-*/
-class ISceneItemFactory
+class CEditorSceneActions: public QObject
 {
 public:
-	virtual CItem* createItemOfType(const QByteArray& typeId, const CEditorScene& scene) const = 0;
+	CEditorSceneActions(CEditorScene *scene);
+
+	QAction *cutAction;
+	QAction *copyAction;
+	QAction *pasteAction;
+	QAction *delAction;
 };
+

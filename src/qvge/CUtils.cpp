@@ -148,3 +148,13 @@ QString CUtils::cutLastSuffix(const QString& fileName)
 		return fileName.left(idx);
 }
 
+
+QRectF CUtils::getBoundingRect(const QList<QGraphicsItem*>& items)
+{
+	QRectF r;
+
+	for (const auto item : items)
+		r |= item->sceneBoundingRect();
+
+	return r;
+}

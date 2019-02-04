@@ -61,6 +61,18 @@ bool CPlatformServices::SetActiveWindow(uint id)
 }
 
 
+bool CPlatformServices::CloseWindow(uint id)
+{
+	HWND hWnd = (HWND)id;
+	if (!hWnd)
+		return false;
+
+	int result = SendMessage(hWnd, WM_SYSCOMMAND, SC_CLOSE, 0);
+
+	return true;
+}
+
+
 CPlatformServices::PIDs CPlatformServices::GetRunningPIDs()
 {
 	PIDs result;

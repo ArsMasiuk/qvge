@@ -1,3 +1,19 @@
+QVGE 0.5.3
+-------------------------------------------------------------------------------
+- default paste behavior modified: items will be preferably pasted into a visible scene's area
+- selection copied to clipboard can be pasted as an image to any software
+- DOT export: scene background attribute exported as well
+- DOT export: extended to optionally export only the topology (#63)
+- added more action hints
+- added fast movement of the selected items by Shift + Arrow keys
+- added start page with common file actions (#59)
+- added exit out of the complete application (with all windows)
+
+- fixed crash on deleting items via Cut or Delete actions (#55)
+- fixed some item selection issues
+- fixed export of image and PDF documents (auto crop added as well)
+
+
 QVGE 0.5.2
 -------------------------------------------------------------------------------
 - View Menu: added Toolbars & Panels submenu (#52) 

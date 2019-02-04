@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -19,11 +19,13 @@ It can be used freely, maintaining the information above.
 #include "CAttribute.h"
 
 
-class CItem;
 class IUndoManager;
 class ISceneItemFactory;
 class IInteractive;
 class ISceneMenuController;
+
+class CItem;
+class CEditorSceneActions;
 
 struct Graph;
 
@@ -49,7 +51,7 @@ class CEditorScene : public QGraphicsScene
 public:
 	typedef QGraphicsScene Super;
 
-    CEditorScene(QObject *parent);
+    CEditorScene(QObject *parent = NULL);
 	virtual ~CEditorScene();
 
 	virtual void reset();
@@ -88,6 +90,8 @@ public:
 	void addUndoState();
 	// must be called to discard recent changes without undo
 	void revertUndoState();
+	// sets initial scene state
+	void setInitialState();
 
 	// serialization 
 	virtual bool storeTo(QDataStream& out, bool storeOptions) const;
@@ -117,6 +121,15 @@ public:
 	void setItemFactoryFilter(ISceneItemFactory *filter) {
 		m_itemFactoryFilter = filter;
 	}
+
+	// scene factory & copy
+	virtual CEditorScene* createScene() const {
+		return new CEditorScene();
+	}
+
+	virtual CEditorScene* clone();
+
+	virtual void copyProperties(const CEditorScene& from);
 
 	// attributes
 	QByteArray getSuperClassId(const QByteArray& classId) const {
@@ -208,11 +221,14 @@ public:
 		return m_infoStatus;
 	}
 
+	QGraphicsView* getCurrentView();
+
 	// callbacks
 	virtual void onItemDestroyed(CItem *citem);
 
 	// actions
 	QObject* getActions();
+	CEditorSceneActions* actions();
 
 public Q_SLOTS:
     void enableGrid(bool on = true);
@@ -222,19 +238,19 @@ public Q_SLOTS:
 	void undo();
 	void redo();
 
-	void onActionDelete();
-	void onActionSelectAll();
-	void onActionEditLabel(CItem *item);
-
 	void selectAll();
 	void deselectAll();
 	void selectItems(const QList<CItem*>& items, bool exclusive = true);
 
-	// copy-paste
+	void del();
 	void cut();
 	void copy();
+
+	void setPastePosition(const QPointF &anchor) { m_pastePos = anchor; }
+	void pasteAt(const QPointF &anchor);
 	void paste();
-	void del();
+
+	void crop();
 
 Q_SIGNALS:
 	void undoAvailable(bool);
@@ -300,6 +316,10 @@ protected Q_SLOTS:
 	virtual void onSelectionChanged();
 	void onFocusItemChanged(QGraphicsItem *newFocusItem, QGraphicsItem *oldFocusItem, Qt::FocusReason reason);
 
+	void onActionDelete();
+	void onActionSelectAll();
+	void onActionEditLabel(CItem *item);
+
 private:
 	void removeItems();
 	void checkUndoState();
@@ -338,6 +358,8 @@ private:
     QPen m_gridPen;
 
 	bool m_needUpdateItems;
+
+	QPointF m_pastePos;
 
 	// selector
 	QRectF m_transformRect;

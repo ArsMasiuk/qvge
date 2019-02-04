@@ -15,8 +15,12 @@ It can be used freely, maintaining the information above.
 #include "CEditorScene.h"
 
 
-bool CPDFExport::save(const QString& fileName, CEditorScene& scene, QString* lastError) const
+bool CPDFExport::save(const QString& fileName, CEditorScene& scene, QString* /*lastError*/) const
 {
+	CEditorScene* tempScene = scene.clone();
+
+	tempScene->crop();
+
 	QPrinter printer(QPrinter::HighResolution);
 	printer.setPageSize(QPrinter::A4);
 	printer.setOrientation(QPrinter::Portrait);
@@ -26,7 +30,10 @@ bool CPDFExport::save(const QString& fileName, CEditorScene& scene, QString* las
 	QPainter painter(&printer);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setRenderHint(QPainter::TextAntialiasing);
-	scene.render(&painter);
+	tempScene->render(&painter);
+	painter.end();
+
+	delete tempScene;
 
 	return true;
 }

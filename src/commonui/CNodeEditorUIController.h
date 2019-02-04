@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -20,12 +20,14 @@ It can be used freely, maintaining the information above.
 
 #include <commonui/CSceneOptionsDialog.h>
 
+
 class CMainWindow;
 
 class CNodeEditorScene;
 class CNodePort;
 class CEditorView;
 class IFileSerializer;
+class CDOTExportDialog;
 
 
 class CNodeEditorUIController : public QObject
@@ -76,7 +78,6 @@ private Q_SLOTS:
 	void unzoom();
 	void resetZoom();
 
-	void sceneCrop();
     void sceneOptions();
 
 	void showNodeIds(bool on);
@@ -121,11 +122,6 @@ private:
 
 	QMenu *m_viewMenu;
 
-	QAction *cutAction;
-	QAction *copyAction;
-	QAction *pasteAction;
-	QAction *delAction;
-
 	QAction *findAction;
 
 	QActionGroup *m_editModesGroup;
@@ -164,4 +160,5 @@ private:
 	class CClassAttributesEditorUI *m_defaultsPanel;
 
 	class CSearchDialog *m_searchDialog;
+	class CDOTExportDialog *m_dotDialog;
 };

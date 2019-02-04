@@ -5,6 +5,8 @@
 
 #include <qvge/ISceneMenuController.h>
 
+class CNodeEditorScene;
+
 
 class CSceneMenuUIController : public QObject, public ISceneMenuController
 {
@@ -23,6 +25,9 @@ public:
 Q_SIGNALS:
 	// emitted before \a menu is about to show.
 	void onContextMenu(QMenu &menu);
+
+private:
+	CNodeEditorScene* m_scene;
 };
 
 

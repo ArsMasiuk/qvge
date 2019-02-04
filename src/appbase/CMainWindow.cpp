@@ -1,5 +1,6 @@
 ﻿#include "CMainWindow.h"
 #include "CPlatformServices.h"
+#include "CStartPage.h"
 
 #include <QFileDialog>
 #include <QDockWidget>
@@ -46,6 +47,25 @@ void CMainWindow::onQuit()
 }
 
 
+void CMainWindow::exit()
+{
+	// close all instances
+	QVariantMap pidFileMap = getActiveInstances();
+	for (auto it = pidFileMap.constBegin(); it != pidFileMap.constEnd(); ++it)
+	{
+		bool isCurrent = (m_stringPID == it.key());
+		if (!isCurrent)
+		{
+			QVariantMap dataMap = it.value().value<QVariantMap>();
+			CPlatformServices::CloseWindow(dataMap["hwnd"].toUInt());
+		}
+	}
+
+	// close me as well
+	close();
+}
+
+
 void CMainWindow::addDocument(const CDocument& doc)
 {
     if (doc.canCreate)
@@ -85,6 +105,8 @@ void CMainWindow::init(const QStringList& args)
     createHelpMenu();
 
     readSettings();
+
+	createStartPage();
 
     processParams(args);
 }
@@ -150,7 +172,7 @@ void CMainWindow::processParams(const QStringList& args)
 
         if (command == "create")
         {
-            doCreateNewDocument(args.at(2).toLocal8Bit());
+            createNewDocument(args.at(2).toLocal8Bit());
             return;
         }
 
@@ -205,8 +227,12 @@ void CMainWindow::createMainMenu()
 
 	m_fileMenu->addSeparator();
 
-    QAction *exitApp = m_fileMenu->addAction(tr("E&xit"), this, SLOT(close()));
-    exitApp->setStatusTip(tr("Leave the application"));
+	QAction *closeDocument = m_fileMenu->addAction(tr("Close"), this, SLOT(close()));
+	closeDocument->setStatusTip(tr("Close current document"));
+	closeDocument->setShortcut(QKeySequence::Close);
+
+    QAction *exitApp = m_fileMenu->addAction(tr("E&xit"), this, SLOT(exit()));
+    exitApp->setStatusTip(tr("Leave the application closing all windows"));
     exitApp->setShortcut(QKeySequence::Quit);
 }
 
@@ -261,6 +287,13 @@ void CMainWindow::createFileToolbar()
 }
 
 
+void CMainWindow::createStartPage()
+{
+	CStartPage *startPage = new CStartPage(this);
+	setCentralWidget(startPage);
+}
+
+
 void CMainWindow::updateTitle()
 {
     setWindowTitle(QString("%1 - %2")
@@ -309,18 +342,18 @@ void CMainWindow::onCurrentFileChanged()
 
 void CMainWindow::createNewDocument()
 {
-    doCreateNewDocument(*m_docTypeCreate.begin());
+    createNewDocument(*m_docTypeCreate.begin());
 }
 
 
 void CMainWindow::createNewDocument(QAction *act)
 {
     QByteArray docType = act->data().toByteArray();
-    doCreateNewDocument(docType);
+    createNewDocument(docType);
 }
 
 
-void CMainWindow::doCreateNewDocument(const QByteArray &docType)
+void CMainWindow::createNewDocument(const QByteArray &docType)
 {
     // document presents - run new instance
     if (m_currentDocType.size())
@@ -359,6 +392,18 @@ bool CMainWindow::createDocument(const QByteArray &docType)
     qDebug() << docType;
 
     return true;
+}
+
+
+void CMainWindow::selectAndOpenDocument()
+{
+	on_actionOpen_triggered();
+}
+
+
+bool CMainWindow::openDocument(const QString &fileName)
+{
+	return doOpenDocument(fileName);
 }
 
 
@@ -641,12 +686,20 @@ bool CMainWindow::saveOnExit()
 
 // recent files management
 
+QStringList CMainWindow::getRecentFilesList() const
+{
+	QSettings &settings = getApplicationSettings();
+
+	return settings.value("recentFiles").toStringList();
+}
+
+
 void CMainWindow::updateRecentFiles()
 {
 	if (m_currentFileName.isEmpty())
 		return;
 
-	QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+	QSettings &settings = getApplicationSettings();
 
 	QStringList recentFiles = settings.value("recentFiles").toStringList();
 	int index = recentFiles.indexOf(m_currentFileName);
@@ -672,7 +725,7 @@ void CMainWindow::fillRecentFilesMenu()
 {
 	m_recentFilesMenu->clear();
 	 
-	QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+	QSettings &settings = getApplicationSettings();
 
 	QStringList recentFiles = settings.value("recentFiles").toStringList();
 
@@ -692,7 +745,7 @@ void CMainWindow::onRecentFilesMenuAction(QAction *recentAction)
 		return;
 
 	// failed - remove
-	QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+	QSettings &settings = getApplicationSettings();
 
 	QStringList recentFiles = settings.value("recentFiles").toStringList();
 	recentFiles.removeAt(recentAction->data().toInt());
@@ -702,31 +755,6 @@ void CMainWindow::onRecentFilesMenuAction(QAction *recentAction)
 
 
 // instance management
-
-void CMainWindow::updateInstance()
-{
-	QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-
-	QVariantMap pidFileMap = settings.value("instances").value<QVariantMap>();
-	QVariantMap dataMap = pidFileMap[m_stringPID].value<QVariantMap>();
-	dataMap["title"] = m_mainTitleText;
-	dataMap["file"] = m_currentFileName;
-	dataMap["hwnd"] = (uint)effectiveWinId();
-	dataMap["spid"] = m_stringPID;
-	pidFileMap[m_stringPID] = dataMap; 
-	settings.setValue("instances", pidFileMap);
-}
-
-
-void CMainWindow::removeInstance()
-{
-	QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-
-	QVariantMap pidFileMap = settings.value("instances").value<QVariantMap>();
-	pidFileMap.remove(m_stringPID);
-	settings.setValue("instances", pidFileMap);
-}
-
 
 QVariantMap CMainWindow::getActiveInstances()
 {
@@ -739,7 +767,7 @@ QVariantMap CMainWindow::getActiveInstances()
 
 	// check if alive
 	QList<QString> spids = pidFileMap.keys();
-	for (auto spid: spids)
+	for (auto spid : spids)
 	{
 		if (!livingPids.contains(spid.toUInt()))
 		{
@@ -755,6 +783,70 @@ QVariantMap CMainWindow::getActiveInstances()
 	}
 
 	return pidFileMap;
+}
+
+
+void CMainWindow::updateInstance()
+{
+	QSettings &settings = getApplicationSettings();
+
+	QVariantMap pidFileMap = settings.value("instances").value<QVariantMap>();
+	QVariantMap dataMap = pidFileMap[m_stringPID].value<QVariantMap>();
+	dataMap["title"] = m_mainTitleText;
+	dataMap["file"] = m_currentFileName;
+	dataMap["hwnd"] = (uint)effectiveWinId();
+	dataMap["spid"] = m_stringPID;
+	pidFileMap[m_stringPID] = dataMap; 
+	settings.setValue("instances", pidFileMap);
+}
+
+
+void CMainWindow::removeInstance()
+{
+	QSettings &settings = getApplicationSettings();
+
+	QVariantMap pidFileMap = settings.value("instances").value<QVariantMap>();
+	pidFileMap.remove(m_stringPID);
+	settings.setValue("instances", pidFileMap);
+}
+
+
+bool CMainWindow::activateInstance(const QString &fileName)
+{
+	QString normalizedName = fileName; // QDir::toNativeSeparators(QFileInfo(fileName).canonicalFilePath());
+#ifdef WIN32
+	normalizedName = normalizedName.toLower();
+#endif
+
+	// current instance?
+	if (normalizedName == m_currentFileName)
+	{
+		raise();
+		activateWindow();
+		return true;
+	}
+
+	// else check running instances
+	QVariantMap pidFileMap = getActiveInstances();
+
+	for (auto it = pidFileMap.constBegin(); it != pidFileMap.constEnd(); ++it)
+	{
+		QVariantMap dataMap = it.value().value<QVariantMap>();
+
+		QString fileName = dataMap["file"].toString();
+#ifdef WIN32
+		fileName = fileName.toLower();
+#endif
+
+		if (normalizedName == fileName)
+		{
+			// found: switch to instance
+			CPlatformServices::SetActiveWindow(dataMap["hwnd"].toUInt());
+			return true;
+		}
+	}
+
+	return false;
 }
 
 
@@ -802,45 +894,6 @@ void CMainWindow::onWindowsMenuAction(QAction *windowAction)
 }
 
 
-bool CMainWindow::activateInstance(const QString &fileName)
-{
-	QString normalizedName = fileName; // QDir::toNativeSeparators(QFileInfo(fileName).canonicalFilePath());
-#ifdef WIN32
-    normalizedName = normalizedName.toLower();
-#endif
-
-	// current instance?
-	if (normalizedName == m_currentFileName)
-	{
-		raise();
-		activateWindow();
-		return true;
-	}
-
-	// else check running instances
-	QVariantMap pidFileMap = getActiveInstances();
-
-	for (auto it = pidFileMap.constBegin(); it != pidFileMap.constEnd(); ++it)
-	{
-		QVariantMap dataMap = it.value().value<QVariantMap>();
-
-		QString fileName = dataMap["file"].toString();
-#ifdef WIN32
-		fileName = fileName.toLower();
-#endif
-
-		if (normalizedName == fileName)
-		{
-			// found: switch to instance
-			CPlatformServices::SetActiveWindow(dataMap["hwnd"].toUInt());
-			return true;
-		}
-	}
-
-    return false;
-}
-
-
 // help
 
 void CMainWindow::createHelpMenu()
@@ -871,7 +924,7 @@ QString CMainWindow::getAboutText() const
 
 // settings
 
-QSettings& CMainWindow::getApplicationSettings()
+QSettings& CMainWindow::getApplicationSettings() const
 {
 	static QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 	return settings;
@@ -890,14 +943,16 @@ void CMainWindow::readSettings()
 
 void CMainWindow::doReadSettings(QSettings& settings)
 {
+	showNormal();
+
+
     // window geometry
 	const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
 	if (geometry.isEmpty()) 
 	{
 		const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
-		resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
-		move((availableGeometry.width() - width()) / 2,
-			(availableGeometry.height() - height()) / 2);
+		resize(availableGeometry.width()-200, availableGeometry.height()-100);
+		move(100, 50);
 	}
 	else {
 		restoreGeometry(geometry);

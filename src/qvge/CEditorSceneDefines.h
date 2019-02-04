@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -19,7 +19,8 @@ enum SceneInfoState
 	SIS_Select = 0,
 	SIS_Hover,
 	SIS_Drag,
-	SIS_Hover_Port
+	SIS_Hover_Port,
+	SIS_Edit_Label
 };
 
 

@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -39,7 +39,18 @@ bool CFormatGraphML::save(const QString& fileName, Graph& graph, QString* lastEr
 
 	xsw.writeStartElement("graph");
 
-	// TO DO: Nodes & Edges
+	// graph attrs
+	if (graph.edgeAttrs.contains("direction"))
+	{
+		xsw.writeAttribute("edgedefault", graph.edgeAttrs["direction"].defaultValue.toString());
+	}
+
+	// nodes
+	writeNodes(xsw, graph);
+
+	// edges
+	writeEdges(xsw, graph);
+
 
 	xsw.writeEndElement();	// graph
 
@@ -47,6 +58,56 @@ bool CFormatGraphML::save(const QString& fileName, Graph& graph, QString* lastEr
 	xsw.writeEndDocument();
 
 	return true;
+}
+
+
+void CFormatGraphML::writeNodes(QXmlStreamWriter &xsw, const Graph& graph) const
+{
+	for (const auto& node : graph.nodes)
+	{
+		xsw.writeStartElement("node");
+		
+		// topology
+		xsw.writeAttribute("id", node.id);
+
+		for (const auto& port : node.ports)
+		{
+			xsw.writeStartElement("port");
+			
+			xsw.writeAttribute("name", port.name);
+			// TO DO: placement, attrs...
+
+			xsw.writeEndElement();
+		}
+
+		// attributes
+		// TO DO
+
+		xsw.writeEndElement();
+	}
+}
+
+
+void CFormatGraphML::writeEdges(QXmlStreamWriter &xsw, const Graph& graph) const
+{
+	for (const auto& edge: graph.edges)
+	{
+		xsw.writeStartElement("edge");
+
+		// topology
+		xsw.writeAttribute("id", edge.id);
+		xsw.writeAttribute("source", edge.startNodeId);
+		xsw.writeAttribute("target", edge.endNodeId);
+		if (edge.startPortId.size())
+			xsw.writeAttribute("sourceport", edge.startPortId);
+		if (edge.endPortId.size())
+			xsw.writeAttribute("endport", edge.endPortId);
+
+		// attributes
+		// TO DO
+
+		xsw.writeEndElement();
+	}
 }
 
 

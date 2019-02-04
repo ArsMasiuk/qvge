@@ -9,6 +9,8 @@ class CPlatformServices
 public:
 	static bool SetActiveWindow(uint id);
 
+	static bool CloseWindow(uint id);
+
 	typedef QSet<uint> PIDs;
 	static PIDs GetRunningPIDs();
 

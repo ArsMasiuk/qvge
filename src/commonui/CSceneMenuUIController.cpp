@@ -4,6 +4,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsSceneContextMenuEvent>
 
+#include <qvge/CEditorView.h>
 #include <qvge/CNodeEditorScene.h>
 #include <qvge/CNodeSceneActions.h>
 #include <qvge/CNode.h>
@@ -22,6 +23,9 @@ CSceneMenuUIController::~CSceneMenuUIController()
 
 bool CSceneMenuUIController::exec(CEditorScene *scene, QGraphicsItem *triggerItem, QGraphicsSceneContextMenuEvent *contextMenuEvent)
 {
+	m_scene = dynamic_cast<CNodeEditorScene*>(scene);
+	m_scene->setPastePosition(contextMenuEvent->scenePos());
+
 	QMenu menu;
 	fillMenu(menu, scene, triggerItem, contextMenuEvent);
 
@@ -30,14 +34,15 @@ bool CSceneMenuUIController::exec(CEditorScene *scene, QGraphicsItem *triggerIte
 	// execute
 	menu.exec(contextMenuEvent->screenPos());
 
+	m_scene->setPastePosition(QPointF());
 	return false;
 }
 
 
-void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphicsItem *triggerItem, QGraphicsSceneContextMenuEvent *contextMenuEvent)
+void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphicsItem *triggerItem, QGraphicsSceneContextMenuEvent* /*contextMenuEvent*/)
 {
 	auto sceneActions = scene->getActions();
-	auto nodeScene = dynamic_cast<CNodeEditorScene*>(scene);
+	auto nodeScene = m_scene;
 
 	int nodesCount = nodeScene->getSelectedNodes().size();
 	bool nodesSelected = (nodesCount > 0);
@@ -49,8 +54,12 @@ void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphic
 	QAction *changeIdAction = menu.addAction(tr("Change Id..."), parent(), SLOT(changeItemId()));
 	changeIdAction->setEnabled((nodesCount + edgesCount) == 1);
 
-	QAction *deleteAction = menu.addAction(tr("Delete"), scene, SLOT(onActionDelete()));
-	deleteAction->setEnabled(scene->createSelectedList(CDeletableItems()).size());
+	menu.addSeparator();
+
+	menu.addAction(scene->actions()->cutAction);
+	menu.addAction(scene->actions()->copyAction);
+	menu.addAction(scene->actions()->pasteAction);
+	menu.addAction(scene->actions()->delAction);
 
 	// add default node actions
 	menu.addSeparator();
@@ -89,3 +98,4 @@ void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphic
 	arrowsMenu->addSeparator();
 	arrowsMenu->addAction(tr("Reverse"), sceneActions, SLOT(onActionEdgeReverse()));
 }
+

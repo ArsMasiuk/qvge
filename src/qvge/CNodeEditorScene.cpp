@@ -147,6 +147,51 @@ bool CNodeEditorScene::toGraph(Graph& g)
 		g.edgeAttrs[it.key()] = attr;
 	}
 
+
+	// nodes
+	auto nodes = getItems<CNode>();
+	for (const auto &node : nodes)
+	{
+		Node n;
+		n.id = node->getId().toLocal8Bit();
+		
+		QByteArrayList ports = node->getPortIds();
+		for (const auto &portId : ports)
+		{
+			auto port = node->getPort(portId);
+			Q_ASSERT(port != NULL);
+
+			NodePort p;
+			p.name = portId;
+
+			// TO DO: other attrs
+
+			n.ports[portId] = p;
+		}
+
+		n.attrs = node->getLocalAttributes();
+
+		g.nodes.append(n);
+	}
+
+
+	// edges
+	auto edges = getItems<CEdge>();
+	for (const auto &edge : edges)
+	{
+		Edge e;
+		e.id = edge->getId().toLocal8Bit();
+		e.startNodeId = edge->firstNode()->getId().toLocal8Bit();
+		e.endNodeId = edge->lastNode()->getId().toLocal8Bit();
+		e.startPortId = edge->firstPortId();
+		e.endPortId = edge->lastPortId();
+
+		e.attrs = edge->getLocalAttributes();
+
+		g.edges.append(e);
+	}
+
+
 	// TODO
 
 	return true;
