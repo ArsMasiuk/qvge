@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -16,6 +16,7 @@ It can be used freely, maintaining the information above.
 #include <QPolygonF>
 #include <QMap>
 #include <QPen>
+#include <QGraphicsItem>
 
 
 class CUtils
@@ -33,6 +34,8 @@ public:
 	static QPointF closestIntersection(const QLineF& line, const QPolygonF& with);
 
 	static QString cutLastSuffix(const QString& fileName);
+
+	static QRectF getBoundingRect(const QList<QGraphicsItem*>& items);
 };
 
 

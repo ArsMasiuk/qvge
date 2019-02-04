@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -25,6 +25,9 @@ public:
 	CEditorView(CEditorScene *scene, QWidget *parent = NULL);
 	CEditorView(QWidget *parent = NULL);
 	virtual ~CEditorView();
+
+	// actions
+	QAction *pasteAction;
 
 	// zoom
 	double getZoom() const { return m_currentZoom; }
@@ -57,7 +60,6 @@ private Q_SLOTS:
 
 private:
 	void onLeftClickMouseMove(QMouseEvent *e);
-	void doClamp(QPointF &value);
 
 	Qt::ContextMenuPolicy m_menuModeTmp;
 	bool m_interactiveTmp = false;

@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -27,18 +27,26 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 
         QString graphId = QFileInfo(fileName).completeBaseName();
 
-        ts << "digraph \"" << graphId << "\" {\n";
+        ts << "digraph \"" << graphId << "\"\n{";
+		ts << "\n\n";
 
 		// we'll output points, not inches
 		//ts << "\n\n";
 		//ts << "inputscale = 72;";
 
-		ts << "\n\n";
+		// background
+		if (m_writeBackground)
+		{
+			ts << "bgcolor = \"" << scene.backgroundBrush().color().name() << "\"";
+			ts << "\n\n";
+		}
 
         // nodes
-		doWriteNodeDefaults(ts, scene);
-
-		ts << "\n\n";
+		if (m_writeAttrs)
+		{
+			doWriteNodeDefaults(ts, scene);
+			ts << "\n\n";
+		}
 
         auto nodes = scene.getItems<CNode>();
         for (auto node: nodes)
@@ -50,9 +58,11 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 
 
         // edges
-		doWriteEdgeDefaults(ts, scene);
-
-		ts << "\n\n";
+		if (m_writeAttrs)
+		{
+			doWriteEdgeDefaults(ts, scene);
+			ts << "\n\n";
+		}
 
         auto edges = scene.getItems<CEdge>();
         for (auto edge: edges)
@@ -60,8 +70,7 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 			doWriteEdge(ts, *edge, scene);
         }
 
-		ts << "\n\n";
-        ts << "}\n";
+		ts << "\n}\n";
 
 		return true;
 	}
@@ -124,15 +133,21 @@ void CFileSerializerDOT::doWriteNodeDefaults(QTextStream& ts, const CEditorScene
 void CFileSerializerDOT::doWriteNode(QTextStream& ts, const CNode& node, const CEditorScene& /*scene*/) const
 {
 	ts << "\"" << node.getId() << "\"";
-	ts << " [\n";
 
-	ts << "pos = \"" << node.pos().x() / 72.0  << "," << -node.pos().y() / 72.0 << "!\"\n";	//  / 72.0 -> point to inch; -y
+	if (m_writeAttrs)
+	{
+		ts << " [\n";
 
-	const QMap<QByteArray, QVariant>& nodeAttrs = node.getLocalAttributes();
+		ts << "pos = \"" << node.pos().x() / 72.0 << "," << -node.pos().y() / 72.0 << "!\"\n";	//  / 72.0 -> point to inch; -y
 
-	doWriteNodeAttrs(ts, nodeAttrs);
+		const QMap<QByteArray, QVariant>& nodeAttrs = node.getLocalAttributes();
 
-	ts << "];\n\n";
+		doWriteNodeAttrs(ts, nodeAttrs);
+
+		ts << "]";
+	}
+
+	ts << "\n\n";
 }
 
 
@@ -254,7 +269,10 @@ void CFileSerializerDOT::doWriteEdge(QTextStream& ts, const CEdge& edge, const C
 
 	ts << " [id = \"" << edge.getId() << "\"\n";
 
-	doWriteEdgeAttrs(ts, edgeAttrs);
+	if (m_writeAttrs)
+	{
+		doWriteEdgeAttrs(ts, edgeAttrs);
+	}
 
 	ts << "];\n\n";
 }

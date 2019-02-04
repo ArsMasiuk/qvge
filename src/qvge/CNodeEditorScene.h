@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -32,9 +32,13 @@ class CNodeEditorScene : public CEditorScene
 public:
 	typedef CEditorScene Super;
 
-	CNodeEditorScene(QObject *parent);
+	CNodeEditorScene(QObject *parent = NULL);
 
 	// reimp
+	virtual CEditorScene* createScene() const {
+		return new CNodeEditorScene();
+	}
+
 	virtual void initialize();
 	virtual bool fromGraph(const Graph& g);
 	virtual bool toGraph(Graph& g);

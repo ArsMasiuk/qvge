@@ -94,6 +94,9 @@ void QSplitButton::actionEvent(QActionEvent *event)
 void QSplitButton::onAction(QAction* act)
 {
     setDefaultAction(act);
+
+	if (act)
+		Q_EMIT activated(act->data());
 }
 
 
@@ -109,9 +112,6 @@ void QSplitButton::setDefaultAction(QAction* act)
 
 		if (statusTip().isEmpty())
 			setStatusTip(oldStatusTip);
-
-		if (act)
-			Q_EMIT activated(act->data());
 	}
 }
 

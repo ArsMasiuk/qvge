@@ -337,6 +337,12 @@ CNodePort* CNode::getPort(const QByteArray& portId) const
 }
 
 
+QByteArrayList CNode::getPortIds() const
+{
+	return m_ports.keys();
+}
+
+
 // serialization 
 
 bool CNode::storeTo(QDataStream& out, quint64 version64) const

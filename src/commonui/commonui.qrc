@@ -33,5 +33,8 @@
         <file alias="Label">Icons/text-label.png</file>
         <file alias="Graph">Icons/Graph.png</file>
         <file alias="Search">Icons/Search.png</file>
+        <file alias="DOT">Icons/Format-DOT.png</file>
+        <file alias="GEXF">Icons/Format-GEXF.png</file>
+        <file alias="GraphML">Icons/Format-GraphML.png</file>
     </qresource>
 </RCC>

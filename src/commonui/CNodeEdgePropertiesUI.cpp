@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -57,6 +57,14 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	ui->StrokeStyle->setUsedRange(Qt::SolidLine, Qt::DashDotDotLine);
 
     ui->EdgeAttrBox->setChecked(false);
+
+
+	// font size
+	QVector<int> fontSizes = { 5,6,7,8,9,10,11,12,14,16,18,20,24,28,32,36,40,44,48,54,60,66,72,80,88,96 };
+	for (int i : fontSizes)
+		ui->LabelFontSize->addItem(QString::number(i), i);
+	auto v = new QIntValidator(4, 200, this);
+	ui->LabelFontSize->setValidator(v);
 
 
     // update status & tooltips etc.
@@ -134,8 +142,9 @@ void CNodeEdgePropertiesUI::updateFromScene(CEditorScene* scene)
 
 	QFont f(edgeAttrs["label.font"].defaultValue.value<QFont>());
 	ui->LabelFont->setCurrentFont(f);
-	ui->LabelFontSize->setValue(f.pointSize());
+	//ui->LabelFontSize->setValue(f.pointSize());
 	ui->LabelColor->setColor(edgeAttrs["label.color"].defaultValue.value<QColor>());
+	ui->LabelFontSize->setCurrentText(QString::number(f.pointSize()));
 }
 
 
@@ -233,7 +242,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     {
 		QFont f(item->getAttribute("label.font").value<QFont>());
         ui->LabelFont->setCurrentFont(f);
-		ui->LabelFontSize->setValue(f.pointSize());
+		ui->LabelFontSize->setCurrentText(QString::number(f.pointSize()));
 		ui->LabelFontBold->setChecked(f.bold());
 		ui->LabelFontItalic->setChecked(f.italic());
 		ui->LabelFontUnderline->setChecked(f.underline());
@@ -381,7 +390,7 @@ void CNodeEdgePropertiesUI::on_EdgeDirection_activated(QVariant data)
 void CNodeEdgePropertiesUI::on_LabelFont_activated(const QFont &font)
 {
 	ui->LabelFontSize->blockSignals(true);
-	ui->LabelFontSize->setValue(font.pointSize());
+	ui->LabelFontSize->setCurrentText(QString::number(font.pointSize()));
 	ui->LabelFontSize->blockSignals(false);
 
     if (m_updateLock || m_scene == NULL)
@@ -418,7 +427,7 @@ void CNodeEdgePropertiesUI::on_LabelColor_activated(const QColor &color)
 }
 
 
-void CNodeEdgePropertiesUI::on_LabelFontSize_valueChanged(int value)
+void CNodeEdgePropertiesUI::on_LabelFontSize_currentTextChanged(const QString &text)
 {
 	if (m_updateLock || m_scene == NULL)
 		return;
@@ -426,6 +435,8 @@ void CNodeEdgePropertiesUI::on_LabelFontSize_valueChanged(int value)
 	QList<CItem*> items = m_scene->getSelectedNodesEdges();
 	if (items.isEmpty())
 		return;
+
+	int value = text.toInt();
 
 	bool set = false;
 

@@ -40,14 +40,15 @@ public:
 
     virtual void init(const QStringList& args);
 
-    void addDocument(const CDocument& doc);
-
 	QDockWidget* createDockWindow(const QString& name, const QString& title, Qt::DockWidgetArea area, QWidget* widget = nullptr);
 
-    virtual void readSettings();
-    virtual void writeSettings();
+	virtual QSettings& getApplicationSettings() const;
+	virtual void readSettings();
+	virtual void writeSettings();
 
-	virtual QSettings& getApplicationSettings();
+    void addDocument(const CDocument& doc);
+	QList<CDocument> getRegisteredDocumentTypes() const { return m_docTypes.values(); }
+	QStringList getRecentFilesList() const;
 
 	QAction* getFileExportAction() { return m_exportDocument; }
 	QMenu* getFileMenu() { return m_fileMenu; }
@@ -57,6 +58,11 @@ public:
 public Q_SLOTS:
 	virtual void onDocumentChanged();
 	virtual void onAboutApplication();
+
+	virtual void createNewDocument(const QByteArray &docType);
+
+	void selectAndOpenDocument();
+	bool openDocument(const QString &fileName);
 
 protected:
 	void closeEvent(QCloseEvent *event);
@@ -71,6 +77,8 @@ protected:
     virtual void createMainMenu();
 	virtual void createWindowsMenu();
 	virtual void createHelpMenu();
+
+	virtual void createStartPage();
 	
 	virtual void fillNewFileMenu();
     virtual void createFileToolbar();
@@ -81,7 +89,6 @@ protected:
 	virtual void updateTitle();
 	virtual QString getAboutText() const;
 
-    virtual void doCreateNewDocument(const QByteArray &docType);
     virtual bool createDocument(const QByteArray &docType);
 	virtual void onNewDocumentCreated(const QByteArray &docType) {}
 
@@ -121,6 +128,7 @@ protected Q_SLOTS:
 	void onWindowsMenuAction(QAction*);
 
 private Q_SLOTS:
+	void exit();
 	void onQuit();
 
 protected:

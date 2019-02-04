@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -33,6 +33,8 @@ private:
 	bool readEdge(int index, const QDomNode &domNode, Graph& graph, const KeyAttrMap& cka) const;
 
 	void writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos &attrs, const QByteArray &classId) const;
+	void writeNodes(QXmlStreamWriter &xsw, const Graph& graph) const;
+	void writeEdges(QXmlStreamWriter &xsw, const Graph& graph) const;
 
 	enum EdgeType {
 		Directed,

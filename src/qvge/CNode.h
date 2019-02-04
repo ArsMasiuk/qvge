@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -64,11 +64,12 @@ public:
     virtual QByteArray superClassId() const { return Super::classId(); }
 
 	// ports
-	virtual CNodePort* addPort(const QByteArray& portId = "", int align = Qt::AlignCenter, double xoff = 0, double yoff = 0);
-	virtual bool removePort(const QByteArray& portId);
-	virtual bool movePort(const QByteArray& portId, int align = Qt::AlignCenter, double xoff = 0, double yoff = 0);
-	virtual bool renamePort(const QByteArray& portId, const QByteArray& newId);
-	virtual CNodePort* getPort(const QByteArray& portId) const;
+	CNodePort* addPort(const QByteArray& portId = "", int align = Qt::AlignCenter, double xoff = 0, double yoff = 0);
+	bool removePort(const QByteArray& portId);
+	bool movePort(const QByteArray& portId, int align = Qt::AlignCenter, double xoff = 0, double yoff = 0);
+	bool renamePort(const QByteArray& portId, const QByteArray& newId);
+	CNodePort* getPort(const QByteArray& portId) const;
+	QByteArrayList getPortIds() const;
 
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;

@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -379,7 +379,7 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 }
 
 
-bool CFileSerializerGEXF::save(const QString& fileName, CEditorScene& scene, QString* lastError) const
+bool CFileSerializerGEXF::save(const QString& fileName, CEditorScene& scene, QString* /*lastError*/) const
 {
 	QFile file(fileName);
 	if (!file.open(QIODevice::WriteOnly))
@@ -550,7 +550,7 @@ void CFileSerializerGEXF::writeNodes(QTextStream &ts, const CEditorScene& scene)
 	ts << "    <nodes>\n";
 
 	auto nodes = scene.getItems<CNode>();
-	for (auto node : nodes)
+	for (const auto &node : nodes)
 	{
 		QMap<QByteArray, QVariant> nodeAttrs = node->getLocalAttributes();
 

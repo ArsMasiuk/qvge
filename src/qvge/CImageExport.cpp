@@ -79,12 +79,20 @@ QString CImageExport::filters() const
 
 bool CImageExport::save(const QString& fileName, CEditorScene& scene, QString* /*lastError*/) const
 {
-	QImage image(scene.sceneRect().size().toSize(), QImage::Format_ARGB32);
+	CEditorScene* tempScene = scene.clone();
+
+	tempScene->crop();
+
+	QImage image(tempScene->sceneRect().size().toSize(), QImage::Format_ARGB32);
 	image.fill(Qt::white);
+
 	QPainter painter(&image);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setRenderHint(QPainter::TextAntialiasing);
-	scene.render(&painter);
+	tempScene->render(&painter);
+	painter.end();
+
+	delete tempScene;
 
 	return image.save(fileName);
 }

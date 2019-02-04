@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -17,6 +17,7 @@ It can be used freely, maintaining the information above.
 #include <CNodesFactorDialog.h>
 #include <CNodePortEditorDialog.h>
 #include <CSearchDialog.h>
+#include <CDOTExportDialog.h>
 
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
@@ -104,6 +105,9 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
     // search dialog
     m_searchDialog = new CSearchDialog(parent);
 
+	// export dialogs
+	m_dotDialog = new CDOTExportDialog(parent);
+
     // OGDF
 #ifdef USE_OGDF
     m_ogdfController = new COGDFLayoutUIController(parent, m_editorScene);
@@ -167,29 +171,16 @@ void CNodeEditorUIController::createMenus()
 
     editMenu->addSeparator();
 
-    cutAction = editMenu->addAction(QIcon(":/Icons/Cut"), tr("Cu&t"));
-    cutAction->setStatusTip(tr("Cut selected item(s) to clipboard"));
-    cutAction->setToolTip(tr("Cut selection"));
-    cutAction->setShortcut(QKeySequence::Cut);
-    connect(cutAction, &QAction::triggered, m_editorScene, &CEditorScene::cut);
+	editMenu->addAction(m_editorScene->actions()->cutAction);
+	editMenu->addAction(m_editorScene->actions()->copyAction);
+	editMenu->addAction(m_editorScene->actions()->pasteAction);
+	editMenu->addAction(m_editorScene->actions()->delAction);
 
-    copyAction = editMenu->addAction(QIcon(":/Icons/Copy"), tr("&Copy"));
-    copyAction->setStatusTip(tr("Copy selected item(s) to clipboard"));
-    copyAction->setToolTip(tr("Copy selection"));
-    copyAction->setShortcut(QKeySequence::Copy);
-    connect(copyAction, &QAction::triggered, m_editorScene, &CEditorScene::copy);
-
-    pasteAction = editMenu->addAction(QIcon(":/Icons/Paste"), tr("&Paste"));
-    pasteAction->setStatusTip(tr("Paste item(s) from clipboard"));
-    pasteAction->setToolTip(tr("Paste from clipboard"));
-    pasteAction->setShortcut(QKeySequence::Paste);
-    connect(pasteAction, &QAction::triggered, m_editorScene, &CEditorScene::paste);
-
-    delAction = editMenu->addAction(QIcon(":/Icons/Delete"), tr("&Delete"));
-    delAction->setStatusTip(tr("Delete selected item(s)"));
-    delAction->setToolTip(tr("Delete selection"));
-    delAction->setShortcut(QKeySequence::Delete);
-    connect(delAction, &QAction::triggered, m_editorScene, &CEditorScene::del);
+	QAction *selAction = editMenu->addAction(QIcon(":/Icons/SelectAll"), tr("Select All"));
+	selAction->setStatusTip(tr("Select all items on the scene"));
+	selAction->setToolTip(tr("Select all items"));
+	selAction->setShortcut(QKeySequence::SelectAll);
+	connect(selAction, &QAction::triggered, m_editorScene, &CEditorScene::selectAll);
 
 
     // edit modes
@@ -227,7 +218,7 @@ void CNodeEditorUIController::createMenus()
 
     QAction *sceneCropAction = editMenu->addAction(QIcon(":/Icons/Crop"), tr("&Crop Area"));
     sceneCropAction->setStatusTip(tr("Crop document area to contents"));
-    connect(sceneCropAction, &QAction::triggered, this, &CNodeEditorUIController::sceneCrop);
+    connect(sceneCropAction, &QAction::triggered, m_editorScene, &CEditorScene::crop);
 
 
     // color schemes
@@ -258,10 +249,10 @@ void CNodeEditorUIController::createMenus()
 
     editToolbar->addSeparator();
 
-    editToolbar->addAction(cutAction);
-    editToolbar->addAction(copyAction);
-    editToolbar->addAction(pasteAction);
-    editToolbar->addAction(delAction);
+    editToolbar->addAction(m_editorScene->actions()->cutAction);
+    editToolbar->addAction(m_editorScene->actions()->copyAction);
+    editToolbar->addAction(m_editorScene->actions()->pasteAction);
+    editToolbar->addAction(m_editorScene->actions()->delAction);
 
     editToolbar->addSeparator();
 
@@ -446,10 +437,6 @@ void CNodeEditorUIController::onSelectionChanged()
 {
     int selectionCount = m_editorScene->selectedItems().size();
 
-    cutAction->setEnabled(selectionCount > 0);
-    copyAction->setEnabled(selectionCount > 0);
-    delAction->setEnabled(selectionCount > 0);
-
     fitZoomSelectedAction->setEnabled(selectionCount > 0);
 }
 
@@ -474,14 +461,20 @@ void CNodeEditorUIController::onSceneHint(const QString& text)
 void CNodeEditorUIController::onSceneStatusChanged(int status)
 {
 	bool isAddNodesMode = (m_editorScene->getEditMode() == EM_AddNodes);
+
+	const QString arrowMoveHint = tr(" | Ctrl + Arrow keys - move selected items by one point | Shift + Arrow keys - move selected items by grid step");
  
     switch (status)
     {
+	case SIS_Edit_Label:
+		onSceneHint(tr("Enter - finish edit | Esc - cancel edit | Shift + Enter - insert line break"));
+		return;
+
     case SIS_Hover:
 		if (isAddNodesMode)
-			onSceneHint(tr("Click & drag - create new connection"));
+			onSceneHint(tr("Click & drag - create new connection | Double click - edit item's label") + arrowMoveHint);
 		else
-			onSceneHint(tr("Ctrl+Click - (un)select item | Click & drag - move selected items | Ctrl+Click & drag - clone selected items"));
+			onSceneHint(tr("Ctrl+Click - (un)select item | Click & drag or Ctrl/Shift + Arrow keys - move selected items | Ctrl+Click & drag - clone selected items | Double click - edit item's label"));
         return;
 
     case SIS_Drag:
@@ -489,14 +482,14 @@ void CNodeEditorUIController::onSceneStatusChanged(int status)
         return;
 
     case SIS_Hover_Port:
-        onSceneHint(tr("Click & drag - make a connection at this port"));
+        onSceneHint(tr("Click & drag - make a connection at this port | Double click - show port properties"));
         return;
 
     default:
 		if (isAddNodesMode)
-			onSceneHint(tr("Click - create new node | Click & drag - create new connection"));
+			onSceneHint(tr("Click - create new node | Click & drag - create new connection") + arrowMoveHint);
 		else
-			onSceneHint(tr("Click & drag - select an area"));
+			onSceneHint(tr("Click & drag - select an area")  + arrowMoveHint);
     }
 }
 
@@ -637,7 +630,15 @@ void CNodeEditorUIController::exportFile()
 
 void CNodeEditorUIController::exportDOT()
 {
-    doExport(CFileSerializerDOT());
+	if (m_dotDialog->exec() == QDialog::Rejected)
+		return;
+
+    doExport(
+		CFileSerializerDOT(
+			m_dotDialog->writeBackground(),
+			m_dotDialog->writeAttributes()
+		)
+	);
 }
 
 
@@ -927,6 +928,9 @@ void CNodeEditorUIController::onDocumentLoaded(const QString &fileName)
 	m_editorScene->setClassAttributeVisible(class_item, attr_label, true);
 	m_editorScene->setClassAttributeVisible(class_node, attr_label, true);
 	m_editorScene->setClassAttributeVisible(class_edge, attr_label, true);
+
+	// store newly created state
+	m_editorScene->setInitialState();
 }
 
 
@@ -981,19 +985,6 @@ void CNodeEditorUIController::editNodePort(CNodePort &port)
 void CNodeEditorUIController::find()
 {
     m_searchDialog->exec(*m_editorScene);
-}
-
-
-void CNodeEditorUIController::sceneCrop()
-{
-	QRectF itemsRect = m_editorScene->itemsBoundingRect().adjusted(-20, -20, 20, 20);
-	if (itemsRect == m_editorScene->sceneRect())
-		return;
-
-	// update scene rect
-	m_editorScene->setSceneRect(itemsRect);
-
-	m_editorScene->addUndoState();
 }
 
 

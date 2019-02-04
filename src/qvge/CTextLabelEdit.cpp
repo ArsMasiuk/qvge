@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2018 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -45,16 +45,6 @@ bool CTextLabelEdit::sceneEvent(QEvent *event)
 	{
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
 		if (keyEvent->matches(QKeySequence::Cancel))	// Esc
-		{
-			finishEdit(false);
-			return true;
-		}
-	}
-
-	if (event->type() == QEvent::KeyPress)
-	{
-		QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
-		if (keyEvent->matches(QKeySequence::InsertParagraphSeparator))	// Enter
 		{
 			finishEdit(true);
 			return true;
