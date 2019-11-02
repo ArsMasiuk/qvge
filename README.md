@@ -96,6 +96,10 @@ It can be compiled & started under Cygwin as well.
 - [Inkscape](https://inkscape.org) (SVG icons)
 - [read_proc library](https://daknuett.eu/personal) (c) Daniel Knuettel
 
+Special thanks to:
+
+- [Tatsuro Ueda](https://github.com/weed), founder of [Feel Physics](https://feel-physics.jp), for comrehensive testing, feedback and suggestions 
+
 ### Extenal Links
 
 **qvge** at [![Download qvge](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
