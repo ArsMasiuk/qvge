@@ -1,6 +1,9 @@
 #include "CQuickHelpUI.h"
 #include "ui_CQuickHelpUI.h"
 
+#include <QFile>
+#include <QTextStream>
+
 
 CQuickHelpUI::CQuickHelpUI(QWidget *parent): 
 	QWidget(parent),
@@ -8,13 +11,17 @@ CQuickHelpUI::CQuickHelpUI(QWidget *parent):
 {
 	ui->setupUi(this);
 
-	// test only
-#ifdef Q_OS_WIN32
-	QStringList sl;
-	sl << QApplication::applicationDirPath() + "/../lang/en";
-	ui->Viewer->setSearchPaths(sl);
-	ui->Viewer->setSource(QUrl("help.htm"));
-#endif
+	//QStringList sl;
+	//sl << QApplication::applicationDirPath() + "/../lang/en";
+	//ui->Viewer->setSearchPaths(sl);
+	//ui->Viewer->setSource(QUrl("help.htm"));
+
+	QFile file(":/Help/Mini_EN");
+	if (file.open(QFile::ReadOnly | QFile::Text))
+	{
+		QTextStream stream(&file);
+		ui->Viewer->setHtml(stream.readAll());
+	}
 }
 
 

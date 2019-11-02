@@ -6,10 +6,13 @@ QVGE 0.5.4
 - added nodes transformation mode (#24)
 - auto scroll during drag implemented (#56)
 
+- some labels drawing optimizations
 - fixed crash after editing a node port
 - fixed drawing direction arrows when nodes are too close
 - fixed some edge drawing issues
-- some labels drawing optimizations
+- fixed crash on reading *.xgr files in 32-bit versions
+- fixed regression on opening main window in maximized mode
+- fixed issue of scaling of the recent files list on the start page
 
 
 QVGE 0.5.3

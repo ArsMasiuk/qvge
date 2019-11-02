@@ -12,6 +12,7 @@ It can be used freely, maintaining the information above.
 
 #include <QGraphicsLineItem>
 #include <QByteArray>
+#include <QtGlobal>
 
 #include "CItem.h"
 
@@ -98,15 +99,11 @@ protected:
 	virtual void updateArrowFlags(const QString& direction);
 
 protected:
-    union{
-		CNode *m_firstNode;
-		quint64 m_tempFirstNodeId;
-    };
+    CNode *m_firstNode;
+    quint64 m_tempFirstNodeId;
 
-    union{
-		CNode *m_lastNode;
-		quint64 m_tempLastNodeId;
-    };
+    CNode *m_lastNode;
+    quint64 m_tempLastNodeId;
 
 	QByteArray m_firstPortId, m_lastPortId;
 

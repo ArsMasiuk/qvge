@@ -79,8 +79,14 @@
      </item>
      <item>
       <widget class="QScrollArea" name="scrollArea">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QAbstractScrollArea::AdjustToContents</enum>
        </property>
        <property name="widgetResizable">
         <bool>true</bool>
@@ -91,7 +97,7 @@
           <x>0</x>
           <y>0</y>
           <width>310</width>
-          <height>379</height>
+          <height>377</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -116,6 +122,9 @@
             </size>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMinAndMaxSize</enum>
+            </property>
             <property name="leftMargin">
              <number>0</number>
             </property>

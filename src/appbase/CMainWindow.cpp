@@ -969,12 +969,12 @@ void CMainWindow::doReadSettings(QSettings& settings)
     // window state
     if (settings.value("maximized", true).toBool())
     {
-#ifdef Q_OS_WIN32
-		showMaximized();
-#else
+//#ifdef Q_OS_WIN32
+//		showMaximized();
+//#else
 		showNormal();
         QTimer::singleShot(0, this, SLOT(showMaximized()));
-#endif
+//#endif
     }
 	else
 		showNormal();
