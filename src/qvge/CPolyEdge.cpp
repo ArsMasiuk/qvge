@@ -204,30 +204,14 @@ void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 	}
 
 	// polyline
-	painter->setClipRect(option->exposedRect);
-
 	setupPainter(painter, option, widget);
 
-	QPointF p1 = m_firstNode->pos();
-	if (m_firstPortId.size() && m_firstNode->getPort(m_firstPortId))
-		p1 = m_firstNode->getPort(m_firstPortId)->scenePos();
-
-	QPointF p2 = m_lastNode->pos();
-	if (m_lastPortId.size() && m_lastNode->getPort(m_lastPortId))
-		p2 = m_lastNode->getPort(m_lastPortId)->scenePos();
-
-	QPainterPath path;
-	path.moveTo(p1);
-
-	for (const QPointF &p : m_polyPoints)
-		path.lineTo(p);
-
-	path.lineTo(p2);
+	painter->setClipRect(boundingRect());
 
 	painter->save();
 
 	painter->setBrush(Qt::NoBrush);
-	painter->drawPath(path);
+	painter->drawPath(m_shapeCachePath);
 
 	painter->restore();
 
@@ -240,42 +224,17 @@ void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 	// arrows
 	if (m_itemFlags & CF_Start_Arrow)
 	{
-		QLineF arrowLine(m_polyPoints.first(), p1);
-		drawArrow(painter, option, true, arrowLine);
+		QLineF arrowLine(m_polyPoints.first(), line().p1());
+		if (arrowLine.length() > ARROW_SIZE * 2)
+			drawArrow(painter, option, true, arrowLine);
 	}
 
 	if (m_itemFlags & CF_End_Arrow)
 	{
-		QLineF arrowLine(m_polyPoints.last(), p2);
-		drawArrow(painter, option, false, arrowLine);
+		QLineF arrowLine(m_polyPoints.last(), line().p2());
+		if (arrowLine.length() > ARROW_SIZE * 2)
+			drawArrow(painter, option, false, arrowLine);
 	}
-}
-
-
-void CPolyEdge::updateLabelPosition()
-{
-	// straight line
-	if (m_polyPoints.isEmpty())
-	{
-		Super::updateLabelPosition();
-		return;
-	}
-
-	// polyline
-	auto r = m_labelItem->boundingRect();
-	int w = r.width();
-	int h = r.height();
-	m_labelItem->setTransformOriginPoint(w / 2, h / 2);
-
-	m_labelItem->setPos(m_centerPos);
-
-	//	// update label rotation
-	//	qreal angle = 180 - line().angle();
-	//	if (angle > 90) angle -= 180;
-	//	else if (angle < -90) angle += 180;
-	//	//qDebug() << angle;
-	//	//m_labelItem->setRotation(angle);
-	//}
 }
 
 
@@ -283,16 +242,16 @@ void CPolyEdge::updateLabelPosition()
 
 void CPolyEdge::onParentGeometryChanged()
 {
-	// optimize: no update while restoring
-	if (s_duringRestore)
-		return;
-
 	// straight line
 	if (m_polyPoints.isEmpty())
 	{
 		Super::onParentGeometryChanged();
 		return;
 	}
+
+	// optimize: no update while restoring
+	if (s_duringRestore)
+		return;
 
 	// polyline
 	if (!m_firstNode || !m_lastNode)
@@ -301,31 +260,40 @@ void CPolyEdge::onParentGeometryChanged()
 	prepareGeometryChange();
 
 	// update line position
-	QPointF p1 = m_firstNode->pos();
+	QPointF p1c = m_firstNode->pos();
 	if (m_firstPortId.size() && m_firstNode->getPort(m_firstPortId))
-		p1 = m_firstNode->getPort(m_firstPortId)->scenePos();
+		p1c = m_firstNode->getPort(m_firstPortId)->scenePos();
 
-	QPointF p2 = m_lastNode->pos();
+	QPointF p2c = m_lastNode->pos();
 	if (m_lastPortId.size() && m_lastNode->getPort(m_lastPortId))
-		p2 = m_lastNode->getPort(m_lastPortId)->scenePos();
+		p2c = m_lastNode->getPort(m_lastPortId)->scenePos();
+
+	QPointF p1 = m_firstNode->getIntersectionPoint(QLineF(p1c, m_polyPoints.first()), m_firstPortId);
+	QPointF p2 = m_lastNode->getIntersectionPoint(QLineF(p2c, m_polyPoints.last()), m_lastPortId);
 
 	QLineF l(p1, p2);
 	setLine(l);
 
 	// update shape path
-	QPainterPath path;
-	path.moveTo(p1);
+	m_shapeCachePath = QPainterPath();
+
+	if (QLineF(p1, m_polyPoints.first()).length() < 5)
+		p1 = m_polyPoints.first();
+	if (QLineF(p2, m_polyPoints.last()).length() < 5)
+		p2 = m_polyPoints.last();
+
+	m_shapeCachePath.moveTo(p1);
 	
 	for (const QPointF &p : m_polyPoints)
-		path.lineTo(p);
+		m_shapeCachePath.lineTo(p);
 
-	path.lineTo(p2);
+	m_shapeCachePath.lineTo(p2);
 
-	m_centerPos = path.pointAtPercent(0.5);
+	m_controlPoint = m_shapeCachePath.pointAtPercent(0.5);
 
 	QPainterPathStroker stroker;
 	stroker.setWidth(6);
-	m_selectionShapePath = stroker.createStroke(path);
+	m_selectionShapePath = stroker.createStroke(m_shapeCachePath);
 
 	update();
 
@@ -342,11 +310,7 @@ void CPolyEdge::onParentGeometryChanged()
 
 void CPolyEdge::dropControlPoints()
 {
-	for (auto cp : m_controlPoints)
-	{
-		delete cp;
-	}
-
+	qDeleteAll(m_controlPoints);
 	m_controlPoints.clear();
 }
 

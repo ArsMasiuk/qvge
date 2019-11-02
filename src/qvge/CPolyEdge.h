@@ -54,7 +54,6 @@ public:
 protected:
 	// reimp
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
-	virtual void updateLabelPosition();
 
 	// callbacks 
 	virtual void onParentGeometryChanged();
@@ -70,7 +69,4 @@ private:
 
 	// visual control points
 	QList<CControlPoint*> m_controlPoints;
-
-	// label
-	QPointF m_centerPos;
 };

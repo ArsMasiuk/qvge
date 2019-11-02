@@ -120,7 +120,6 @@ QString CUtils::penStyleToText(int style)
 QPointF CUtils::closestIntersection(const QLineF& line, const QPolygonF& endPolygon)
 {
 	QPointF intersectPoint;
-
 	QPointF p1 = endPolygon.first();
 	QPointF p2;
 
@@ -130,12 +129,12 @@ QPointF CUtils::closestIntersection(const QLineF& line, const QPolygonF& endPoly
 		QLineF polyLine = QLineF(p1, p2);
 		QLineF::IntersectType intersectType = polyLine.intersect(line, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection)
-			break;
+			return intersectPoint;
 
 		p1 = p2;
 	}
 
-	return intersectPoint;
+	return QPointF();
 }
 
 

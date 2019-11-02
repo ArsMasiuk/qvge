@@ -53,7 +53,7 @@ CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent),
 	m_isFontAntialiased(true),
 	m_labelsEnabled(true),
 	m_labelsUpdate(false),
-	m_pimpl(new CEditorScene_p)
+	m_pimpl(new CEditorScene_p(this))
 {
     m_gridSize = 25;
     m_gridEnabled = true;
@@ -726,7 +726,7 @@ CAttributeConstrains* CEditorScene::getClassAttributeConstrains(const QByteArray
 	if (m_classAttributesConstrains.contains(index))
 		return m_classAttributesConstrains[index];
 	else
-		return NULL;
+        return nullptr;
 }
 
 
@@ -872,7 +872,7 @@ void CEditorScene::pasteAt(const QPointF &anchor)
 {
 	const QClipboard *clipboard = QApplication::clipboard();
 	const QMimeData *mimeData = clipboard->mimeData();
-	if (mimeData == NULL)
+    if (!mimeData)
 		return;
 	if (!mimeData->hasFormat("qvge/selection"))
 		return;
@@ -1056,40 +1056,6 @@ QList<QGraphicsItem*> CEditorScene::transformableItems() const
 }
 
 
-void CEditorScene::calculateTransformRect()
-{
-	auto items = transformableItems();
-
-	if (items.isEmpty())
-	{
-		m_transformRect = QRectF();
-	}
-	else
-	{
-		QRectF r;
-		for (const auto item : items)
-		{
-			r |= item->sceneBoundingRect();
-		}
-
-		invalidate(r | m_transformRect);
-
-		m_transformRect = r;
-	}
-}
-
-
-void CEditorScene::drawTransformRect(QPainter *painter)
-{
-	if (m_transformRect.isValid())
-	{
-		painter->setBrush(Qt::transparent);
-		painter->setPen(QPen(Qt::red, 0, Qt::DashLine));
-		painter->drawRect(m_transformRect);
-	}
-}
-
-
 // callbacks
 
 void CEditorScene::onItemDestroyed(CItem *citem)
@@ -1113,7 +1079,10 @@ void CEditorScene::onSelectionChanged()
 	actions()->copyAction->setEnabled(selectionCount > 0);
 	actions()->delAction->setEnabled(selectionCount > 0);
 
-	calculateTransformRect();
+	if (m_editController)
+	{
+		m_editController->onSelectionChanged(*this);
+	}
 }
 
 
@@ -1186,8 +1155,9 @@ void CEditorScene::drawForeground(QPainter *painter, const QRectF &r)
 	// drop label update flag
 	m_labelsUpdate = false;
 
-	// draw transformer
-	//drawTransformRect(painter);
+	// draw transformer etc
+	if (m_editController)
+		m_editController->draw(*this, painter, r);
 }
 
 
@@ -1275,6 +1245,18 @@ void CEditorScene::needUpdate()
 
 void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+	if (m_editController)
+	{
+		if (m_editController->onMousePressed(*this, mouseEvent))
+		{
+			mouseEvent->setAccepted(true);
+			return;
+		}
+		else
+			mouseEvent->setAccepted(false);
+	}
+
+	// check RMB
 	if (mouseEvent->button() == Qt::RightButton)
 	{	
 		onRightButtonPressed(mouseEvent);
@@ -1341,9 +1323,23 @@ void CEditorScene::onRightButtonPressed(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+	if (m_editController)
+	{
+		if (m_editController->onMouseMove(*this, mouseEvent))
+		{
+			mouseEvent->setAccepted(true);
+			return;
+		}
+		else
+			mouseEvent->setAccepted(false);
+	}
+
+
+	// store the last position
 	m_mousePos = mouseEvent->scenePos();
 
 	bool isDragging = (mouseEvent->buttons() & Qt::LeftButton);
+
 
 	if (m_doubleClick)
 	{
@@ -1393,6 +1389,11 @@ void CEditorScene::startDrag(QGraphicsItem* dragItem)
 
 void CEditorScene::processDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem)
 {
+	if (m_editController)
+	{
+		m_editController->onDragItem(*this, mouseEvent, dragItem);
+	}
+
 	QPointF d = mouseEvent->scenePos() - mouseEvent->lastScenePos();	// delta pos
 
 	if (m_startDragItem)
@@ -1547,6 +1548,17 @@ void CEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+	if (m_editController)
+	{
+		if (m_editController->onMouseReleased(*this, mouseEvent))
+		{
+			mouseEvent->setAccepted(true);
+			return;
+		}
+		else
+			mouseEvent->setAccepted(false);
+	}
+
 	QGraphicsItem* prevGrabber = m_draggedItem;
 
 	Super::mouseReleaseEvent(mouseEvent);
@@ -1628,9 +1640,6 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 
 	m_startDragItem = NULL;
 	m_dragInProgress = false;
-
-	// transform resume
-	calculateTransformRect();
 }
 
 
@@ -1681,12 +1690,9 @@ void CEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIt
 
 void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* clickedItem)
 {
-	// emit signals
-	Q_EMIT sceneDoubleClicked(mouseEvent, clickedItem);
-
 	// clicked on empty space?
-	if (!clickedItem)
-		return;
+	//if (!clickedItem)
+	//	return;
 
 	// else check clicked item...
 	if (CItem *item = dynamic_cast<CItem*>(clickedItem))
@@ -1694,6 +1700,9 @@ void CEditorScene::onLeftDoubleClick(QGraphicsSceneMouseEvent* mouseEvent, QGrap
 		onActionEditLabel(item);
 		//item->onDoubleClick(mouseEvent);
 	}
+
+	// emit signals
+	Q_EMIT sceneDoubleClicked(mouseEvent, clickedItem);
 }
 
 
@@ -1704,11 +1713,8 @@ bool CEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const QPoin
 		if (!item->isEnabled())
 			return false;
 
-		if (!item->flags() & item->ItemIsMovable)
+        if (!(item->flags() & item->ItemIsMovable))
 			return false;
-
-		// transform reset
-		m_transformRect = QRectF();
 
 		if (CItem *citem = dynamic_cast<CItem*>(item))
 		{
@@ -1757,7 +1763,7 @@ bool CEditorScene::onDoubleClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const
 		if (!item->isEnabled())
 			return false;
 
-		if (!item->flags() & item->ItemIsMovable)
+        if (!(item->flags() & item->ItemIsMovable))
 			return false;
 
 		CItem *citem = dynamic_cast<CItem*>(item);
@@ -1877,7 +1883,7 @@ QGraphicsItem* CEditorScene::getItemAt(const QPointF& pos) const
 	QGraphicsItem *hoverItem = itemAt(pos, QTransform());
 	
 	// if label: return parent instead
-	if (dynamic_cast<QGraphicsSimpleTextItem*>(hoverItem) != NULL)
+    if (dynamic_cast<QGraphicsSimpleTextItem*>(hoverItem))
 	{
 		return hoverItem->parentItem();
 	}
@@ -1893,6 +1899,9 @@ QGraphicsView* CEditorScene::getCurrentView()
 		if (view->underMouse() || view->hasFocus()) 
 			return view;
 	}
+
+	if (views().count() == 1)
+		return views().first();
 
 	return nullptr;
 }
@@ -2167,7 +2176,7 @@ CEditorSceneActions* CEditorScene::actions()
 
 QObject* CEditorScene::getActions()
 {
-	if (m_actions == NULL)
+    if (m_actions == nullptr)
 		m_actions = createActions();
 
 	return m_actions;
@@ -2179,3 +2188,28 @@ QObject* CEditorScene::createActions()
 	return new CEditorSceneActions(this);
 }
 
+
+// edit extenders
+
+void CEditorScene::startTransform(bool on)
+{
+	if (on)
+		setSceneEditController(&m_pimpl->m_transformRect);
+	else
+		setSceneEditController(nullptr);
+}
+
+
+void CEditorScene::setSceneEditController(ISceneEditController *controller)
+{
+	if (m_editController != controller)
+	{
+		if (m_editController)
+			m_editController->onDeactivated(*this);
+
+		m_editController = controller;
+
+		if (m_editController)
+			m_editController->onActivated(*this);
+	}
+}

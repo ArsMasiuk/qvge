@@ -51,9 +51,7 @@ public:
 	virtual void copyDataFrom(CItem* from);
 
 	virtual QSizeF getSize() const		{ return rect().size(); }
-	virtual void resize(float size)		{ setRect(-size / 2, -size / 2, size, size); }
-	virtual void resize(float w, float h) { setRect(-w / 2, -h / 2, w, h); }
-	virtual void resize(const QSizeF& size) { resize(size.width(), size.height()); }
+	virtual void setSize(float w, float h);
 
 	// attributes
 	virtual bool hasLocalAttribute(const QByteArray& attrId) const;
@@ -137,6 +135,10 @@ protected:
 private:
 	void recalculateShape();
 	void updateConnections();
+
+	void resize(float size)			{ setRect(-size / 2, -size / 2, size, size); }
+	void resize(float w, float h)	{ setRect(-w / 2, -h / 2, w, h); }
+	void resize(const QSizeF& size) { resize(size.width(), size.height()); }
 
 protected:
 	QSet<CEdge*> m_connections;

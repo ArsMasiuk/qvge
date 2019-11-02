@@ -18,6 +18,7 @@
         <file alias="Node-Hexagon">Icons/Node-Hexagon.png</file>
         <file alias="Mode-AddNodes">Icons/Mode-AddNodes.png</file>
         <file alias="Mode-Select">Icons/Mode-Select.png</file>
+        <file alias="Mode-Transform">Icons/Mode-Transform.png</file>
         <file alias="Copy">Icons/edit-copy.png</file>
         <file alias="Cut">Icons/edit-cut.png</file>
         <file alias="Paste">Icons/edit-paste.png</file>
@@ -29,6 +30,7 @@
         <file alias="ZoomIn">Icons/zoom-in.png</file>
         <file alias="ZoomReset">Icons/zoom-original.png</file>
         <file alias="ZoomOut">Icons/zoom-out.png</file>
+        <file alias="ZoomFitBack">Icons/zoom-previous.png</file>
         <file alias="Delete">Icons/edit-delete.png</file>
         <file alias="Label">Icons/text-label.png</file>
         <file alias="Graph">Icons/Graph.png</file>

@@ -10,6 +10,7 @@
 
 #include <qvgeio/CGraphBase.h>
 
+#include <QGraphicsView>
 #include <QGraphicsSceneMouseEvent>
 #include <QColorDialog> 
 #include <QKeyEvent>
@@ -281,6 +282,24 @@ void CNodeEditorScene::setEditMode(EditMode mode)
 	{
 		m_editMode = mode;
 
+		switch (m_editMode)
+		{
+		case EM_Transform:
+			getCurrentView()->setDragMode(QGraphicsView::RubberBandDrag);
+			startTransform(true);
+			break;
+
+		case EM_AddNodes:
+			getCurrentView()->setDragMode(QGraphicsView::NoDrag);
+			startTransform(false);
+			break;
+
+		default:
+			getCurrentView()->setDragMode(QGraphicsView::RubberBandDrag);
+			startTransform(false);
+			break;
+		}
+
 		Q_EMIT editModeChanged(m_editMode);
 	}
 }
@@ -288,6 +307,9 @@ void CNodeEditorScene::setEditMode(EditMode mode)
 
 bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 {
+	if (m_editMode == EM_Transform)
+		return false;
+
 	if (QGraphicsItem* item = getItemAt(pos))
 	{
 		if (!item->isEnabled())
@@ -346,7 +368,7 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 
     // auto select created items
     m_startNode->setSelected(false);
-    //m_connection->setSelected(true);
+    m_connection->setSelected(true);
     m_endNode->setSelected(true);
 
 	return true;
@@ -504,6 +526,43 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
+	bool isCtrl = (keyEvent->modifiers() == Qt::ControlModifier);
+	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
+	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
+
+
+	// Ctrl+Up/Down; alter size by 10%
+	if (keyEvent->key() == Qt::Key_Up && isCtrl)
+	{
+		auto &nodes = getSelectedNodes();
+		for (auto &node : nodes)
+		{
+			node->setAttribute(attr_size, node->getSize() * 1.1);
+		}
+
+		addUndoState();
+
+		keyEvent->accept();
+		return;
+	}
+
+
+	if (keyEvent->key() == Qt::Key_Down && isCtrl)
+	{
+		auto &nodes = getSelectedNodes();
+		for (auto &node : nodes)
+		{
+			node->setAttribute(attr_size, node->getSize() / 1.1);
+		}
+
+		addUndoState();
+
+		keyEvent->accept();
+		return;
+	}
+
+
+	// cancel label edit
 	if (keyEvent->key() == Qt::Key_Escape)
 	{
 		cancel();
@@ -538,7 +597,7 @@ bool CNodeEditorScene::onClickDrag(QGraphicsSceneMouseEvent *mouseEvent, const Q
 	{
 		if (startNewConnection(clickPos))
 		{
-			setEditMode(EM_Default);
+			//setEditMode(EM_Default);
 			return true;
 		}
 	}
@@ -640,7 +699,7 @@ void CNodeEditorScene::onLeftClick(QGraphicsSceneMouseEvent* mouseEvent, QGraphi
 		if (!clickedItem)
 		{
 			onLeftDoubleClick(mouseEvent, clickedItem);
-			setEditMode(EM_Default);
+			//setEditMode(EM_Default);
 			return;
 		}
 	}
@@ -779,19 +838,34 @@ QList<QGraphicsItem*> CNodeEditorScene::transformableItems() const
 
 bool CNodeEditorScene::doUpdateCursorState(Qt::KeyboardModifiers keys, Qt::MouseButtons buttons, QGraphicsItem *hoverItem)
 {
-	// handled by super?
-	if (Super::doUpdateCursorState(keys, buttons, hoverItem))
-		return true;
-
+	// port?
 	if (CNodePort *portItem = dynamic_cast<CNodePort*>(hoverItem))
 	{
 		if (portItem->isEnabled())
 		{
-			setSceneCursor(Qt::UpArrowCursor);
+			setSceneCursor(Qt::CrossCursor);
 			setInfoStatus(SIS_Hover_Port);
 			return true;
 		}
 	}
+
+	// hover item?
+	if (m_editMode == EM_AddNodes)
+	{
+		if (hoverItem)
+		{
+			if (hoverItem->isEnabled())
+			{
+				setSceneCursor(Qt::CrossCursor);
+				setInfoStatus(SIS_Hover);
+				return true;
+			}
+		}
+	}
+
+	// handled by super?
+	if (Super::doUpdateCursorState(keys, buttons, hoverItem))
+		return true;
 
 	// still not handled
 	return false;

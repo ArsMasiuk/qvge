@@ -42,36 +42,17 @@
 #ifndef QTPROPERTYBROWSER_H
 #define QTPROPERTYBROWSER_H
 
-#include <QWidget>
-#include <QSet>
-#include <QLineEdit>
-
-#if QT_VERSION >= 0x040400
-QT_BEGIN_NAMESPACE
-#endif
-
-#if defined(Q_OS_WIN)
-#  if !defined(QT_QTPROPERTYBROWSER_EXPORT) && !defined(QT_QTPROPERTYBROWSER_IMPORT)
-#    define QT_QTPROPERTYBROWSER_EXPORT
-#  elif defined(QT_QTPROPERTYBROWSER_IMPORT)
-#    if defined(QT_QTPROPERTYBROWSER_EXPORT)
-#      undef QT_QTPROPERTYBROWSER_EXPORT
-#    endif
-#    define QT_QTPROPERTYBROWSER_EXPORT __declspec(dllimport)
-#  elif defined(QT_QTPROPERTYBROWSER_EXPORT)
-#    undef QT_QTPROPERTYBROWSER_EXPORT
-#    define QT_QTPROPERTYBROWSER_EXPORT __declspec(dllexport)
-#  endif
-#else
-#  define QT_QTPROPERTYBROWSER_EXPORT
-#endif
+#include <QtWidgets/QLineEdit>
+#include <QtCore/QSet>
 
 typedef QLineEdit::EchoMode EchoMode;
+
+QT_BEGIN_NAMESPACE
 
 class QtAbstractPropertyManager;
 class QtPropertyPrivate;
 
-class QT_QTPROPERTYBROWSER_EXPORT QtProperty
+class QtProperty
 {
 public:
     virtual ~QtProperty();
@@ -112,10 +93,11 @@ private:
 
 class QtAbstractPropertyManagerPrivate;
 
-class QT_QTPROPERTYBROWSER_EXPORT QtAbstractPropertyManager : public QObject
+class QtAbstractPropertyManager : public QObject
 {
     Q_OBJECT
 public:
+
     explicit QtAbstractPropertyManager(QObject *parent = 0);
     ~QtAbstractPropertyManager();
 
@@ -123,14 +105,13 @@ public:
     void clear() const;
 
     QtProperty *addProperty(const QString &name = QString());
-
 Q_SIGNALS:
+
     void propertyInserted(QtProperty *property,
                 QtProperty *parent, QtProperty *after);
     void propertyChanged(QtProperty *property);
     void propertyRemoved(QtProperty *property, QtProperty *parent);
     void propertyDestroyed(QtProperty *property);
-
 protected:
     virtual bool hasValue(const QtProperty *property) const;
     virtual QIcon valueIcon(const QtProperty *property) const;
@@ -140,7 +121,6 @@ protected:
     virtual void initializeProperty(QtProperty *property) = 0;
     virtual void uninitializeProperty(QtProperty *property);
     virtual QtProperty *createProperty();
-
 private:
     friend class QtProperty;
     QtAbstractPropertyManagerPrivate *d_ptr;
@@ -148,7 +128,7 @@ private:
     Q_DISABLE_COPY(QtAbstractPropertyManager)
 };
 
-class QT_QTPROPERTYBROWSER_EXPORT QtAbstractEditorFactoryBase : public QObject
+class QtAbstractEditorFactoryBase : public QObject
 {
     Q_OBJECT
 public:
@@ -250,7 +230,7 @@ private:
 class QtAbstractPropertyBrowser;
 class QtBrowserItemPrivate;
 
-class QT_QTPROPERTYBROWSER_EXPORT QtBrowserItem
+class QtBrowserItem
 {
 public:
     QtProperty *property() const;
@@ -266,7 +246,7 @@ private:
 
 class QtAbstractPropertyBrowserPrivate;
 
-class QT_QTPROPERTYBROWSER_EXPORT QtAbstractPropertyBrowser : public QWidget
+class QtAbstractPropertyBrowser : public QWidget
 {
     Q_OBJECT
 public:
@@ -299,19 +279,21 @@ Q_SIGNALS:
     void currentItemChanged(QtBrowserItem *);
 
 public Q_SLOTS:
+
     QtBrowserItem *addProperty(QtProperty *property);
     QtBrowserItem *insertProperty(QtProperty *property, QtProperty *afterProperty);
     void removeProperty(QtProperty *property);
 
 protected:
+
     virtual void itemInserted(QtBrowserItem *item, QtBrowserItem *afterItem) = 0;
     virtual void itemRemoved(QtBrowserItem *item) = 0;
     // can be tooltip, statustip, whatsthis, name, icon, text.
     virtual void itemChanged(QtBrowserItem *item) = 0;
 
     virtual QWidget *createEditor(QtProperty *property, QWidget *parent);
-
 private:
+
     bool addFactory(QtAbstractPropertyManager *abstractManager,
                 QtAbstractEditorFactoryBase *abstractFactory);
 
@@ -324,10 +306,9 @@ private:
                             QtProperty *))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
     Q_PRIVATE_SLOT(d_func(), void slotPropertyDataChanged(QtProperty *))
+
 };
 
-#if QT_VERSION >= 0x040400
 QT_END_NAMESPACE
-#endif
 
 #endif // QTPROPERTYBROWSER_H

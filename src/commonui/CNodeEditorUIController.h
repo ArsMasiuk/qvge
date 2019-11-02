@@ -59,6 +59,7 @@ private Q_SLOTS:
 	void exportFile();
 	void exportPDF();
 	void exportDOT();
+	bool importCSV(const QString &fileName, QString* lastError);
 
 	void doBackup();
 
@@ -127,7 +128,7 @@ private:
 	QActionGroup *m_editModesGroup;
 	QAction *modeDefaultAction;
 	QAction *modeNodesAction;
-	QAction *modeEdgesAction;
+	QAction *modeTransformAction;
 
 	QAction *zoomAction;
 	QAction *unzoomAction;
@@ -135,6 +136,7 @@ private:
 	QAction *resetZoomAction2;
 	QAction *fitZoomAction;
 	QAction *fitZoomSelectedAction;
+	QAction *fitZoomBackAction;
 
     QAction *gridAction;
     QAction *gridSnapAction;
@@ -158,6 +160,7 @@ private:
 	class CNodeEdgePropertiesUI *m_propertiesPanel;
 	class CCommutationTable *m_connectionsPanel;
 	class CClassAttributesEditorUI *m_defaultsPanel;
+	class CQuickHelpUI *m_quickHelpPanel;
 
 	class CSearchDialog *m_searchDialog;
 	class CDOTExportDialog *m_dotDialog;

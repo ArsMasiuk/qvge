@@ -1,12 +1,8 @@
 include(../common.pri)
-greaterThan(QT_MAJOR_VERSION, 4): QT *= widgets
+
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
-qtpropertybrowser-uselib:!qtpropertybrowser-buildlib {
-    LIBS += -L$$QTPROPERTYBROWSER_LIBDIR -l$$QTPROPERTYBROWSER_LIBNAME
-} else {
-    DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
     SOURCES += $$PWD/qtpropertybrowser.cpp \
             $$PWD/qtpropertymanager.cpp \
             $$PWD/qteditorfactory.cpp \
@@ -26,9 +22,3 @@ qtpropertybrowser-uselib:!qtpropertybrowser-buildlib {
             $$PWD/qtpropertybrowserutils_p.h \
 			$$PWD/lineedit.h
     RESOURCES += $$PWD/qtpropertybrowser.qrc
-}
-
-win32 {
-    contains(TEMPLATE, lib):contains(CONFIG, shared):DEFINES += QT_QTPROPERTYBROWSER_EXPORT
-    else:qtpropertybrowser-uselib:DEFINES += QT_QTPROPERTYBROWSER_IMPORT
-}

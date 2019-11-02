@@ -50,8 +50,9 @@ public:
 	QList<CDocument> getRegisteredDocumentTypes() const { return m_docTypes.values(); }
 	QStringList getRecentFilesList() const;
 
-	QAction* getFileExportAction() { return m_exportDocument; }
 	QMenu* getFileMenu() { return m_fileMenu; }
+	QMenu* getHelpMenu() { return m_helpMenu; }
+	QAction* getFileExportAction() { return m_exportDocument; }
 	QAction* getWindowMenuAction() { return m_windowsMenuAction; }
 	QString getCurrentFileName() const { return m_currentFileName; }
 
@@ -135,6 +136,8 @@ protected:
     QMenu *m_fileMenu;
     QMenu *m_newMenu;
 	QMenu *m_recentFilesMenu;
+	QMenu *m_helpMenu;
+
     QAction *m_newDocument;
     QAction *m_openDocument;
     QAction *m_saveDocument;

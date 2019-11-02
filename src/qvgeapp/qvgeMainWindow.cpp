@@ -180,11 +180,12 @@ QString qvgeMainWindow::getAboutText() const
 			"<br>It comes without warranty of any kind. Use it on your own risk."
 			"<p>&copy; 2016-2019 Ars L. Masiuk"
 			"<hr>"
-			"<p>Credits:"
+			"<p><i>Credits:</i>"
 			"<br>Qt framework &copy; The Qt Company Ltd"
-			"<br>Qt property browser framework &copy; Digia PLC"
+			"<br>Qt property browser framework &copy; Digia PLC &copy; The Qt Company Ltd"
 			"<br>QSint widgets library &copy; Sintegrial Technologies"
 			"<br>OGDF &copy; OREAS GmbH and others"
+			"<br>read_proc &copy; Daniel Knuettel"
 		);
 }
 

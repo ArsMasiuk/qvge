@@ -1,3 +1,17 @@
+QVGE 0.5.4
+-------------------------------------------------------------------------------
+- added shortcuts for quick node resizing (Ctrl+Up, Ctrl+Down)
+- added mini help panel (#15)
+- added "restore zoom after fit" feature (#65)
+- added nodes transformation mode (#24)
+- auto scroll during drag implemented (#56)
+
+- fixed crash after editing a node port
+- fixed drawing direction arrows when nodes are too close
+- fixed some edge drawing issues
+- some labels drawing optimizations
+
+
 QVGE 0.5.3
 -------------------------------------------------------------------------------
 - default paste behavior modified: items will be preferably pasted into a visible scene's area

@@ -21,7 +21,8 @@ enum EditMode
 {
 	EM_Default,
 	EM_AddNodes,
-	EM_AddEdges
+	EM_AddEdges,
+	EM_Transform
 };
 
 
@@ -63,6 +64,8 @@ public:
 
     // selections
     virtual void moveSelectedItemsBy(const QPointF& d);
+
+	virtual int getBoundingMargin() const { return 5; }
 
     const QList<CNode*>& getSelectedNodes() const;
     const QList<CEdge*>& getSelectedEdges() const;

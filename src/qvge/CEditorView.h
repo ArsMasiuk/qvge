@@ -12,6 +12,7 @@ It can be used freely, maintaining the information above.
 
 #include <QGraphicsView>
 #include <QPaintEvent>
+#include <QTimer>
 
 class CEditorScene;
 
@@ -36,8 +37,12 @@ public:
 	// factor if relative % value to zoom by (2 = 2x from current etc.)
 	void zoomBy(double factor);
 
+	double getZoomBeforeFit() const { return m_zoomBeforeFit; }
 	void fitToView();
 	void fitSelectedToView();
+	void zoomBack();
+
+	QPointF getCenter() const;
 
 	// reimp
 	virtual void mousePressEvent(QMouseEvent *e);
@@ -57,17 +62,20 @@ Q_SIGNALS:
 
 private Q_SLOTS:
 	void restoreContextMenu();
+	void onScrollTimeout();
 
 private:
-	void onLeftClickMouseMove(QMouseEvent *e);
-
+	DragMode m_dragModeTmp;
 	Qt::ContextMenuPolicy m_menuModeTmp;
 	bool m_interactiveTmp = false;
 	bool m_moved = false;
 	QPoint m_pos;
 
 	double m_currentZoom;
+	double m_zoomBeforeFit;
+	QPointF m_dxyBeforeFit;
 
+	QTimer m_scrollTimer;
 	float m_scrollThreshold = 30;
 };
 

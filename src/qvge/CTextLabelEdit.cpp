@@ -13,6 +13,8 @@ It can be used freely, maintaining the information above.
 
 #include <QTextCursor>
 #include <QTextDocument>
+#include <QEvent>
+#include <QKeyEvent>
 
 
 CTextLabelEdit::CTextLabelEdit()

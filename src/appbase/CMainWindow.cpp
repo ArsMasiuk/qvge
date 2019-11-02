@@ -898,11 +898,11 @@ void CMainWindow::onWindowsMenuAction(QAction *windowAction)
 
 void CMainWindow::createHelpMenu()
 {
-	auto helpMenu = new QMenu(tr("&Help"));
-	menuBar()->addMenu(helpMenu);
+	m_helpMenu = new QMenu(tr("&Help"));
+	menuBar()->addMenu(m_helpMenu);
 
-	helpMenu->addAction(tr("About &Qt..."), qApp, SLOT(aboutQt()));
-	helpMenu->addAction(tr("&About..."), this, SLOT(onAboutApplication()));
+	m_helpMenu->addAction(tr("About &Qt..."), qApp, SLOT(aboutQt()));
+	m_helpMenu->addAction(tr("&About..."), this, SLOT(onAboutApplication()));
 }
 
 

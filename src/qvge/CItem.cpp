@@ -9,6 +9,7 @@ It can be used freely, maintaining the information above.
 
 
 #include "CItem.h"
+#include "CEditorSceneDefines.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QMenu>
@@ -138,6 +139,9 @@ QSet<QByteArray> CItem::getVisibleAttributeIds(int flags) const
 	if (flags == VF_ANY || flags == VF_TOOLTIP)
         result = getLocalAttributes().keys().toSet();
 
+	if (flags == VF_LABEL)
+		result += "label";
+
 	if (auto scene = getScene())
 	{
 		if (flags == VF_ANY || flags == VF_TOOLTIP)
@@ -249,17 +253,23 @@ void CItem::updateLabelContent()
 		}
 	}
 
+	// text
 	setLabelText(labelToShow);
 
+
     // label attrs
-    QFont f(getAttribute(QByteArrayLiteral("label.font")).value<QFont>());
+	m_labelItem->setBrush(getAttribute(attr_label_color).value<QColor>());
+	
+	QFont f(getAttribute(attr_label_font).value<QFont>());
 
 	if (!scene->isFontAntialiased())
 		f.setStyleStrategy(QFont::NoAntialias);
 
     m_labelItem->setFont(f);
 
-	m_labelItem->setBrush(getAttribute(QByteArrayLiteral("label.color")).value<QColor>());
+
+	// update exlicitly
+	m_labelItem->update();
 }
 
 
@@ -342,10 +352,16 @@ void CItem::onItemSelected(bool state)
 void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 {
 	// update tooltip
-	QString tooltipToShow("<table columns=2>");
-
 	auto idsToShow = getVisibleAttributeIds(CItem::VF_TOOLTIP).toList();
+	if (idsToShow.isEmpty())
+	{
+		sceneItem->setToolTip("");
+		return;
+	}
+
 	qSort(idsToShow);
+
+	QString tooltipToShow("<table columns=2>");
 
 	for (const QByteArray& id : idsToShow)
 	{

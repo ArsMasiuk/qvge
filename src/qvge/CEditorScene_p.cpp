@@ -9,13 +9,12 @@ It can be used freely, maintaining the information above.
 
 #pragma once
 
-#include <QMenu>
-#include <QList>
-#include <QGraphicsItem>
+#include "CEditorScene_p.h"
+#include "CEditorScene.h"
 
 
-class IContextMenuProvider
+CEditorScene_p::CEditorScene_p(class CEditorScene *scene): 
+	m_scene(scene),
+	m_transformRect()
 {
-public:
-	virtual bool populateMenu(QMenu& menu, const QList<QGraphicsItem*>& selectedItems) = 0;
-};
+}
