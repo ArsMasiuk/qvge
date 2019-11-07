@@ -30,7 +30,7 @@ int CPlatformServices::GetPlatformBits()
 }
 
 
-#if defined (Q_OS_WIN32) || defined(Q_OS_CYGWIN)
+#if defined (Q_OS_WIN32) && not defined(Q_OS_CYGWIN)
 
 #include <Windows.h>
 #include <Psapi.h>
@@ -108,7 +108,7 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 
 #endif // windows
 
-#if (defined(Q_OS_LINUX) || defined (Q_OS_UNIX)) && not defined (Q_OS_CYGWIN)
+#if defined(Q_OS_LINUX) || defined (Q_OS_UNIX) || defined (Q_OS_CYGWIN)
 #include <QX11Info>
 
 #include <X11/Xlib.h>
