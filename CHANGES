@@ -1,3 +1,14 @@
+QVGE 0.6 ** Just cloned from 0.5.4 **
+-------------------------------------------------------------------------------
+- support of Qt 5.13
+- support of MSVC 2017
+- support of MinGW 7
+
+- fixed project issue when building on MS Windows having Cygwin installed 
+- fixed potential crash if wrong grid size was set/read
+- fixed interception of direct edges with elliptical nodes
+
+
 QVGE 0.5.4
 -------------------------------------------------------------------------------
 - added shortcuts for quick node resizing (Ctrl+Up, Ctrl+Down)

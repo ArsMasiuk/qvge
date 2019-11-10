@@ -30,7 +30,7 @@ int CPlatformServices::GetPlatformBits()
 }
 
 
-#if defined (Q_OS_WIN32) && not defined(Q_OS_CYGWIN)
+#if defined (Q_OS_WIN32) && !defined(Q_OS_CYGWIN)
 
 #include <Windows.h>
 #include <Psapi.h>
