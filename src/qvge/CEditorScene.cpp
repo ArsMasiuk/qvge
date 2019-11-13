@@ -1125,7 +1125,7 @@ void CEditorScene::drawBackground(QPainter *painter, const QRectF &)
 	painter->drawRect(sceneRect());
 
 	// draw grid if needed
-	if (m_gridSize < 0 || !m_gridEnabled)
+	if (m_gridSize <= 0 || !m_gridEnabled)
 		return;
 
 	painter->setPen(m_gridPen);

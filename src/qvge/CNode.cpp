@@ -580,12 +580,24 @@ QPointF CNode::getIntersectionPoint(const QLineF& line, const QByteArray& portId
 		}
 	}
 
-	// circle 
+	// circular shape
 	if (m_shapeCache.isEmpty())
 	{
-		auto shift = qMax(rect().width() / 2, rect().height() / 2);
-		auto angle = qDegreesToRadians(line.angle());
-		return pos() + QPointF(shift * qCos(angle), - shift * qSin(angle));
+		// circle/ring
+		if (rect().height() == rect().width())
+		{
+			auto shift = rect().width() / 2;
+			auto angle = qDegreesToRadians(line.angle());
+			return pos() + QPointF(shift * qCos(angle), -shift * qSin(angle));
+		}
+
+		// ellipse
+		{
+			QRectF r(rect());
+			r.moveCenter(pos());
+			QPolygonF p(r);
+			return CUtils::closestIntersection(line, p);
+		}
 	}
 
 	// polygon (must be cashed)

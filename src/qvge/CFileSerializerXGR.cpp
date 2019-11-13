@@ -58,6 +58,10 @@ bool CFileSerializerXGR::load(const QString& fileName, CEditorScene& scene, QStr
     scene.setItemFactoryFilter(&s_dpseRecoder);
 
 	QDataStream ds(&openFile);
+#if (QT_VERSION >= 0x050a00)
+	ds.setVersion(QDataStream::Qt_5_10);
+#endif
+
 	scene.restoreFrom(ds, true);
 
     scene.setItemFactoryFilter(nullptr);
@@ -74,6 +78,10 @@ bool CFileSerializerXGR::save(const QString& fileName, CEditorScene& scene, QStr
 	if (saveFile.open(QFile::WriteOnly))
 	{
 		QDataStream ds(&saveFile);
+#if (QT_VERSION >= 0x050a00)
+		ds.setVersion(QDataStream::Qt_5_10);
+#endif
+
 		scene.storeTo(ds, true);
 
 		return true;
