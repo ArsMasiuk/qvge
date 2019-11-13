@@ -34,6 +34,5 @@ INCLUDEPATH += $$PWD
 
 
 # install
-target.path = /usr/local/bin
 INSTALLS += target
 

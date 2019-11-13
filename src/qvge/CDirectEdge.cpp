@@ -200,7 +200,12 @@ void CDirectEdge::onParentGeometryChanged()
 		if (m_bendFactor == 0)
 		{
 			m_shapeCachePath.lineTo(p2);
+
+#if QT_VERSION < 0x050a00
             m_controlPoint = (line().p1() + line().p2()) / 2;
+#else
+			m_controlPoint = line().center();
+#endif
 		}
 		else
 		{

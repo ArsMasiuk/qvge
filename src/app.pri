@@ -29,3 +29,13 @@ win32{
 unix{
     LIBS += -lQt5X11Extras -lX11
 }
+
+
+# install
+unix{
+    isEmpty(PREFIX) {
+        PREFIX = /usr/local/bin
+    }
+
+    target.path = $$PREFIX/
+}

@@ -1,4 +1,4 @@
-CONFIG += USE_OGDF
+#CONFIG += USE_OGDF
 USE_OGDF{
     DEFINES += USE_OGDF
     message(USE_OGDF!)
@@ -7,7 +7,7 @@ USE_OGDF{
 
 # compiler stuff
 win32-msvc*{
-  QMAKE_CXXFLAGS += /MP
+    QMAKE_CXXFLAGS += /MP
 }
 
 
@@ -18,10 +18,10 @@ CONFIG += c++11
 
 
 CONFIG(debug, debug|release){
-        LIBS += -L$$OUT_PWD/../lib.debug
+    LIBS += -L$$OUT_PWD/../lib.debug
 }
 else{
-        LIBS += -L$$OUT_PWD/../lib
+    LIBS += -L$$OUT_PWD/../lib
 }
 
 
