@@ -7,8 +7,6 @@ QVGE - Qt Visual Graph Editor
 It can be used freely, maintaining the information above.
 */
 
-#pragma once
-
 #include "CEditorScene_p.h"
 #include "CEditorScene.h"
 
