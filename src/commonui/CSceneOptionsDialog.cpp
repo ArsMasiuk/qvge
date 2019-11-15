@@ -23,6 +23,10 @@ CSceneOptionsDialog::CSceneOptionsDialog(QWidget *parent) :
 
     ui->BackgroundColor->setColorScheme(QSint::OpenOfficeColors());
     ui->GridColor->setColorScheme(QSint::OpenOfficeColors());
+
+#ifndef USE_OGDF
+	ui->StartupGB->hide();
+#endif
 }
 
 CSceneOptionsDialog::~CSceneOptionsDialog()

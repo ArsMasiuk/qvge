@@ -410,7 +410,9 @@ void CNodeEditorUIController::createPanels()
 	// update help menu
 	QAction *quickHelpAction = quickHelpDock->toggleViewAction();
 	quickHelpAction->setShortcut(QKeySequence::HelpContents);
-	m_parent->getHelpMenu()->insertAction(nullptr, quickHelpAction);
+	m_parent->getHelpMenu()->insertAction(
+		m_parent->getHelpMenu()->actions().first(), 
+		quickHelpAction);
 }
 
 

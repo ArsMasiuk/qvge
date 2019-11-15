@@ -181,11 +181,14 @@ QString qvgeMainWindow::getAboutText() const
 			"<p>&copy; 2016-2019 Ars L. Masiuk"
 			"<hr>"
 			"<p><i>Credits:</i>"
-			"<br>Qt framework &copy; The Qt Company Ltd"
-			"<br>Qt property browser framework &copy; Digia PLC &copy; The Qt Company Ltd"
-			"<br>QSint widgets library &copy; Sintegrial Technologies"
-			"<br>OGDF &copy; OREAS GmbH and others"
-			"<br>read_proc &copy; Daniel Knuettel"
+			"<br>&nbsp; - Qt framework &copy; <i>The Qt Company Ltd</i>"
+			"<br>&nbsp; - Qt property browser framework &copy; <i>The Qt Company Ltd</i>"
+			"<br>&nbsp; - QSint widgets library &copy; <i>Sintegrial Technologies</i>"
+			"<br>&nbsp; - read_proc &copy; <i>Daniel Knuettel</i>"
+			"<br>&nbsp; - menu & toolbar graphics &copy; <i>Inkscape project</i>"
+#ifdef USE_OGDF
+			"<br>&nbsp; - OGDF &copy; <i>OGDF development team</i>"
+#endif
 		);
 }
 
