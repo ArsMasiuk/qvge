@@ -22,12 +22,10 @@ win32{
     LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
 }
 
-#cygwin*{
-#    LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
-#}
-
 unix{
-    LIBS += -lQt5X11Extras -lX11
+    !haiku{
+        LIBS += -lQt5X11Extras -lX11
+    }
 }
 
 

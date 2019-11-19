@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(commonui);
     Q_INIT_RESOURCE(appbase);
 	a.setWindowIcon(QIcon(":/Icons/AppIcon"));
+	a.setStyle("fusion");
 
 	qvgeMainWindow w;
 	w.init(QCoreApplication::arguments());

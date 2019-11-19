@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>355</width>
+    <width>419</width>
     <height>430</height>
    </rect>
   </property>
@@ -20,18 +20,34 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">/*
-QToolButton, QComboBox, QDoubleSpinBox, QSpinBox
+   <string notr="true">QToolButton
 {
-border: 1px solid #aaa;
-border-radius: 2px;
+border: 1px none;
+background: transparent;
 }
-*/
+
+QDoubleSpinBox, QSpinBox, QComboBox
+{
+border: 1px none;
+background: white;
+}
+
+
+QToolButton::menu-button 
+{
+background: transparent;
+}
 
 QToolButton:on
 {
 border: 1px solid #aaa;
 background: #bbb;
+}
+
+QToolButton:hover:!on, QSpinBox:hover, QDoubleSpinBox:hover, QComboBox:hover
+{
+border: 1px solid #aaa;
+background: #eee;
 }
 </string>
   </property>
@@ -52,6 +68,9 @@ background: #bbb;
     <widget class="QGroupBox" name="NodesBox">
      <property name="title">
       <string>Nodes (1)</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
@@ -116,6 +135,9 @@ background: #bbb;
           <property name="popupMode">
            <enum>QToolButton::MenuButtonPopup</enum>
           </property>
+          <property name="autoRaise">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -134,7 +156,7 @@ background: #bbb;
           </property>
           <property name="maximumSize">
            <size>
-            <width>16777215</width>
+            <width>60</width>
             <height>26</height>
            </size>
           </property>
@@ -189,6 +211,12 @@ background: #bbb;
            <size>
             <width>60</width>
             <height>26</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="statusTip">
@@ -318,6 +346,12 @@ background: #bbb;
             <height>26</height>
            </size>
           </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="statusTip">
            <string>Set stroke width of the selected nodes</string>
           </property>
@@ -380,8 +414,11 @@ background: #bbb;
         <property name="title">
          <string>Custom Attributes</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="flat">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -409,6 +446,9 @@ background: #bbb;
     <widget class="QGroupBox" name="EdgesBox">
      <property name="title">
       <string>Edges (1)</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -483,6 +523,12 @@ background: #bbb;
             <height>26</height>
            </size>
           </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="statusTip">
            <string>Set weight of the selected edges</string>
           </property>
@@ -554,8 +600,11 @@ background: #bbb;
         <property name="title">
          <string>Custom Attributes</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="flat">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -583,6 +632,9 @@ background: #bbb;
     <widget class="QGroupBox" name="LablesBox">
      <property name="title">
       <string>Labels</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -621,77 +673,6 @@ background: #bbb;
           </property>
           <property name="popupMode">
            <enum>QToolButton::MenuButtonPopup</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSint::QFontButton" name="LabelFont">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>70</width>
-            <height>28</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>28</height>
-           </size>
-          </property>
-          <property name="statusTip">
-           <string>Set font of the selected labels</string>
-          </property>
-          <property name="text">
-           <string>Aa1</string>
-          </property>
-          <property name="popupMode">
-           <enum>QToolButton::MenuButtonPopup</enum>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextOnly</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSint::SpinComboBox" name="LabelFontSize">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>60</width>
-            <height>26</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>26</height>
-           </size>
-          </property>
-          <property name="statusTip">
-           <string>Set font size of the selected labels</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="correctionMode">
-           <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>1000</number>
           </property>
          </widget>
         </item>
@@ -813,6 +794,77 @@ background: #bbb;
          </widget>
         </item>
         <item>
+         <widget class="QSint::SpinComboBox" name="LabelFontSize">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>26</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>26</height>
+           </size>
+          </property>
+          <property name="statusTip">
+           <string>Set font size of the selected labels</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="correctionMode">
+           <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSint::QFontButton" name="LabelFont">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>70</width>
+            <height>28</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>28</height>
+           </size>
+          </property>
+          <property name="statusTip">
+           <string>Set font of the selected labels</string>
+          </property>
+          <property name="text">
+           <string>Aa1</string>
+          </property>
+          <property name="popupMode">
+           <enum>QToolButton::MenuButtonPopup</enum>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextOnly</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -882,9 +934,6 @@ background: #bbb;
   <tabstop>EdgeAttrBox</tabstop>
   <tabstop>LabelColor</tabstop>
   <tabstop>LabelFont</tabstop>
-  <tabstop>LabelFontBold</tabstop>
-  <tabstop>LabelFontItalic</tabstop>
-  <tabstop>LabelFontUnderline</tabstop>
  </tabstops>
  <resources/>
  <connections>
