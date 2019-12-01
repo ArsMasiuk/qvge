@@ -27,7 +27,6 @@ class CNodeEditorScene;
 class CNodePort;
 class CEditorView;
 class IFileSerializer;
-class CDOTExportDialog;
 
 
 class CNodeEditorUIController : public QObject
@@ -36,7 +35,7 @@ class CNodeEditorUIController : public QObject
 
 public:
     CNodeEditorUIController(CMainWindow *parent);
-	~CNodeEditorUIController();
+	virtual ~CNodeEditorUIController();
 
 	void doReadSettings(QSettings& settings);
 	void doWriteSettings(QSettings& settings);
@@ -163,5 +162,7 @@ private:
 	class CQuickHelpUI *m_quickHelpPanel;
 
 	class CSearchDialog *m_searchDialog;
+
 	class CDOTExportDialog *m_dotDialog;
+	class CImageExportDialog *m_imageDialog;
 };

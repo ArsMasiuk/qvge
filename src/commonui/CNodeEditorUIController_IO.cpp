@@ -9,6 +9,7 @@ It can be used freely, maintaining the information above.
 
 #include <CNodeEditorUIController.h>
 #include <CDOTExportDialog.h>
+#include <CImageExportDialog.h>
 #include <CCSVImportDialog.h>
 #include <CExtListInputDialog.h>
 
@@ -71,7 +72,16 @@ bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
 
 void CNodeEditorUIController::exportFile()
 {
-    doExport(CImageExport());
+	m_imageDialog->setScene(*m_editorScene);
+	if (m_imageDialog->exec() == QDialog::Rejected)
+		return;
+
+	doExport(
+		CImageExport(
+			m_imageDialog->writeBackground(),
+			m_imageDialog->resolution()
+		)
+	);
 }
 
 

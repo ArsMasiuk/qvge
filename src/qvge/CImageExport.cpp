@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2017 Ars L.Masiuk(ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L.Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -84,12 +84,31 @@ bool CImageExport::save(const QString& fileName, CEditorScene& scene, QString* /
 	tempScene->crop();
 
 	QImage image(tempScene->sceneRect().size().toSize(), QImage::Format_ARGB32);
-	image.fill(Qt::white);
+	QRect targetRect;	// empty by default
 
+	// resolution
+	int old_dpi = image.physicalDpiX();
+	if (old_dpi <= 0)
+		old_dpi = 96;
+
+	if (m_resolution > 0 && old_dpi != m_resolution)
+	{
+		double coeff = (double)m_resolution / (double)old_dpi;
+		int dpm = m_resolution / 0.0254;
+		image.setDotsPerMeterX(dpm);
+		image.setDotsPerMeterY(dpm);
+
+		QSize newSize = image.size() * coeff;
+		image = image.scaled(newSize);
+
+		targetRect = QRect(0,0, newSize.width(), newSize.height());
+	}
+
+	image.fill(Qt::white);
 	QPainter painter(&image);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setRenderHint(QPainter::TextAntialiasing);
-	tempScene->render(&painter);
+	tempScene->render(&painter, targetRect);
 	painter.end();
 
 	delete tempScene;

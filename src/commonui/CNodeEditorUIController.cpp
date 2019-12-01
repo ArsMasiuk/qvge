@@ -18,7 +18,9 @@ It can be used freely, maintaining the information above.
 #include <CNodesFactorDialog.h>
 #include <CNodePortEditorDialog.h>
 #include <CSearchDialog.h>
+
 #include <CDOTExportDialog.h>
+#include <CImageExportDialog.h>
 
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
@@ -108,6 +110,7 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 
 	// export dialogs
 	m_dotDialog = new CDOTExportDialog(parent);
+	m_imageDialog = new CImageExportDialog(parent);
 
     // OGDF
 #ifdef USE_OGDF

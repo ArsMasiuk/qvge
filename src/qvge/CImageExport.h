@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2017 Ars L.Masiuk(ars.masiuk@gmail.com)
+(c) 2016-2019 Ars L.Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -17,6 +17,11 @@ It can be used freely, maintaining the information above.
 class CImageExport : public IFileSerializer
 {
 public:
+	CImageExport(bool writeBackground = true, int resolution = 0) :
+		m_writeBackground(writeBackground),
+		m_resolution(resolution)
+	{}
+
 	// reimp
 	virtual QString description() const {
 		return "Image Format";
@@ -41,4 +46,8 @@ public:
 	}
 
 	virtual bool save(const QString& fileName, CEditorScene& scene, QString* lastError = nullptr) const;
+
+private:
+	bool m_writeBackground;
+	int m_resolution;
 };
