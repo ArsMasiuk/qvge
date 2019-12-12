@@ -194,7 +194,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 
 
     // nodes
-    ui->NodesBox->setTitle(tr("Nodes (%1)").arg(nodes.count()));
+    ui->NodesBox->setTitle(tr("Nodes - %1").arg(nodes.count()));
 
     if (nodes.count())
     {
@@ -221,7 +221,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 
 
     // edges
-    ui->EdgesBox->setTitle(tr("Edges (%1)").arg(edges.count()));
+    ui->EdgesBox->setTitle(tr("Edges - %1").arg(edges.count()));
 
     if (edges.count())
     {

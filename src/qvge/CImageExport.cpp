@@ -62,12 +62,20 @@ QString CImageExport::filters() const
 				usedFormats << suffix;
 		}
 
+		// add known formats
+		for (auto it = formatNames.constBegin(); it != formatNames.constEnd(); ++it)
+		{
+			if (usedFormats.contains(it.key()))
+			{
+				usedFormats.remove(it.key());
+				filter += it.value() + ";;";
+			}
+		}
+
+		// add evtl. unlisted ones
 		for (auto format : usedFormats)
 		{
-			if (formatNames.contains(format))
-				filter += formatNames[format] + ";;";
-			else
-				filter += format + " (*." + format + ");;";
+			filter += format + " (*." + format + ");;";
 		}
 
 		filter.chop(2);
@@ -81,7 +89,8 @@ bool CImageExport::save(const QString& fileName, CEditorScene& scene, QString* /
 {
 	CEditorScene* tempScene = scene.clone();
 
-	tempScene->crop();
+	if (m_cutContent)
+		tempScene->crop();
 
 	QImage image(tempScene->sceneRect().size().toSize(), QImage::Format_ARGB32);
 	QRect targetRect;	// empty by default

@@ -27,6 +27,7 @@ CImageExportDialog::CImageExportDialog(QWidget *parent):
 		m_dpi = 96; // default
 
 	connect(ui->Resolution, &QComboBox::currentTextChanged, this, &CImageExportDialog::updateTargetSize);
+	connect(ui->CutToContent, &QCheckBox::stateChanged, this, &CImageExportDialog::updateTargetSize);
 }
 
 
@@ -35,12 +36,27 @@ CImageExportDialog::~CImageExportDialog()
 }
 
 
+void CImageExportDialog::doReadSettings(QSettings& settings)
+{
+	settings.beginGroup("ImageExport");
+	ui->Resolution->setCurrentText(settings.value("DPI", ui->Resolution->currentText()).toString());
+	ui->CutToContent->setChecked(settings.value("CutContent", ui->CutToContent->isChecked()).toBool());
+	settings.endGroup();
+}
+
+
+void CImageExportDialog::doWriteSettings(QSettings& settings)
+{
+	settings.beginGroup("ImageExport");
+	settings.setValue("DPI", ui->Resolution->currentText());
+	settings.setValue("CutContent", ui->CutToContent->isChecked());
+	settings.endGroup();
+}
+
+
 void CImageExportDialog::setScene(CEditorScene& scene)
 {
-	CEditorScene* tempScene = scene.clone();
-	tempScene->crop();
-	m_size = tempScene->sceneRect().size().toSize();
-	delete tempScene;
+	m_scene = &scene;
 
 	updateTargetSize();
 }
@@ -48,19 +64,25 @@ void CImageExportDialog::setScene(CEditorScene& scene)
 
 void CImageExportDialog::updateTargetSize()
 {
+	CEditorScene* tempScene = m_scene->clone();
+	if (cutToContent())
+		tempScene->crop();
+	QSize size = tempScene->sceneRect().size().toSize();
+	delete tempScene;
+
 	int res = resolution();
 	if (res <= 0)
 		res = m_dpi;
 
 	double coeff = (double)res / (double)m_dpi;
-	QSize newSize = m_size * coeff;
+	QSize newSize = size * coeff;
 	ui->ImageSize->setText(QString("%1 x %2").arg(newSize.width()).arg(newSize.height()));
 }
 
 
-bool CImageExportDialog::writeBackground() const
+bool CImageExportDialog::cutToContent() const
 {
-	return ui->WriteBackground->isChecked();
+	return ui->CutToContent->isChecked();
 }
 
 

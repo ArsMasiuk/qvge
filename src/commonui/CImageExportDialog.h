@@ -10,6 +10,7 @@ It can be used freely, maintaining the information above.
 */
 
 #include <QDialog>
+#include <QSettings>
 
 
 namespace Ui {
@@ -27,9 +28,12 @@ public:
 	CImageExportDialog(QWidget *parent = 0);
 	~CImageExportDialog();
 
+	void doReadSettings(QSettings& settings);
+	void doWriteSettings(QSettings& settings);
+
 	void setScene(CEditorScene& scene);
 
-	bool writeBackground() const;
+	bool cutToContent() const;
 	int resolution() const;
 
 private Q_SLOTS:
@@ -38,8 +42,7 @@ private Q_SLOTS:
 private:
 	Ui::CImageExportDialog *ui;
 
-	//const CNodeEditorScene* m_scene;
-	QSize m_size;
-	int m_dpi;
+	CEditorScene *m_scene = nullptr;
+	int m_dpi = 96;
 };
 

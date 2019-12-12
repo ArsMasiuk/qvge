@@ -37,6 +37,7 @@ public:
     CNodeEditorUIController(CMainWindow *parent);
 	virtual ~CNodeEditorUIController();
 
+	QSettings& getApplicationSettings() const;
 	void doReadSettings(QSettings& settings);
 	void doWriteSettings(QSettings& settings);
 
@@ -143,9 +144,6 @@ private:
 	QAction *m_actionShowNodeIds;
 	QAction *m_actionShowEdgeIds;
 
-
-	QString m_lastExportPath;
-
 	OptionsData m_optionsData;
 
 	QTimer m_backupTimer;
@@ -163,6 +161,10 @@ private:
 
 	class CSearchDialog *m_searchDialog;
 
+
+	// IO
 	class CDOTExportDialog *m_dotDialog;
 	class CImageExportDialog *m_imageDialog;
+
+	QString m_lastExportPath;
 };

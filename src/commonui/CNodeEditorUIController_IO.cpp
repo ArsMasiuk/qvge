@@ -73,15 +73,21 @@ bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
 void CNodeEditorUIController::exportFile()
 {
 	m_imageDialog->setScene(*m_editorScene);
+
+	auto& settings = getApplicationSettings();
+	m_imageDialog->doReadSettings(settings);
+
 	if (m_imageDialog->exec() == QDialog::Rejected)
 		return;
 
-	doExport(
+	if (!doExport(
 		CImageExport(
-			m_imageDialog->writeBackground(),
+			m_imageDialog->cutToContent(),
 			m_imageDialog->resolution()
-		)
-	);
+		))) 
+		return;
+
+	m_imageDialog->doWriteSettings(settings);
 }
 
 

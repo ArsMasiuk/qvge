@@ -17,8 +17,8 @@ It can be used freely, maintaining the information above.
 class CImageExport : public IFileSerializer
 {
 public:
-	CImageExport(bool writeBackground = true, int resolution = 0) :
-		m_writeBackground(writeBackground),
+	CImageExport(bool cutContent = true, int resolution = 0) :
+		m_cutContent(cutContent),
 		m_resolution(resolution)
 	{}
 
@@ -48,6 +48,6 @@ public:
 	virtual bool save(const QString& fileName, CEditorScene& scene, QString* lastError = nullptr) const;
 
 private:
-	bool m_writeBackground;
-	int m_resolution;
+	bool m_cutContent = true;
+	int m_resolution = 96;
 };

@@ -20,18 +20,24 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QToolButton
+   <string notr="true">QDoubleSpinBox, QSpinBox, QComboBox
+{
+border: 1px solid #aaa;
+background: white;
+}
+
+QSpinBox:hover, QDoubleSpinBox:hover, QComboBox:hover
+{
+border: 1px solid #00a;
+background: white;
+}
+
+
+QToolButton
 {
 border: 1px none;
 background: transparent;
 }
-
-QDoubleSpinBox, QSpinBox, QComboBox
-{
-border: 1px none;
-background: white;
-}
-
 
 QToolButton::menu-button 
 {
@@ -40,13 +46,13 @@ background: transparent;
 
 QToolButton:on
 {
-border: 1px solid #aaa;
+border: 1px solid #00a;
 background: #bbb;
 }
 
-QToolButton:hover:!on, QSpinBox:hover, QDoubleSpinBox:hover, QComboBox:hover
+QToolButton:hover:!on
 {
-border: 1px solid #aaa;
+border: 1px solid #00a;
 background: #eee;
 }
 </string>
@@ -412,10 +418,10 @@ background: #eee;
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Custom Attributes</string>
+         <string>Custom attributes</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -425,6 +431,9 @@ background: #eee;
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
           <number>0</number>
          </property>
          <property name="rightMargin">
@@ -598,10 +607,10 @@ background: #eee;
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Custom Attributes</string>
+         <string>Custom attributes</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -611,6 +620,9 @@ background: #eee;
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
           <number>0</number>
          </property>
          <property name="rightMargin">

@@ -634,6 +634,12 @@ void CNodeEditorUIController::onDocumentLoaded(const QString &fileName)
 
 // settings
 
+QSettings& CNodeEditorUIController::getApplicationSettings() const
+{
+	return m_parent->getApplicationSettings();
+}
+
+
 void CNodeEditorUIController::doReadSettings(QSettings& settings)
 {
 	// options
@@ -681,6 +687,12 @@ void CNodeEditorUIController::doWriteSettings(QSettings& settings)
 
 	settings.setValue("autoCreateGraphDialog", m_optionsData.newGraphDialogOnStart);
 	settings.setValue("backupPeriod", m_optionsData.backupPeriod);
+
+
+	// IO
+	settings.beginGroup("IO/ImageExport");
+	m_imageDialog->doWriteSettings(settings);
+	settings.endGroup();
 
 
 	// UI elements
@@ -786,7 +798,8 @@ void CNodeEditorUIController::sceneOptions()
 
 void CNodeEditorUIController::updateSceneOptions()
 {
-	if (m_optionsData.backupPeriod > 0) {
+	if (m_optionsData.backupPeriod > 0) 
+	{
 		m_backupTimer.setInterval(m_optionsData.backupPeriod * 60000);
 		m_backupTimer.start();
 	}
