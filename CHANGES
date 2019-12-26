@@ -8,6 +8,7 @@ QVGE 0.6 ** Just cloned from 0.5.4 **
 - fixed potential crash if wrong grid size was set/read
 - fixed interception of direct edges with elliptical nodes
 - fixed custom installation path under Linux (#69)
+- fixed crash on copying items with pressed Ctrl (#75)
 
 
 QVGE 0.5.4

@@ -777,14 +777,13 @@ void CEditorScene::del()
 void CEditorScene::copy()
 {
 	// store selected items only
-	QMap<CItem*, uint> sortedMap;
+	QMap<CItem*, quint64> sortedMap;
 
 	QList<QGraphicsItem*> allItems = copyPasteItems();
 
 	for (QGraphicsItem* item : allItems)
 	{
-		CItem* citem = dynamic_cast<CItem*>(item);
-		if (citem)
+		if (CItem* citem = dynamic_cast<CItem*>(item))
 		{
 			sortedMap[citem] = quint64(citem);
 		}
@@ -988,46 +987,125 @@ QList<QGraphicsItem*> CEditorScene::copyPasteItems() const
 
 QList<CItem*> CEditorScene::cloneSelectedItems()
 {
-	CItem::CItemLinkMap idToItem;
-
-	auto allItems = copyPasteItems();
-
-	// clone items
-	for (auto item : allItems)
-	{
-		if (auto citem = dynamic_cast<CItem*>(item))
-		{
-			auto ptrId = (quint64)citem;
-			idToItem[ptrId] = citem->clone();
-		}
-	}
-
-	// link items
-	CItem::beginRestore();
-
-	QSignalBlocker blocker(this);
-
 	QList<CItem*> clonedList;
 
-	for (CItem* citem : idToItem.values())
-	{
-		if (citem->linkAfterPaste(idToItem))
-		{
-			//auto sceneItem = dynamic_cast<QGraphicsItem*>(citem);
-			//addItem(sceneItem);
+	// store selected items only
+	QMap<CItem*, quint64> sortedMap;
 
-			clonedList << citem;
+	QList<QGraphicsItem*> allItems = copyPasteItems();
+
+	for (QGraphicsItem* item : allItems)
+	{
+		if (CItem* citem = dynamic_cast<CItem*>(item))
+		{
+			sortedMap[citem] = quint64(citem);
 		}
 	}
 
-	CItem::endRestore();
+	if (sortedMap.isEmpty())
+		return clonedList;
 
-	for (CItem* citem : clonedList)
+	// write version and items
+	QByteArray buffer;
 	{
-		citem->onItemRestored();
+		QDataStream out(&buffer, QIODevice::WriteOnly);
+
+		for (CItem* citem : sortedMap.keys())
+		{
+			out << citem->typeId() << quint64(citem);
+
+			citem->storeTo(out, version64);
+		}
+	}
+
+	// read cloned items from the buffer
+	deselectAll();
+
+	CItem::CItemLinkMap idToItem;
+	QList<CItem*> deathList;
+
+	{
+		QDataStream in(buffer);
+
+		while (!in.atEnd())
+		{
+			QByteArray typeId; in >> typeId;
+			quint64 ptrId; in >> ptrId;
+
+			CItem* item = createItemOfType(typeId);
+			if (item)
+			{
+				if (item->restoreFrom(in, version64))
+				{
+					idToItem[ptrId] = item;
+				}
+				else
+					deathList << item;
+			}
+		}
+	}
+
+
+	// link items
+	QSignalBlocker blocker(this);
+
+	for (CItem* item : idToItem.values())
+	{
+		if (item->linkAfterPaste(idToItem))
+		{
+			auto sceneItem = dynamic_cast<QGraphicsItem*>(item);
+			addItem(sceneItem);
+			sceneItem->setSelected(true);
+
+			clonedList << item;
+		}
+		else
+			deathList << item;
+	}
+
+	// cleanup
+	qDeleteAll(deathList);
+
+	if (clonedList.isEmpty())
+		return clonedList;
+
+	// shift & rename pasted items which were not removed
+	QMap<QString, int> ids;
+	auto allCItems = getItems<CItem>();
+	for (auto item : allCItems)
+		ids[item->getId() + item->typeId()]++;
+
+	// shift if not in-place
+	auto selItems = selectedItems();
+
+	// rename pasted items
+	for (auto sceneItem : selItems)
+	{
+		CItem* item = dynamic_cast<CItem*>(sceneItem);
+		if (item)
+		{
+			QString id = item->getId();
+			QString typeId = item->typeId();
+			if (ids[id + typeId] > 1)
+			{
+				int counter = 1;
+				QString newId = id;
+
+				while (ids.contains(newId + typeId))
+					newId = QString("Copy%1 of %2").arg(counter++).arg(id);
+
+				item->setId(newId);
+			}
+		}
+	}
+
+	for (CItem* item : idToItem.values())
+	{
+		item->onItemRestored();
 	}
 
 	blocker.unblock();
+	Q_EMIT selectionChanged();
 
 	return clonedList;
 }
