@@ -143,7 +143,7 @@ public:
 	virtual ItemDragTestResult acceptDragFromItem(QGraphicsItem* /*draggedItem*/) { return Accepted; }
 
 	// called after restoring data (reimplement to update cached attribute values)
-	virtual void updateCachedItems() {}
+	virtual void updateCachedItems();
 
 protected:
 	int m_itemFlags;

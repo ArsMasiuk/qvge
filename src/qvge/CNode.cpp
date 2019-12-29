@@ -894,6 +894,8 @@ QRectF CNode::boundingRect() const
 
 void CNode::updateCachedItems()
 {
+	Super::updateCachedItems();
+
 	auto shapeCache = m_shapeCache;
 	auto sizeCache = m_sizeCache;
 
@@ -904,13 +906,6 @@ void CNode::updateCachedItems()
 	{
 		// update ports & edges
 		updatePortsLayout();
-
-		// update text label
-		if (getScene() && getScene()->itemLabelsEnabled())
-		{
-			updateLabelPosition();
-			updateLabelDecoration();
-		}
 	}
 
 	update();

@@ -374,3 +374,18 @@ void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 	sceneItem->setToolTip(tooltipToShow);
 }
 
+
+// internal
+
+void CItem::updateCachedItems()
+{
+	setItemStateFlag(IS_Attribute_Changed);
+
+	// update text label
+	if (getScene() && getScene()->itemLabelsEnabled())
+	{
+		updateLabelContent();
+		updateLabelPosition();
+		updateLabelDecoration();
+	}
+}

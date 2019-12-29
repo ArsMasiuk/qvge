@@ -42,10 +42,21 @@ void CTextLabelEdit::updateGeometry()
 
 bool CTextLabelEdit::sceneEvent(QEvent *event)
 {
+	if (event->type() == QEvent::KeyPress)
+	{
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
+		if ((keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)
+			&& keyEvent->modifiers() == Qt::NoModifier)
+		{
+			finishEdit(true);
+			return true;
+		}
+	}
+
 	if (event->type() == QEvent::KeyRelease)
 	{
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
-		if (keyEvent->matches(QKeySequence::Cancel))	// Esc
+		if (keyEvent->matches(QKeySequence::Cancel))				// Esc
 		{
 			finishEdit(true);
 			return true;
@@ -78,6 +89,7 @@ void CTextLabelEdit::startEdit(CItem *item)
 
 	setPlainText(m_storedText);
 	setFont(m_item->getAttribute("label.font").value<QFont>());
+	setDefaultTextColor(m_item->getAttribute("label.color").value<QColor>());
 
 	updateGeometry();
 
