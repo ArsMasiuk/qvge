@@ -779,7 +779,7 @@ void CEditorScene::copy()
 	// store selected items only
 	QMap<CItem*, quint64> sortedMap;
 
-	QList<QGraphicsItem*> allItems = copyPasteItems();
+	QList<QGraphicsItem*> allItems = getCopyPasteItems();
 
 	for (QGraphicsItem* item : allItems)
 	{
@@ -979,7 +979,7 @@ void CEditorScene::pasteAt(const QPointF &anchor)
 }
 
 
-QList<QGraphicsItem*> CEditorScene::copyPasteItems() const
+QList<QGraphicsItem*> CEditorScene::getCopyPasteItems() const
 {
 	return selectedItems();
 }
@@ -992,7 +992,7 @@ QList<CItem*> CEditorScene::cloneSelectedItems()
 	// store selected items only
 	QMap<CItem*, quint64> sortedMap;
 
-	QList<QGraphicsItem*> allItems = copyPasteItems();
+	QList<QGraphicsItem*> allItems = getCopyPasteItems();
 
 	for (QGraphicsItem* item : allItems)
 	{
@@ -1128,7 +1128,7 @@ void CEditorScene::crop()
 
 // transform
 
-QList<QGraphicsItem*> CEditorScene::transformableItems() const
+QList<QGraphicsItem*> CEditorScene::getTransformableItems() const
 {
 	return selectedItems();
 }

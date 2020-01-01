@@ -10,6 +10,7 @@ QVGE 0.6 ** Just cloned from 0.5.4 **
 - fixed custom installation path under Linux (#69)
 - fixed crash on copying items with pressed Ctrl (#75)
 - fixed items ID visibility when dragging with pressed Ctrl (#78)
+- improvements/fixes in drawing arrows (#14)
 
 - label editing can be finished with Enter as well (#77)
 - when exporting to image, a resolution can be customized (#73)

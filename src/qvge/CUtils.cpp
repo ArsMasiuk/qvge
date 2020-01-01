@@ -157,3 +157,22 @@ QRectF CUtils::getBoundingRect(const QList<QGraphicsItem*>& items)
 
 	return r;
 }
+
+
+QLineF CUtils::extendLine(const QLineF& line, float fromStart, float fromEnd)
+{
+	QPointF v(line.p2().x() - line.p1().x(), line.p2().y() - line.p1().y());
+
+	float l = std::sqrtf(v.x() * v.x() + v.y() * v.y());
+
+	v.setX(v.x() / l);
+	v.setY(v.y() / l);
+
+	return QLineF(
+		line.p1().x() - v.x() * fromStart, 
+		line.p1().y() - v.y() * fromStart,
+		line.p2().x() - v.x() * fromEnd,
+		line.p2().y() - v.y() * fromEnd
+	);
+}
+

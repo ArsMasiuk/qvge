@@ -100,8 +100,8 @@ protected:
 	virtual void onLeftDoubleClick(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* clickedItem);
 
 	// reimp
-	virtual QList<QGraphicsItem*> copyPasteItems() const;
-	virtual QList<QGraphicsItem*> transformableItems() const;
+	virtual QList<QGraphicsItem*> getCopyPasteItems() const;
+	virtual QList<QGraphicsItem*> getTransformableItems() const;
 	virtual bool doUpdateCursorState(Qt::KeyboardModifiers keys, Qt::MouseButtons buttons, QGraphicsItem *hoverItem);
 	virtual QObject* createActions();
 

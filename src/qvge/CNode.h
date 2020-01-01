@@ -99,9 +99,6 @@ public:
 	// returns true if a connection from this node to itself is allowed.
 	virtual bool allowCircledConnection() const { return true; }
 
-	// calculates distance to the line's end point (used to draw connections to this item).
-	virtual double getDistanceToLineEnd(const QLineF& line, const QByteArray& portId) const;		// -- unused ?
-
 	// calculates point on the node's outline intersecting with line.
 	virtual QPointF getIntersectionPoint(const QLineF& line, const QByteArray& portId) const;
 

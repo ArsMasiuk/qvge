@@ -45,7 +45,7 @@ void CTransformRect::onActivated(CEditorScene& scene)
 
 void CTransformRect::draw(class CEditorScene &scene, QPainter *painter, const QRectF &)
 {
-	auto selItems = scene.transformableItems();
+	auto selItems = scene.getTransformableItems();
 	if (selItems.size())
 	{
 		QRectF r = CUtils::getBoundingRect(selItems);
@@ -196,7 +196,7 @@ void CTransformRect::doTransformBy(CEditorScene& scene, QRectF oldRect, QRectF n
 	double xc = oldRect.width() / newRect.width();
 	double yc = oldRect.height() / newRect.height();
 
-	auto selItems = scene.transformableItems();
+	auto selItems = scene.getTransformableItems();
 	for (auto item : selItems)
 	{
 		auto citem = dynamic_cast<CNode*>(item);

@@ -106,8 +106,6 @@ void CEdge::updateCachedItems()
 	Super::updateCachedItems();
 
 	updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
-
-	update();
 }
 
 

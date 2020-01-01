@@ -197,8 +197,8 @@ public:
 	virtual int getBoundingMargin() const { return 0; }
 
 	// to reimplement
-	virtual QList<QGraphicsItem*> copyPasteItems() const;
-	virtual QList<QGraphicsItem*> transformableItems() const;
+	virtual QList<QGraphicsItem*> getCopyPasteItems() const;
+	virtual QList<QGraphicsItem*> getTransformableItems() const;
  
 	// operations
 	void startDrag(QGraphicsItem* dragItem);
