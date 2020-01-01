@@ -36,9 +36,6 @@ CEdge* CDirectEdge::clone()
 {
 	CDirectEdge* c = new CDirectEdge(parentItem());
 
-	//c->setFirstNode(m_firstNode);
-	//c->setLastNode(m_lastNode);
-
 	// assign directly!
 	c->m_firstNode = m_firstNode;
 	c->m_firstPortId = m_firstPortId;
@@ -161,8 +158,11 @@ void CDirectEdge::onParentGeometryChanged()
 	QLineF l(p1, p2);
 	setLine(l);
 
+
 	// update shape path
 	m_shapeCachePath = QPainterPath();
+
+	double arrowSize = getWeight() + ARROW_SIZE;
 
 	// circled connection 
 	if (isCircled())
@@ -181,31 +181,47 @@ void CDirectEdge::onParentGeometryChanged()
 
 		// up point
 		m_controlPos = (p1c + p2c) / 2 + QPointF(0, -r * 2);
+		m_controlPoint = (lp + rp) / 2;
 
 		QLineF l(p1, p2);
 		setLine(l);
 
-		m_controlPoint = (lp + rp) / 2;
-
-		m_shapeCachePath.moveTo(p1);
-		m_shapeCachePath.cubicTo(lp, rp, p2);
+		createCurvedPath(true, l, QLineF(p1c, p2c), p1, lp, rp, p2, arrowSize);
 	}
 	else // not circled
 	{
-		m_shapeCachePath.moveTo(p1);
-
 		// center
 		m_controlPos = (p1c + p2c) / 2;
 
 		if (m_bendFactor == 0)
 		{
-			m_shapeCachePath.lineTo(p2);
+			// shift line by arrows
+			auto len = l.length();
+			bool isArrow = (len > arrowSize * 2);
+
+			if (isArrow && (m_itemFlags & CF_Mutual_Arrows))
+			{
+				l = CUtils::extendLine(l,
+					m_itemFlags & CF_Start_Arrow ? -arrowSize : 0,
+					m_itemFlags & CF_End_Arrow ? arrowSize : 0);
+			}
+
+			m_shapeCachePath.moveTo(l.p1());
+			m_shapeCachePath.lineTo(l.p2());
 
 #if QT_VERSION < 0x050a00
             m_controlPoint = (line().p1() + line().p2()) / 2;
 #else
 			m_controlPoint = line().center();
 #endif
+			auto fullLen = QLineF(p1c, p2c).length();
+			//qDebug() << len << fullLen;
+
+			// if no intersection or len == fullLen : drop the shape
+			if (!intersected || qAbs(len - fullLen) < 5)
+			{
+				m_shapeCachePath = QPainterPath();
+			}
 		}
 		else
 		{
@@ -223,31 +239,76 @@ void CDirectEdge::onParentGeometryChanged()
 			m_controlPos = f1.p2();
 			m_controlPoint = m_controlPos - (t1 - m_controlPos) * 0.33;
 
-			m_shapeCachePath.cubicTo(m_controlPoint, m_controlPoint, p2);
-		}
-
-		auto len = line().length();
-		auto fullLen = QLineF(p1c, p2c).length();
-		//qDebug() << len << fullLen;
-
-		// if no intersection or len == fullLen : drop the shape
-		if (!intersected || qAbs(len - fullLen) < 5)
-		{
-			m_shapeCachePath = QPainterPath();
+			createCurvedPath(intersected, l, QLineF(p1c, p2c), p1, m_controlPoint, m_controlPoint, p2, arrowSize);
 		}
 	}
 
+	// rasterise the line stroke
 	QPainterPathStroker stroker;
 	stroker.setWidth(6);
 	m_selectionShapePath = stroker.createStroke(m_shapeCachePath);
 
-	update();
+	//update();
 
 	// update text label
 	if (getScene() && getScene()->itemLabelsEnabled())
 	{
-		updateLabelPosition();
-		updateLabelDecoration();
+		if (m_shapeCachePath.isEmpty())
+		{
+			m_labelItem->hide();
+		}
+		else
+		{
+			m_labelItem->show();
+
+			updateLabelPosition();
+			updateLabelDecoration();
+		}
+	}
+}
+
+
+void CDirectEdge::createCurvedPath(bool intersected,
+	const QLineF& shortLine, const QLineF& fullLine,
+	const QPointF& p1, const QPointF& lp, const QPointF& rp, const QPointF& p2,
+	double arrowSize)
+{
+	auto len = shortLine.length();
+	auto fullLen = fullLine.length();
+	//qDebug() << len << fullLen;
+
+	m_shapeCachePath = QPainterPath();
+
+	// if no intersection or len == fullLen : drop the shape
+	if (!intersected || qAbs(len - fullLen) < 5)
+	{
+	}
+	else
+	{
+		m_shapeCachePath.moveTo(p1);
+		m_shapeCachePath.cubicTo(lp, rp, p2);
+
+		// check arrows
+		if (m_itemFlags & CF_Mutual_Arrows)
+		{
+			QPointF newP1 = p1, newP2 = p2;
+
+			if (m_itemFlags & CF_Start_Arrow)
+			{
+				qreal arrowStart = m_shapeCachePath.percentAtLength(arrowSize);
+				newP1 = m_shapeCachePath.pointAtPercent(arrowStart);
+			}
+
+			if (m_itemFlags & CF_End_Arrow)
+			{
+				qreal arrowStart = m_shapeCachePath.percentAtLength(m_shapeCachePath.length() - arrowSize);
+				newP2 = m_shapeCachePath.pointAtPercent(arrowStart);
+			}
+
+			m_shapeCachePath = QPainterPath();
+			m_shapeCachePath.moveTo(newP1);
+			m_shapeCachePath.cubicTo(lp, rp, newP2);
+		}
 	}
 }
 

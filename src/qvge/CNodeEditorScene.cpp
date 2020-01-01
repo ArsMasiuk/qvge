@@ -792,7 +792,7 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 }
 
 
-QList<QGraphicsItem*> CNodeEditorScene::copyPasteItems() const
+QList<QGraphicsItem*> CNodeEditorScene::getCopyPasteItems() const
 {
 	// only selected edges & their nodes
 	QList<QGraphicsItem*> result;
@@ -824,7 +824,7 @@ QList<QGraphicsItem*> CNodeEditorScene::copyPasteItems() const
 }
 
 
-QList<QGraphicsItem*> CNodeEditorScene::transformableItems() const
+QList<QGraphicsItem*> CNodeEditorScene::getTransformableItems() const
 {
 	QList<QGraphicsItem*> result;
 	

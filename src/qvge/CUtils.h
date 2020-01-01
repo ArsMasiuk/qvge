@@ -36,6 +36,8 @@ public:
 	static QString cutLastSuffix(const QString& fileName);
 
 	static QRectF getBoundingRect(const QList<QGraphicsItem*>& items);
+
+	static QLineF extendLine(const QLineF& line, float fromStart, float fromEnd);
 };
 
 

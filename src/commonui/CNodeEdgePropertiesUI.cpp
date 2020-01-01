@@ -71,6 +71,16 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	ui->NodeSizeY->setValueList(nodeSizes);
 
 
+	// node outline
+	QList<double> strokeSizes = { 1,2,3,4,5,6,7,8,9,10 };
+	ui->StrokeSize->setValueList(strokeSizes);
+
+
+	// edge weight
+	QList<double> edgeSizes = { 1,2,3,4,5,6,7,8,9,10 };
+	ui->EdgeWeight->setValueList(edgeSizes);
+
+
     // update status & tooltips etc.
     ui->retranslateUi(this);
 }

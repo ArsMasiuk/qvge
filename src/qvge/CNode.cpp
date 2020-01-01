@@ -538,35 +538,6 @@ QSet<CEdge*> CNode::getOutConnections() const
 }
 
 
-double CNode::getDistanceToLineEnd(const QLineF& line, const QByteArray& portId) const
-{
-	// port
-	if (portId.size())
-	{
-		if (CNodePort* port = getPort(portId) )
-		{
-			double shift = (port->boundingRect().width() / 2);
-			return shift;
-		}
-	}
-
-	// circle 
-	if (m_shapeCache.isEmpty())
-	{
-		double shift = qMax(rect().width() / 2, rect().height() / 2);
-		return shift;
-	}
-
-	// polygon (must be cashed)
-	QPolygonF scenePolygon = m_shapeCache.translated(pos());
-    QPointF intersectionPoint = CUtils::closestIntersection(line, scenePolygon);
-	if (intersectionPoint.isNull())
-		return 0.0;
-	else
-		return QLineF(intersectionPoint, line.p2()).length();
-}
-
-
 QPointF CNode::getIntersectionPoint(const QLineF& line, const QByteArray& portId) const
 {
 	// port

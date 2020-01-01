@@ -98,6 +98,8 @@ protected:
 	virtual void updateCachedItems();
 	virtual void updateArrowFlags(const QString& direction);
 
+	double getWeight() const;
+
 protected:
     CNode *m_firstNode;
     quint64 m_tempFirstNodeId;

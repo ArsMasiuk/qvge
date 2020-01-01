@@ -339,7 +339,7 @@ background: #eee;
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="StrokeSize">
+         <widget class="QSint::DoubleSpinComboBox" name="StrokeSize">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -519,7 +519,7 @@ background: #eee;
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="EdgeWeight">
+         <widget class="QSint::DoubleSpinComboBox" name="EdgeWeight">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -927,6 +927,11 @@ background: #eee;
    <class>QSint::SpinComboBox</class>
    <extends>QSpinBox</extends>
    <header>spincombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QSint::DoubleSpinComboBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>doublespincombobox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

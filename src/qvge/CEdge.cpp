@@ -106,8 +106,6 @@ void CEdge::updateCachedItems()
 	Super::updateCachedItems();
 
 	updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
-
-	update();
 }
 
 
@@ -140,10 +138,7 @@ QRectF CEdge::boundingRect() const
 void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* /*widget*/)
 {
 	// weight
-	bool ok = false;
-	double weight = qMax(0.1, getAttribute(QByteArrayLiteral("weight")).toDouble(&ok));
-	if (!ok) weight = 1;
-	if (weight > 10) weight = 10;	// safety
+	double weight = getWeight();
 
 	// line style
 	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("style")).toString(), Qt::SolidLine);
@@ -166,6 +161,19 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *opti
 		painter->setOpacity(1.0);
 		painter->setPen(p);
 	}
+}
+
+
+double CEdge::getWeight() const
+{
+	bool ok = false;
+	double weight = qMax(0.1, getAttribute(QByteArrayLiteral("weight")).toDouble(&ok));
+	if (!ok) 
+		return 1;
+	else
+		if (weight > 10) 
+			weight = 10;	// safety
+	return weight;
 }
 
 

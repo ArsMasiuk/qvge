@@ -42,6 +42,12 @@ protected:
 	// callbacks 
 	virtual void onParentGeometryChanged();
 
+private:
+	void createCurvedPath(bool intersected, 
+		const QLineF& shortLine, const QLineF& fullLine,
+		const QPointF& p1, const QPointF& lp, const QPointF& rp, const QPointF& p2,
+		double arrowSize);
+
 protected:
 	int m_bendFactor;
 	QPointF m_controlPoint, m_controlPos;
