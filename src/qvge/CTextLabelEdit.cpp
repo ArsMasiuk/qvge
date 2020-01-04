@@ -101,6 +101,8 @@ void CTextLabelEdit::startEdit(CItem *item)
 
 	scene->addItem(this);
 	show();
+
+	Q_EMIT editingStarted(m_item);
 }
 
 
@@ -108,6 +110,8 @@ void CTextLabelEdit::finishEdit(bool accept)
 {
 	if (m_item == nullptr)
 		return;
+
+	Q_EMIT editingFinished(m_item, !accept);
 
 	auto scene = m_item->getScene();
 	if (scene == nullptr)

@@ -4,6 +4,11 @@ QVGE 0.6 ** Just cloned from 0.5.4 **
 - support of MSVC 2017
 - support of MinGW 7
 
+- label editing can be finished with Enter as well (#77)
+- when exporting to image, a resolution can be customized (#73)
+- nodes & edges editor UI improved
+- added export to GraphML format; node ports supported as well (#28)
+
 - fixed project issue when building on MS Windows having Cygwin installed 
 - fixed potential crash if wrong grid size was set/read
 - fixed interception of direct edges with elliptical nodes
@@ -11,10 +16,8 @@ QVGE 0.6 ** Just cloned from 0.5.4 **
 - fixed crash on copying items with pressed Ctrl (#75)
 - fixed items ID visibility when dragging with pressed Ctrl (#78)
 - improvements/fixes in drawing arrows (#14)
-
-- label editing can be finished with Enter as well (#77)
-- when exporting to image, a resolution can be customized (#73)
-- nodes & edges editor UI improved
+- fixed handling of edge cancellation by right click
+- some fixes of label editing logic
 
 
 QVGE 0.5.4

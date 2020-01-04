@@ -351,6 +351,7 @@ void CItem::onItemSelected(bool state)
 
 void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 {
+	/*
 	// update tooltip
 	auto idsToShow = getVisibleAttributeIds(CItem::VF_TOOLTIP).toList();
 	if (idsToShow.isEmpty())
@@ -370,6 +371,9 @@ void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 	}
 
 	tooltipToShow += "</table>";
+	*/
+
+	QString tooltipToShow = CUtils::variantToText(getAttribute("tooltip"));
 
 	sceneItem->setToolTip(tooltipToShow);
 }

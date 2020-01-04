@@ -178,6 +178,24 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 		return false;
 	}
 
+	if (attrId == "width")
+	{
+		float s = v.toFloat();
+		QSizeF sf = getSize();
+		Super::setAttribute("size", QSizeF(s, sf.height()));
+		resize(s, sf.height());
+		return true;
+	}
+
+	if (attrId == "height")
+	{
+		float s = v.toFloat();
+		QSizeF sf = getSize();
+		Super::setAttribute("size", QSizeF(sf.width(), s));
+		resize(sf.width(), s);
+		return true;
+	}
+
 	if (attrId == "x")
 	{
 		setX(v.toDouble());

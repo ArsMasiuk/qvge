@@ -88,7 +88,9 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 
 		for (auto it = n.ports.constBegin(); it != n.ports.constEnd(); ++it)
 		{
-			/*CNodePort* port =*/ node->addPort(it.key().toLocal8Bit());
+			CNodePort* port = node->addPort(it.key().toLocal8Bit(), it.value().anchor, it.value().x, it.value().y);
+			Q_ASSERT(port != nullptr);
+			port->setColor(it.value().color);
 		}
 	}
 
@@ -155,7 +157,7 @@ bool CNodeEditorScene::toGraph(Graph& g)
 	{
 		Node n;
 		n.id = node->getId().toLocal8Bit();
-		
+
 		QByteArrayList ports = node->getPortIds();
 		for (const auto &portId : ports)
 		{
@@ -164,13 +166,18 @@ bool CNodeEditorScene::toGraph(Graph& g)
 
 			NodePort p;
 			p.name = portId;
-
-			// TO DO: other attrs
+			p.anchor = port->getAlign();
+			p.x = port->getX();
+			p.y = port->getY();
+			p.color = port->getColor();
 
 			n.ports[portId] = p;
 		}
 
 		n.attrs = node->getLocalAttributes();
+		n.attrs["x"] = node->pos().x();
+		n.attrs["y"] = node->pos().y();
+		n.attrs["size"] = node->getSize();
 
 		g.nodes.append(n);
 	}
@@ -237,6 +244,27 @@ void CNodeEditorScene::initialize()
 	degreeAttr.noDefault = true;
 	degreeAttr.isVirtual = true;
 	setClassAttribute("node", degreeAttr);
+
+	CAttribute widthAttr("width", "Width", 0.0f);
+	widthAttr.noDefault = true;
+	widthAttr.isVirtual = true;
+	setClassAttribute("node", widthAttr);
+
+	CAttribute heightAttr("height", "Height", 0.0f);
+	heightAttr.noDefault = true;
+	heightAttr.isVirtual = true;
+	setClassAttribute("node", heightAttr);
+
+	CAttribute xAttr("x", "X-Coordinate", 0.0f);
+	xAttr.noDefault = true;
+	xAttr.isVirtual = true;
+	setClassAttribute("node", xAttr);
+
+	CAttribute yAttr("y", "Y-Coordinate", 0.0f);
+	yAttr.noDefault = true;
+	yAttr.isVirtual = true;
+	setClassAttribute("node", yAttr);
+
 
 
 	// default edge attr
@@ -477,7 +505,13 @@ void CNodeEditorScene::setEdgesFactory(CEdge* edgeFactory)
 
 void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-	//if (m_state == IS_None)
+	if (m_editItem)
+	{
+		// call super
+		Super::mouseReleaseEvent(mouseEvent);
+		return;
+	}
+
 	if (m_startDragItem == NULL)
 	{
 		// call super
@@ -494,6 +528,7 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		if (mouseEvent->button() == Qt::RightButton)
 		{
 			m_state = IS_Cancelling;
+			m_skipMenuEvent = true;
 		}
 
 		// cancel on same position
@@ -521,6 +556,8 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	// necessary to handle scene events properly
 	QGraphicsScene::mouseReleaseEvent(mouseEvent);
+
+	updateCursorState();
 }
 
 

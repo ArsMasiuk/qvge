@@ -19,7 +19,12 @@ bool CFormatGraphML::save(const QString& fileName, Graph& graph, QString* lastEr
 {
 	QFile file(fileName);
 	if (!file.open(QIODevice::WriteOnly))
+	{
+		if (lastError)
+			*lastError = QString("%1: File cannot be opened for writing").arg(fileName);
+
 		return false;
+	}
 
 	QXmlStreamWriter xsw(&file);
 	xsw.setCodec("UTF-8");
@@ -33,9 +38,9 @@ bool CFormatGraphML::save(const QString& fileName, Graph& graph, QString* lastEr
 	xsw.writeAttribute("xsi:schemaLocation", "http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd");
 
 	// attrs
-	writeAttributes(xsw, graph.graphAttrs, "");
-	writeAttributes(xsw, graph.nodeAttrs, "node");
+	writeAttributes(xsw, graph.graphAttrs, "graph");
 	writeAttributes(xsw, graph.edgeAttrs, "edge");
+	writeAttributes(xsw, graph.nodeAttrs, "node");
 
 	xsw.writeStartElement("graph");
 
@@ -75,13 +80,27 @@ void CFormatGraphML::writeNodes(QXmlStreamWriter &xsw, const Graph& graph) const
 			xsw.writeStartElement("port");
 			
 			xsw.writeAttribute("name", port.name);
-			// TO DO: placement, attrs...
+			xsw.writeAttribute("color", port.color.name());
+			xsw.writeAttribute("anchor", QString::number(port.anchor));
+			xsw.writeAttribute("x", QString::number(port.x));
+			xsw.writeAttribute("y", QString::number(port.y));
 
 			xsw.writeEndElement();
 		}
 
 		// attributes
-		// TO DO
+		for (auto it = node.attrs.constBegin(); it != node.attrs.constEnd(); it++)
+		{
+			if (it.key() == "size")
+			{
+				QSizeF sf = it.value().toSizeF();
+				writeAttribute(xsw, "width", sf.width());
+				writeAttribute(xsw, "height", sf.height());
+				continue;
+			}
+
+			writeAttribute(xsw, it.key(), it.value());
+		}
 
 		xsw.writeEndElement();
 	}
@@ -104,7 +123,10 @@ void CFormatGraphML::writeEdges(QXmlStreamWriter &xsw, const Graph& graph) const
 			xsw.writeAttribute("endport", edge.endPortId);
 
 		// attributes
-		// TO DO
+		for (auto it = edge.attrs.constBegin(); it != edge.attrs.constEnd(); it++)
+		{
+			writeAttribute(xsw, it.key(), it.value());
+		}
 
 		xsw.writeEndElement();
 	}
@@ -116,8 +138,9 @@ void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos
 	for (auto& attr : attrs)
 	{
 		xsw.writeStartElement("key");
+
+		xsw.writeAttribute("id", attr.id);
 		xsw.writeAttribute("attr.name", attr.name);
-		xsw.writeAttribute("attr.id", attr.id);
 
 		if (classId.size())
 			xsw.writeAttribute("for", classId);
@@ -125,6 +148,7 @@ void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos
 		switch (attr.valueType)
 		{
 		case QVariant::Int:			xsw.writeAttribute("attr.type", "integer"); break;
+		case QVariant::LongLong:	xsw.writeAttribute("attr.type", "long"); break;
 		case QVariant::Double:		xsw.writeAttribute("attr.type", "double"); break;
 		case QMetaType::Float:		xsw.writeAttribute("attr.type", "float"); break;
 		case QMetaType::Bool:		xsw.writeAttribute("attr.type", "boolen"); break;
@@ -139,6 +163,17 @@ void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos
 
 		xsw.writeEndElement();	// key
 	}
+}
+
+
+void CFormatGraphML::writeAttribute(QXmlStreamWriter &xsw, const QString &keyId, const QVariant &value) const
+{
+	xsw.writeStartElement("data");
+
+	xsw.writeAttribute("key", keyId);
+	xsw.writeCharacters(value.toString());
+
+	xsw.writeEndElement();
 }
 
 
@@ -215,14 +250,14 @@ bool CFormatGraphML::readAttrKey(int /*index*/, const QDomNode& domNode, Graph& 
 	attr.id = attrId.toLatin1();
 	attr.name = nameId.isEmpty() ? attrId : nameId;
 
-	if (valueType == "integer" || valueType == "long") {
+	if (valueType == "integer"/* || valueType == "long"*/) {
 		attr.valueType = QVariant::Int;
 		attr.defaultValue.setValue(elem.text().toInt());
 	}
-	//else if (valueType == "long") {
-	//	attr.valueType = QVariant::LongLong;
-	//	attr.defaultValue.setValue(elem.text().toLongLong());
-	//}
+	else if (valueType == "long") {
+		attr.valueType = QVariant::LongLong;
+		attr.defaultValue.setValue(elem.text().toLongLong());
+	}
 	else if (valueType == "double") {
 		attr.valueType = QVariant::Double;
 		attr.defaultValue.setValue(elem.text().toDouble());
@@ -276,7 +311,14 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 		ClassAttrId classAttrId = cka[key.toLocal8Bit()];
 		QByteArray attrId = classAttrId.second;
 
-		if (!attrId.isEmpty())
+		if (attrId.isEmpty())
+		{
+			// warning: no key registered
+			// TO DO
+
+			node.attrs[key.toLocal8Bit()] = de.text();
+		}
+		else
 		{
 			node.attrs[attrId] = de.text();
 
@@ -293,9 +335,9 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 
 	// ports
 	QDomNodeList portNodes = elem.elementsByTagName("port");
-	for (int i = 0; i < data.count(); ++i)
+	for (int i = 0; i < portNodes.count(); ++i)
 	{
-		QDomNode dm = data.at(i);
+		QDomNode dm = portNodes.at(i);
 		QDomElement de = dm.toElement();
 
 		QString portName = de.attribute("name", "");
@@ -304,6 +346,10 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 
 		NodePort port;
 		port.name = portName;
+		port.color = de.attribute("color");
+		port.anchor = de.attribute("anchor").toInt();
+		port.x = de.attribute("x").toFloat();
+		port.y = de.attribute("y").toFloat();
 		node.ports[portName] = port;
 	}
 

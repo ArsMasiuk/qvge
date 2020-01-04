@@ -25,6 +25,10 @@ public:
 	void startEdit(CItem *item);
 	void finishEdit(bool accept = true);
 
+Q_SIGNALS:
+	void editingStarted(CItem *item);
+	void editingFinished(CItem *item, bool cancelled);
+
 protected:
 	virtual bool sceneEvent(QEvent *event);
 

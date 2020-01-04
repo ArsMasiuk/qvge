@@ -33,6 +33,7 @@ private:
 	bool readEdge(int index, const QDomNode &domNode, Graph& graph, const KeyAttrMap& cka) const;
 
 	void writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos &attrs, const QByteArray &classId) const;
+	void writeAttribute(QXmlStreamWriter &xsw, const QString &keyId, const QVariant &value) const;
 	void writeNodes(QXmlStreamWriter &xsw, const Graph& graph) const;
 	void writeEdges(QXmlStreamWriter &xsw, const Graph& graph) const;
 

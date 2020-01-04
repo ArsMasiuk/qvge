@@ -1334,6 +1334,13 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			mouseEvent->setAccepted(false);
 	}
 
+	if (m_editItem)
+	{
+		// call super
+		Super::mousePressEvent(mouseEvent);
+		return;
+	}
+
 	// check RMB
 	if (mouseEvent->button() == Qt::RightButton)
 	{	
@@ -1412,6 +1419,12 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			mouseEvent->setAccepted(false);
 	}
 
+	if (m_editItem)
+	{
+		// call super
+		Super::mouseMoveEvent(mouseEvent);
+		return;
+	}
 
 	// store the last position
 	m_mousePos = mouseEvent->scenePos();
@@ -2100,13 +2113,18 @@ void CEditorScene::focusInEvent(QFocusEvent *focusEvent)
 
 void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent)
 {
-	QMenu sceneMenu;
+	if (m_skipMenuEvent)
+	{
+		m_skipMenuEvent = false;
+		return;
+	}
 
 	m_menuTriggerItem = getItemAt(contextMenuEvent->scenePos()); //Get the item at the position
 
 	// check if item provides own menu
 	if (auto menuItem = dynamic_cast<IContextMenuProvider*>(m_menuTriggerItem))
 	{
+		QMenu sceneMenu;
 		if (menuItem->populateMenu(sceneMenu, selectedItems()))
 		{
 			sceneMenu.exec(contextMenuEvent->screenPos());
@@ -2139,11 +2157,22 @@ void CEditorScene::onActionSelectAll()
 }
 
 
+// label edit
+
 void CEditorScene::onActionEditLabel(CItem *item)
 {
 	setInfoStatus(SIS_Edit_Label);
+	setSceneCursor(Qt::IBeamCursor);
 
 	m_pimpl->m_labelEditor.startEdit(item);
+
+	m_editItem = item;
+}
+
+
+void CEditorScene::onItemEditingFinished(CItem * /*item*/, bool /*cancelled*/)
+{
+	m_editItem = nullptr;
 }
 
 

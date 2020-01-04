@@ -13,6 +13,7 @@ It can be used freely, maintaining the information above.
 #include <QByteArray>
 #include <QVariant>
 #include <QList>
+#include <QColor>
 
 
 typedef QMap<QByteArray, QVariant> GraphAttributes;
@@ -32,7 +33,9 @@ typedef QMap<QByteArray, AttrInfo> AttributeInfos;
 struct NodePort
 {
 	QString name;
-	//QPoint pos;
+	float x = 0, y = 0;
+	QColor color;
+	int anchor;
 };
 
 typedef QMap<QString, NodePort> NodePorts;
@@ -42,6 +45,7 @@ struct Node
 {
 	QByteArray id;
 	GraphAttributes attrs;
+
 	NodePorts ports;
 };
 

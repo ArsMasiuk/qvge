@@ -124,7 +124,7 @@ protected:
 	enum InternState {
 		IS_None, IS_Creating, IS_Finishing, IS_Cancelling
 	};
-	InternState m_state;
+	InternState m_state = IS_None;
 
 	CNode *m_nodesFactory = 0;
 	CEdge *m_edgesFactory = 0;
