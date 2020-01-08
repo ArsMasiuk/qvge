@@ -151,8 +151,12 @@ public:
 	void setClassAttribute(const QByteArray& classId, const QByteArray& attrId, const QVariant& defaultValue);
 
 	// convenience method to create a class attribute by single call
-	bool createClassAttribute(const QByteArray& classId, 
-		const QByteArray& attrId, const QString& attrName, const QVariant& defaultValue, 
+	CAttribute& createClassAttribute(
+		const QByteArray& classId, 
+		const QByteArray& attrId, 
+		const QString& attrName, 
+		const QVariant& defaultValue = QVariant(), 
+		int attrFlags = ATTR_NONE,
 		CAttributeConstrains* constrains = NULL,
 		bool vis = false);
 
@@ -355,6 +359,7 @@ private:
 	ISceneItemFactory *m_itemFactoryFilter = nullptr;
 
 	IUndoManager *m_undoManager = nullptr;
+	bool m_inProgress = false;
 	
 	QGraphicsItem *m_menuTriggerItem = nullptr;
 	ISceneMenuController *m_menuController = nullptr;

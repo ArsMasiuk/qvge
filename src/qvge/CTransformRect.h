@@ -31,7 +31,7 @@ public:
 	// ISceneEditController
 	virtual void onActivated(CEditorScene& scene);
 	virtual void onDeactivated(CEditorScene& /*scene*/) {}
-	virtual void onSelectionChanged(CEditorScene& scene) {}
+	virtual void onSelectionChanged(CEditorScene& /*scene*/) {}
 	virtual void onDragItem(CEditorScene& /*scene*/, QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* /*dragItem*/) {}
 	virtual void draw(CEditorScene& scene, QPainter *painter, const QRectF &r);
 	virtual bool onMousePressed(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent);

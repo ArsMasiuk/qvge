@@ -137,7 +137,7 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
 		{	// no such attr
 			attr.id = attrId;
 			attr.classId = classId;
-			attr.userDefined = true;
+			attr.flags |= ATTR_USER;
 			attr.valueType = attrInfo.variantType;
 		}
 		else // exist
@@ -503,7 +503,7 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 	for (auto it = attrs.constBegin(); it != attrs.constEnd(); ++it)
 	{
 		const auto &attr = it.value();
-		if (attr.isVirtual)
+		if (attr.flags & ATTR_VIRTUAL)
 			continue;
 
 		// size
@@ -526,7 +526,7 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 		// others (id = title)
 		ts << "        <attribute id=\"" << it.key() << "\" title=\"" << it.key() << "\" type=\"" << typeToString(attr.valueType) << "\">\n";
 		
-		if (!attr.noDefault && attr.defaultValue.isValid())
+		if (!(attr.flags & ATTR_NODEFAULT) && attr.defaultValue.isValid())
 		{
 			ts << "            <default>";
 

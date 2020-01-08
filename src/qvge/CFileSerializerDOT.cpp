@@ -108,7 +108,7 @@ void CFileSerializerDOT::doWriteNodeDefaults(QTextStream& ts, const CEditorScene
 	const AttributesMap& nodeAttrMap = scene.getClassAttributes("node", false);
 	for (const auto &attr : nodeAttrMap)
 	{
-		if (!attr.noDefault)
+		if (!(attr.flags & ATTR_NODEFAULT))
 			nodeAttrs[attr.id] = attr.defaultValue;
 	}
 
@@ -231,7 +231,7 @@ void CFileSerializerDOT::doWriteEdgeDefaults(QTextStream& ts, const CEditorScene
 	const AttributesMap& edgeAttrMap = scene.getClassAttributes("edge", false);
 	for (const auto &attr : edgeAttrMap)
 	{
-		if (!attr.noDefault)
+		if (!(attr.flags & ATTR_NODEFAULT))
 			edgeAttrs[attr.id] = attr.defaultValue;
 	}
 

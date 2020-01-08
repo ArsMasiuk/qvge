@@ -106,20 +106,14 @@ void CEditorScene::initialize()
 	m_classAttributesConstrains.clear();
 
 	// default item attrs
-    CAttribute labelAttr("label", "Label", "");
-	labelAttr.noDefault = true;
-	setClassAttribute(class_item, labelAttr, true);
-
-	CAttribute labelColorAttr("label.color", "Label Color", QColor(Qt::black));
-	setClassAttribute(class_item, labelColorAttr);
+	createClassAttribute(class_item, "label", "Label", "", ATTR_NODEFAULT, 0, true);
+	createClassAttribute(class_item, "label.color", "Label Color", QColor(Qt::black));
 
 	QFont labelFont;
 	CAttribute labelFontAttr("label.font", "Label Font", labelFont);
 	setClassAttribute(class_item, labelFontAttr);
 
-    CAttribute idAttr("id", "ID", "");
-	idAttr.noDefault = true;
-	setClassAttribute(class_item, idAttr, true);
+	createClassAttribute(class_item, "id", "ID", "", ATTR_NODEFAULT, 0, true);
 
 
 	// labels policy
@@ -129,10 +123,7 @@ void CEditorScene::initialize()
 		labelsPolicy->ids << Auto << AlwaysOn << AlwaysOff;
 	}
 
-	CAttribute labelsPolicyAttr(attr_labels_policy, "Labels Policy", Auto);
-	labelsPolicyAttr.userDefined = false;
-	setClassAttribute(class_scene, labelsPolicyAttr);
-	setClassAttributeConstrains(class_scene, attr_labels_policy, labelsPolicy);
+	createClassAttribute(class_scene, attr_labels_policy, "Labels Policy", Auto, ATTR_NONE, labelsPolicy);
 }
 
 
@@ -226,6 +217,11 @@ CEditorScene* CEditorScene::clone()
 
 void CEditorScene::undo()
 {
+	if (m_inProgress)
+		return;
+
+	m_inProgress = true;
+
 	if (m_undoManager)
 	{
 		m_undoManager->undo();
@@ -234,11 +230,18 @@ void CEditorScene::undo()
 
 		onSceneChanged();
 	}
+
+	m_inProgress = false;
 }
 
 
 void CEditorScene::redo()
 {
+	if (m_inProgress)
+		return;
+
+	m_inProgress = true;
+
 	if (m_undoManager)
 	{
 		m_undoManager->redo();
@@ -247,11 +250,18 @@ void CEditorScene::redo()
 
 		onSceneChanged();
 	}
+
+	m_inProgress = false;
 }
 
 
 void CEditorScene::addUndoState()
 {
+	if (m_inProgress)
+		return;
+
+	m_inProgress = true;
+
 	onSceneChanged();
 
 	// canvas size
@@ -266,11 +276,18 @@ void CEditorScene::addUndoState()
 
 		checkUndoState();
 	}
+
+	m_inProgress = false;
 }
 
 
 void CEditorScene::revertUndoState()
 {
+	if (m_inProgress)
+		return;
+
+	m_inProgress = true;
+
 	if (m_undoManager)
 	{
 		m_undoManager->revertState();
@@ -279,11 +296,15 @@ void CEditorScene::revertUndoState()
 	}
 
 	onSceneChanged();
+
+	m_inProgress = false;
 }
 
 
 void CEditorScene::setInitialState()
 {
+	m_inProgress = false;
+
 	if (m_undoManager)
 	{
 		m_undoManager->reset();
@@ -557,24 +578,31 @@ CItem* CEditorScene::createItemOfType(const QByteArray &id) const
 
 // attributes
 
-bool CEditorScene::createClassAttribute(const QByteArray& classId,
-	const QByteArray& attrId, const QString& attrName, const QVariant& defaultValue,
+CAttribute& CEditorScene::createClassAttribute(
+	const QByteArray& classId,
+	const QByteArray& attrId, 
+	const QString& attrName, 
+	const QVariant& defaultValue,
+	int attrFlags,
 	CAttributeConstrains* constrains,
 	bool vis) 
 {
 	if (m_classAttributes[classId].contains(attrId))
-		return false;
+	{
+		// just update the value
+		m_classAttributes[classId][attrId].defaultValue = defaultValue;
+	}
+	else
+	{
+		m_classAttributes[classId][attrId] = CAttribute(attrId, attrName, defaultValue, attrFlags);
 
-	CAttribute attr(attrId, attrName, defaultValue);
+		setClassAttributeVisible(classId, attrId, vis);
 
-	m_classAttributes[classId][attrId] = attr;
+		if (constrains)
+			setClassAttributeConstrains(classId, attrId, constrains);
+	}
 
-	setClassAttributeVisible(classId, attrId, vis);
-
-	if (constrains)
-		setClassAttributeConstrains(classId, attrId, constrains);
-
-	return true;
+	return m_classAttributes[classId][attrId];
 }
 
 

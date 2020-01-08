@@ -19,6 +19,16 @@ It can be used freely, maintaining the information above.
 typedef QMap<QByteArray, QVariant> GraphAttributes;
 
 
+enum AttrFlags
+{
+	ATTR_NONE = 0,
+	ATTR_VIRTUAL = 1,
+	ATTR_USER = 2,
+	ATTR_NODEFAULT = 4,
+	ATTR_NOEXPORT = 8
+};
+
+
 struct AttrInfo
 {
 	QByteArray id;

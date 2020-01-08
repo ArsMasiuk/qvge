@@ -301,12 +301,6 @@ void CNodeEditorUIController::createMenus()
     gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
     connect(gridSnapAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGridSnap(bool)));
 
- //   actionShowLabels = m_viewMenu->addAction(QIcon(":/Icons/Label"), tr("Show &Labels"));
- //   actionShowLabels->setCheckable(true);
- //   actionShowLabels->setStatusTip(tr("Show/hide item labels"));
-	//actionShowLabels->setChecked(m_editorScene->isClassAttributeVisible("item", "label"));
-	//connect(actionShowLabels, SIGNAL(toggled(bool)), this, SLOT(showItemLabels(bool)));
-
 	m_actionShowNodeIds = m_viewMenu->addAction(tr("Show Node Ids"));
 	m_actionShowNodeIds->setCheckable(true);
 	m_actionShowNodeIds->setStatusTip(tr("Show/hide node ids"));
@@ -816,6 +810,7 @@ void CNodeEditorUIController::updateActions()
 	{
 		gridAction->setChecked(m_editorScene->gridEnabled());
 		gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
+
 		m_actionShowNodeIds->setChecked(m_editorScene->isClassAttributeVisible(class_node, attr_id));
 		m_actionShowEdgeIds->setChecked(m_editorScene->isClassAttributeVisible(class_edge, attr_id));
 	}
@@ -926,14 +921,6 @@ void CNodeEditorUIController::showNodeIds(bool on)
 void CNodeEditorUIController::showEdgeIds(bool on)
 {
 	m_editorScene->setClassAttributeVisible(class_edge, attr_id, on);
-
-	m_editorScene->addUndoState();
-}
-
-
-void CNodeEditorUIController::showItemLabels(bool on)
-{
-	m_editorScene->setClassAttributeVisible(class_item, "label", on);
 
 	m_editorScene->addUndoState();
 }

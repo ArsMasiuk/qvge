@@ -12,16 +12,15 @@ It can be used freely, maintaining the information above.
 
 // attributes
 
-CAttribute::CAttribute()
-    : isVirtual(false)
+CAttribute::CAttribute():
+	flags(ATTR_USER)
 {
 	valueType = QVariant::String;
 }
 
 
-CAttribute::CAttribute(const QByteArray& attrId, const QString& attrName)
-	: isVirtual(false),
-	noDefault(true)
+CAttribute::CAttribute(const QByteArray& attrId, const QString& attrName) : 
+	flags(ATTR_USER | ATTR_NODEFAULT)
 {
 	id = attrId;
 	name = attrName;
@@ -32,10 +31,11 @@ CAttribute::CAttribute(const QByteArray& attrId, const QString& attrName)
 
 
 CAttribute::CAttribute(
-	const QByteArray& attrId, const QString& attrName, 
-	const QVariant& defaultValue)
-	: isVirtual(false),
-	noDefault(false)
+	const QByteArray& attrId, 
+	const QString& attrName, 
+	const QVariant& defaultValue,
+	const int attrFlags_) :
+	flags(attrFlags_)
 {
 	id = attrId;
 	name = attrName;
@@ -48,7 +48,7 @@ CAttribute::CAttribute(
 
 bool CAttribute::storeTo(QDataStream& out, quint64 /*version64*/) const
 {
-    out << id << name << defaultValue << userDefined << true << valueType;
+    out << id << name << defaultValue << true << true << valueType;
 
 	return true;
 }
@@ -63,8 +63,8 @@ bool CAttribute::restoreFrom(QDataStream& out, quint64 version64)
 	if (version64 < 6)
 		out >> classId;	// dummy value
 
-    out >> name >> defaultValue >> userDefined >> dummy;
-	userDefined = true;
+    out >> name >> defaultValue >> dummy >> dummy;
+	//attrFlags = ATTR_USER;
 
 	// size must be converted
 	if (version64 < 7)

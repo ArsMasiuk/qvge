@@ -206,7 +206,6 @@ void CClassAttributesEditorUI::on_AddButton_clicked()
 
     auto v = dialog.getValue();
     CAttribute attr(id, id, v);
-	attr.userDefined = true;
     m_scene->setClassAttribute(classId, attr);
 
     // store state
@@ -334,7 +333,7 @@ void CClassAttributesEditorUI::rebuild()
 	for (auto it = attrs.constBegin(); it != attrs.constEnd(); ++it)
 	{
 		// skip not default
-		if (it.value().noDefault)
+		if (it.value().flags & ATTR_NODEFAULT)
 			continue;
 
 		QtVariantProperty* prop = NULL;
@@ -390,7 +389,7 @@ void CClassAttributesEditorUI::rebuild()
 		auto item = ui->Editor->addProperty(prop);
 		ui->Editor->setExpanded(item, false);
 
-		if (it.value().userDefined)
+		if (it.value().flags & ATTR_USER)
 			prop->setModified(true);
 
 		if (ui->Editor->currentItem() == NULL)

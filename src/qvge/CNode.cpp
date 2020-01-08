@@ -44,12 +44,6 @@ CNode::CNode(QGraphicsItem* parent) : QGraphicsRectItem(parent)
 	m_labelItem->setPen(Qt::NoPen);
 	m_labelItem->setAcceptedMouseButtons(Qt::NoButton);
 	m_labelItem->setAcceptHoverEvents(false);
-
-
-	// temp
-	//addPort("Port 1", Qt::AlignLeft | Qt::AlignVCenter);
-	//addPort("Port 2", Qt::AlignBottom | Qt::AlignRight);
-	//addPort("Port 3", Qt::AlignBottom | Qt::AlignRight, 0, -20);
 }
 
 
@@ -765,8 +759,8 @@ ItemDragTestResult CNode::acceptDragFromItem(QGraphicsItem* draggedItem)
 {
 	if (dynamic_cast<CNode*>(draggedItem))
 		return Accepted;
-
-	return Ignored;
+	else
+		return Ignored;
 }
 
 
@@ -776,11 +770,11 @@ QVariant CNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVari
 {
 	if (change == ItemSceneHasChanged)
 	{
-		// update attributes cache after attach to scene
-		updateCachedItems();
-
 		// set default ID
 		setDefaultId();
+
+		// update attributes cache after attach to scene
+		updateCachedItems();
 
 		return value;
 	}

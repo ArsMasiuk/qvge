@@ -83,7 +83,6 @@ private Q_SLOTS:
 
 	void showNodeIds(bool on);
 	void showEdgeIds(bool on);
-	void showItemLabels(bool on);
 
 	void undo();
 	void redo();

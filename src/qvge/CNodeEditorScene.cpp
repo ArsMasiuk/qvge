@@ -50,7 +50,7 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 	
 	for (const auto& attr : g.graphAttrs)
 	{
-		createClassAttribute("", attr.id, attr.name, attr.defaultValue);
+		createClassAttribute("", attr.id, attr.name, attr.defaultValue, ATTR_USER);
 	}
 
 	for (auto it = g.attrs.constBegin(); it != g.attrs.constEnd(); ++it)
@@ -61,13 +61,13 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 
 	for (const auto& attr : g.nodeAttrs)
 	{
-		createClassAttribute("node", attr.id, attr.name, attr.defaultValue);
+		createClassAttribute("node", attr.id, attr.name, attr.defaultValue, ATTR_USER);
 	}
 
 
 	for (const auto& attr : g.edgeAttrs)
 	{
-		createClassAttribute("edge", attr.id, attr.name, attr.defaultValue);
+		createClassAttribute("edge", attr.id, attr.name, attr.defaultValue, ATTR_USER);
 	}
 
 
@@ -231,40 +231,18 @@ void CNodeEditorScene::initialize()
 
 	createClassAttribute("node", "size", "Size", QSizeF(11.0, 11.0));
 
-	createClassAttribute("node", "stroke.style", "Stroke Style", "solid");
-	setClassAttributeConstrains("node", "stroke.style", edgeStyles);
+	createClassAttribute("node", "stroke.style", "Stroke Style", "solid", 0, edgeStyles);
 	createClassAttribute("node", "stroke.size", "Stroke Size", 1.0);
 	createClassAttribute("node", "stroke.color", "Stroke Color", QColor(Qt::black));
 
-    CAttribute posAttr("pos", "Position", QPointF());
-	posAttr.noDefault = true;
-	setClassAttribute("node", posAttr);
+	createClassAttribute("node", "pos", "Position", QPointF(), ATTR_NODEFAULT);
 
-	CAttribute degreeAttr("degree", "Degree", 0);
-	degreeAttr.noDefault = true;
-	degreeAttr.isVirtual = true;
-	setClassAttribute("node", degreeAttr);
+	createClassAttribute("node", "degree", "Degree", 0, ATTR_NODEFAULT | ATTR_VIRTUAL);
 
-	CAttribute widthAttr("width", "Width", 0.0f);
-	widthAttr.noDefault = true;
-	widthAttr.isVirtual = true;
-	setClassAttribute("node", widthAttr);
-
-	CAttribute heightAttr("height", "Height", 0.0f);
-	heightAttr.noDefault = true;
-	heightAttr.isVirtual = true;
-	setClassAttribute("node", heightAttr);
-
-	CAttribute xAttr("x", "X-Coordinate", 0.0f);
-	xAttr.noDefault = true;
-	xAttr.isVirtual = true;
-	setClassAttribute("node", xAttr);
-
-	CAttribute yAttr("y", "Y-Coordinate", 0.0f);
-	yAttr.noDefault = true;
-	yAttr.isVirtual = true;
-	setClassAttribute("node", yAttr);
-
+	createClassAttribute("node", "width", "Width", 0.0f, ATTR_NODEFAULT);
+	createClassAttribute("node", "height", "Height", 0.0f, ATTR_NODEFAULT);
+	createClassAttribute("node", "x", "X-Coordinate", 0.0f, ATTR_NODEFAULT);
+	createClassAttribute("node", "y", "Y-Coordinate", 0.0f, ATTR_NODEFAULT);
 
 
 	// default edge attr
@@ -378,10 +356,6 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 		m_startNode = createNewNode(getSnapped(pos));
 		m_startNodePort = NULL;
 	}
-
-	//m_endNode = dynamic_cast<CNode*>(m_startNode->clone());
-	//addItem(m_endNode);
-	//m_endNode->setPos(getSnapped(pos));
 
 	m_endNode = createNewNode(getSnapped(pos));
 

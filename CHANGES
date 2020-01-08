@@ -6,8 +6,9 @@ QVGE 0.6 ** Just cloned from 0.5.4 **
 
 - label editing can be finished with Enter as well (#77)
 - when exporting to image, a resolution can be customized (#73)
-- nodes & edges editor UI improved
 - added export to GraphML format; node ports supported as well (#28)
+- nodes & edges editor UI improved
+- "tooltip" attribute is shown as a popup tooltip
 
 - fixed project issue when building on MS Windows having Cygwin installed 
 - fixed potential crash if wrong grid size was set/read
@@ -15,8 +16,9 @@ QVGE 0.6 ** Just cloned from 0.5.4 **
 - fixed custom installation path under Linux (#69)
 - fixed crash on copying items with pressed Ctrl (#75)
 - fixed items ID visibility when dragging with pressed Ctrl (#78)
-- improvements/fixes in drawing arrows (#14)
 - fixed handling of edge cancellation by right click
+- fixed issue with undo/redo manager 
+- improvements/fixes in drawing arrows (#14)
 - some fixes of label editing logic
 
 
