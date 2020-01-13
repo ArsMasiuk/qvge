@@ -124,6 +124,10 @@ void CEditorScene::initialize()
 	}
 
 	createClassAttribute(class_scene, attr_labels_policy, "Labels Policy", Auto, ATTR_NONE, labelsPolicy);
+
+	//createClassAttribute(class_scene, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
+	//createClassAttribute(class_node, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
+	//createClassAttribute(class_edge, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
 }
 
 
@@ -706,6 +710,18 @@ QSet<QByteArray> CEditorScene::getVisibleClassAttributes(const QByteArray& class
 	}
 
 	return result;
+}
+
+
+void CEditorScene::setVisibleClassAttributes(const QByteArray& classId, const QSet<QByteArray>& vis)
+{
+	m_classAttributesVis[classId] = vis;
+
+	// set label update flag
+	m_labelsUpdate = true;
+
+	// schedule update
+	invalidate();
 }
 
 
