@@ -322,9 +322,9 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 		{
 			node.attrs[attrId] = de.text();
 
-			if (attrId == "tooltip")
-				node.attrs["label"] = de.text();
-			else
+			//if (attrId == "tooltip")
+			//	node.attrs["label"] = de.text();
+			//else
 			if (attrId == "x_coordinate")
 				node.attrs["x"] = de.text();
 			else

@@ -48,29 +48,56 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 	reset();
 
 	
+	// Graph attrs
 	for (const auto& attr : g.graphAttrs)
 	{
+		if (attr.id == attr_labels_visIds)
+		{
+			auto graphVis = CUtils::visFromString(attr.defaultValue.toString());
+			setVisibleClassAttributes("", graphVis);
+			continue;
+		}
+
 		createClassAttribute("", attr.id, attr.name, attr.defaultValue, ATTR_USER);
 	}
 
 	for (auto it = g.attrs.constBegin(); it != g.attrs.constEnd(); ++it)
 	{
+		if (it.key() == attr_labels_visIds)
+			continue;
+
 		setClassAttribute("", it.key(), it.value());
 	}
 
 
+	// Class attrs
 	for (const auto& attr : g.nodeAttrs)
 	{
+		if (attr.id == attr_labels_visIds)
+		{
+			auto nodeVis = CUtils::visFromString(attr.defaultValue.toString());
+			setVisibleClassAttributes("node", nodeVis);
+			continue;
+		}
+
 		createClassAttribute("node", attr.id, attr.name, attr.defaultValue, ATTR_USER);
 	}
 
 
 	for (const auto& attr : g.edgeAttrs)
 	{
+		if (attr.id == attr_labels_visIds)
+		{
+			auto edgeVis = CUtils::visFromString(attr.defaultValue.toString());
+			setVisibleClassAttributes("edge", edgeVis);
+			continue;
+		}
+
 		createClassAttribute("edge", attr.id, attr.name, attr.defaultValue, ATTR_USER);
 	}
 
 
+	// Nodes
 	QMap<QByteArray, CNode*> nodesMap;
 
 	for (const Node& n : g.nodes)
@@ -95,6 +122,7 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 	}
 
 
+	// Edges
 	for (const Edge& e : g.edges)
 	{
 		CEdge* edge = createNewConnection();
@@ -123,6 +151,8 @@ bool CNodeEditorScene::toGraph(Graph& g)
 {
 	g.clear();
 
+
+	// class attributes
 	auto graphAttrs = getClassAttributes("", false);
 	for (auto it = graphAttrs.constBegin(); it != graphAttrs.constEnd(); ++it)
 	{
@@ -148,6 +178,31 @@ bool CNodeEditorScene::toGraph(Graph& g)
 		if (attr.name.isEmpty())
 			attr.name = QString(attr.id);
 		g.edgeAttrs[it.key()] = attr;
+	}
+
+
+	// visibility
+	static AttrInfo _vis_({ attr_labels_visIds , "Visible Labels"});
+
+	auto nodeVis = getVisibleClassAttributes("node", false);
+	if (nodeVis.size())
+	{
+		_vis_.defaultValue = CUtils::visToString(nodeVis);
+		g.nodeAttrs[attr_labels_visIds] = _vis_;
+	}
+
+	auto edgeVis = getVisibleClassAttributes("edge", false);
+	if (edgeVis.size())
+	{
+		_vis_.defaultValue = CUtils::visToString(edgeVis);
+		g.edgeAttrs[attr_labels_visIds] = _vis_;
+	}
+
+	auto graphVis = getVisibleClassAttributes("", false);
+	if (graphVis.size())
+	{
+		_vis_.defaultValue = CUtils::visToString(graphVis);
+		g.graphAttrs[attr_labels_visIds] = _vis_;
 	}
 
 
@@ -642,7 +697,9 @@ void CNodeEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphics
 	CEdge *dragEdge = dynamic_cast<CEdge*>(dragItem);
 
 	// perform snap
-	if (gridSnapEnabled())
+	auto keys = mouseEvent->modifiers();
+	bool isSnap = (keys & Qt::AltModifier) ? !gridSnapEnabled() : gridSnapEnabled();
+	if (isSnap)
 	{
 		// control point:
 		if (auto cp = dynamic_cast<CControlPoint*>(dragItem))

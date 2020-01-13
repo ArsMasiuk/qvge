@@ -1,4 +1,4 @@
-QVGE 0.6 ** Just cloned from 0.5.4 **
+QVGE 0.6 ** cloned from 0.5.4 **
 -------------------------------------------------------------------------------
 - support of Qt 5.13
 - support of MSVC 2017
@@ -6,10 +6,12 @@ QVGE 0.6 ** Just cloned from 0.5.4 **
 
 - label editing can be finished with Enter as well (#77)
 - when exporting to image, a resolution can be customized (#73)
-- added export to GraphML format; node ports supported as well (#28)
+- added export to GraphML format; node ports supported now (#28)
 - nodes & edges editor UI improved
 - "tooltip" attribute is shown as a popup tooltip
 
+- improvements/fixes in drawing arrows (#14)
+- some fixes of label editing logic
 - fixed project issue when building on MS Windows having Cygwin installed 
 - fixed potential crash if wrong grid size was set/read
 - fixed interception of direct edges with elliptical nodes
@@ -18,8 +20,7 @@ QVGE 0.6 ** Just cloned from 0.5.4 **
 - fixed items ID visibility when dragging with pressed Ctrl (#78)
 - fixed handling of edge cancellation by right click
 - fixed issue with undo/redo manager 
-- improvements/fixes in drawing arrows (#14)
-- some fixes of label editing logic
+- fixed grid snapping issue with pressed Alt key
 
 
 QVGE 0.5.4

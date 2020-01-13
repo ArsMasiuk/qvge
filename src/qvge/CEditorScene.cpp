@@ -124,6 +124,10 @@ void CEditorScene::initialize()
 	}
 
 	createClassAttribute(class_scene, attr_labels_policy, "Labels Policy", Auto, ATTR_NONE, labelsPolicy);
+
+	//createClassAttribute(class_scene, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
+	//createClassAttribute(class_node, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
+	//createClassAttribute(class_edge, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
 }
 
 
@@ -706,6 +710,18 @@ QSet<QByteArray> CEditorScene::getVisibleClassAttributes(const QByteArray& class
 	}
 
 	return result;
+}
+
+
+void CEditorScene::setVisibleClassAttributes(const QByteArray& classId, const QSet<QByteArray>& vis)
+{
+	m_classAttributesVis[classId] = vis;
+
+	// set label update flag
+	m_labelsUpdate = true;
+
+	// schedule update
+	invalidate();
 }
 
 
@@ -1353,6 +1369,11 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	if (m_editController)
 	{
+		if (m_editItem)
+		{
+			m_pimpl->m_labelEditor.finishEdit();
+		}
+
 		if (m_editController->onMousePressed(*this, mouseEvent))
 		{
 			mouseEvent->setAccepted(true);
@@ -1781,9 +1802,11 @@ void CEditorScene::onDragging(QGraphicsItem* /*dragItem*/, const QSet<IInteracti
 }
 
 
-void CEditorScene::onDropped(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* dragItem)
+void CEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem)
 {
-	if (m_gridSnap)
+	auto keys = mouseEvent->modifiers();
+	bool isSnap = (keys & Qt::AltModifier) ? !m_gridSnap : m_gridSnap;
+	if (isSnap)
 	{
 		auto pos = getSnapped(dragItem->pos());
 		auto d = pos - dragItem->pos();
@@ -1973,7 +1996,9 @@ bool CEditorScene::doUpdateCursorState(Qt::KeyboardModifiers keys, Qt::MouseButt
 
 QPointF CEditorScene::getSnapped(const QPointF& pos) const
 {
-	if (m_gridSnap)
+	auto keys = qApp->queryKeyboardModifiers();
+	bool isSnap = (keys & Qt::AltModifier) ? !gridSnapEnabled() : gridSnapEnabled();
+	if (isSnap)
 	{
 		QPointF newPos(pos);
 

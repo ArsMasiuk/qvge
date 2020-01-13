@@ -161,6 +161,8 @@ public:
 		bool vis = false);
 
 	QSet<QByteArray> getVisibleClassAttributes(const QByteArray& classId, bool inherited) const;
+	void setVisibleClassAttributes(const QByteArray& classId, const QSet<QByteArray>& vis);
+
 	void setClassAttributeVisible(const QByteArray& classId, const QByteArray& attrId, bool vis = true);
 	bool isClassAttributeVisible(const QByteArray& classId, const QByteArray& attrId) const;
 

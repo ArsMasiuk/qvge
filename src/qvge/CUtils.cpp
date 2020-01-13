@@ -117,6 +117,22 @@ QString CUtils::penStyleToText(int style)
 }
 
 
+QString CUtils::visToString(const QSet<QByteArray>& visIds)
+{
+	QString result;
+	for (auto& it : visIds)
+		result += QString(it) + '|';
+	result.chop(1);
+	return result;
+}
+
+
+QSet<QByteArray> CUtils::visFromString(const QString& text)
+{
+	return text.toUtf8().split('|').toSet();
+}
+
+
 QPointF CUtils::closestIntersection(const QLineF& line, const QPolygonF& endPolygon)
 {
 	QPointF intersectPoint;

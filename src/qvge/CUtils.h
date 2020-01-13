@@ -10,11 +10,13 @@ It can be used freely, maintaining the information above.
 #pragma once
 
 #include <QString>
+#include <QByteArray>
 #include <QVariant>
 #include <QPointF>
 #include <QLineF>
 #include <QPolygonF>
 #include <QMap>
+#include <QSet>
 #include <QPen>
 #include <QGraphicsItem>
 
@@ -27,6 +29,9 @@ public:
 
     static Qt::PenStyle textToPenStyle(const QString& text, Qt::PenStyle def = Qt::NoPen);
 	static QString penStyleToText(int style);
+
+	static QString visToString(const QSet<QByteArray>& visIds);
+	static QSet<QByteArray> visFromString(const QString& text);
 
 	template<class X>
 	static void insertUnique(X& dest, const X& from);
