@@ -137,7 +137,6 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
 		{	// no such attr
 			attr.id = attrId;
 			attr.classId = classId;
-			attr.flags |= ATTR_USER;
 			attr.valueType = attrInfo.variantType;
 		}
 		else // exist

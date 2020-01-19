@@ -572,8 +572,9 @@ void CNodeEditorUIController::onNewDocumentCreated()
 {
 	readDefaultSceneSettings();
 
-    m_editorScene->setClassAttribute("", "comment", QString());
-    m_editorScene->setClassAttribute("", "creator", QApplication::applicationName() + " " + QApplication::applicationVersion());
+	m_editorScene->createClassAttribute("", "comment", "Comment", QString(), ATTR_NONE);
+    m_editorScene->createClassAttribute("", "creator", "Creator of document", 
+		QApplication::applicationName() + " " + QApplication::applicationVersion(), ATTR_NONE);
 
 #ifdef USE_OGDF
     if (m_optionsData.newGraphDialogOnStart)

@@ -13,14 +13,14 @@ It can be used freely, maintaining the information above.
 // attributes
 
 CAttribute::CAttribute():
-	flags(ATTR_USER)
+	flags(ATTR_NONE)
 {
 	valueType = QVariant::String;
 }
 
 
 CAttribute::CAttribute(const QByteArray& attrId, const QString& attrName) : 
-	flags(ATTR_USER | ATTR_NODEFAULT)
+	flags(ATTR_NODEFAULT)
 {
 	id = attrId;
 	name = attrName;
@@ -33,16 +33,15 @@ CAttribute::CAttribute(const QByteArray& attrId, const QString& attrName) :
 CAttribute::CAttribute(
 	const QByteArray& attrId, 
 	const QString& attrName, 
-	const QVariant& defaultValue,
+	const QVariant& defaultValue_,
 	const int attrFlags_) :
 	flags(attrFlags_)
 {
 	id = attrId;
-	name = attrName;
-	if (name.isEmpty()) name = id;
+	name = attrName.isEmpty() ? id : attrName;
 	
-	this->defaultValue = defaultValue;
-	valueType = defaultValue.type();
+	valueType = defaultValue_.type();
+	defaultValue = (flags & ATTR_NODEFAULT) ? QVariant() : defaultValue_;
 }
 
 

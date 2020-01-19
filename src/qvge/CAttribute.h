@@ -26,13 +26,14 @@ struct CAttribute: public AttrInfo
 {
 	CAttribute();
 	CAttribute(const QByteArray& attrId, const QString& attrName = QString());
-    CAttribute(const QByteArray& attrId, const QString& attrName, const QVariant& defaultValue, const int attrFlags = ATTR_USER);
+    CAttribute(const QByteArray& attrId, const QString& attrName, const QVariant& defaultValue, const int attrFlags = ATTR_NONE);
 
-	/*const*/ int flags = ATTR_USER;
+	/*const*/ int flags = ATTR_NONE;
 
-	//bool isVirtual = false;	// x,y,label,color etc.
-	//bool noDefault = false;	// default value makes no sense (id, label, position)
- //   bool userDefined = true;
+	bool isUserDefined() const
+	{
+		return !(flags & ATTR_FIXED);
+	}
 
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;

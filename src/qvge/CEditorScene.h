@@ -156,7 +156,7 @@ public:
 		const QByteArray& attrId, 
 		const QString& attrName, 
 		const QVariant& defaultValue = QVariant(), 
-		int attrFlags = ATTR_NONE,
+		int attrFlags = ATTR_FIXED,
 		CAttributeConstrains* constrains = NULL,
 		bool vis = false);
 

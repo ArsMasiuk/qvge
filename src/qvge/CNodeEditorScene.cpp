@@ -58,7 +58,7 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 			continue;
 		}
 
-		createClassAttribute("", attr.id, attr.name, attr.defaultValue, ATTR_USER);
+		createClassAttribute("", attr.id, attr.name, attr.defaultValue, ATTR_NONE);
 	}
 
 	for (auto it = g.attrs.constBegin(); it != g.attrs.constEnd(); ++it)
@@ -80,7 +80,7 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 			continue;
 		}
 
-		createClassAttribute("node", attr.id, attr.name, attr.defaultValue, ATTR_USER);
+		createClassAttribute("node", attr.id, attr.name, attr.defaultValue, ATTR_NONE);
 	}
 
 
@@ -93,7 +93,7 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 			continue;
 		}
 
-		createClassAttribute("edge", attr.id, attr.name, attr.defaultValue, ATTR_USER);
+		createClassAttribute("edge", attr.id, attr.name, attr.defaultValue, ATTR_NONE);
 	}
 
 
@@ -156,27 +156,27 @@ bool CNodeEditorScene::toGraph(Graph& g)
 	auto graphAttrs = getClassAttributes("", false);
 	for (auto it = graphAttrs.constBegin(); it != graphAttrs.constEnd(); ++it)
 	{
-		AttrInfo attr = *it;
-		if (attr.name.isEmpty())
-			attr.name = QString(attr.id);
+		const auto& attr = *it;
+		if (attr.flags & ATTR_VIRTUAL)
+			continue;
 		g.graphAttrs[it.key()] = attr;
 	}
 
 	auto nodeAttrs = getClassAttributes("node", false);
 	for (auto it = nodeAttrs.constBegin(); it != nodeAttrs.constEnd(); ++it)
 	{
-		AttrInfo attr = *it;
-		if (attr.name.isEmpty())
-			attr.name = QString(attr.id);
+		const auto& attr = *it;
+		if (attr.flags & ATTR_VIRTUAL)
+			continue;
 		g.nodeAttrs[it.key()] = attr;
 	}
 
 	auto edgeAttrs = getClassAttributes("edge", false);
 	for (auto it = edgeAttrs.constBegin(); it != edgeAttrs.constEnd(); ++it)
 	{
-		AttrInfo attr = *it;
-		if (attr.name.isEmpty())
-			attr.name = QString(attr.id);
+		const auto& attr = *it;
+		if (attr.flags & ATTR_VIRTUAL)
+			continue;
 		g.edgeAttrs[it.key()] = attr;
 	}
 
@@ -232,7 +232,8 @@ bool CNodeEditorScene::toGraph(Graph& g)
 		n.attrs = node->getLocalAttributes();
 		n.attrs["x"] = node->pos().x();
 		n.attrs["y"] = node->pos().y();
-		n.attrs["size"] = node->getSize();
+		n.attrs["width"] = node->getSize().width();
+		n.attrs["height"] = node->getSize().height();
 
 		g.nodes.append(n);
 	}
@@ -273,44 +274,42 @@ void CNodeEditorScene::initialize()
 	if (edgeStyles->ids.isEmpty()) {
 		edgeStyles->names << tr("None") << tr("Solid") << tr("Dots") << tr("Dashes") << tr("Dash-Dot") << tr("Dash-Dot-Dot");
 		edgeStyles->ids << "none" << "solid" << "dotted" << "dashed" << "dashdot" << "dashdotdot";
-		//edgeStyles->icons << QIcon(":/Icons/Edge-Directed") << QIcon(":/Icons/Edge-Mutual") << QIcon(":/Icons/Edge-Undirected");
 	}
 
 
 	// default node attr
-    CAttribute nodeAttr("color", "Color", QColor(Qt::magenta));
+    CAttribute nodeAttr("color", "Color", QColor(Qt::magenta), ATTR_FIXED);
 	setClassAttribute("node", nodeAttr);
 
-    CAttribute shapeAttr("shape", "Shape", "disc");
+    CAttribute shapeAttr("shape", "Shape", "disc", ATTR_FIXED);
 	setClassAttribute("node", shapeAttr);
 
-	createClassAttribute("node", "size", "Size", QSizeF(11.0, 11.0));
+	createClassAttribute("node", "size", "Size", QSizeF(11.0, 11.0), ATTR_MAPPED | ATTR_FIXED);
+	//createClassAttribute("node", "width", "Width", 11.0f, ATTR_MAPPED);
+	//createClassAttribute("node", "height", "Height", 11.0f, ATTR_MAPPED);
 
-	createClassAttribute("node", "stroke.style", "Stroke Style", "solid", 0, edgeStyles);
-	createClassAttribute("node", "stroke.size", "Stroke Size", 1.0);
-	createClassAttribute("node", "stroke.color", "Stroke Color", QColor(Qt::black));
+	//createClassAttribute("node", "pos", "Position", QPointF(), ATTR_NODEFAULT | ATTR_MAPPED);
+	createClassAttribute("node", "x", "X-Coordinate", 0.0f, ATTR_NODEFAULT | ATTR_MAPPED | ATTR_FIXED);
+	createClassAttribute("node", "y", "Y-Coordinate", 0.0f, ATTR_NODEFAULT | ATTR_MAPPED | ATTR_FIXED);
 
-	createClassAttribute("node", "pos", "Position", QPointF(), ATTR_NODEFAULT);
+	createClassAttribute("node", "stroke.style", "Stroke Style", "solid", ATTR_FIXED, edgeStyles);
+	createClassAttribute("node", "stroke.size", "Stroke Size", 1.0, ATTR_FIXED);
+	createClassAttribute("node", "stroke.color", "Stroke Color", QColor(Qt::black), ATTR_FIXED);
 
-	createClassAttribute("node", "degree", "Degree", 0, ATTR_NODEFAULT | ATTR_VIRTUAL);
-
-	createClassAttribute("node", "width", "Width", 0.0f, ATTR_NODEFAULT);
-	createClassAttribute("node", "height", "Height", 0.0f, ATTR_NODEFAULT);
-	createClassAttribute("node", "x", "X-Coordinate", 0.0f, ATTR_NODEFAULT);
-	createClassAttribute("node", "y", "Y-Coordinate", 0.0f, ATTR_NODEFAULT);
+	createClassAttribute("node", "degree", "Degree", 0, ATTR_NODEFAULT | ATTR_VIRTUAL | ATTR_FIXED);
 
 
 	// default edge attr
-    CAttribute edgeAttr("color", "Color", QColor(Qt::gray));
+    CAttribute edgeAttr("color", "Color", QColor(Qt::gray), ATTR_FIXED);
 	setClassAttribute("edge", edgeAttr);
 
-	CAttribute directionAttr("direction", "Direction", "directed");
+	CAttribute directionAttr("direction", "Direction", "directed", ATTR_FIXED);
 	setClassAttribute("edge", directionAttr);
 
-	CAttribute weightAttr("weight", "Weight", 1.0);
+	CAttribute weightAttr("weight", "Weight", 1.0, ATTR_FIXED);
 	setClassAttribute("edge", weightAttr);
 
-    CAttribute styleAttr("style", "Style", "solid");
+    CAttribute styleAttr("style", "Style", "solid", ATTR_FIXED);
     setClassAttribute("edge", styleAttr);
 
 

@@ -91,13 +91,21 @@ void CFormatGraphML::writeNodes(QXmlStreamWriter &xsw, const Graph& graph) const
 		// attributes
 		for (auto it = node.attrs.constBegin(); it != node.attrs.constEnd(); it++)
 		{
-			if (it.key() == "size")
-			{
-				QSizeF sf = it.value().toSizeF();
-				writeAttribute(xsw, "width", sf.width());
-				writeAttribute(xsw, "height", sf.height());
-				continue;
-			}
+			//if (it.key() == "size")
+			//{
+			//	QSizeF sf = it.value().toSizeF();
+			//	writeAttribute(xsw, "width", sf.width());
+			//	writeAttribute(xsw, "height", sf.height());
+			//	continue;
+			//}
+
+			//if (it.key() == "pos")
+			//{
+			//	QPointF sf = it.value().toPointF();
+			//	writeAttribute(xsw, "x", sf.x());
+			//	writeAttribute(xsw, "y", sf.y());
+			//	continue;
+			//}
 
 			writeAttribute(xsw, it.key(), it.value());
 		}
@@ -140,7 +148,8 @@ void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos
 		xsw.writeStartElement("key");
 
 		xsw.writeAttribute("id", attr.id);
-		xsw.writeAttribute("attr.name", attr.name);
+		xsw.writeAttribute("attr.name", attr.id);		// GraphML::name = qvge::id
+		xsw.writeAttribute("attr.title", attr.name);	// GraphML::title = qvge::name
 
 		if (classId.size())
 			xsw.writeAttribute("for", classId);
@@ -238,12 +247,13 @@ bool CFormatGraphML::readAttrKey(int /*index*/, const QDomNode& domNode, Graph& 
 {
 	QDomElement elem = domNode.toElement();
 
-	QString attrId = elem.attribute("id", "");
+	QString keyId = elem.attribute("id", "");
+	QString attrId = elem.attribute("attr.name", "");
 	QString classId = elem.attribute("for", "");
-	QString nameId = elem.attribute("attr.name", "");
+	QString nameId = elem.attribute("attr.title", "");
 	QString valueType = elem.attribute("attr.type", "");
 
-	if (attrId.isEmpty())
+	if (keyId.isEmpty() || attrId.isEmpty())
 		return false;
 
 	AttrInfo attr;
@@ -285,7 +295,7 @@ bool CFormatGraphML::readAttrKey(int /*index*/, const QDomNode& domNode, Graph& 
 
 	if (attrClassId == "graph") attrClassId = "";
 
-	cka[attr.id] = ClassAttrId(attrClassId, attr.id);	// d0 = node:x
+	cka[keyId.toLatin1()] = ClassAttrId(attrClassId, attr.id);	// d0 = node:x
 
 	return true;
 }
@@ -298,7 +308,7 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 	Node node;
 
 	// common attrs
-	auto id = elem.attribute("id", "").toLocal8Bit();
+	auto id = elem.attribute("id", "").toLatin1();
 	node.id = id;
 
 	QDomNodeList data = elem.elementsByTagName("data");
@@ -308,29 +318,25 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 		QDomElement de = dm.toElement();
 
 		QString key = de.attribute("key", "");
-		ClassAttrId classAttrId = cka[key.toLocal8Bit()];
+		ClassAttrId classAttrId = cka[key.toLatin1()];
 		QByteArray attrId = classAttrId.second;
 
 		if (attrId.isEmpty())
 		{
 			// warning: no key registered
 			// TO DO
-
-			node.attrs[key.toLocal8Bit()] = de.text();
+			attrId = key.toLatin1();
 		}
-		else
-		{
-			node.attrs[attrId] = de.text();
 
-			//if (attrId == "tooltip")
-			//	node.attrs["label"] = de.text();
-			//else
-			if (attrId == "x_coordinate")
-				node.attrs["x"] = de.text();
-			else
-			if (attrId == "y_coordinate")
-				node.attrs["y"] = de.text();
-		}
+		QVariant value = de.text();
+
+		node.attrs[attrId] = value;
+
+		//if (attrId == "x_coordinate")
+		//	node.attrs["x"] = de.text();
+		//else
+		//if (attrId == "y_coordinate")
+		//	node.attrs["y"] = de.text();
 	}
 
 	// ports
@@ -364,14 +370,14 @@ bool CFormatGraphML::readEdge(int /*index*/, const QDomNode &domNode, Graph& gra
 	QDomElement elem = domNode.toElement();
 	
 	Edge edge;
-	edge.startNodeId = elem.attribute("source", "").toLocal8Bit();
-	edge.startPortId = elem.attribute("sourceport", "").toLocal8Bit();
-	edge.endNodeId = elem.attribute("target", "").toLocal8Bit();
-	edge.endPortId = elem.attribute("targetport", "").toLocal8Bit();
+	edge.startNodeId = elem.attribute("source", "").toLatin1();
+	edge.startPortId = elem.attribute("sourceport", "").toLatin1();
+	edge.endNodeId = elem.attribute("target", "").toLatin1();
+	edge.endPortId = elem.attribute("targetport", "").toLatin1();
 
 	// common attrs
 	QString id = elem.attribute("id", "");
-	edge.id = id.toLocal8Bit();
+	edge.id = id.toLatin1();
 
 	QDomNodeList data = elem.elementsByTagName("data");
 	for (int i = 0; i < data.count(); ++i)

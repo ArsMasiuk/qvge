@@ -22,10 +22,10 @@ typedef QMap<QByteArray, QVariant> GraphAttributes;
 enum AttrFlags
 {
 	ATTR_NONE = 0,
-	ATTR_VIRTUAL = 1,
-	ATTR_USER = 2,
-	ATTR_NODEFAULT = 4,
-	ATTR_NOEXPORT = 8
+	ATTR_VIRTUAL = 1,		// read only, not to be stored & read
+	ATTR_FIXED = 2,			// non-user defined
+	ATTR_NODEFAULT = 4,		// has no default value
+	ATTR_MAPPED = 8			// internal: mapped to some system value, i.e. coordinate or size
 };
 
 

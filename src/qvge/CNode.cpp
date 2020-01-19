@@ -144,7 +144,7 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 		return true;
 	}
 
-	// virtual attributes
+	// mapped attributes
 	if (attrId == "size")
 	{
 		if (v.type() == QVariant::Size || v.type() == QVariant::SizeF)
@@ -233,7 +233,7 @@ bool CNode::removeAttribute(const QByteArray& attrId)
 
 QVariant CNode::getAttribute(const QByteArray& attrId) const
 {
-	// virtual attributes
+	// mapped attributes
 	if (attrId == "x")
 	{
 		return x();
@@ -254,6 +254,7 @@ QVariant CNode::getAttribute(const QByteArray& attrId) const
 		return pos();
 	}
 
+	// virtual attributes
 	if (attrId == "degree")
 	{
 		return m_connections.size();

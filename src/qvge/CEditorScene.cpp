@@ -106,14 +106,14 @@ void CEditorScene::initialize()
 	m_classAttributesConstrains.clear();
 
 	// default item attrs
-	createClassAttribute(class_item, "label", "Label", "", ATTR_NODEFAULT, 0, true);
+	createClassAttribute(class_item, "label", "Label", "", ATTR_NODEFAULT | ATTR_FIXED, 0, true);
 	createClassAttribute(class_item, "label.color", "Label Color", QColor(Qt::black));
 
 	QFont labelFont;
-	CAttribute labelFontAttr("label.font", "Label Font", labelFont);
+	CAttribute labelFontAttr("label.font", "Label Font", labelFont, ATTR_FIXED);
 	setClassAttribute(class_item, labelFontAttr);
 
-	createClassAttribute(class_item, "id", "ID", "", ATTR_NODEFAULT, 0, true);
+	createClassAttribute(class_item, "id", "ID", "", ATTR_NODEFAULT | ATTR_FIXED, 0, true);
 
 
 	// labels policy
@@ -123,11 +123,7 @@ void CEditorScene::initialize()
 		labelsPolicy->ids << Auto << AlwaysOn << AlwaysOff;
 	}
 
-	createClassAttribute(class_scene, attr_labels_policy, "Labels Policy", Auto, ATTR_NONE, labelsPolicy);
-
-	//createClassAttribute(class_scene, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
-	//createClassAttribute(class_node, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
-	//createClassAttribute(class_edge, "labels.visibleIds", "Visible IDs", "", ATTR_NODEFAULT);
+	createClassAttribute(class_scene, attr_labels_policy, "Labels Policy", Auto, ATTR_FIXED, labelsPolicy);
 }
 
 

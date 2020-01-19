@@ -389,7 +389,7 @@ void CClassAttributesEditorUI::rebuild()
 		auto item = ui->Editor->addProperty(prop);
 		ui->Editor->setExpanded(item, false);
 
-		if (it.value().flags & ATTR_USER)
+		if (it.value().isUserDefined())
 			prop->setModified(true);
 
 		if (ui->Editor->currentItem() == NULL)
