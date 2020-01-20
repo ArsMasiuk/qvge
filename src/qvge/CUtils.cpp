@@ -119,11 +119,7 @@ QString CUtils::penStyleToText(int style)
 
 QString CUtils::visToString(const QSet<QByteArray>& visIds)
 {
-	QString result;
-	for (auto& it : visIds)
-		result += QString(it) + '|';
-	result.chop(1);
-	return result;
+	return visIds.toList().join('|');
 }
 
 

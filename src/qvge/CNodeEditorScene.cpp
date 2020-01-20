@@ -115,7 +115,7 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 
 		for (auto it = n.ports.constBegin(); it != n.ports.constEnd(); ++it)
 		{
-			CNodePort* port = node->addPort(it.key().toLocal8Bit(), it.value().anchor, it.value().x, it.value().y);
+			CNodePort* port = node->addPort(it.key().toLatin1(), it.value().anchor, it.value().x, it.value().y);
 			Q_ASSERT(port != nullptr);
 			port->setColor(it.value().color);
 		}
@@ -182,7 +182,7 @@ bool CNodeEditorScene::toGraph(Graph& g)
 
 
 	// visibility
-	static AttrInfo _vis_({ attr_labels_visIds , "Visible Labels"});
+	static AttrInfo _vis_({ attr_labels_visIds , "Visible Labels", QVariant::String});
 
 	auto nodeVis = getVisibleClassAttributes("node", false);
 	if (nodeVis.size())
@@ -211,7 +211,7 @@ bool CNodeEditorScene::toGraph(Graph& g)
 	for (const auto &node : nodes)
 	{
 		Node n;
-		n.id = node->getId().toLocal8Bit();
+		n.id = node->getId().toLatin1();
 
 		QByteArrayList ports = node->getPortIds();
 		for (const auto &portId : ports)
@@ -244,9 +244,9 @@ bool CNodeEditorScene::toGraph(Graph& g)
 	for (const auto &edge : edges)
 	{
 		Edge e;
-		e.id = edge->getId().toLocal8Bit();
-		e.startNodeId = edge->firstNode()->getId().toLocal8Bit();
-		e.endNodeId = edge->lastNode()->getId().toLocal8Bit();
+		e.id = edge->getId().toLatin1();
+		e.startNodeId = edge->firstNode()->getId().toLatin1();
+		e.endNodeId = edge->lastNode()->getId().toLatin1();
 		e.startPortId = edge->firstPortId();
 		e.endPortId = edge->lastPortId();
 

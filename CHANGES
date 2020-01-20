@@ -21,6 +21,7 @@ QVGE 0.6 ** cloned from 0.5.4 **
 - fixed handling of edge cancellation by right click
 - fixed issue with undo/redo manager 
 - fixed grid snapping issue with pressed Alt key
+- fixed export of UTF-8 encoded text to GraphViz/DOT
 
 
 QVGE 0.5.4

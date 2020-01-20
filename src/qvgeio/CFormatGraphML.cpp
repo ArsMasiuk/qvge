@@ -148,8 +148,9 @@ void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos
 		xsw.writeStartElement("key");
 
 		xsw.writeAttribute("id", attr.id);
-		xsw.writeAttribute("attr.name", attr.id);		// GraphML::name = qvge::id
-		xsw.writeAttribute("attr.title", attr.name);	// GraphML::title = qvge::name
+		//xsw.writeAttribute("attr.name", attr.id);		// GraphML::name = qvge::id
+		//xsw.writeAttribute("attr.title", attr.name);	// GraphML::title = qvge::name
+		xsw.writeAttribute("attr.name", attr.name);
 
 		if (classId.size())
 			xsw.writeAttribute("for", classId);
@@ -218,7 +219,7 @@ bool CFormatGraphML::load(const QString& fileName, Graph& graph, QString* lastEr
 		m_edgeType = tree.at(0).toElement().attribute("edgedefault", "undirected");
 	}
 
-	KeyAttrMap cka;
+	ClassKeyAttrMap cka;
 
 	QDomNodeList keys = doc.elementsByTagName("key");
 	for (int i = 0; i < keys.count(); ++i)
@@ -229,13 +230,13 @@ bool CFormatGraphML::load(const QString& fileName, Graph& graph, QString* lastEr
 	QDomNodeList nodes = doc.elementsByTagName("node");
 	for (int i = 0; i < nodes.count(); ++i)
 	{
-		readNode(i, nodes.at(i), graph, cka);
+		readNode(i, nodes.at(i), graph, cka["node"]);
 	}
 
 	QDomNodeList edges = doc.elementsByTagName("edge");
 	for (int i = 0; i < edges.count(); ++i)
 	{
-		readEdge(i, edges.at(i), graph, cka);
+		readEdge(i, edges.at(i), graph, cka["edge"]);
 	}
 
 	// done
@@ -243,14 +244,17 @@ bool CFormatGraphML::load(const QString& fileName, Graph& graph, QString* lastEr
 }
 
 
-bool CFormatGraphML::readAttrKey(int /*index*/, const QDomNode& domNode, Graph& graph, KeyAttrMap& cka) const
+bool CFormatGraphML::readAttrKey(int /*index*/, const QDomNode& domNode, Graph& graph, ClassKeyAttrMap& cka) const
 {
 	QDomElement elem = domNode.toElement();
 
 	QString keyId = elem.attribute("id", "");
-	QString attrId = elem.attribute("attr.name", "");
+	//QString attrId = elem.attribute("attr.name", "");
+	//QString nameId = elem.attribute("attr.title", "");
+	QString attrId = keyId;
+	QString nameId = elem.attribute("attr.name", "");
+
 	QString classId = elem.attribute("for", "");
-	QString nameId = elem.attribute("attr.title", "");
 	QString valueType = elem.attribute("attr.type", "");
 
 	if (keyId.isEmpty() || attrId.isEmpty())
@@ -295,13 +299,13 @@ bool CFormatGraphML::readAttrKey(int /*index*/, const QDomNode& domNode, Graph& 
 
 	if (attrClassId == "graph") attrClassId = "";
 
-	cka[keyId.toLatin1()] = ClassAttrId(attrClassId, attr.id);	// d0 = node:x
+	cka[attrClassId][keyId.toLatin1()] = attr.id;
 
 	return true;
 }
 
 
-bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& graph, const KeyAttrMap& cka) const
+bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& graph, const KeyAttrMap& nodeKeys) const
 {
 	QDomElement elem = domNode.toElement();
 
@@ -317,26 +321,17 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 		QDomNode dm = data.at(i);
 		QDomElement de = dm.toElement();
 
-		QString key = de.attribute("key", "");
-		ClassAttrId classAttrId = cka[key.toLatin1()];
-		QByteArray attrId = classAttrId.second;
+		QByteArray keyId = de.attribute("key", "").toLatin1();
+		QByteArray attrId = nodeKeys.contains(keyId) ? 
+			nodeKeys[keyId] : 
+			keyId;				// warning: no key registered
 
-		if (attrId.isEmpty())
-		{
-			// warning: no key registered
-			// TO DO
-			attrId = key.toLatin1();
-		}
+		if (attrId.isEmpty())	// error should be here
+			continue;
 
 		QVariant value = de.text();
 
 		node.attrs[attrId] = value;
-
-		//if (attrId == "x_coordinate")
-		//	node.attrs["x"] = de.text();
-		//else
-		//if (attrId == "y_coordinate")
-		//	node.attrs["y"] = de.text();
 	}
 
 	// ports
@@ -365,7 +360,7 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 }
 
 
-bool CFormatGraphML::readEdge(int /*index*/, const QDomNode &domNode, Graph& graph, const KeyAttrMap& cka) const
+bool CFormatGraphML::readEdge(int /*index*/, const QDomNode &domNode, Graph& graph, const KeyAttrMap& edgeKeys) const
 {
 	QDomElement elem = domNode.toElement();
 	
@@ -385,12 +380,15 @@ bool CFormatGraphML::readEdge(int /*index*/, const QDomNode &domNode, Graph& gra
 		QDomNode dm = data.at(i);
 		QDomElement de = dm.toElement();
 
-		QString key = de.attribute("key", "");
-		QByteArray attrId = cka[key.toLatin1()].second;
-		if (!attrId.isEmpty())
-		{
-			edge.attrs[attrId] = de.text();
-		}
+		QByteArray keyId = de.attribute("key", "").toLatin1();
+		QByteArray attrId = edgeKeys.contains(keyId) ?
+			edgeKeys[keyId] :
+			keyId;				// warning: no key registered
+
+		if (attrId.isEmpty())	// error should be here
+			continue;
+
+		edge.attrs[attrId] = de.text();
 	}
 
 	graph.edges.append(edge);

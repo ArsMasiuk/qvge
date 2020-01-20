@@ -24,6 +24,8 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 	if (saveFile.open(QFile::WriteOnly))
 	{
         QTextStream ts(&saveFile);
+		ts.setCodec("UTF-8");
+		ts.setGenerateByteOrderMark(true);
 
         QString graphId = QFileInfo(fileName).completeBaseName();
 

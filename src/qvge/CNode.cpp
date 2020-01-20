@@ -123,8 +123,8 @@ void CNode::setSize(float w, float h)
 
 bool CNode::hasLocalAttribute(const QByteArray& attrId) const
 {
-	if (/*attrId == "shape" || attrId == "size" ||*/ attrId == "pos" || 
-		attrId == "x" || attrId == "y" || attrId == "z") 
+	if (attrId == "width" || attrId == "height" || 
+		attrId == "pos" || attrId == "x" || attrId == "y" || attrId == "z") 
 		return true;
 
 	return Super::hasLocalAttribute(attrId);
