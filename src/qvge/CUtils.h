@@ -24,7 +24,7 @@ It can be used freely, maintaining the information above.
 class CUtils
 {
 public:
-	static QString variantToText(const QVariant& v);
+	static QString variantToText(const QVariant& v, int type = -1);
     static QVariant textToVariant(const QString& text, int type = QVariant::String);
 
     static Qt::PenStyle textToPenStyle(const QString& text, Qt::PenStyle def = Qt::NoPen);
@@ -32,6 +32,7 @@ public:
 
 	static QString visToString(const QSet<QByteArray>& visIds);
 	static QSet<QByteArray> visFromString(const QString& text);
+	static QStringList byteArraySetToStringList(const QSet<QByteArray>& visIds);
 
 	template<class X>
 	static void insertUnique(X& dest, const X& from);

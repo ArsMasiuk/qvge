@@ -1,4 +1,4 @@
-#CONFIG += USE_OGDF
+CONFIG += USE_OGDF
 USE_OGDF{
     DEFINES += USE_OGDF
     message(USE_OGDF!)

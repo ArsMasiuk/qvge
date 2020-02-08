@@ -55,7 +55,6 @@ CCommutationTable::CCommutationTable(QWidget *parent)
 	m_scene(NULL)
 {
 	ui.setupUi(this);
-	ui.Table->setUniformRowHeights(true);
 
 	ui.Table->header()->setSortIndicator(2, Qt::AscendingOrder);
 

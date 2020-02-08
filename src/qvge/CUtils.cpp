@@ -10,6 +10,9 @@ QVariant CUtils::textToVariant(const QString& text, int type)
 {
     switch (type)
     {
+	case QMetaType::QStringList:
+		return text.split('|', QString::SkipEmptyParts);
+
     case QVariant::Int:
         return text.toInt();
 
@@ -41,9 +44,12 @@ QVariant CUtils::textToVariant(const QString& text, int type)
 }
 
 
-QString CUtils::variantToText(const QVariant& v)
+QString CUtils::variantToText(const QVariant& v, int type)
 {
-	switch (v.type())
+	if (type < 0)
+		type = v.type();
+
+	switch (type)
 	{
 	case QVariant::Point:
 		return QString("%1;%2").arg(v.toPoint().x()).arg(v.toPoint().y());
@@ -66,18 +72,8 @@ QString CUtils::variantToText(const QVariant& v)
 	case QMetaType::Float:
 		return QString::number(v.value<float>(), 'f', 4);
 
-
-	//case QVariant::UInt:
-	//	return QString::number(v.toUInt());
-
-	//case QVariant::Int:
-	//	return QString::number(v.toInt());
-
-	//case QVariant::ULongLong:
-	//	return QString::number(v.toULongLong());
-
-	//case QVariant::LongLong:
-	//	return QString::number(v.toLongLong());
+	case QMetaType::QStringList:
+		return v.toStringList().join('|');
 
 	default:;
         return v.toString();
@@ -126,6 +122,15 @@ QString CUtils::visToString(const QSet<QByteArray>& visIds)
 QSet<QByteArray> CUtils::visFromString(const QString& text)
 {
 	return text.toUtf8().split('|').toSet();
+}
+
+
+QStringList CUtils::byteArraySetToStringList(const QSet<QByteArray>& ids)
+{
+	QStringList sl;
+	for (const auto& id : ids)
+		sl << id;
+	return sl;
 }
 
 

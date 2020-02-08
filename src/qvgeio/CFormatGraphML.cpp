@@ -162,13 +162,15 @@ void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos
 		case QVariant::Double:		xsw.writeAttribute("attr.type", "double"); break;
 		case QMetaType::Float:		xsw.writeAttribute("attr.type", "float"); break;
 		case QMetaType::Bool:		xsw.writeAttribute("attr.type", "boolen"); break;
-		case QMetaType::QString:	xsw.writeAttribute("attr.type", "string"); break;
-		default:;
+		default:					xsw.writeAttribute("attr.type", "string"); break;
 		}
 
 		if (attr.defaultValue.isValid())
 		{
-			xsw.writeTextElement("default", attr.defaultValue.toString());
+			xsw.writeTextElement("default", 
+				attr.valueType == QMetaType::QStringList ? attr.defaultValue.toStringList().join('|') :
+				attr.defaultValue.toString()
+			);
 		}
 
 		xsw.writeEndElement();	// key

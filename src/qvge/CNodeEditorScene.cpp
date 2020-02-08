@@ -80,6 +80,9 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 			continue;
 		}
 
+		if (attr.id == attr_size)
+			continue;	// ignore for now
+
 		createClassAttribute("node", attr.id, attr.name, attr.defaultValue, ATTR_NONE);
 	}
 
@@ -180,28 +183,32 @@ bool CNodeEditorScene::toGraph(Graph& g)
 		g.edgeAttrs[it.key()] = attr;
 	}
 
+	// temp solution
+	g.nodeAttrs.remove("size");
+	g.nodeAttrs.remove("pos");
+
 
 	// visibility
-	static AttrInfo _vis_({ attr_labels_visIds , "Visible Labels", QVariant::String});
+	static AttrInfo _vis_({ attr_labels_visIds , "Visible Labels", QVariant::StringList});
 
 	auto nodeVis = getVisibleClassAttributes("node", false);
 	if (nodeVis.size())
 	{
-		_vis_.defaultValue = CUtils::visToString(nodeVis);
+		_vis_.defaultValue = CUtils::byteArraySetToStringList(nodeVis);
 		g.nodeAttrs[attr_labels_visIds] = _vis_;
 	}
 
 	auto edgeVis = getVisibleClassAttributes("edge", false);
 	if (edgeVis.size())
 	{
-		_vis_.defaultValue = CUtils::visToString(edgeVis);
+		_vis_.defaultValue = CUtils::byteArraySetToStringList(edgeVis);
 		g.edgeAttrs[attr_labels_visIds] = _vis_;
 	}
 
 	auto graphVis = getVisibleClassAttributes("", false);
 	if (graphVis.size())
 	{
-		_vis_.defaultValue = CUtils::visToString(graphVis);
+		_vis_.defaultValue = CUtils::byteArraySetToStringList(graphVis);
 		g.graphAttrs[attr_labels_visIds] = _vis_;
 	}
 
@@ -230,10 +237,13 @@ bool CNodeEditorScene::toGraph(Graph& g)
 		}
 
 		n.attrs = node->getLocalAttributes();
+		// temp solution
 		n.attrs["x"] = node->pos().x();
 		n.attrs["y"] = node->pos().y();
+		n.attrs.remove("pos");
 		n.attrs["width"] = node->getSize().width();
 		n.attrs["height"] = node->getSize().height();
+		n.attrs.remove("size");
 
 		g.nodes.append(n);
 	}
