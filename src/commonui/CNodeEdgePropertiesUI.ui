@@ -20,7 +20,8 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDoubleSpinBox, QSpinBox, QComboBox
+   <string notr="true">/*
+QDoubleSpinBox, QSpinBox, QComboBox
 {
 border: 1px solid #aaa;
 background: white;
@@ -55,6 +56,7 @@ QToolButton:hover:!on
 border: 1px solid #00a;
 background: #eee;
 }
+*/
 </string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -141,9 +143,6 @@ background: #eee;
           <property name="popupMode">
            <enum>QToolButton::MenuButtonPopup</enum>
           </property>
-          <property name="autoRaise">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
         <item>
@@ -157,13 +156,13 @@ background: #eee;
           <property name="minimumSize">
            <size>
             <width>60</width>
-            <height>26</height>
+            <height>28</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>60</width>
-            <height>26</height>
+            <height>28</height>
            </size>
           </property>
           <property name="statusTip">
@@ -216,13 +215,13 @@ background: #eee;
           <property name="minimumSize">
            <size>
             <width>60</width>
-            <height>26</height>
+            <height>28</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>60</width>
-            <height>16777215</height>
+            <height>28</height>
            </size>
           </property>
           <property name="statusTip">
@@ -349,13 +348,13 @@ background: #eee;
           <property name="minimumSize">
            <size>
             <width>60</width>
-            <height>26</height>
+            <height>28</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>60</width>
-            <height>16777215</height>
+            <height>28</height>
            </size>
           </property>
           <property name="statusTip">
@@ -421,10 +420,10 @@ background: #eee;
          <string>Custom attributes</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="flat">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -529,13 +528,13 @@ background: #eee;
           <property name="minimumSize">
            <size>
             <width>60</width>
-            <height>26</height>
+            <height>28</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>60</width>
-            <height>16777215</height>
+            <height>28</height>
            </size>
           </property>
           <property name="statusTip">
@@ -610,10 +609,10 @@ background: #eee;
          <string>Custom attributes</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="flat">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -816,13 +815,13 @@ background: #eee;
           <property name="minimumSize">
            <size>
             <width>60</width>
-            <height>26</height>
+            <height>28</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>60</width>
-            <height>26</height>
+            <height>28</height>
            </size>
           </property>
           <property name="statusTip">
