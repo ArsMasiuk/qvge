@@ -1,4 +1,4 @@
-#include "doubleSpinComboBox.h"
+#include "doublespincombobox.h"
 
 
 namespace QSint
