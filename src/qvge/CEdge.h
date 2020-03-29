@@ -101,11 +101,11 @@ protected:
 	double getWeight() const;
 
 protected:
-    CNode *m_firstNode;
-    quint64 m_tempFirstNodeId;
+    CNode *m_firstNode = nullptr;
+    quint64 m_tempFirstNodeId = 0;
 
-    CNode *m_lastNode;
-    quint64 m_tempLastNodeId;
+    CNode *m_lastNode = nullptr;
+    quint64 m_tempLastNodeId = 0;
 
 	QByteArray m_firstPortId, m_lastPortId;
 

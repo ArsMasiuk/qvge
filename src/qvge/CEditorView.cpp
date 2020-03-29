@@ -18,8 +18,7 @@ It can be used freely, maintaining the information above.
 
 CEditorView::CEditorView(QWidget *parent)
 	: Super(parent),
-	m_menuModeTmp(Qt::PreventContextMenu),
-	m_currentZoom(1.0)
+	m_menuModeTmp(Qt::PreventContextMenu)
 {
     setAttribute(Qt::WA_TranslucentBackground, false);
 	setViewportUpdateMode(BoundingRectViewportUpdate);

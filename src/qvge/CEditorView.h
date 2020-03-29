@@ -71,8 +71,8 @@ private:
 	bool m_moved = false;
 	QPoint m_pos;
 
-	double m_currentZoom;
-	double m_zoomBeforeFit;
+	double m_currentZoom = 1.0;
+	double m_zoomBeforeFit = 0.0;	// 0 means no zoom called yet
 	QPointF m_dxyBeforeFit;
 
 	QTimer m_scrollTimer;

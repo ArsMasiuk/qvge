@@ -139,7 +139,7 @@ private:
 
 protected:
 	QSet<CEdge*> m_connections;
-	int m_nodeFlags;
+	int m_nodeFlags = 0;
 
 	QMap<QByteArray, CNodePort*> m_ports;
 

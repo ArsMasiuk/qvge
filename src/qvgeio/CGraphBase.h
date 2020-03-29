@@ -45,7 +45,7 @@ struct NodePort
 	QString name;
 	float x = 0, y = 0;
 	QColor color;
-	int anchor;
+	int anchor = 0;
 };
 
 typedef QMap<QString, NodePort> NodePorts;

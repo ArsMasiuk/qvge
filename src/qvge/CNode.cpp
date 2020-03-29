@@ -302,7 +302,7 @@ bool CNode::removePort(const QByteArray& portId)
 
 	updateCachedItems();
 
-	return port;
+	return true;
 }
 
 

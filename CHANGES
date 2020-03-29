@@ -24,6 +24,7 @@ QVGE 0.6 ** cloned from 0.5.4 **
 - fixed export of UTF-8 encoded text to GraphViz/DOT
 - fixed input/output of size attribute to GEXF format
 - fixed building issue under Linux/Unix (file name mismatch in one of 3rdParies) (#81)
+- fixed potential crash when using "Zoom Back" function after loading a graph document
  
 
 QVGE 0.5.4
