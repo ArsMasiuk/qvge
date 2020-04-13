@@ -13,7 +13,7 @@ win32-msvc*{
 
 # common config
 QT += core gui widgets xml opengl network printsupport
-CONFIG += c++11
+CONFIG += c++14
 
 
 

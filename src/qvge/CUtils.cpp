@@ -5,6 +5,8 @@
 #include <QColor>
 #include <QFont>
 
+#include <math.h>
+
 
 QVariant CUtils::textToVariant(const QString& text, int type)
 {
@@ -180,7 +182,7 @@ QLineF CUtils::extendLine(const QLineF& line, float fromStart, float fromEnd)
 {
 	QPointF v(line.p2().x() - line.p1().x(), line.p2().y() - line.p1().y());
 
-	float l = std::sqrtf(v.x() * v.x() + v.y() * v.y());
+    float l = std::sqrt(v.x() * v.x() + v.y() * v.y());
 
 	v.setX(v.x() / l);
 	v.setY(v.y() / l);
