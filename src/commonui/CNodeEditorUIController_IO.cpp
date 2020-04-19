@@ -35,6 +35,7 @@ It can be used freely, maintaining the information above.
 
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QPageSetupDialog>
 #include <QStatusBar>
 
 
@@ -107,7 +108,15 @@ void CNodeEditorUIController::exportDOT()
 
 void CNodeEditorUIController::exportPDF()
 {
-    doExport(CPDFExport());
+	QPageSetupDialog pageDialog;
+	if (pageDialog.exec() == QDialog::Rejected)
+		return;
+
+	QPrinter* pagePrinter = pageDialog.printer();
+
+	CPDFExport pdf(pagePrinter);
+
+    doExport(pdf);
 }
 
 

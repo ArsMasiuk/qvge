@@ -2,32 +2,39 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2017 Ars L.Masiuk(ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L.Masiuk(ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
 
-#include <QFileDialog> 
 #include <QPainter> 
-#include <QPrinter> 
 
 #include "CPDFExport.h"
 #include "CEditorScene.h"
 
+CPDFExport::CPDFExport(QPrinter* printer): m_printer(printer)
+{
+	if (!m_printer)
+	{
+		m_printer = new QPrinter(QPrinter::HighResolution);
+		m_printer->setPageSize(QPrinter::A4);
+		m_printer->setOrientation(QPrinter::Portrait);
+	}
+
+	m_printer->setOutputFormat(QPrinter::PdfFormat);
+}
+
 
 bool CPDFExport::save(const QString& fileName, CEditorScene& scene, QString* /*lastError*/) const
 {
-	CEditorScene* tempScene = scene.clone();
+	Q_ASSERT(m_printer);
 
+	m_printer->setOutputFileName(fileName);
+
+	CEditorScene* tempScene = scene.clone();
 	tempScene->crop();
 
-	QPrinter printer(QPrinter::HighResolution);
-	printer.setPageSize(QPrinter::A4);
-	printer.setOrientation(QPrinter::Portrait);
-	printer.setOutputFormat(QPrinter::PdfFormat);
-	printer.setOutputFileName(fileName);
-
-	QPainter painter(&printer);
+	QPainter painter(m_printer);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setRenderHint(QPainter::TextAntialiasing);
 	tempScene->render(&painter);
