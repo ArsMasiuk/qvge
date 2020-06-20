@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -99,9 +99,6 @@ public:
 	// returns true if a connection from this node to itself is allowed.
 	virtual bool allowCircledConnection() const { return true; }
 
-	// calculates distance to the line's end point (used to draw connections to this item).
-	virtual double getDistanceToLineEnd(const QLineF& line, const QByteArray& portId) const;		// -- unused ?
-
 	// calculates point on the node's outline intersecting with line.
 	virtual QPointF getIntersectionPoint(const QLineF& line, const QByteArray& portId) const;
 
@@ -142,7 +139,7 @@ private:
 
 protected:
 	QSet<CEdge*> m_connections;
-	int m_nodeFlags;
+	int m_nodeFlags = 0;
 
 	QMap<QByteArray, CNodePort*> m_ports;
 

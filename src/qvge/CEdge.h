@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -98,12 +98,14 @@ protected:
 	virtual void updateCachedItems();
 	virtual void updateArrowFlags(const QString& direction);
 
-protected:
-    CNode *m_firstNode;
-    quint64 m_tempFirstNodeId;
+	double getWeight() const;
 
-    CNode *m_lastNode;
-    quint64 m_tempLastNodeId;
+protected:
+    CNode *m_firstNode = nullptr;
+    quint64 m_tempFirstNodeId = 0;
+
+    CNode *m_lastNode = nullptr;
+    quint64 m_tempLastNodeId = 0;
 
 	QByteArray m_firstPortId, m_lastPortId;
 

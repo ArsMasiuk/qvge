@@ -10,6 +10,7 @@ It can be used freely, maintaining the information above.
 #pragma once
 
 #include <QString>
+#include <QPrinter>
 
 #include "qvge/IFileSerializer.h"
 
@@ -17,6 +18,8 @@ It can be used freely, maintaining the information above.
 class CPDFExport : public IFileSerializer
 {
 public:
+	CPDFExport(QPrinter* printer = NULL);
+
 	// reimp
 	virtual QString description() const {
 		return "Adobe Portable Document Format";
@@ -43,4 +46,7 @@ public:
 	}
 
 	virtual bool save(const QString& fileName, CEditorScene& scene, QString* lastError = nullptr) const;
+
+private:
+	mutable QPrinter *m_printer = nullptr;
 };

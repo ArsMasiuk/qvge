@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -31,8 +31,9 @@ const QByteArray class_node = QByteArrayLiteral("node");
 const QByteArray class_edge = QByteArrayLiteral("edge");
 
 const QByteArray attr_id = QByteArrayLiteral("id");
+const QByteArray attr_size = QByteArrayLiteral("size");
 const QByteArray attr_label = QByteArrayLiteral("label");
 const QByteArray attr_label_font = QByteArrayLiteral("label.font");
 const QByteArray attr_label_color = QByteArrayLiteral("label.color");
 const QByteArray attr_labels_policy = QByteArrayLiteral("labels.policy");
-const QByteArray attr_size = QByteArrayLiteral("size");
+const QByteArray attr_labels_visIds = QByteArrayLiteral("labels.visibleIds");

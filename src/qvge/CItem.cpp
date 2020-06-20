@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -351,6 +351,7 @@ void CItem::onItemSelected(bool state)
 
 void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 {
+	/*
 	// update tooltip
 	auto idsToShow = getVisibleAttributeIds(CItem::VF_TOOLTIP).toList();
 	if (idsToShow.isEmpty())
@@ -370,7 +371,25 @@ void CItem::onHoverEnter(QGraphicsItem* sceneItem, QGraphicsSceneHoverEvent*)
 	}
 
 	tooltipToShow += "</table>";
+	*/
+
+	QString tooltipToShow = CUtils::variantToText(getAttribute("tooltip"));
 
 	sceneItem->setToolTip(tooltipToShow);
 }
 
+
+// internal
+
+void CItem::updateCachedItems()
+{
+	setItemStateFlag(IS_Attribute_Changed);
+
+	// update text label
+	if (getScene() && getScene()->itemLabelsEnabled())
+	{
+		updateLabelContent();
+		updateLabelPosition();
+		updateLabelDecoration();
+	}
+}

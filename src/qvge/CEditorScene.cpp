@@ -106,20 +106,14 @@ void CEditorScene::initialize()
 	m_classAttributesConstrains.clear();
 
 	// default item attrs
-    CAttribute labelAttr("label", "Label", "");
-	labelAttr.noDefault = true;
-	setClassAttribute(class_item, labelAttr, true);
-
-	CAttribute labelColorAttr("label.color", "Label Color", QColor(Qt::black));
-	setClassAttribute(class_item, labelColorAttr);
+	createClassAttribute(class_item, "label", "Label", "", ATTR_NODEFAULT | ATTR_FIXED, 0, true);
+	createClassAttribute(class_item, "label.color", "Label Color", QColor(Qt::black));
 
 	QFont labelFont;
-	CAttribute labelFontAttr("label.font", "Label Font", labelFont);
+	CAttribute labelFontAttr("label.font", "Label Font", labelFont, ATTR_FIXED);
 	setClassAttribute(class_item, labelFontAttr);
 
-    CAttribute idAttr("id", "ID", "");
-	idAttr.noDefault = true;
-	setClassAttribute(class_item, idAttr, true);
+	createClassAttribute(class_item, "id", "ID", "", ATTR_NODEFAULT | ATTR_FIXED, 0, true);
 
 
 	// labels policy
@@ -129,10 +123,7 @@ void CEditorScene::initialize()
 		labelsPolicy->ids << Auto << AlwaysOn << AlwaysOff;
 	}
 
-	CAttribute labelsPolicyAttr(attr_labels_policy, "Labels Policy", Auto);
-	labelsPolicyAttr.userDefined = false;
-	setClassAttribute(class_scene, labelsPolicyAttr);
-	setClassAttributeConstrains(class_scene, attr_labels_policy, labelsPolicy);
+	createClassAttribute(class_scene, attr_labels_policy, "Labels Policy", Auto, ATTR_FIXED, labelsPolicy);
 }
 
 
@@ -226,6 +217,11 @@ CEditorScene* CEditorScene::clone()
 
 void CEditorScene::undo()
 {
+	if (m_inProgress)
+		return;
+
+	m_inProgress = true;
+
 	if (m_undoManager)
 	{
 		m_undoManager->undo();
@@ -234,11 +230,18 @@ void CEditorScene::undo()
 
 		onSceneChanged();
 	}
+
+	m_inProgress = false;
 }
 
 
 void CEditorScene::redo()
 {
+	if (m_inProgress)
+		return;
+
+	m_inProgress = true;
+
 	if (m_undoManager)
 	{
 		m_undoManager->redo();
@@ -247,11 +250,18 @@ void CEditorScene::redo()
 
 		onSceneChanged();
 	}
+
+	m_inProgress = false;
 }
 
 
 void CEditorScene::addUndoState()
 {
+	if (m_inProgress)
+		return;
+
+	m_inProgress = true;
+
 	onSceneChanged();
 
 	// canvas size
@@ -266,11 +276,18 @@ void CEditorScene::addUndoState()
 
 		checkUndoState();
 	}
+
+	m_inProgress = false;
 }
 
 
 void CEditorScene::revertUndoState()
 {
+	if (m_inProgress)
+		return;
+
+	m_inProgress = true;
+
 	if (m_undoManager)
 	{
 		m_undoManager->revertState();
@@ -279,11 +296,15 @@ void CEditorScene::revertUndoState()
 	}
 
 	onSceneChanged();
+
+	m_inProgress = false;
 }
 
 
 void CEditorScene::setInitialState()
 {
+	m_inProgress = false;
+
 	if (m_undoManager)
 	{
 		m_undoManager->reset();
@@ -557,24 +578,31 @@ CItem* CEditorScene::createItemOfType(const QByteArray &id) const
 
 // attributes
 
-bool CEditorScene::createClassAttribute(const QByteArray& classId,
-	const QByteArray& attrId, const QString& attrName, const QVariant& defaultValue,
+CAttribute& CEditorScene::createClassAttribute(
+	const QByteArray& classId,
+	const QByteArray& attrId, 
+	const QString& attrName, 
+	const QVariant& defaultValue,
+	int attrFlags,
 	CAttributeConstrains* constrains,
 	bool vis) 
 {
 	if (m_classAttributes[classId].contains(attrId))
-		return false;
+	{
+		// just update the value
+		m_classAttributes[classId][attrId].defaultValue = defaultValue;
+	}
+	else
+	{
+		m_classAttributes[classId][attrId] = CAttribute(attrId, attrName, defaultValue, attrFlags);
 
-	CAttribute attr(attrId, attrName, defaultValue);
+		setClassAttributeVisible(classId, attrId, vis);
 
-	m_classAttributes[classId][attrId] = attr;
+		if (constrains)
+			setClassAttributeConstrains(classId, attrId, constrains);
+	}
 
-	setClassAttributeVisible(classId, attrId, vis);
-
-	if (constrains)
-		setClassAttributeConstrains(classId, attrId, constrains);
-
-	return true;
+	return m_classAttributes[classId][attrId];
 }
 
 
@@ -681,6 +709,18 @@ QSet<QByteArray> CEditorScene::getVisibleClassAttributes(const QByteArray& class
 }
 
 
+void CEditorScene::setVisibleClassAttributes(const QByteArray& classId, const QSet<QByteArray>& vis)
+{
+	m_classAttributesVis[classId] = vis;
+
+	// set label update flag
+	m_labelsUpdate = true;
+
+	// schedule update
+	invalidate();
+}
+
+
 const CAttribute CEditorScene::getClassAttribute(const QByteArray& classId, const QByteArray& attrId, bool inherited) const 
 {
 	CAttribute attr = m_classAttributes[classId][attrId];
@@ -777,14 +817,13 @@ void CEditorScene::del()
 void CEditorScene::copy()
 {
 	// store selected items only
-	QMap<CItem*, uint> sortedMap;
+	QMap<CItem*, quint64> sortedMap;
 
-	QList<QGraphicsItem*> allItems = copyPasteItems();
+	QList<QGraphicsItem*> allItems = getCopyPasteItems();
 
 	for (QGraphicsItem* item : allItems)
 	{
-		CItem* citem = dynamic_cast<CItem*>(item);
-		if (citem)
+		if (CItem* citem = dynamic_cast<CItem*>(item))
 		{
 			sortedMap[citem] = quint64(citem);
 		}
@@ -980,7 +1019,7 @@ void CEditorScene::pasteAt(const QPointF &anchor)
 }
 
 
-QList<QGraphicsItem*> CEditorScene::copyPasteItems() const
+QList<QGraphicsItem*> CEditorScene::getCopyPasteItems() const
 {
 	return selectedItems();
 }
@@ -988,46 +1027,125 @@ QList<QGraphicsItem*> CEditorScene::copyPasteItems() const
 
 QList<CItem*> CEditorScene::cloneSelectedItems()
 {
-	CItem::CItemLinkMap idToItem;
-
-	auto allItems = copyPasteItems();
-
-	// clone items
-	for (auto item : allItems)
-	{
-		if (auto citem = dynamic_cast<CItem*>(item))
-		{
-			auto ptrId = (quint64)citem;
-			idToItem[ptrId] = citem->clone();
-		}
-	}
-
-	// link items
-	CItem::beginRestore();
-
-	QSignalBlocker blocker(this);
-
 	QList<CItem*> clonedList;
 
-	for (CItem* citem : idToItem.values())
-	{
-		if (citem->linkAfterPaste(idToItem))
-		{
-			//auto sceneItem = dynamic_cast<QGraphicsItem*>(citem);
-			//addItem(sceneItem);
+	// store selected items only
+	QMap<CItem*, quint64> sortedMap;
 
-			clonedList << citem;
+	QList<QGraphicsItem*> allItems = getCopyPasteItems();
+
+	for (QGraphicsItem* item : allItems)
+	{
+		if (CItem* citem = dynamic_cast<CItem*>(item))
+		{
+			sortedMap[citem] = quint64(citem);
 		}
 	}
 
-	CItem::endRestore();
+	if (sortedMap.isEmpty())
+		return clonedList;
 
-	for (CItem* citem : clonedList)
+	// write version and items
+	QByteArray buffer;
 	{
-		citem->onItemRestored();
+		QDataStream out(&buffer, QIODevice::WriteOnly);
+
+		for (CItem* citem : sortedMap.keys())
+		{
+			out << citem->typeId() << quint64(citem);
+
+			citem->storeTo(out, version64);
+		}
+	}
+
+	// read cloned items from the buffer
+	deselectAll();
+
+	CItem::CItemLinkMap idToItem;
+	QList<CItem*> deathList;
+
+	{
+		QDataStream in(buffer);
+
+		while (!in.atEnd())
+		{
+			QByteArray typeId; in >> typeId;
+			quint64 ptrId; in >> ptrId;
+
+			CItem* item = createItemOfType(typeId);
+			if (item)
+			{
+				if (item->restoreFrom(in, version64))
+				{
+					idToItem[ptrId] = item;
+				}
+				else
+					deathList << item;
+			}
+		}
+	}
+
+
+	// link items
+	QSignalBlocker blocker(this);
+
+	for (CItem* item : idToItem.values())
+	{
+		if (item->linkAfterPaste(idToItem))
+		{
+			auto sceneItem = dynamic_cast<QGraphicsItem*>(item);
+			addItem(sceneItem);
+			sceneItem->setSelected(true);
+
+			clonedList << item;
+		}
+		else
+			deathList << item;
+	}
+
+	// cleanup
+	qDeleteAll(deathList);
+
+	if (clonedList.isEmpty())
+		return clonedList;
+
+	// shift & rename pasted items which were not removed
+	QMap<QString, int> ids;
+	auto allCItems = getItems<CItem>();
+	for (auto item : allCItems)
+		ids[item->getId() + item->typeId()]++;
+
+	// shift if not in-place
+	auto selItems = selectedItems();
+
+	// rename pasted items
+	for (auto sceneItem : selItems)
+	{
+		CItem* item = dynamic_cast<CItem*>(sceneItem);
+		if (item)
+		{
+			QString id = item->getId();
+			QString typeId = item->typeId();
+			if (ids[id + typeId] > 1)
+			{
+				int counter = 1;
+				QString newId = id;
+
+				while (ids.contains(newId + typeId))
+					newId = QString("Copy%1 of %2").arg(counter++).arg(id);
+
+				item->setId(newId);
+			}
+		}
+	}
+
+	for (CItem* item : idToItem.values())
+	{
+		item->onItemRestored();
 	}
 
 	blocker.unblock();
+	Q_EMIT selectionChanged();
 
 	return clonedList;
 }
@@ -1050,7 +1168,7 @@ void CEditorScene::crop()
 
 // transform
 
-QList<QGraphicsItem*> CEditorScene::transformableItems() const
+QList<QGraphicsItem*> CEditorScene::getTransformableItems() const
 {
 	return selectedItems();
 }
@@ -1247,6 +1365,11 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	if (m_editController)
 	{
+		if (m_editItem)
+		{
+			m_pimpl->m_labelEditor.finishEdit();
+		}
+
 		if (m_editController->onMousePressed(*this, mouseEvent))
 		{
 			mouseEvent->setAccepted(true);
@@ -1254,6 +1377,13 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		}
 		else
 			mouseEvent->setAccepted(false);
+	}
+
+	if (m_editItem)
+	{
+		// call super
+		Super::mousePressEvent(mouseEvent);
+		return;
 	}
 
 	// check RMB
@@ -1334,6 +1464,12 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			mouseEvent->setAccepted(false);
 	}
 
+	if (m_editItem)
+	{
+		// call super
+		Super::mouseMoveEvent(mouseEvent);
+		return;
+	}
 
 	// store the last position
 	m_mousePos = mouseEvent->scenePos();
@@ -1662,9 +1798,11 @@ void CEditorScene::onDragging(QGraphicsItem* /*dragItem*/, const QSet<IInteracti
 }
 
 
-void CEditorScene::onDropped(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* dragItem)
+void CEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem)
 {
-	if (m_gridSnap)
+	auto keys = mouseEvent->modifiers();
+	bool isSnap = (keys & Qt::AltModifier) ? !m_gridSnap : m_gridSnap;
+	if (isSnap)
 	{
 		auto pos = getSnapped(dragItem->pos());
 		auto d = pos - dragItem->pos();
@@ -1854,7 +1992,9 @@ bool CEditorScene::doUpdateCursorState(Qt::KeyboardModifiers keys, Qt::MouseButt
 
 QPointF CEditorScene::getSnapped(const QPointF& pos) const
 {
-	if (m_gridSnap)
+	auto keys = qApp->queryKeyboardModifiers();
+	bool isSnap = (keys & Qt::AltModifier) ? !gridSnapEnabled() : gridSnapEnabled();
+	if (isSnap)
 	{
 		QPointF newPos(pos);
 
@@ -2022,13 +2162,18 @@ void CEditorScene::focusInEvent(QFocusEvent *focusEvent)
 
 void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent)
 {
-	QMenu sceneMenu;
+	if (m_skipMenuEvent)
+	{
+		m_skipMenuEvent = false;
+		return;
+	}
 
 	m_menuTriggerItem = getItemAt(contextMenuEvent->scenePos()); //Get the item at the position
 
 	// check if item provides own menu
 	if (auto menuItem = dynamic_cast<IContextMenuProvider*>(m_menuTriggerItem))
 	{
+		QMenu sceneMenu;
 		if (menuItem->populateMenu(sceneMenu, selectedItems()))
 		{
 			sceneMenu.exec(contextMenuEvent->screenPos());
@@ -2061,11 +2206,22 @@ void CEditorScene::onActionSelectAll()
 }
 
 
+// label edit
+
 void CEditorScene::onActionEditLabel(CItem *item)
 {
 	setInfoStatus(SIS_Edit_Label);
+	setSceneCursor(Qt::IBeamCursor);
 
 	m_pimpl->m_labelEditor.startEdit(item);
+
+	m_editItem = item;
+}
+
+
+void CEditorScene::onItemEditingFinished(CItem * /*item*/, bool /*cancelled*/)
+{
+	m_editItem = nullptr;
 }
 
 

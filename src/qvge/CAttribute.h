@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -26,11 +26,14 @@ struct CAttribute: public AttrInfo
 {
 	CAttribute();
 	CAttribute(const QByteArray& attrId, const QString& attrName = QString());
-    CAttribute(const QByteArray& attrId, const QString& attrName, const QVariant& defaultValue);
+    CAttribute(const QByteArray& attrId, const QString& attrName, const QVariant& defaultValue, const int attrFlags = ATTR_NONE);
 
-	bool isVirtual = false;	// x,y,label,color etc.
-	bool noDefault = false;	// default value makes no sense (id, label, position)
-    bool userDefined = true;
+	/*const*/ int flags = ATTR_NONE;
+
+	bool isUserDefined() const
+	{
+		return !(flags & ATTR_FIXED);
+	}
 
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;

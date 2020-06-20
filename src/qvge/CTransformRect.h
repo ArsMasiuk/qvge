@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -30,9 +30,9 @@ public:
 
 	// ISceneEditController
 	virtual void onActivated(CEditorScene& scene);
-	virtual void onDeactivated(CEditorScene& scene) {}
-	virtual void onSelectionChanged(CEditorScene& scene) {}
-	virtual void onDragItem(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem) {}
+	virtual void onDeactivated(CEditorScene& /*scene*/) {}
+	virtual void onSelectionChanged(CEditorScene& /*scene*/) {}
+	virtual void onDragItem(CEditorScene& /*scene*/, QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* /*dragItem*/) {}
 	virtual void draw(CEditorScene& scene, QPainter *painter, const QRectF &r);
 	virtual bool onMousePressed(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent);
 	virtual bool onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent);

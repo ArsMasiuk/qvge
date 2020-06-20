@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -137,7 +137,6 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
 		{	// no such attr
 			attr.id = attrId;
 			attr.classId = classId;
-			attr.userDefined = true;
 			attr.valueType = attrInfo.variantType;
 		}
 		else // exist
@@ -228,20 +227,23 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
     if (viz_size.isEmpty())
         viz_size = elem.elementsByTagName("ns0:size");      // v1.1
 
-	if (viz_size.size()) {
+	if (viz_size.size()) 
+	{
+		QSizeF sz = node->getSize();
 		QDomElement viz_elem = viz_size.at(0).toElement();
-		if (viz_elem.hasAttribute("value")) {
+		
+		if (viz_elem.hasAttribute("value")) 
+		{
 			float v = viz_elem.attribute("value", "5").toFloat();
-			node->setAttribute("size", v);
+			sz.setWidth(v);
+			sz.setHeight(v);
 		}
-		else {
-			QSizeF sz = node->getSize();
-			if (viz_elem.hasAttribute("x"))
-				sz.setWidth(viz_elem.attribute("x").toFloat());
-			if (viz_elem.hasAttribute("y"))
-				sz.setHeight(viz_elem.attribute("y").toFloat());
-			node->setAttribute("size", sz);
-		}
+		if (viz_elem.hasAttribute("width"))
+			sz.setWidth(viz_elem.attribute("width").toFloat());
+		if (viz_elem.hasAttribute("height"))
+			sz.setHeight(viz_elem.attribute("height").toFloat());
+
+		node->setAttribute("size", sz);
 	}
 
 	// shape
@@ -277,7 +279,7 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
 
 	m_nodeMap[id] = node;
 
-	node->onItemRestored();
+	//node->onItemRestored();
 
 	return true;
 }
@@ -373,7 +375,7 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 
 	scene.addItem(link);
 
-	link->onItemRestored();
+	//link->onItemRestored();
 
 	return true;
 }
@@ -503,7 +505,7 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 	for (auto it = attrs.constBegin(); it != attrs.constEnd(); ++it)
 	{
 		const auto &attr = it.value();
-		if (attr.isVirtual)
+		if (attr.flags & ATTR_VIRTUAL)
 			continue;
 
 		// size
@@ -526,7 +528,7 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 		// others (id = title)
 		ts << "        <attribute id=\"" << it.key() << "\" title=\"" << it.key() << "\" type=\"" << typeToString(attr.valueType) << "\">\n";
 		
-		if (!attr.noDefault && attr.defaultValue.isValid())
+		if (!(attr.flags & ATTR_NODEFAULT) && attr.defaultValue.isValid())
 		{
 			ts << "            <default>";
 
@@ -566,7 +568,7 @@ void CFileSerializerGEXF::writeNodes(QTextStream &ts, const CEditorScene& scene)
 				if (size.width() == size.height())
 					ts << "            <viz:size value=\"" << size.width() << "\"/>\n";
 				else
-					ts << "            <viz:size x=\"" << size.width() << "\" y=\"" << size.height() << "\"/>\n";		// non-standard extension
+					ts << "            <viz:size value=\"" << size.width() << "\" width=\"" << size.width() << "\" height=\"" << size.height() << "\"/>\n";		// non-standard extension
 			}
 			else
 				ts << "            <viz:size value=\"" << sizeV.toFloat() << "\"/>\n";

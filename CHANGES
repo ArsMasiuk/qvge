@@ -1,3 +1,32 @@
+QVGE 0.5.5
+-------------------------------------------------------------------------------
+- support of Qt 5.13
+- support of MSVC 2017
+- support of MinGW 7
+
+- label editing can be finished with Enter as well (#77)
+- when exporting to image, a resolution can be customized (#73)
+- added export to GraphML format; node ports supported now (#28)
+- nodes & edges editor UI improved
+- "tooltip" attribute is shown as a popup tooltip
+
+- improvements/fixes in drawing arrows (#14)
+- some fixes of label editing logic
+- fixed project issue when building on MS Windows having Cygwin installed 
+- fixed potential crash if wrong grid size was set/read
+- fixed interception of direct edges with elliptical nodes
+- fixed custom installation path under Linux (#69)
+- fixed crash on copying items with pressed Ctrl (#75)
+- fixed items ID visibility when dragging with pressed Ctrl (#78)
+- fixed handling of edge cancellation by right click
+- fixed issue with undo/redo manager 
+- fixed grid snapping issue with pressed Alt key
+- fixed export of UTF-8 encoded text to GraphViz/DOT
+- fixed input/output of size attribute to GEXF format
+- fixed building issue under Linux/Unix (file name mismatch in one of 3rdParies) (#81)
+- fixed potential crash when using "Zoom Back" function after loading a graph document
+ 
+
 QVGE 0.5.4
 -------------------------------------------------------------------------------
 - added shortcuts for quick node resizing (Ctrl+Up, Ctrl+Down)

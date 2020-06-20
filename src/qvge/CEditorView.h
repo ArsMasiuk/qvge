@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -71,8 +71,8 @@ private:
 	bool m_moved = false;
 	QPoint m_pos;
 
-	double m_currentZoom;
-	double m_zoomBeforeFit;
+	double m_currentZoom = 1.0;
+	double m_zoomBeforeFit = 0.0;	// 0 means no zoom called yet
 	QPointF m_dxyBeforeFit;
 
 	QTimer m_scrollTimer;

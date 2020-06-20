@@ -27,7 +27,7 @@ Q_SIGNALS:
 	void onContextMenu(QMenu &menu);
 
 private:
-	CNodeEditorScene* m_scene;
+	CNodeEditorScene* m_scene = nullptr;
 };
 
 

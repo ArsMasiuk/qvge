@@ -2,13 +2,14 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
 
 #include <CNodeEditorUIController.h>
 #include <CDOTExportDialog.h>
+#include <CImageExportDialog.h>
 #include <CCSVImportDialog.h>
 #include <CExtListInputDialog.h>
 
@@ -34,6 +35,7 @@ It can be used freely, maintaining the information above.
 
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QPageSetupDialog>
 #include <QStatusBar>
 
 
@@ -71,7 +73,22 @@ bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
 
 void CNodeEditorUIController::exportFile()
 {
-    doExport(CImageExport());
+	m_imageDialog->setScene(*m_editorScene);
+
+	auto& settings = getApplicationSettings();
+	m_imageDialog->doReadSettings(settings);
+
+	if (m_imageDialog->exec() == QDialog::Rejected)
+		return;
+
+	if (!doExport(
+		CImageExport(
+			m_imageDialog->cutToContent(),
+			m_imageDialog->resolution()
+		))) 
+		return;
+
+	m_imageDialog->doWriteSettings(settings);
 }
 
 
@@ -91,7 +108,15 @@ void CNodeEditorUIController::exportDOT()
 
 void CNodeEditorUIController::exportPDF()
 {
-    doExport(CPDFExport());
+	QPageSetupDialog pageDialog;
+	if (pageDialog.exec() == QDialog::Rejected)
+		return;
+
+	QPrinter* pagePrinter = pageDialog.printer();
+
+	CPDFExport pdf(pagePrinter);
+
+    doExport(pdf);
 }
 
 

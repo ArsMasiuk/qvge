@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -18,7 +18,9 @@ It can be used freely, maintaining the information above.
 #include <CNodesFactorDialog.h>
 #include <CNodePortEditorDialog.h>
 #include <CSearchDialog.h>
+
 #include <CDOTExportDialog.h>
+#include <CImageExportDialog.h>
 
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
@@ -108,6 +110,7 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 
 	// export dialogs
 	m_dotDialog = new CDOTExportDialog(parent);
+	m_imageDialog = new CImageExportDialog(parent);
 
     // OGDF
 #ifdef USE_OGDF
@@ -298,12 +301,6 @@ void CNodeEditorUIController::createMenus()
     gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
     connect(gridSnapAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGridSnap(bool)));
 
- //   actionShowLabels = m_viewMenu->addAction(QIcon(":/Icons/Label"), tr("Show &Labels"));
- //   actionShowLabels->setCheckable(true);
- //   actionShowLabels->setStatusTip(tr("Show/hide item labels"));
-	//actionShowLabels->setChecked(m_editorScene->isClassAttributeVisible("item", "label"));
-	//connect(actionShowLabels, SIGNAL(toggled(bool)), this, SLOT(showItemLabels(bool)));
-
 	m_actionShowNodeIds = m_viewMenu->addAction(tr("Show Node Ids"));
 	m_actionShowNodeIds->setCheckable(true);
 	m_actionShowNodeIds->setStatusTip(tr("Show/hide node ids"));
@@ -410,7 +407,9 @@ void CNodeEditorUIController::createPanels()
 	// update help menu
 	QAction *quickHelpAction = quickHelpDock->toggleViewAction();
 	quickHelpAction->setShortcut(QKeySequence::HelpContents);
-	m_parent->getHelpMenu()->insertAction(nullptr, quickHelpAction);
+	m_parent->getHelpMenu()->insertAction(
+		m_parent->getHelpMenu()->actions().first(), 
+		quickHelpAction);
 }
 
 
@@ -573,8 +572,9 @@ void CNodeEditorUIController::onNewDocumentCreated()
 {
 	readDefaultSceneSettings();
 
-    m_editorScene->setClassAttribute("", "comment", QString());
-    m_editorScene->setClassAttribute("", "creator", QApplication::applicationName() + " " + QApplication::applicationVersion());
+	m_editorScene->createClassAttribute("", "comment", "Comment", QString(), ATTR_NONE);
+    m_editorScene->createClassAttribute("", "creator", "Creator of document", 
+		QApplication::applicationName() + " " + QApplication::applicationVersion(), ATTR_NONE);
 
 #ifdef USE_OGDF
     if (m_optionsData.newGraphDialogOnStart)
@@ -629,6 +629,12 @@ void CNodeEditorUIController::onDocumentLoaded(const QString &fileName)
 
 // settings
 
+QSettings& CNodeEditorUIController::getApplicationSettings() const
+{
+	return m_parent->getApplicationSettings();
+}
+
+
 void CNodeEditorUIController::doReadSettings(QSettings& settings)
 {
 	// options
@@ -676,6 +682,12 @@ void CNodeEditorUIController::doWriteSettings(QSettings& settings)
 
 	settings.setValue("autoCreateGraphDialog", m_optionsData.newGraphDialogOnStart);
 	settings.setValue("backupPeriod", m_optionsData.backupPeriod);
+
+
+	// IO
+	settings.beginGroup("IO/ImageExport");
+	m_imageDialog->doWriteSettings(settings);
+	settings.endGroup();
 
 
 	// UI elements
@@ -781,7 +793,8 @@ void CNodeEditorUIController::sceneOptions()
 
 void CNodeEditorUIController::updateSceneOptions()
 {
-	if (m_optionsData.backupPeriod > 0) {
+	if (m_optionsData.backupPeriod > 0) 
+	{
 		m_backupTimer.setInterval(m_optionsData.backupPeriod * 60000);
 		m_backupTimer.start();
 	}
@@ -798,6 +811,7 @@ void CNodeEditorUIController::updateActions()
 	{
 		gridAction->setChecked(m_editorScene->gridEnabled());
 		gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
+
 		m_actionShowNodeIds->setChecked(m_editorScene->isClassAttributeVisible(class_node, attr_id));
 		m_actionShowEdgeIds->setChecked(m_editorScene->isClassAttributeVisible(class_edge, attr_id));
 	}
@@ -908,14 +922,6 @@ void CNodeEditorUIController::showNodeIds(bool on)
 void CNodeEditorUIController::showEdgeIds(bool on)
 {
 	m_editorScene->setClassAttributeVisible(class_edge, attr_id, on);
-
-	m_editorScene->addUndoState();
-}
-
-
-void CNodeEditorUIController::showItemLabels(bool on)
-{
-	m_editorScene->setClassAttributeVisible(class_item, "label", on);
 
 	m_editorScene->addUndoState();
 }

@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -24,6 +24,10 @@ public:
 
 	void startEdit(CItem *item);
 	void finishEdit(bool accept = true);
+
+Q_SIGNALS:
+	void editingStarted(CItem *item);
+	void editingFinished(CItem *item, bool cancelled);
 
 protected:
 	virtual bool sceneEvent(QEvent *event);

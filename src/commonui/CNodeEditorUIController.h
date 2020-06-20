@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -27,7 +27,6 @@ class CNodeEditorScene;
 class CNodePort;
 class CEditorView;
 class IFileSerializer;
-class CDOTExportDialog;
 
 
 class CNodeEditorUIController : public QObject
@@ -36,8 +35,9 @@ class CNodeEditorUIController : public QObject
 
 public:
     CNodeEditorUIController(CMainWindow *parent);
-	~CNodeEditorUIController();
+	virtual ~CNodeEditorUIController();
 
+	QSettings& getApplicationSettings() const;
 	void doReadSettings(QSettings& settings);
 	void doWriteSettings(QSettings& settings);
 
@@ -83,7 +83,6 @@ private Q_SLOTS:
 
 	void showNodeIds(bool on);
 	void showEdgeIds(bool on);
-	void showItemLabels(bool on);
 
 	void undo();
 	void redo();
@@ -144,9 +143,6 @@ private:
 	QAction *m_actionShowNodeIds;
 	QAction *m_actionShowEdgeIds;
 
-
-	QString m_lastExportPath;
-
 	OptionsData m_optionsData;
 
 	QTimer m_backupTimer;
@@ -163,5 +159,11 @@ private:
 	class CQuickHelpUI *m_quickHelpPanel;
 
 	class CSearchDialog *m_searchDialog;
+
+
+	// IO
 	class CDOTExportDialog *m_dotDialog;
+	class CImageExportDialog *m_imageDialog;
+
+	QString m_lastExportPath;
 };

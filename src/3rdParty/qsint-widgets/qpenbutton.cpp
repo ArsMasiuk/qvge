@@ -9,9 +9,12 @@ namespace QSint
 {
 
 
-QPenButton::QPenButton(QWidget *parent) : QSplitButton(parent)
+QPenButton::QPenButton(QWidget *parent) : QMenuButton(parent)
 {
     init();
+
+    setUsedRange(Qt::NoPen, Qt::DashDotDotLine);
+    setPenStyle(Qt::SolidLine);
 }
 
 
@@ -73,7 +76,7 @@ void QPenButton::setPenStyle(Qt::PenStyle style)
 
 void QPenButton::onAction(QAction* act)
 {
-	QSplitButton::onAction(act);
+	QMenuButton::onAction(act);
 
 	int style = act->data().toInt();
 	if (style < Qt::NoPen || style >= Qt::CustomDashLine)

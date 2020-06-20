@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -41,6 +41,12 @@ protected:
 
 	// callbacks 
 	virtual void onParentGeometryChanged();
+
+private:
+	void createCurvedPath(bool intersected, 
+		const QLineF& shortLine, const QLineF& fullLine,
+		const QPointF& p1, const QPointF& lp, const QPointF& rp, const QPointF& p2,
+		double arrowSize);
 
 protected:
 	int m_bendFactor;

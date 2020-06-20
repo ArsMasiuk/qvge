@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -69,6 +69,16 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	QList<int> nodeSizes = { 5,10,15,20,30,40,50,75,100,150,200 };
 	ui->NodeSizeX->setValueList(nodeSizes);
 	ui->NodeSizeY->setValueList(nodeSizes);
+
+
+	// node outline
+	QList<double> strokeSizes = { 1,2,3,4,5,6,7,8,9,10 };
+	ui->StrokeSize->setValueList(strokeSizes);
+
+
+	// edge weight
+	QList<double> edgeSizes = { 1,2,3,4,5,6,7,8,9,10 };
+	ui->EdgeWeight->setValueList(edgeSizes);
 
 
     // update status & tooltips etc.
@@ -194,7 +204,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 
 
     // nodes
-    ui->NodesBox->setTitle(tr("Nodes (%1)").arg(nodes.count()));
+    ui->NodesBox->setTitle(tr("Nodes: %1").arg(nodes.count()));
 
     if (nodes.count())
     {
@@ -217,11 +227,11 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     QList<CItem*> nodeItems;
     for (auto item: nodes) nodeItems << item;
     int attrCount = ui->NodeAttrEditor->setupFromItems(*m_scene, nodeItems);
-	ui->NodeAttrBox->setTitle(tr("Custom Attributes (%1)").arg(attrCount));
+	ui->NodeAttrBox->setTitle(tr("Custom Attributes: %1").arg(attrCount));
 
 
     // edges
-    ui->EdgesBox->setTitle(tr("Edges (%1)").arg(edges.count()));
+    ui->EdgesBox->setTitle(tr("Edges: %1").arg(edges.count()));
 
     if (edges.count())
     {
@@ -236,7 +246,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     QList<CItem*> edgeItems;
     for (auto item: edges) edgeItems << item;
 	attrCount = ui->EdgeAttrEditor->setupFromItems(*m_scene, edgeItems);
-	ui->EdgeAttrBox->setTitle(tr("Custom Attributes (%1)").arg(attrCount));
+	ui->EdgeAttrBox->setTitle(tr("Custom Attributes: %1").arg(attrCount));
 
 
     // labels

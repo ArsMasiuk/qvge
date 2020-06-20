@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -24,6 +24,8 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 	if (saveFile.open(QFile::WriteOnly))
 	{
         QTextStream ts(&saveFile);
+		ts.setCodec("UTF-8");
+		ts.setGenerateByteOrderMark(true);
 
         QString graphId = QFileInfo(fileName).completeBaseName();
 
@@ -108,7 +110,7 @@ void CFileSerializerDOT::doWriteNodeDefaults(QTextStream& ts, const CEditorScene
 	const AttributesMap& nodeAttrMap = scene.getClassAttributes("node", false);
 	for (const auto &attr : nodeAttrMap)
 	{
-		if (!attr.noDefault)
+		if (!(attr.flags & ATTR_NODEFAULT))
 			nodeAttrs[attr.id] = attr.defaultValue;
 	}
 
@@ -231,7 +233,7 @@ void CFileSerializerDOT::doWriteEdgeDefaults(QTextStream& ts, const CEditorScene
 	const AttributesMap& edgeAttrMap = scene.getClassAttributes("edge", false);
 	for (const auto &attr : edgeAttrMap)
 	{
-		if (!attr.noDefault)
+		if (!(attr.flags & ATTR_NODEFAULT))
 			edgeAttrs[attr.id] = attr.defaultValue;
 	}
 

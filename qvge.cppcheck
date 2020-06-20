@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <builddir>qvge-cppcheck-build-dir</builddir>
+    <platform>win64</platform>
+    <analyze-all-vs-configs>false</analyze-all-vs-configs>
+    <check-headers>true</check-headers>
+    <check-unused-templates>false</check-unused-templates>
+    <max-ctu-depth>10</max-ctu-depth>
+    <paths>
+        <dir name="src/appbase"/>
+        <dir name="src/commonui"/>
+        <dir name="src/qvge"/>
+        <dir name="src/qvgeapp"/>
+        <dir name="src/qvgeio"/>
+    </paths>
+    <libraries>
+        <library>qt</library>
+    </libraries>
+</project>

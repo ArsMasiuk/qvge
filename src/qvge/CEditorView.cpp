@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -18,8 +18,7 @@ It can be used freely, maintaining the information above.
 
 CEditorView::CEditorView(QWidget *parent)
 	: Super(parent),
-	m_menuModeTmp(Qt::PreventContextMenu),
-	m_currentZoom(1.0)
+	m_menuModeTmp(Qt::PreventContextMenu)
 {
     setAttribute(Qt::WA_TranslucentBackground, false);
 	setViewportUpdateMode(BoundingRectViewportUpdate);

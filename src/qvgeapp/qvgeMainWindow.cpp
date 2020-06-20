@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -178,14 +178,17 @@ QString qvgeMainWindow::getAboutText() const
 		+ QString(
 			"<p>This is a free software."
 			"<br>It comes without warranty of any kind. Use it on your own risk."
-			"<p>&copy; 2016-2019 Ars L. Masiuk"
+			"<p>&copy; 2016-2020 Ars L. Masiuk"
 			"<hr>"
 			"<p><i>Credits:</i>"
-			"<br>Qt framework &copy; The Qt Company Ltd"
-			"<br>Qt property browser framework &copy; Digia PLC &copy; The Qt Company Ltd"
-			"<br>QSint widgets library &copy; Sintegrial Technologies"
-			"<br>OGDF &copy; OREAS GmbH and others"
-			"<br>read_proc &copy; Daniel Knuettel"
+			"<br>&nbsp; - Qt framework &copy; <i>The Qt Company Ltd</i>"
+			"<br>&nbsp; - Qt property browser framework &copy; <i>The Qt Company Ltd</i>"
+			"<br>&nbsp; - QSint widgets library &copy; <i>Sintegrial Technologies</i>"
+			"<br>&nbsp; - read_proc &copy; <i>Daniel Knuettel</i>"
+			"<br>&nbsp; - menu & toolbar graphics &copy; <i>Inkscape project</i>"
+#ifdef USE_OGDF
+			"<br>&nbsp; - OGDF &copy; <i>OGDF development team</i>"
+#endif
 		);
 }
 

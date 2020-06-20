@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -42,10 +42,21 @@ void CTextLabelEdit::updateGeometry()
 
 bool CTextLabelEdit::sceneEvent(QEvent *event)
 {
+	if (event->type() == QEvent::KeyPress)
+	{
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
+		if ((keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)
+			&& keyEvent->modifiers() == Qt::NoModifier)
+		{
+			finishEdit(true);
+			return true;
+		}
+	}
+
 	if (event->type() == QEvent::KeyRelease)
 	{
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
-		if (keyEvent->matches(QKeySequence::Cancel))	// Esc
+		if (keyEvent->matches(QKeySequence::Cancel))				// Esc
 		{
 			finishEdit(true);
 			return true;
@@ -78,6 +89,7 @@ void CTextLabelEdit::startEdit(CItem *item)
 
 	setPlainText(m_storedText);
 	setFont(m_item->getAttribute("label.font").value<QFont>());
+	setDefaultTextColor(m_item->getAttribute("label.color").value<QColor>());
 
 	updateGeometry();
 
@@ -89,6 +101,8 @@ void CTextLabelEdit::startEdit(CItem *item)
 
 	scene->addItem(this);
 	show();
+
+	Q_EMIT editingStarted(m_item);
 }
 
 
@@ -96,6 +110,8 @@ void CTextLabelEdit::finishEdit(bool accept)
 {
 	if (m_item == nullptr)
 		return;
+
+	Q_EMIT editingFinished(m_item, !accept);
 
 	auto scene = m_item->getScene();
 	if (scene == nullptr)

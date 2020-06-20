@@ -44,12 +44,6 @@ CNode::CNode(QGraphicsItem* parent) : QGraphicsRectItem(parent)
 	m_labelItem->setPen(Qt::NoPen);
 	m_labelItem->setAcceptedMouseButtons(Qt::NoButton);
 	m_labelItem->setAcceptHoverEvents(false);
-
-
-	// temp
-	//addPort("Port 1", Qt::AlignLeft | Qt::AlignVCenter);
-	//addPort("Port 2", Qt::AlignBottom | Qt::AlignRight);
-	//addPort("Port 3", Qt::AlignBottom | Qt::AlignRight, 0, -20);
 }
 
 
@@ -129,8 +123,8 @@ void CNode::setSize(float w, float h)
 
 bool CNode::hasLocalAttribute(const QByteArray& attrId) const
 {
-	if (/*attrId == "shape" || attrId == "size" ||*/ attrId == "pos" || 
-		attrId == "x" || attrId == "y" || attrId == "z") 
+	if (attrId == "width" || attrId == "height" || 
+		attrId == "pos" || attrId == "x" || attrId == "y" || attrId == "z") 
 		return true;
 
 	return Super::hasLocalAttribute(attrId);
@@ -150,7 +144,7 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 		return true;
 	}
 
-	// virtual attributes
+	// mapped attributes
 	if (attrId == "size")
 	{
 		if (v.type() == QVariant::Size || v.type() == QVariant::SizeF)
@@ -176,6 +170,24 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 		}
 
 		return false;
+	}
+
+	if (attrId == "width")
+	{
+		float s = v.toFloat();
+		QSizeF sf = getSize();
+		Super::setAttribute("size", QSizeF(s, sf.height()));
+		resize(s, sf.height());
+		return true;
+	}
+
+	if (attrId == "height")
+	{
+		float s = v.toFloat();
+		QSizeF sf = getSize();
+		Super::setAttribute("size", QSizeF(sf.width(), s));
+		resize(sf.width(), s);
+		return true;
 	}
 
 	if (attrId == "x")
@@ -221,7 +233,7 @@ bool CNode::removeAttribute(const QByteArray& attrId)
 
 QVariant CNode::getAttribute(const QByteArray& attrId) const
 {
-	// virtual attributes
+	// mapped attributes
 	if (attrId == "x")
 	{
 		return x();
@@ -242,6 +254,7 @@ QVariant CNode::getAttribute(const QByteArray& attrId) const
 		return pos();
 	}
 
+	// virtual attributes
 	if (attrId == "degree")
 	{
 		return m_connections.size();
@@ -289,7 +302,7 @@ bool CNode::removePort(const QByteArray& portId)
 
 	updateCachedItems();
 
-	return port;
+	return true;
 }
 
 
@@ -538,35 +551,6 @@ QSet<CEdge*> CNode::getOutConnections() const
 }
 
 
-double CNode::getDistanceToLineEnd(const QLineF& line, const QByteArray& portId) const
-{
-	// port
-	if (portId.size())
-	{
-		if (CNodePort* port = getPort(portId) )
-		{
-			double shift = (port->boundingRect().width() / 2);
-			return shift;
-		}
-	}
-
-	// circle 
-	if (m_shapeCache.isEmpty())
-	{
-		double shift = qMax(rect().width() / 2, rect().height() / 2);
-		return shift;
-	}
-
-	// polygon (must be cashed)
-	QPolygonF scenePolygon = m_shapeCache.translated(pos());
-    QPointF intersectionPoint = CUtils::closestIntersection(line, scenePolygon);
-	if (intersectionPoint.isNull())
-		return 0.0;
-	else
-		return QLineF(intersectionPoint, line.p2()).length();
-}
-
-
 QPointF CNode::getIntersectionPoint(const QLineF& line, const QByteArray& portId) const
 {
 	// port
@@ -776,8 +760,8 @@ ItemDragTestResult CNode::acceptDragFromItem(QGraphicsItem* draggedItem)
 {
 	if (dynamic_cast<CNode*>(draggedItem))
 		return Accepted;
-
-	return Ignored;
+	else
+		return Ignored;
 }
 
 
@@ -787,11 +771,11 @@ QVariant CNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVari
 {
 	if (change == ItemSceneHasChanged)
 	{
-		// update attributes cache after attach to scene
-		updateCachedItems();
-
 		// set default ID
 		setDefaultId();
+
+		// update attributes cache after attach to scene
+		updateCachedItems();
 
 		return value;
 	}
@@ -894,6 +878,8 @@ QRectF CNode::boundingRect() const
 
 void CNode::updateCachedItems()
 {
+	Super::updateCachedItems();
+
 	auto shapeCache = m_shapeCache;
 	auto sizeCache = m_sizeCache;
 
@@ -904,13 +890,6 @@ void CNode::updateCachedItems()
 	{
 		// update ports & edges
 		updatePortsLayout();
-
-		// update text label
-		if (getScene() && getScene()->itemLabelsEnabled())
-		{
-			updateLabelPosition();
-			updateLabelDecoration();
-		}
 	}
 
 	update();

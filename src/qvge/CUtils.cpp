@@ -5,11 +5,16 @@
 #include <QColor>
 #include <QFont>
 
+#include <math.h>
+
 
 QVariant CUtils::textToVariant(const QString& text, int type)
 {
     switch (type)
     {
+	case QMetaType::QStringList:
+		return text.split('|', QString::SkipEmptyParts);
+
     case QVariant::Int:
         return text.toInt();
 
@@ -41,9 +46,12 @@ QVariant CUtils::textToVariant(const QString& text, int type)
 }
 
 
-QString CUtils::variantToText(const QVariant& v)
+QString CUtils::variantToText(const QVariant& v, int type)
 {
-	switch (v.type())
+	if (type < 0)
+		type = v.type();
+
+	switch (type)
 	{
 	case QVariant::Point:
 		return QString("%1;%2").arg(v.toPoint().x()).arg(v.toPoint().y());
@@ -66,18 +74,8 @@ QString CUtils::variantToText(const QVariant& v)
 	case QMetaType::Float:
 		return QString::number(v.value<float>(), 'f', 4);
 
-
-	//case QVariant::UInt:
-	//	return QString::number(v.toUInt());
-
-	//case QVariant::Int:
-	//	return QString::number(v.toInt());
-
-	//case QVariant::ULongLong:
-	//	return QString::number(v.toULongLong());
-
-	//case QVariant::LongLong:
-	//	return QString::number(v.toLongLong());
+	case QMetaType::QStringList:
+		return v.toStringList().join('|');
 
 	default:;
         return v.toString();
@@ -114,6 +112,27 @@ QString CUtils::penStyleToText(int style)
 		case Qt::DashDotDotLine:    return QStringLiteral("dashdotdot");
 		default:					return QStringLiteral("none");
 	}
+}
+
+
+QString CUtils::visToString(const QSet<QByteArray>& visIds)
+{
+	return visIds.toList().join('|');
+}
+
+
+QSet<QByteArray> CUtils::visFromString(const QString& text)
+{
+	return text.toUtf8().split('|').toSet();
+}
+
+
+QStringList CUtils::byteArraySetToStringList(const QSet<QByteArray>& ids)
+{
+	QStringList sl;
+	for (const auto& id : ids)
+		sl << id;
+	return sl;
 }
 
 
@@ -157,3 +176,22 @@ QRectF CUtils::getBoundingRect(const QList<QGraphicsItem*>& items)
 
 	return r;
 }
+
+
+QLineF CUtils::extendLine(const QLineF& line, float fromStart, float fromEnd)
+{
+	QPointF v(line.p2().x() - line.p1().x(), line.p2().y() - line.p1().y());
+
+    float l = std::sqrt(v.x() * v.x() + v.y() * v.y());
+
+	v.setX(v.x() / l);
+	v.setY(v.y() / l);
+
+	return QLineF(
+		line.p1().x() - v.x() * fromStart, 
+		line.p1().y() - v.y() * fromStart,
+		line.p2().x() - v.x() * fromEnd,
+		line.p2().y() - v.y() * fromEnd
+	);
+}
+
