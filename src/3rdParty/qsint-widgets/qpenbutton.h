@@ -1,6 +1,6 @@
 #pragma once
 
-#include "qmenubutton.h"
+#include "qsplitbutton.h"
 
 #include <QPen>
 
@@ -9,7 +9,7 @@ namespace QSint
 {
 
 
-class QPenButton : public QMenuButton
+class QPenButton : public QSplitButton
 {
     Q_OBJECT
 
