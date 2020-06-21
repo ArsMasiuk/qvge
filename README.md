@@ -71,19 +71,24 @@ jom
 
 ### Supported compilers
 
-**qvge** has been built with:
-- Microsoft Visual Studio 2015 (Community Edition)
-- MinGW 5.3
-- GCC 4.8 & GCC 5.3 (Linux)
+Recent version of **qvge** has been built with:
+- Microsoft Visual Studio 2017 (Community Edition)
+- MinGW 7.3
+- GCC 7.5 (Linux)
 - GCC 6.4.0 (Cygwin) 
 - Clang C++ (FreeBSD)
 
-Hopefully it will be compiled with others compilers, too. If not please do not hesitate to provide description of the issue.
+Hopefully it can be compiled with others compilers, too. If not please do not hesitate to provide description of the issue.
 
-### Supported OSes
+### Supported OS
 
-**qvge** has been tested on Microsoft Windows 10 and several Linux (Mint, Mageia etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
-It can be compiled & started under Cygwin as well.
+**qvge** has been tested on Microsoft Windows 10 and several Linux OS (Mint, Mageia etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
+
+**qvge** can be compiled & started under Cygwin as well.
+
+### Supported Qt
+
+**qvge** has been tested with Qt 5.9-5.13. But it should be compiled with any newer 5.x version too. 
 
 ### Credits
 
