@@ -52,6 +52,9 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Mutual"), tr("Mutual (both ends)"), "mutual");
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Undirected"), tr("None (no ends)"), "undirected");
 
+	ui->EdgeType->addAction(QIcon(":/Icons/Edge-Line"), tr("Direct line"), "edge");
+	ui->EdgeType->addAction(QIcon(":/Icons/Edge-Polyline"), tr("Polyline"), "polyedge");
+
     ui->EdgeColor->setColorScheme(QSint::OpenOfficeColors());
 
     ui->EdgeStyle->setUsedRange(Qt::SolidLine, Qt::DashDotDotLine);
@@ -399,6 +402,12 @@ void CNodeEdgePropertiesUI::on_EdgeStyle_activated(QVariant data)
 void CNodeEdgePropertiesUI::on_EdgeDirection_activated(QVariant data)
 {
 	setEdgesAttribute("direction", data);
+}
+
+
+void CNodeEdgePropertiesUI::on_EdgeType_activated(QVariant data)
+{
+
 }
 
 

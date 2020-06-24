@@ -62,6 +62,7 @@ protected Q_SLOTS:
     void on_EdgeWeight_valueChanged(double value);
     void on_EdgeStyle_activated(QVariant data);
 	void on_EdgeDirection_activated(QVariant data);
+	void on_EdgeType_activated(QVariant data);
 
     void on_LabelFont_activated(const QFont &font);
 	void on_LabelColor_activated(const QColor &color);

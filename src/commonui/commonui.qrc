@@ -38,5 +38,7 @@
         <file alias="DOT">Icons/Format-DOT.png</file>
         <file alias="GEXF">Icons/Format-GEXF.png</file>
         <file alias="GraphML">Icons/Format-GraphML.png</file>
+        <file alias="Edge-Line">Icons/Edge-Direct.png</file>
+        <file alias="Edge-Polyline">Icons/Edge-Polyline.png</file>
     </qresource>
 </RCC>

@@ -25,6 +25,11 @@ QVGE 0.5.5
 - fixed input/output of size attribute to GEXF format
 - fixed building issue under Linux/Unix (file name mismatch in one of 3rdParies) (#81)
 - fixed potential crash when using "Zoom Back" function after loading a graph document
+
+Windows installation:
+- Build moved from MSVC 2015 to MinGW 7
+- Qt updated to 5.13.2
+- Installation/binary packages made significantly smaller
  
 
 QVGE 0.5.4
