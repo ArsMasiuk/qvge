@@ -1,7 +1,7 @@
 # This file is a part of
 # QVGE - Qt Visual Graph Editor
 #
-# (c) 2016-2019 Ars L. Masiuk (ars.masiuk@gmail.com)
+# (c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
 #
 # It can be used freely, maintaining the information above.
 
@@ -35,17 +35,15 @@ INCLUDEPATH += $$PWD
 
 # install
 unix{
-#    QVGE_INSTALL_ROOT = $$(INSTALL_ROOT)
-#    isEmpty(QVGE_INSTALL_ROOT){
-#        QVGE_INSTALL_ROOT = ./
-#    }
+    PREFIX_DIR = $${PREFIX}
 
-    QVGE_PREFIX = $$(PREFIX)
-    isEmpty(QVGE_PREFIX){
-        QVGE_PREFIX = /usr/local
+    isEmpty(PREFIX_DIR) {
+        PREFIX_DIR = /usr/local
     }
 
-    TARGET.path = $$QVGE_PREFIX/
+    target.path = $$PREFIX_DIR
+
+    #message($$target.path)
 
     INSTALLS += target
 }
