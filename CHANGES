@@ -1,8 +1,9 @@
 QVGE 0.6.0
 -------------------------------------------------------------------------------
-(inprogress) - added polyedges (#23)
+(in progress) - added polyedges (#23)
 
 - fixed crash at undo recent drag
+- fixed issue when a document could not be opened (#96)
 
 
 QVGE 0.5.5

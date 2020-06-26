@@ -154,32 +154,39 @@ bool CNodeEditorUIController::importCSV(const QString &fileName, QString* lastEr
 
 bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QString &format, QString* lastError)
 {
-    if (format == "xgr")
-    {
-        return (CFileSerializerXGR().load(fileName, *m_editorScene, lastError));
-    }
+	try 
+	{
+		if (format == "xgr")
+		{
+			return (CFileSerializerXGR().load(fileName, *m_editorScene, lastError));
+		}
 
-    if (format == "graphml")
-    {
-        return (CFileSerializerGraphML().load(fileName, *m_editorScene, lastError));
-    }
+		if (format == "graphml")
+		{
+			return (CFileSerializerGraphML().load(fileName, *m_editorScene, lastError));
+		}
 
-    if (format == "gexf")
-    {
-        return (CFileSerializerGEXF().load(fileName, *m_editorScene, lastError));
-    }
+		if (format == "gexf")
+		{
+			return (CFileSerializerGEXF().load(fileName, *m_editorScene, lastError));
+		}
 
-    if (format == "csv")
-    {
-		return importCSV(fileName, lastError);
-    }
+		if (format == "csv")
+		{
+			return importCSV(fileName, lastError);
+		}
 
-    // else via ogdf
+		// else via ogdf
 #ifdef USE_OGDF
-    return (COGDFLayout::loadGraph(fileName, *m_editorScene, lastError));
+		return (COGDFLayout::loadGraph(fileName, *m_editorScene, lastError));
 #else
-    return false;
+		return false;
 #endif
+	}
+	catch (...)
+	{
+		return false;
+	}
 }
 
 

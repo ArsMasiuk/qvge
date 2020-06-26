@@ -62,7 +62,8 @@ bool qvgeMainWindow::createDocument(const QByteArray &docType)
     // scene
     if (docType == "graph")
     {
-        m_graphEditController = new CNodeEditorUIController(this);
+		if (m_graphEditController == nullptr)
+			m_graphEditController = new CNodeEditorUIController(this);
 
         return true;
     }
@@ -70,16 +71,37 @@ bool qvgeMainWindow::createDocument(const QByteArray &docType)
     // text
     if (docType == "text")
     {
-        m_textEditor = new QPlainTextEdit(this);
-        setCentralWidget(m_textEditor);
+		if (m_textEditor == nullptr)
+		{
+			m_textEditor = new QPlainTextEdit(this);
+			setCentralWidget(m_textEditor);
 
-        connect(m_textEditor, &QPlainTextEdit::textChanged, this, &CMainWindow::onDocumentChanged);
+			connect(m_textEditor, &QPlainTextEdit::textChanged, this, &CMainWindow::onDocumentChanged);
+		}
 
         return true;
     }
 
     // unknown type
     return false;
+}
+
+
+void qvgeMainWindow::destroyDocument()
+{
+	if (m_graphEditController)
+	{
+		m_graphEditController->disconnect();
+		delete m_graphEditController;
+		m_graphEditController = nullptr;
+	}
+
+	if (m_textEditor)
+	{
+		m_textEditor->disconnect();
+		delete m_textEditor;
+		m_textEditor = nullptr;
+	}
 }
 
 
@@ -109,6 +131,9 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 				m_graphEditController->onDocumentLoaded(fileName);
 				return true;
 			}
+
+			// terminate incomplete document
+			//destroyDocument();
 		}
 
 		if (lastError.size())
@@ -134,6 +159,9 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 				f.close();
 				return true;
 			}
+
+			// terminate incomplete document
+			//destroyDocument();
 		}
 	}
 

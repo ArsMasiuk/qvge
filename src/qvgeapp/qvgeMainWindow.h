@@ -34,6 +34,7 @@ public:
 
 protected:
     virtual bool createDocument(const QByteArray &docType);
+	virtual void destroyDocument();
 	virtual void onNewDocumentCreated(const QByteArray &docType);
     virtual bool openDocument(const QString &fileName, QByteArray &docType);
     virtual bool saveDocument(const QString &fileName, const QString &selectedFilter, const QByteArray &docType);
