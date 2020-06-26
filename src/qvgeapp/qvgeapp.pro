@@ -10,9 +10,9 @@ TEMPLATE = app
 TARGET = qvgeapp
 
 win32{
-        VERSION = 0.5.4.0
+        VERSION = 0.6.0.0
 	RC_ICONS = $$PWD/win32/icon.ico
-        QMAKE_TARGET_COPYRIGHT = (C) 2016-2019 Ars L. Masiuk
+        QMAKE_TARGET_COPYRIGHT = (C) 2016-2020 Ars L. Masiuk
 	QMAKE_TARGET_DESCRIPTION = Qt Visual Graph Editor
 	QMAKE_TARGET_PRODUCT = qvge
 }
@@ -34,5 +34,19 @@ INCLUDEPATH += $$PWD
 
 
 # install
-INSTALLS += target
+unix{
+#    QVGE_INSTALL_ROOT = $$(INSTALL_ROOT)
+#    isEmpty(QVGE_INSTALL_ROOT){
+#        QVGE_INSTALL_ROOT = ./
+#    }
+
+    QVGE_PREFIX = $$(PREFIX)
+    isEmpty(QVGE_PREFIX){
+        QVGE_PREFIX = /usr/local
+    }
+
+    TARGET.path = $$QVGE_PREFIX/
+
+    INSTALLS += target
+}
 

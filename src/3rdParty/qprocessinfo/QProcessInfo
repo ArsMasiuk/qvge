@@ -1,0 +1,7 @@
+// Copyright (c) 2016, Baldur Karlsson
+//
+// Licensed under BSD 2-Clause License, see LICENSE file.
+//
+// Obtained from https://github.com/baldurk/qprocessinfo
+
+#include "qprocessinfo.h"
