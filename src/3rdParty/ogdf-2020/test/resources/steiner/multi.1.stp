@@ -1,0 +1,30 @@
+33D32945 STP File, STP Format Version 1.0
+
+SECTION Comment
+Name    "Multigraph"
+Creator "Tilo Wiedera"
+END
+
+SECTION Graph
+Nodes 2
+Edges 11
+E 2 1 111111
+E 2 1 11111
+E 2 1 1111
+E 2 1 111
+E 2 1 11
+E 1 2 1
+E 1 2 10
+E 1 2 100
+E 1 2 1000
+E 1 2 10000
+E 1 2 100000
+END
+
+SECTION Terminals
+Terminals 2
+T 1
+T 2
+END
+
+EOF

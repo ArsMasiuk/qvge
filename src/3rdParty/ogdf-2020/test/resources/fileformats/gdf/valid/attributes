@@ -1,0 +1,10 @@
+nodedef>name VARCHAR,label VARCHAR,class VARCHAR, visible BOOLEAN,labelvisible BOOLEAN,width DOUBLE,height DOUBLE,x DOUBLE,y DOUBLE
+s1,SiteA,blog,true,true,10.0,10.0,-52.11296,-25.921143
+s2,SiteB,forum,true,true,10.986123,10.986123,-20.114172,25.740356
+s3,SiteC,webpage,true,true,10.986123,10.986123,8.598924,-26.867584
+edgedef>node1 VARCHAR,node2 VARCHAR,directed BOOLEAN
+s1,s2,true
+s2,s3,true
+s3,s2,true
+s3,s1,true
+

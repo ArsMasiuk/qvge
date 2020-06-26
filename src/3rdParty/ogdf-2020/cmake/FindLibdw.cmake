@@ -1,0 +1,5 @@
+find_path(LIBDW_INCLUDE_DIR "elfutils/libdw.h" "elfutils/libdwfl.h")
+find_library(LIBDW_LIBRARY dw)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(LIBDW DEFAULT_MSG LIBDW_LIBRARY LIBDW_INCLUDE_DIR)
+mark_as_advanced(LIBDW_INCLUDE_DIR LIBDW_LIBRARY)

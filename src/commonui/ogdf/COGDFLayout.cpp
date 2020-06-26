@@ -6,10 +6,13 @@
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
-#include <ogdf/module/LayoutModule.h>
+//#include <ogdf/module/LayoutModule.h>
 #include <ogdf/fileformats/GraphIO.h>
 
 #include <ogdf/misclayout/BalloonLayout.h>
+
+#include <iostream>     // std::ios, std::istream, std::cout
+#include <fstream>      // std::filebuf
 
 #include <QMap>
 #include <QApplication>
@@ -245,33 +248,42 @@ void COGDFLayout::graphToScene(const ogdf::Graph &G, const ogdf::GraphAttributes
 bool COGDFLayout::loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError)
 {
     ogdf::Graph G;
-    ogdf::GraphAttributes GA(G, 0xffffff);   // all attrs
+    ogdf::GraphAttributes GA(G, -1);   // all attrs
 
     QString format = QFileInfo(filename).suffix().toLower();
 
+    std::filebuf fb;
+    if (!fb.open (filename.toStdString(), std::ios::in))
+        return false;
+
+    std::istream is(&fb);
+
     bool ok = false;
-    if (format == "gml")
-        ok = ogdf::GraphIO::readGML(GA, G, filename.toStdString());
+
+	if (format == "gml")
+	{
+        ok = ogdf::GraphIO::readGML(GA, G, is);
+	}
 	else 
-		if (format == "dot" || format == "gv")
-		{
-			ok = ogdf::GraphIO::readDOT(GA, G, filename.toStdString());
+	if (format == "dot" || format == "gv")
+	{
+        ok = ogdf::GraphIO::readDOT(GA, G, is);
 			
-			// normalize node positions
-			if (ok && GA.has(GA.nodeGraphics))
+		// normalize node positions
+		if (ok && GA.has(GA.nodeGraphics))
+		{
+			for (auto n : G.nodes)
 			{
-				for (auto n : G.nodes)
+                if (GA.x(n) != 0.0 || GA.y(n) != 0.0)
 				{
-					if (GA.x(n) || GA.y(n))
-					{
-						GA.x(n) *= 72.0;
-						GA.y(n) *= -72.0;
-						GA.width(n) *= 72.0;
-						GA.height(n) *= 72.0;
-					}
+					GA.x(n) *= 72.0;
+					GA.y(n) *= -72.0;
+					GA.width(n) *= 72.0;
+					GA.height(n) *= 72.0;
 				}
 			}
 		}
+	}
 
     if (ok)
     {
@@ -279,6 +291,8 @@ bool COGDFLayout::loadGraph(const QString &filename, CNodeEditorScene &scene, QS
         graphToScene(G, GA, scene);
 		scene.addUndoState();
 	}
+
+    fb.close();
 
     return ok;
 }
@@ -292,7 +306,7 @@ bool COGDFLayout::autoLayoutIfNone(const ogdf::Graph &G, ogdf::GraphAttributes &
 	{
 		for (auto n : G.nodes)
 		{
-			if (GA.x(n) || GA.y(n))
+            if (GA.x(n) != 0.0 || GA.y(n) != 0.0)
 				return false;
 		}
 	}

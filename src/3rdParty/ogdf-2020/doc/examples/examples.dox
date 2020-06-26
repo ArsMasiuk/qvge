@@ -1,0 +1,10 @@
+/**
+ * \page examples How-to Examples
+ *
+ * The following code examples are meant to show simple examples of <b>how to use OGDF</b>.
+ * They are grouped into the following categories:
+ *
+ * - \subpage ex-basic
+ * - \subpage ex-layout
+ * - \subpage ex-special
+ */

@@ -1,0 +1,6 @@
+graph {
+  a [label="Foo";
+  b [shape=box];
+  a -- b -- c [color=blue];
+  b -- d [style=dotted];
+}

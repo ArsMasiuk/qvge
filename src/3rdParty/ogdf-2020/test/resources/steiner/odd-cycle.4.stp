@@ -1,0 +1,33 @@
+33D32945 STP File, STP Format Version 1.0
+
+SECTION Comment
+Name    "Odd Cycle"
+Creator "Tilo Wiedera"
+END
+
+SECTION Graph
+Nodes 6
+Edges 9
+E 1 2 1
+E 1 6 1
+
+E 2 3 1
+E 2 4 1
+E 2 6 1
+
+E 3 4 1
+
+E 4 5 1
+E 4 6 1
+
+E 5 6 1
+END
+
+SECTION Terminals
+Terminals 3
+T 1
+T 3
+T 5
+END
+
+EOF

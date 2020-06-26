@@ -1,0 +1,10 @@
+graph {
+  // Lorem ipsum dolor sit amet
+	a -- b -- c;
+  // consetetur sadipscing elitr
+	b -- d;
+  // sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat
+}
+
+// sed diam voluptua
+

@@ -1,0 +1,55 @@
+/* redefinitions for doxygen standard settings */
+
+body, table, div, p, dl {
+	font: 13px/19px Arial, Helvetica, sans-serif;
+}
+
+
+/* additional OGDF stuff for header */
+
+.ogdftitle {
+	font-size: 22px;
+	line-height: 24px;
+}
+
+a.menu {
+	display:block;
+	margin-bottom:0px;
+	padding:5px 2ex 5px 2ex;
+	text-decoration:none;
+	font-weight: bold;
+	border-left-color: #4A7D9B;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-bottom-color: #4A7D9B;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+a.menu:link    { background-color:transparent; }
+a.menu:visited { background-color:transparent; }
+a.menu:hover   { background-color: #4A7D9B; color:#DEEBF8; }
+a.menu:active  { color:#ffffff; background-color:#000000; }
+
+.menubox {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+;	border-bottom-style: solid;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-top-color: #4A7D9B;
+	border-right-color: #4A7D9B;
+	border-bottom-color: #4A7D9B;
+	border-left-color: #4A7D9B;
+}
+
+.menutable {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	background-color: #DEEBF8;
+	font-size: 100%;
+}

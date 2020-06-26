@@ -602,8 +602,8 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
 	bool isCtrl = (keyEvent->modifiers() == Qt::ControlModifier);
-	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
-	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
+//	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
+//	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
 
 
 	// Ctrl+Up/Down; alter size by 10%

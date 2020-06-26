@@ -1,0 +1,2 @@
+#define OGDF_MEMORY_POOL_TS 1
+#define COIN_OSI_CLP 1
