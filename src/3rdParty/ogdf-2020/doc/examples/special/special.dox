@@ -1,0 +1,28 @@
+/**
+ * \page ex-special Special Functionality
+ *
+ * \section sec-ex-special-1 Check build mode
+ *  This example shows how to check the build mode of the ogdf and user programs.
+ *
+ * \include check-build-mode.cpp
+ *  As hinted at in this example the internal differentiation between Debug and Release build mode
+ *  in the OGDF is handled via the preprocessor macro <tt>OGDF_DEBUG</tt>. Also, any compiled instance of
+ *  the ogdf will expose the build mode it was compiled in via the flag ogdf::debugMode.
+ *  This allows users to make sure the build configuration of their user code matches that of the
+ *  ogdf library.
+ *
+ * \section sec-ex-special-2 Displaying information about the system
+ *  This example shows how to query information about the system.
+ *
+ * \include system-info.cpp
+ *  The ogdf::System interface enables you to query information about the system at runtime, including
+ *  CPU thread count, cache sizes and supported technologies as well as some basic statistics about
+ *  memory usage on the system.
+ *  While most of this should probably not concern the average user, it might still be useful
+ *  to know for more experienced users that by default the ogdf comes with and uses its own
+ *  memory manager ogdf::PoolMemoryAllocator which will allocate memory in chunks for better
+ *  runtime at the cost of some (minor) memory overhead. To compile with standard free/malloc memory
+ *  management using ogdf::MallocMemoryAllocator you can define the preprocessor macro
+ *  <tt>OGDF_MEMORY_MALLOC_TS</tt> via cmake. Note also that all ogdf algorithms will
+ *  run sequentially unless multithreading is explicitly requested.
+ */

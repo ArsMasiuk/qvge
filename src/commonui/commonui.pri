@@ -17,7 +17,7 @@ INCLUDEPATH += $$PWD/../3rdParty/qsint-widgets
 INCLUDEPATH += $$PWD/../3rdParty/qtpropertybrowser 
 
 USE_OGDF{
-    INCLUDEPATH += $$PWD/../3rdParty/ogdf/include
+    INCLUDEPATH += $$PWD/../3rdParty/ogdf-2020/include
 
     SOURCES += $$files($$PWD/ogdf/*.cpp)
     HEADERS += $$files($$PWD/ogdf/*.h)

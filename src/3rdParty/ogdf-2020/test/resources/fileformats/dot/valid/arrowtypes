@@ -1,0 +1,7 @@
+digraph {
+    a -> b [dir = both];
+    c -> d [dir = forward];
+    e -> f [dir = back];
+    g -> h [dir = none];
+    i -> j [dir = undefined];
+}

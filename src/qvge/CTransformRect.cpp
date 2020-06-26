@@ -87,7 +87,7 @@ void CTransformRect::draw(class CEditorScene &scene, QPainter *painter, const QR
 }
 
 
-bool CTransformRect::onMousePressed(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent)
+bool CTransformRect::onMousePressed(CEditorScene& /*scene*/, QGraphicsSceneMouseEvent* mouseEvent)
 {
 	bool isDragging = (mouseEvent->button() == Qt::LeftButton);
 	if (!isDragging)

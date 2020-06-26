@@ -1,0 +1,34 @@
+#define OGDF_MEMORY_@OGDF_MEMORY_MANAGER@
+
+#if @MULTICONFIG_BUILD@ == 0 || !defined(NDEBUG)
+	#cmakedefine OGDF_DEBUG
+#endif
+
+#ifdef OGDF_DEBUG
+	#cmakedefine OGDF_HEAVY_DEBUG
+	#cmakedefine OGDF_USE_ASSERT_EXCEPTIONS
+	#ifdef OGDF_USE_ASSERT_EXCEPTIONS
+		#define OGDF_FUNCTION_NAME @OGDF_FUNCTION_NAME@
+	#endif
+	#if @SHOW_STACKTRACE@
+		#define OGDF_USE_ASSERT_EXCEPTIONS_WITH_STACKTRACE
+		#cmakedefine01 BACKWARD_HAS_DW
+		#cmakedefine01 BACKWARD_HAS_BFD
+		#cmakedefine01 BACKWARD_HAS_UNWIND
+	#endif
+#endif
+
+#cmakedefine OGDF_DLL
+
+//! The size of a pointer
+//! @ingroup macros
+#define OGDF_SIZEOF_POINTER @CMAKE_SIZEOF_VOID_P@
+
+#define COIN_OSI_@COIN_SOLVER@
+
+#if @COIN_SOLVER_IS_EXTERNAL@
+	#define OSI_@COIN_SOLVER@
+#endif
+
+#cmakedefine OGDF_SSE3_EXTENSIONS @OGDF_SSE3_EXTENSIONS@
+#cmakedefine OGDF_HAS_LINUX_CPU_MACROS

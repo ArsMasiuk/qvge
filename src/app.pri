@@ -15,7 +15,7 @@ else{
 LIBS += -lcommonui -lqvge -lqvgeio -lqtpropertybrowser -lqsint-widgets
 
 USE_OGDF{
-    LIBS += -logdf
+    LIBS += -logdf-2020
 }
 
 win32{

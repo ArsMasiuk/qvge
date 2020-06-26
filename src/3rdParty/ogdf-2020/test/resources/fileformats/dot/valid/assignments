@@ -1,0 +1,4 @@
+digraph {
+    label = "wat"
+    a -> b
+}

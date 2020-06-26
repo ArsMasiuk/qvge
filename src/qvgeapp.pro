@@ -12,8 +12,8 @@ CONFIG += ordered
 include($$PWD/config.pri)
 
 USE_OGDF{
-    SUBDIRS += ogdf
-    ogdf.file = $$PWD/3rdParty/ogdf/ogdf.pro
+    #SUBDIRS += ogdf-2020
+    #ogdf.file = $$PWD/3rdParty/ogdf-2020/ogdf-2020.pro
 }
 
 SUBDIRS += qtpropertybrowser
