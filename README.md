@@ -21,12 +21,14 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 - Node ports supported as well
 - Search among the graph elements and their attributes
 - Auto-creation and auto-layout of graphs (via OGDF)
-- Native graph persistence format (XGR)
-- Reading GraphML, GML, GraphViz DOT (partially) and GEXF files
 - Export into PDF and popular image formats
-- Export into GraphViz DOT format
-- Export into GEXF format
-
+- Graph file format support:
+  - Native graph persistence format (XGR)
+  - GEXF
+  - GraphML
+  - GML
+  - GraphViz DOT (partially)
+ 
 ### Some users' feedback
 
 >"Qt Visual Graph Editor is a fairly straightforward, open-source tool that enables users to design relatively simple graphs for their >projects. It comes with a decent set of features and is very intuitive." 
@@ -70,6 +72,17 @@ or by Jom:
 jom 
 ~~~~
 
+### Enabling OGDF 
+
+In order to build **qvge** with OGDF support (shipped with qvge together): 
+before running qmake, open src/config.ini file and make sure that the following option is present:
+~~~~
+CONFIG += USE_OGDF 
+~~~~
+
+Then run qmake + make as desribed in the step before. *Please note:* OGDF is really big, so its compilation takes some time. 
+
+
 ### Supported compilers
 
 Recent version of **qvge** has been built with:
@@ -95,12 +108,12 @@ Hopefully it can also be compiled with others compilers. If not please do not he
 
 **qvge** uses following 3rd party components:
 
-- [Qt](https://www.qt.io) (c) Qt Company 
-- [Qt property browser](https://github.com/qtproject/qt-solutions) (c) Qt Company 
-- [QSint widgets library](https://sourceforge.net/projects/qsint) (c) Sintegrial Technologies
+- [Qt](https://www.qt.io)
+- [Qt property browser](https://github.com/qtproject/qt-solutions)
+- [QProcessInfo](https://github.com/baldurk/qprocessinfo) 
+- [QSint widgets library](https://sourceforge.net/projects/qsint) 
 - [OGDF - Open Graph Drawing Framework](http://www.ogdf.net)
-- [Inkscape](https://inkscape.org) (SVG icons)
-- (deprecated) [read_proc library](https://daknuett.eu/personal) (c) Daniel Knuettel
+- SVG icons from [Inkscape](https://inkscape.org)
 
 Special thanks to:
 
