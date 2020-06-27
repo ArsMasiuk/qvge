@@ -9,8 +9,7 @@ in a simple and intuitive way.
 
 Please note that **qvge** is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor :)
 
-![Screenshot1](https://a.fsdn.com/con/app/proj/qvge/screenshots/qvge-117.PNG/245/183/1)
-![Screenshot2](https://a.fsdn.com/con/app/proj/qvge/screenshots/qvge%20-%20search.PNG/245/183/1)
+![Screenshot1](https://user-images.githubusercontent.com/19762856/85934275-2a985480-b8e1-11ea-81a9-a5b81f3365e2.PNG)
 
 ### Main Features
 
