@@ -79,17 +79,17 @@ Recent version of **qvge** has been built with:
 - GCC 6.4.0 (Cygwin) 
 - Clang C++ (FreeBSD)
 
-Hopefully it can be compiled with others compilers, too. If not please do not hesitate to provide description of the issue.
+Hopefully it can also be compiled with others compilers. If not please do not hesitate to provide description of the issue.
 
 ### Supported OS
 
 **qvge** has been tested on Microsoft Windows 10 and several Linux OS (Mint, Mageia etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
 
-**qvge** can be compiled & started under Cygwin as well.
+**qvge** can be compiled & run under Cygwin.
 
 ### Supported Qt
 
-**qvge** has been tested with Qt 5.9-5.13. But it should be compiled with any newer 5.x version too. 
+**qvge** has been tested with Qt 5.9-5.14. But it should work with any newer 5.x version too. 
 
 ### Credits
 
@@ -100,7 +100,7 @@ Hopefully it can be compiled with others compilers, too. If not please do not he
 - [QSint widgets library](https://sourceforge.net/projects/qsint) (c) Sintegrial Technologies
 - [OGDF - Open Graph Drawing Framework](http://www.ogdf.net)
 - [Inkscape](https://inkscape.org) (SVG icons)
-- [read_proc library](https://daknuett.eu/personal) (c) Daniel Knuettel
+- (deprecated) [read_proc library](https://daknuett.eu/personal) (c) Daniel Knuettel
 
 Special thanks to:
 
@@ -114,7 +114,7 @@ Special thanks to:
 
 ### Support
 
-Since **qvge** is a free software, it is developed in the free time on my own costs only. If you like the software and would like to support its further development, you can make a small donation using the button below:
+Since **qvge** is a free software, it is developed in the free time on my own costs only. If you like the software and wish to support its further development, you could make a small donation using the button below:
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url)
 
