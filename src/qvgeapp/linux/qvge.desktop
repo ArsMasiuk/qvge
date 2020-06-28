@@ -1,8 +1,10 @@
 [Desktop Entry]
-Name=qvge
-GenericName=Qt visual graph editor
-Comment=Application for viewing and manipulating small till middle-sized graphs. It supports several formats (GraphML, GEXF, GML, GraphViz/Dot).
-Exec=qvgeapp
-Icon=qvge
+Encoding=UTF-8
+Terminal=false
+Name=Qt Visual Graph Editor
+Comment=Application for viewing and manipulating small till middle-sized graphs
+Exec=qvgeapp %F
+Icon=qvge.png
 Type=Application
 Categories=Graphics;2DGraphics;Education;Science;DataVisualization;ComputerScience;Math;Viewer;Development;Qt;
+

@@ -37,13 +37,17 @@ INCLUDEPATH += $$PWD
 unix{
     PREFIX_DIR = $${PREFIX}
 
+#message($$PREFIX_DIR)
+
     isEmpty(PREFIX_DIR) {
         PREFIX_DIR = /usr/local
     }
 
-    target.path = $$PREFIX_DIR
+#message($$PREFIX_DIR)
 
-    #message($$target.path)
+    target.path = $$PREFIX_DIR/bin
+
+#message($$target.path)
 
     INSTALLS += target
 
