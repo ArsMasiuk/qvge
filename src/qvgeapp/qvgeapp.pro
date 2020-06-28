@@ -46,5 +46,17 @@ unix{
     #message($$target.path)
 
     INSTALLS += target
+
+    desktop.path = /usr/share/applications/
+    desktop.files = linux/qvge.desktop
+    INSTALLS += desktop
+
+    icon.path = /usr/share/icons/hicolor/256x256/apps/
+    icon.files = linux/qvge.png
+    INSTALLS += icon
+
+    appdata.path = /usr/share/appdata/
+    appdata.files = linux/qvge.appdata.xml
+    INSTALLS += appdata
 }
 

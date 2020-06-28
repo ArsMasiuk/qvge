@@ -1,11 +1,19 @@
 QVGE 0.6.0
 -------------------------------------------------------------------------------
-(in progress) - added polyedges (#23)
+- OGDF updated to v.2020-02 (much more stable than previous one)
+- read_proc is deprecated and replaced by QProcessInfo
+
+- (in progress) - added polyedges (#23)
 
 - fixed crash at undo recent drag
 - fixed issue when a document could not be opened (#96)
 
-- OGDF updated to v.2020-02 (much more stable than previous)
+Linux:
+- "qmake -r PREFIX=.." should be respected now (#69,#93)
+- fixed menu with opened windows (#88)
+- fixed "Segmentation fault" issue when loading documents (#82)
+- fixed "Buffer/Memory containment" issues (#80)
+- fixed desktop integration (#91)
 
 
 

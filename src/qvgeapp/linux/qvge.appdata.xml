@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2016-2020 Ars L. Masiuk <ars.masiuk@gmail.com> -->
+<component type="desktop">
+  <id>qvge.desktop</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Qt visual graph editor</name>
+  <summary>Application for viewing and manipulating small till middle-sized graphs.</summary>
+  <description>
+    <p>
+      Application for viewing and manipulating small till middle-sized graphs. It supports several formats (GraphML, GEXF, GML, GraphViz/Dot).
+    </p>
+  </description>
+  <url type="homepage">https://github.com/ArsMasiuk/qvge</url>
+  <url type="donation">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://user-images.githubusercontent.com/19762856/85934275-2a985480-b8e1-11ea-81a9-a5b81f3365e2.PNG</image>
+      <caption>Screenshot of the main window</caption>
+    </screenshot>
+  </screenshots>
+  <updatecontact>https://github.com/ArsMasiuk/qvge/issues</updatecontact>
+  <translation type="qt">qvge</translation>
+</component>
