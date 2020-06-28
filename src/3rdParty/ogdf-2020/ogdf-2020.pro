@@ -1213,7 +1213,7 @@ INCLUDEPATH = \
     $$PWD/include/coin \
     $$PWD/include/ogdf/augmentation \
     $$PWD/include/ogdf/augmentation/planar \
-    $$PWD/include/ogdf/basic \
+#    $$PWD/include/ogdf/basic \
     $$PWD/include/ogdf/basic/graph_generators \
     $$PWD/include/ogdf/basic/heap \
     $$PWD/include/ogdf/basic/internal \
