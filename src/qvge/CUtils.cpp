@@ -5,7 +5,7 @@
 #include <QColor>
 #include <QFont>
 
-#include <math.h>
+#include <cmath>
 
 
 QVariant CUtils::textToVariant(const QString& text, int type)

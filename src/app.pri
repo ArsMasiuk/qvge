@@ -32,7 +32,8 @@ win32{
 
 unix{
     !haiku{
-        LIBS += -lQt5X11Extras -lX11
+		QT += x11extras
+        LIBS += -lX11
     }
 }
 

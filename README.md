@@ -1,6 +1,7 @@
 ## Qt Visual Graph Editor 
 [![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)](https://github.com/ArsMasiuk/qvge/releases/latest)
 ![GitHub release](https://img.shields.io/github/release/ArsMasiuk/qvge.svg?style=for-the-badge)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url)
 
 
 **qvge** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
@@ -8,8 +9,7 @@ in a simple and intuitive way.
 
 Please note that **qvge** is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor :)
 
-![Screenshot1](https://a.fsdn.com/con/app/proj/qvge/screenshots/qvge-117.PNG/245/183/1)
-![Screenshot2](https://a.fsdn.com/con/app/proj/qvge/screenshots/qvge%20-%20search.PNG/245/183/1)
+![Screenshot1](https://user-images.githubusercontent.com/19762856/85934275-2a985480-b8e1-11ea-81a9-a5b81f3365e2.PNG)
 
 ### Main Features
 
@@ -19,13 +19,15 @@ Please note that **qvge** is not a replacement for such a software like Gephi, G
 - Directed, undirected and mixed graphs supported
 - Node ports supported as well
 - Search among the graph elements and their attributes
-- Auto-creation and auto-layout of graphs (via OGDF)
-- Native graph persistence format (XGR)
-- Reading GraphML, GML, GraphViz DOT (partially) and GEXF files
+- Auto-creation and auto-layout of graphs (via [OGDF](https://ogdf.uos.de/))
 - Export into PDF and popular image formats
-- Export into GraphViz DOT format
-- Export into GEXF format
-
+- Graph file format support:
+  - Native graph persistence format (XGR)
+  - GEXF
+  - GraphML
+  - GML
+  - [GraphViz DOT](https://graphviz.org/) (partially)
+ 
 ### Some users' feedback
 
 >"Qt Visual Graph Editor is a fairly straightforward, open-source tool that enables users to design relatively simple graphs for their >projects. It comes with a decent set of features and is very intuitive." 
@@ -69,35 +71,52 @@ or by Jom:
 jom 
 ~~~~
 
+### Enabling OGDF 
+
+In order to build **qvge** with OGDF support (shipped with qvge together): 
+before running qmake, open src/config.ini file and make sure that the following option is present:
+~~~~
+CONFIG += USE_OGDF 
+~~~~
+
+Then run qmake + make as desribed in the step before. *Please note:* OGDF is really big, so its compilation takes some time. 
+
+
 ### Supported compilers
 
-**qvge** has been built with:
-- Microsoft Visual Studio 2015 (Community Edition)
-- MinGW 5.3
-- GCC 4.8 & GCC 5.3 (Linux)
+Recent version of **qvge** has been built with:
+- Microsoft Visual Studio 2017 (Community Edition)
+- MinGW 7.3
+- GCC 7.5 (Linux)
 - GCC 6.4.0 (Cygwin) 
 - Clang C++ (FreeBSD)
 
-Hopefully it will be compiled with others compilers, too. If not please do not hesitate to provide description of the issue.
+Hopefully it can also be compiled with others compilers. If not please do not hesitate to provide description of the issue.
 
-### Supported OSes
+### Supported OS
 
-**qvge** has been tested on Microsoft Windows 10 and several Linux (Mint, Mageia etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
-It can be compiled & started under Cygwin as well.
+**qvge** has been tested on Microsoft Windows 10 and several Linux OS (Mint, Mageia etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
+
+**qvge** can be compiled & run under Cygwin.
+
+### Supported Qt
+
+**qvge** has been tested with Qt 5.9-5.14. But it should work with any newer 5.x version too. 
 
 ### Credits
 
 **qvge** uses following 3rd party components:
 
-- [Qt](https://www.qt.io) (c) Qt Company 
-- [Qt property browser](https://github.com/qtproject/qt-solutions) (c) Qt Company 
-- [QSint widgets library](https://sourceforge.net/projects/qsint) (c) Sintegrial Technologies
+- [Qt](https://www.qt.io)
+- [Qt property browser](https://github.com/qtproject/qt-solutions)
+- [QProcessInfo](https://github.com/baldurk/qprocessinfo) 
+- [QSint widgets library](https://sourceforge.net/projects/qsint) 
 - [OGDF - Open Graph Drawing Framework](http://www.ogdf.net)
-- [Inkscape](https://inkscape.org) (SVG icons)
-- [read_proc library](https://daknuett.eu/personal) (c) Daniel Knuettel
+- SVG icons from [Inkscape](https://inkscape.org)
 
 Special thanks to:
 
+- Dr. prof. [Vladimir A. Svjatnyj](https://wiki.donntu.edu.ua/view/%D0%A1%D0%B2%D1%8F%D1%82%D0%BD%D0%B8%D0%B9_%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80_%D0%90%D0%BD%D0%B4%D1%80%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87), head of [computer engineering chair](https://donntu.edu.ua/knt/kafedra-ki) at [DonNTU](https://donntu.edu.ua/en/donntu2020) and my scientific supervisor
 - [Tatsuro Ueda](https://github.com/weed), founder of [Feel Physics](https://feel-physics.jp), for comrehensive testing, feedback and suggestions 
 
 ### Extenal Links
@@ -105,3 +124,11 @@ Special thanks to:
 **qvge** at [![Download qvge](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
 
 **qvge** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml)
+
+### Support
+
+Since **qvge** is a free software, it is developed in the free time on my own costs only. If you like the software and wish to support its further development, you could make a small donation using the button below:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url)
+
+Thank you!

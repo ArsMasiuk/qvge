@@ -8,12 +8,15 @@ QVGE 0.6.0
 - fixed crash at undo recent drag
 - fixed issue when a document could not be opened (#96)
 
+- fixed <math.h> include issue (#101)
+
 Linux:
 - "qmake -r PREFIX=.." should be respected now (#69,#93)
 - fixed menu with opened windows (#88)
 - fixed "Segmentation fault" issue when loading documents (#82)
 - fixed "Buffer/Memory containment" issues (#80)
 - fixed desktop integration (#91)
+- fixed including Qt5 X11Extras into project (#92)
 
 
 
