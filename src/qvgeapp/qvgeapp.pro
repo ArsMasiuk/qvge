@@ -52,15 +52,16 @@ unix{
     INSTALLS += target
 
     desktop.path = /usr/share/applications/
-    desktop.files = linux/qvge.desktop
+    desktop.files = $$PWD/linux/qvge.desktop
     INSTALLS += desktop
 
-    icon.path = /usr/share/icons/hicolor/256x256/apps/
-    icon.files = linux/qvge.png
+    #icon.path = /usr/share/icons/hicolor/256x256/apps/
+    icon.path = /usr/share/qvge
+    icon.files = $$PWD/linux/qvge.png
     INSTALLS += icon
 
     appdata.path = /usr/share/appdata/
-    appdata.files = linux/qvge.appdata.xml
+    appdata.files = $$PWD/linux/qvge.appdata.xml
     INSTALLS += appdata
 }
 
