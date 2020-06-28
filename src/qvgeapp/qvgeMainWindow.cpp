@@ -212,7 +212,7 @@ QString qvgeMainWindow::getAboutText() const
 			"<br>&nbsp; - Qt framework &copy; <i>The Qt Company Ltd</i>"
 			"<br>&nbsp; - Qt property browser framework &copy; <i>The Qt Company Ltd</i>"
 			"<br>&nbsp; - QSint widgets library &copy; <i>Sintegrial Technologies</i>"
-			"<br>&nbsp; - read_proc &copy; <i>Daniel Knuettel</i>"
+            "<br>&nbsp; - QProcessInfo &copy; <i>Baldur Karlsson</i>"
 			"<br>&nbsp; - menu & toolbar graphics &copy; <i>Inkscape project</i>"
 #ifdef USE_OGDF
 			"<br>&nbsp; - OGDF &copy; <i>OGDF development team</i>"

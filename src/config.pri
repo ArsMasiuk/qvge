@@ -23,7 +23,7 @@ QT += core gui widgets xml opengl network printsupport
 CONFIG += c++14
 
 
-
+# output
 CONFIG(debug, debug|release){
         LIBS += -L$$OUT_PWD/../lib.debug
 }
@@ -31,4 +31,7 @@ else{
         LIBS += -L$$OUT_PWD/../lib
 }
 
-
+MOC_DIR = $$OUT_PWD/_generated
+OBJECTS_DIR = $$OUT_PWD/_generated
+UI_DIR = $$OUT_PWD/_generated
+RCC_DIR = $$OUT_PWD/_generated
