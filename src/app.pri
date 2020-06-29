@@ -11,19 +11,24 @@ INCLUDEPATH += $$PWD $$PWD/3rdParty/qtpropertybrowser $$PWD/3rdParty/qsint-widge
 
 
 CONFIG(debug, debug|release){
-        DESTDIR = $$OUT_PWD/../bin.debug
-        LIBS += -L$$OUT_PWD/../lib.debug
+	DESTDIR = $$OUT_PWD/../bin.debug
+	LIBS += -L$$OUT_PWD/../lib.debug
 }
 else{
-        DESTDIR = $$OUT_PWD/../bin
-        LIBS += -L$$OUT_PWD/../lib
+	DESTDIR = $$OUT_PWD/../bin
+	LIBS += -L$$OUT_PWD/../lib
 }
 
 
 LIBS += -lcommonui -lqvge -lqvgeio -lqtpropertybrowser -lqsint-widgets
 
-USE_OGDF{
+USE_LOCAL_OGDF{
     LIBS += -logdf-2020
+}
+
+USE_EXTERNAL_OGDF{
+	LIBS += -l$$OGDF_LIB_NAME -L$$OGDF_LIB_PATH
+	INCLUDEPATH += $$OGDF_INCLUDE_PATH
 }
 
 win32{

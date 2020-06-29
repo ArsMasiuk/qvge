@@ -11,7 +11,7 @@ CONFIG += ordered
 
 include($$PWD/config.pri)
 
-USE_OGDF{
+BUILD_OGDF{
     SUBDIRS += ogdf
     ogdf.file = $$PWD/3rdParty/ogdf-2020/ogdf-2020.pro
 }

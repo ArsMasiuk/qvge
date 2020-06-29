@@ -1,6 +1,7 @@
 #include "roundprogressbar.h"
 
 #include <QtGui/QPainter>
+#include <QtGui/QPainterPath>
 
 
 namespace QSint
@@ -193,7 +194,7 @@ void RoundProgressBar::paintEvent(QPaintEvent* /*event*/)
 
     QPainter painter(this);
     painter.fillRect(baseRect, Qt::transparent);
-    painter.drawImage(0,0, buffer);
+    painter.drawImage((width() - outerRadius) / 2, (height() - outerRadius) / 2, buffer);
 }
 
 void RoundProgressBar::drawBackground(QPainter &p, const QRectF &baseRect)
