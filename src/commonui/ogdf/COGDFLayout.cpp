@@ -4,10 +4,11 @@
 #include <qvge/CNode.h>
 #include <qvge/CDirectEdge.h>
 
+#include <ogdf/fileformats/GraphIO.h>
+
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
-//#include <ogdf/module/LayoutModule.h>
-#include <ogdf/fileformats/GraphIO.h>
+#include <ogdf/basic/LayoutModule.h>
 
 #include <ogdf/misclayout/BalloonLayout.h>
 

@@ -1,16 +1,20 @@
 QVGE 0.6.0
 -------------------------------------------------------------------------------
-- OGDF updated to v.2020-02 (much more stable than previous one)
-- read_proc is deprecated and replaced by QProcessInfo
-- QSint widgets updated to the latest snapshot (0.4.x)
-
 - (in progress) - added polyedges (#23)
 
 - fixed crash after undoing recent drag operation
 - fixed issue when a document could not be opened (#96)
 
 - fixed <math.h> include issue (#101)
-- qvge can be built & linked against external OGDF library (#...)
+
+Externals:
+- read_proc is deprecated and replaced by QProcessInfo
+- QSint widgets updated to the latest snapshot (0.4.x)
+
+OGDF:
+- qvge can be built & linked against external OGDF library
+- OGDF updated to v.2020-02 (much more stable than previous one)
+- Davidson-Harel layout added
 
 Linux:
 - "qmake -r PREFIX=.." should be respected now (#69,#93)
@@ -19,7 +23,7 @@ Linux:
 - fixed "Buffer/Memory containment" issues (#80)
 - fixed desktop integration (#91)
 - fixed including Qt5 X11Extras into project (#92)
-- fixed glitches of some UI elements (#...)
+- fixed glitches of some UI elements (#99)
 
 
 

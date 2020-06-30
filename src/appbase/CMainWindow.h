@@ -49,6 +49,7 @@ public:
     void addDocument(const CDocument& doc);
 	QList<CDocument> getRegisteredDocumentTypes() const { return m_docTypes.values(); }
 	QStringList getRecentFilesList() const;
+	void cleanRecentFilesList();
 
 	QMenu* getFileMenu() { return m_fileMenu; }
 	QMenu* getHelpMenu() { return m_helpMenu; }

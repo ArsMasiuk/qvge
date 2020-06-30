@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <QWidget>
+#include <QMap>
 
 #include "ui_CStartPage.h"
 
@@ -22,8 +23,14 @@ protected:
 protected Q_SLOTS:
 	void onCreateDocument();
 	void onRecentDocument();
+	void onRemoveDocument();
+
+private Q_SLOTS:
+	void on_CleanRecentButton_clicked();
 
 private:
 	Ui::CStartPage ui;
 	CMainWindow *m_parent;
+
+	QMap<int, QWidget*> m_buttons;
 };
