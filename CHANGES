@@ -1,6 +1,7 @@
 QVGE 0.6.0
 -------------------------------------------------------------------------------
-- (in progress) - added polyedges (#23)
+- (in progress) added polyedges (#23)
+- (in progress) added possibility to clean up the recent files list (#89)
 
 - fixed crash after undoing recent drag operation
 - fixed issue when a document could not be opened (#96)

@@ -93,7 +93,7 @@ void CStartPage::createRecentDocs()
 		deleteButton->setToolTip(tr("Remove this file from the list"));
 
 		QAction *deleteAction = new QAction(fileName, deleteButton);
-		deleteAction->setData(fileName);
+		deleteAction->setData(i);
 
 		connect(deleteButton, &QCommandLinkButton::clicked, deleteAction, &QAction::triggered);
 		connect(deleteAction, &QAction::triggered, this, &CStartPage::onRemoveDocument);
@@ -141,8 +141,25 @@ void CStartPage::onRemoveDocument()
 	QAction *act = dynamic_cast<QAction*>(sender());
 	if (act)
 	{
-		// ask...
-		//m_parent->removeRecentDocument(act->text());
+		int r = QMessageBox::question(this,
+			tr("Remove Document"),
+			tr("Are you sure to remove the document from the list?\n\n(File itself will not be removed!)"),
+			QMessageBox::Yes, QMessageBox::Cancel);
+
+		if (r == QMessageBox::Cancel)
+			return;
+
+		if (m_parent->removeRecentDocument(act->text()))
+		{
+			int i = act->data().toInt();
+			QWidget *w = m_buttons[i];
+			if (w)
+			{
+				delete w;
+				m_buttons.remove(i);
+				ui.CleanRecentButton->setVisible(m_buttons.size());
+			}
+		}
 	}
 }
 
