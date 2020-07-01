@@ -9,6 +9,7 @@ It can be used freely, maintaining the information above.
 
 #include "CEdge.h"
 #include "CNode.h"
+#include "CEditorSceneDefines.h"
 
 #include <QPen>
 #include <QPainter>
@@ -138,7 +139,7 @@ QRectF CEdge::boundingRect() const
 void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* /*widget*/)
 {
 	// weight
-	double weight = getWeight();
+	double weight = getVisibleWeight();
 
 	// line style
 	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("style")).toString(), Qt::SolidLine);
@@ -167,7 +168,15 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *opti
 double CEdge::getWeight() const
 {
 	bool ok = false;
-	double weight = qMax(0.1, getAttribute(QByteArrayLiteral("weight")).toDouble(&ok));
+	double weight = getAttribute(attr_weight).toDouble(&ok);
+	return ok ? weight : 1;
+}
+
+
+double CEdge::getVisibleWeight() const
+{
+	bool ok = false;
+	double weight = qMax(0.1, getAttribute(attr_weight).toDouble(&ok));
 	if (!ok) 
 		return 1;
 	else

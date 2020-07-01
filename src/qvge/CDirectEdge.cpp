@@ -162,7 +162,7 @@ void CDirectEdge::onParentGeometryChanged()
 	// update shape path
 	m_shapeCachePath = QPainterPath();
 
-	double arrowSize = getWeight() + ARROW_SIZE;
+	double arrowSize = getVisibleWeight() + ARROW_SIZE;
 
 	// circled connection 
 	if (isCircled())

@@ -84,11 +84,11 @@ void CStartPage::createRecentDocs()
 	{
 		QWidget *host = new QWidget(this);
 		host->setLayout(new QHBoxLayout);
-		//host->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
 		QFileInfo fi(fileName);
 
 		QToolButton *deleteButton = new QToolButton(host);
+		deleteButton->setAutoRaise(true);
 		deleteButton->setIcon(QIcon(":/Icons/Delete"));
 		deleteButton->setToolTip(tr("Remove this file from the list"));
 
@@ -104,8 +104,6 @@ void CStartPage::createRecentDocs()
 			host
 		);
 
-		//fileButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
-
 		QAction *recentAction = new QAction(fileName, fileButton);
 		recentAction->setData(i);
 
@@ -114,7 +112,6 @@ void CStartPage::createRecentDocs()
 
 		host->layout()->addWidget(fileButton);
 		host->layout()->addWidget(deleteButton);
-		//host->adjustSize();
 
         ui.RightWidget->layout()->addWidget(host);
 		m_buttons[i++] = host;

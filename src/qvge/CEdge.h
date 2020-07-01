@@ -52,6 +52,8 @@ public:
 	bool isValid() const	{ return m_firstNode != NULL && m_lastNode != NULL; }
 	bool isCircled() const	{ return isValid() && m_firstNode == m_lastNode; }
 
+	double getWeight() const;
+
 	virtual void reverse();
 
 	// reimp
@@ -98,7 +100,7 @@ protected:
 	virtual void updateCachedItems();
 	virtual void updateArrowFlags(const QString& direction);
 
-	double getWeight() const;
+	double getVisibleWeight() const;
 
 protected:
     CNode *m_firstNode = nullptr;
