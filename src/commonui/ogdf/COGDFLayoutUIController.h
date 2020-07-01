@@ -18,8 +18,9 @@ private Q_SLOTS:
     void doLinearLayout();
     void doBalloonLayout();
     void doCircularLayout();
+	void doTreeLayout();
     void doFMMMLayout();
-	void doPSLLayout();
+	void doDHLayout();
 	void doSugiyamaLayout();
 
 private:

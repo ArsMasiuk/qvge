@@ -62,6 +62,9 @@ public:
 	void setNodesFactory(CNode* node);
 	void setEdgesFactory(CEdge* node);
 
+	CNode* getNodesFactory() { return m_nodesFactory; }
+	CEdge* getEdgesFactory() { return m_edgesFactory; }
+
     // selections
     virtual void moveSelectedItemsBy(const QPointF& d);
 

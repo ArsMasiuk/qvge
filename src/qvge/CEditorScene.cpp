@@ -1725,6 +1725,10 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem, bool dragCancelled)
 {
+	// cleanup drag state
+	m_startDragItem = NULL;
+	m_dragInProgress = false;
+
 	if (dragItem)
 	{
 		// deactivate left hovers
@@ -1773,9 +1777,6 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 			addUndoState();
 		}
 	}
-
-	m_startDragItem = NULL;
-	m_dragInProgress = false;
 }
 
 

@@ -19,6 +19,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CNode.h>
 #include <qvge/CEdge.h>
 #include <qvge/CDirectEdge.h>
+#include <qvge/CPolyEdge.h>
 #include <qvge/CAttribute.h>
 #include <qvge/CEditorSceneDefines.h>
 
@@ -29,10 +30,6 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
     m_updateLock(false),
     ui(new Ui::CNodeEdgePropertiesUI)
 {
-	m_nodeFactory = new CNode;
-	m_edgeFactory = new CDirectEdge;
-
-
     ui->setupUi(this);
 
     ui->NodeColor->setColorScheme(QSint::OpenOfficeColors());
@@ -51,6 +48,9 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Directed"), tr("Directed (one end)"), "directed");
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Mutual"), tr("Mutual (both ends)"), "mutual");
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Undirected"), tr("None (no ends)"), "undirected");
+
+	ui->EdgeType->addAction(QIcon(":/Icons/Edge-Line"), tr("Direct line"), "line");
+	ui->EdgeType->addAction(QIcon(":/Icons/Edge-Polyline"), tr("Polyline"), "polyline");
 
     ui->EdgeColor->setColorScheme(QSint::OpenOfficeColors());
 
@@ -88,7 +88,6 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 
 CNodeEdgePropertiesUI::~CNodeEdgePropertiesUI()
 {
-	delete m_nodeFactory;
     delete ui;
 }
 
@@ -166,8 +165,8 @@ void CNodeEdgePropertiesUI::updateFromScene(CEditorScene* scene)
 void CNodeEdgePropertiesUI::onSceneAttached(CEditorScene* scene)
 {
 	// factories for new items
-	//scene->setActiveItemFactory(m_nodeFactory);
-	//scene->setActiveItemFactory(m_edgeFactory);
+	m_nodeFactory = m_scene->getNodesFactory();
+	m_edgeFactory = m_scene->getEdgesFactory();
 
 	// default attrs
 	updateFromScene(scene);
@@ -272,8 +271,8 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 
 void CNodeEdgePropertiesUI::setNodesAttribute(const QByteArray& attrId, const QVariant& v)
 {
-	if (m_nodeFactory)
-		m_nodeFactory->setAttribute(attrId, v);
+	//if (m_nodeFactory)
+	//	m_nodeFactory->setAttribute(attrId, v);
 
 	if (m_updateLock || m_scene == NULL)
 		return;
@@ -291,8 +290,8 @@ void CNodeEdgePropertiesUI::setNodesAttribute(const QByteArray& attrId, const QV
 
 void CNodeEdgePropertiesUI::setEdgesAttribute(const QByteArray& attrId, const QVariant& v)
 {
-	if (m_edgeFactory)
-		m_edgeFactory->setAttribute(attrId, v);
+	//if (m_edgeFactory)
+	//	m_edgeFactory->setAttribute(attrId, v);
 
 	if (m_updateLock || m_scene == NULL)
 		return;
@@ -399,6 +398,21 @@ void CNodeEdgePropertiesUI::on_EdgeStyle_activated(QVariant data)
 void CNodeEdgePropertiesUI::on_EdgeDirection_activated(QVariant data)
 {
 	setEdgesAttribute("direction", data);
+}
+
+
+void CNodeEdgePropertiesUI::on_EdgeType_activated(QVariant data)
+{
+	if (m_scene)
+	{
+		if (data.toString() == "line")
+			m_scene->setEdgesFactory(m_scene->factory<CDirectEdge>());
+		else
+		if (data.toString() == "polyline")
+			m_scene->setEdgesFactory(m_scene->factory<CPolyEdge>());
+
+		m_edgeFactory = m_scene->getEdgesFactory();
+	}
 }
 
 

@@ -32,6 +32,7 @@ const QByteArray class_edge = QByteArrayLiteral("edge");
 
 const QByteArray attr_id = QByteArrayLiteral("id");
 const QByteArray attr_size = QByteArrayLiteral("size");
+const QByteArray attr_weight = QByteArrayLiteral("weight");
 const QByteArray attr_label = QByteArrayLiteral("label");
 const QByteArray attr_label_font = QByteArrayLiteral("label.font");
 const QByteArray attr_label_color = QByteArrayLiteral("label.color");

@@ -487,7 +487,7 @@ void CNodeEditorUIController::onSceneStatusChanged(int status)
 {
 	bool isAddNodesMode = (m_editorScene->getEditMode() == EM_AddNodes);
 
-	const QString arrowMoveHint = tr(" | Ctrl + Arrow keys - move selected items by one point | Shift + Arrow keys - move selected items by grid step");
+	const QString arrowMoveHint = tr(" | Cursor keys - move selected items by one point | Shift + Cursor keys - move selected items by grid step");
  
     switch (status)
     {
@@ -499,7 +499,7 @@ void CNodeEditorUIController::onSceneStatusChanged(int status)
 		if (isAddNodesMode)
 			onSceneHint(tr("Click & drag - create new connection | Double click - edit item's label") + arrowMoveHint);
 		else
-			onSceneHint(tr("Ctrl+Click - (un)select item | Click & drag or Ctrl/Shift + Arrow keys - move selected items | Ctrl+Click & drag - clone selected items | Double click - edit item's label"));
+			onSceneHint(tr("Ctrl + Click - (un)select item | Click & drag or Ctrl/Shift + Cursor keys - move selected items | Ctrl + Click & drag - clone selected items | Double click - edit item's label"));
         return;
 
     case SIS_Drag:

@@ -109,6 +109,9 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 #endif // windows
 
 #if (defined(Q_OS_LINUX) || defined (Q_OS_UNIX) || defined (Q_OS_CYGWIN)) && (!defined (Q_OS_HAIKU))
+
+#include <QProcessInfo>
+
 #include <QX11Info>
 
 #include <X11/Xlib.h>
@@ -121,9 +124,6 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 #include <sys/sysinfo.h>
 #endif
 
-extern "C" {
-#include <read_proc.h>
-}
 
 bool CPlatformServices::SetActiveWindow(uint id)
 {
@@ -165,15 +165,10 @@ CPlatformServices::PIDs CPlatformServices::GetRunningPIDs()
 {
     PIDs result;
 
-    struct Root *root = read_proc();
-    struct Job *buffer = NULL;
-
-    for (int i = 0; i < root->len; i++)
+    auto procList = QProcessInfo::enumerate();
+    for (auto &procInfo: procList)
     {
-        buffer = get_from_place(root,i);
-        //printf("%s\t%u\n",buffer->name,buffer->pid);
-
-        result << buffer->pid;
+        result << procInfo.pid();
     }
 
     return result;

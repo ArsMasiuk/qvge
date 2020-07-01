@@ -5,6 +5,7 @@
 #include <QSpacerItem>
 #include <QFileInfo>
 #include <QDateTime>
+#include <QMessageBox>
 
 
 CStartPage::CStartPage(CMainWindow *parent) : QWidget(parent)
@@ -77,26 +78,43 @@ void CStartPage::createRecentDocs()
     const auto &recentList = m_parent->getRecentFilesList();
 	int i = 0;
 
+	ui.CleanRecentButton->setVisible(recentList.size());
+
 	for (const QString &fileName : recentList)
 	{
+		QWidget *host = new QWidget(this);
+		host->setLayout(new QHBoxLayout);
+
 		QFileInfo fi(fileName);
+
+		QToolButton *deleteButton = new QToolButton(host);
+		deleteButton->setAutoRaise(true);
+		deleteButton->setIcon(QIcon(":/Icons/Delete"));
+		deleteButton->setToolTip(tr("Remove this file from the list"));
+
+		QAction *deleteAction = new QAction(fileName, deleteButton);
+		deleteAction->setData(i);
+
+		connect(deleteButton, &QCommandLinkButton::clicked, deleteAction, &QAction::triggered);
+		connect(deleteAction, &QAction::triggered, this, &CStartPage::onRemoveDocument);
 
 		QCommandLinkButton *fileButton = new QCommandLinkButton(
 			fi.baseName(),
 			fi.lastModified().toString() + " | " + fileName,
-			this
+			host
 		);
 
-		fileButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-
 		QAction *recentAction = new QAction(fileName, fileButton);
-		recentAction->setData(i++);
+		recentAction->setData(i);
 
 		connect(fileButton, &QCommandLinkButton::clicked, recentAction, &QAction::triggered);
 		connect(recentAction, &QAction::triggered, this, &CStartPage::onRecentDocument);
-		
 
-        ui.RightWidget->layout()->addWidget(fileButton);
+		host->layout()->addWidget(fileButton);
+		host->layout()->addWidget(deleteButton);
+
+        ui.RightWidget->layout()->addWidget(host);
+		m_buttons[i++] = host;
 	}
 
 
@@ -113,3 +131,55 @@ void CStartPage::onRecentDocument()
 	if (act)
 		m_parent->openDocument(act->text());
 }
+
+
+void CStartPage::onRemoveDocument()
+{
+	QAction *act = dynamic_cast<QAction*>(sender());
+	if (act)
+	{
+		int r = QMessageBox::question(this,
+			tr("Remove Document"),
+			tr("Are you sure to remove the document from the list?\n\n(File itself will not be removed!)"),
+			QMessageBox::Yes, QMessageBox::Cancel);
+
+		if (r == QMessageBox::Cancel)
+			return;
+
+		if (m_parent->removeRecentDocument(act->text()))
+		{
+			int i = act->data().toInt();
+			QWidget *w = m_buttons[i];
+			if (w)
+			{
+				delete w;
+				m_buttons.remove(i);
+				ui.CleanRecentButton->setVisible(m_buttons.size());
+			}
+		}
+	}
+}
+
+
+void CStartPage::on_CleanRecentButton_clicked()
+{
+	int r = QMessageBox::question(this,
+		tr("Clean Recent Documents"),
+		tr("Are you sure to clean the recent documents list?\n\n(Files will not be removed!)"),
+		QMessageBox::Yes, QMessageBox::Cancel);
+
+	if (r == QMessageBox::Yes)
+	{
+		m_parent->cleanRecentFilesList();
+
+		for (QWidget *w : m_buttons)
+		{
+			ui.RightWidget->layout()->removeWidget(w);
+		}
+
+		m_buttons.clear();
+
+		ui.CleanRecentButton->hide();
+	}
+}
+

@@ -49,6 +49,8 @@ public:
     void addDocument(const CDocument& doc);
 	QList<CDocument> getRegisteredDocumentTypes() const { return m_docTypes.values(); }
 	QStringList getRecentFilesList() const;
+	void cleanRecentFilesList();
+	bool removeRecentDocument(const QString& name);
 
 	QMenu* getFileMenu() { return m_fileMenu; }
 	QMenu* getHelpMenu() { return m_helpMenu; }

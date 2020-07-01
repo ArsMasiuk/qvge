@@ -1,0 +1,74 @@
+/**
+ * \page ex-basic Basic Functionality
+ *
+ * \section sec-ex-manual-1 Generate an acyclic random graph
+ * This example shows how to generate a random graph, make it acyclic by removing edges, and then store it as a GML file.
+ *
+ * \include gen-acyclic-graph.cpp
+ *
+ * <h3>Step-by-step explanation</h3>
+ *
+ * -# We first have to include all header files declaring the classes and functions we want to use. OGDF's header files
+ *    are contained in subdirectories of a common include directory <tt>ogdf</tt>.
+ * -# We make use of ogdf::Graph, a class that represents the most basic features of a graph: nodes, edges
+ *    and their adjacencies and nothing more (no weights, markers etc.). ogdf::Graph uses an adjacency list and
+ *    is able to store directed multigraphs. Depending on the application, an ogdf::Graph may be simple and/or
+ *    interpreted as undirected.
+ * -# For now we will settle for a simple graph that we generate randomly using ogdf::randomSimpleGraph(). Other
+ *    generators can be found in graph_generators.h and---like ogdf::randomSimpleGraph()---for the most part take
+ *    the desired number of nodes and edges as input. As with virtually any function in the OGDF, the resulting
+ *    graph is provided by a passed reference instead of a return value.
+ * -# We then make use of an instance of the algorithm class ogdf::DfsAcyclicSubgraph which we call on <tt>G</tt>
+ *    to make it acyclic by removing some of its edges.
+ * -# Finally the resulting graph (i.e. its nodes and edges) is written to a file using ogdf::GraphIO::write. We specify the
+ *    desired output format (GML) by passing it the correct writer function ogdf::GraphIO::writeGML.
+ *
+ * \section sec-ex-manual-2 Manual creation and layout of graphs
+ * This example shows how to manually create a basic ogdf::Graph together with a drawing of this graph that is stored
+ * in an instance of ogdf::GraphAttributes.
+ *
+ * \include manual.cpp
+ *
+ * <h3>Step-by-step explanation</h3>
+ *
+ * -# Here, we show an exemplary use of ogdf::GraphAttributes. By associating <tt>GA</tt>
+ *    with <tt>G</tt> we have a way of adding attributes to <tt>G</tt> without actually modifying it. Note that
+ *    in order to use an attribute (i.e. the corresponding getters and setters) it must first be enabled. This can be done
+ *    by passing the respective bitflags to the constructor or calling ogdf::GraphAttributes::addAttributes(). For an
+ *    explanation of all the available flags and what they do, check the static member variables of ogdf::GraphAttributes.
+ * -# We continue by adding some nodes and edges to the graph in a loop:
+ *    -# ogdf::Graph::newNode() returns a handle of the newly created <tt>node</tt> which can then be used
+ *       to retrieve and edit its attributes, in this case setting its 2D coordinates as well as its width and height.
+ *       We can access these attributes because we enabled them before with the flag ogdf::GraphAttributes::nodeGraphics.
+ *    -# Once we have two of those <tt>node</tt> handles we can create an edge connecting them. Recall that in the OGDF,
+ *       every edge is directed and in case of undirected graphs, we simply provide an arbitrary orientation to ogdf::Graph::newEdge().
+ *    -# Once again we retrieve a handle of the newly created <tt>edge</tt> and use it to edit its graphical representation stored
+ *       in <tt>GA</tt>. We do this by adding two ogdf::DPoint to the ogdf::DPolyline representing the edge's bend points.
+ *       Again, we are able to access those because we enabled ogdf::GraphAttributes::edgeGraphics beforehand.
+ * -# After graph creation is finished we once again want to store the result. This time we have more
+ *    information to store than our ogdf::Graph <tt>G</tt> contains, so we pass the ogdf::GraphAttributes <tt>GA</tt>
+ *    instead. The specified output function ogdf::GraphIO::writeGML will automatically handle any enabled attribute.
+ * -# Finally we use the same interface to output a visualization of the graph in SVG format.
+ *
+ * \section sec-ex-manual-3 Planarizing a graph
+ * This example shows how to planarize a given graph by computing a
+ * drawing with few crossings and replacing theses crossings with new nodes.
+ *
+ * \include subgraph-planarizer.cpp
+ *
+ * <h3>Step-by-step explanation</h3>
+ *
+ * -# We randomly generate a simple graph.
+ * -# Just like most algorithms in the ogdf library ogdf::SubgraphPlanarizer is modular and is
+ *    configured by first creating an instance, and then passing it dynamically allocated
+ *    configuration modules that derive from a base module class to overwrite the default
+ *    settings for the algorithm. In this case we pass it:
+ *    -# An ogdf::PlanarSubgraphModule which determines the way a planar subgraph is computed in
+ *       the first phase of the planarization algorithm. We use ogdf::PlanarSubgraphFast for this.
+ *    -# An ogdf::EdgeInsertionModule which determines how the remaining edges get inserted into
+ *       the subgraph. We use ogdf::VariableEmbeddingInserter for this.
+ * -# Next we create an ogdf::PlanRep, that is, a planar representation that will hold the result
+ *    of the algorithm. It will contain dummy vertices with degree 4 at any remaining crossings.
+ * -# After running the algorithm we output the number of remaining crossings to the console and
+ *    conclude by saving the planar representation to a .gml file.
+**/

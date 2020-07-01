@@ -1,0 +1,228 @@
+﻿/**
+ * \mainpage The Open Graph Drawing Framework
+ *
+ * \section sec_intro Introduction
+ * OGDF stands both for Open Graph Drawing Framework (the original name)
+ * and Open Graph algorithms and Data structures Framework.
+ *
+ * OGDF is a C++ library for graph algorithms,
+ * in particular for (but not restricted to) automatic graph drawing.
+ * It offers sophisticated algorithms and data structures to use
+ * within your own applications or scientific projects.
+ * The library is self-contained; optionally, additional packages
+ * like LP-solvers are required for some implementations.
+ *
+ * Here, you find the library's documentation. For more general information
+ * on OGDF see http://www.ogdf.net. There, you can also find further explanations,
+ * how-tos, and example code.
+ *
+ * \section sec_overview Overview
+ *
+ * - \subpage getting-started
+ *   <br>Contains information how to build OGDF, how to port code to a more recent version of OGDF, etc.
+ *
+ * - \subpage examples
+ *
+ * - \ref basic
+ *   <br>Contains basic general classes and functions for \ref random "random numbers", \ref date-time "date and time",
+ *   fundamental classes and concepts like \ref exceptions "exception handling"
+ *   and \ref comparer "comparer", as well as system-specific functionality like \ref threads "multi-threading support" and
+ *   access to information on \ref system "system and configuration".
+ *   There are also some \ref macros "noteworthy macros" for developers.
+ *
+ * - \ref graphs
+ *   <br>Contains classes for representing graphs and combinatorial embeddings, as well as \ref graph-containers "containers"
+ *   associated with them (e.g., node arrays), functionality for writing graphs in various file (and graphics) formats (see class ogdf::GraphIO),
+ *   and \ref graph-generators "graph generators".
+ *
+ * - \ref graph-algs
+ *   <br>Contains various general algorithms for graphs, digraphs, clustered graphs. More advanced algorithms deal with
+ *   \ref ga-connectivity "connectivity", \ref ga-sp "shortest paths", \ref ga-flow "flow", \ref ga-mst "minimum spanning trees",
+ *   \ref ga-steiner "Steiner trees", \ref ga-augment "augmentation", and \ref ga-clustering "clustering".
+ *
+ * - \ref decomp
+ *
+ * - \ref graph-drawing
+ *
+ * \page getting-started Getting Started
+ *
+ * - \subpage build for information how to build OGDF
+ * - \subpage relnotes for each release
+ * - \subpage porting for information about compatibility-breaking changes
+ * - A list of @subpage defines
+ *
+ *
+ * @defgroup basic Basic Functionality
+ * \brief This module contains basic general functions and enumerations.
+ *
+ * @defgroup macros Useful Macros
+ * @ingroup basic
+ * \brief Several useful macros defined by the OGDF.
+ *
+ * @defgroup exceptions Exception Handling
+ * @ingroup basic
+ * \brief Provides support for exception handling in OGDF.
+ *
+ * @defgroup comparer Comparer
+ * @ingroup basic
+ * \brief Provides support for comparer classes.
+ *
+ * @defgroup random Random Numbers
+ * @ingroup basic
+ * \brief Provides random number generators.
+ *
+ * @defgroup date-time Date and Time
+ * @ingroup basic
+ * \brief Provides date and time utilites.
+ *
+ * @defgroup container-functions Container Functions
+ * @ingroup basic
+ * \brief Provides some commonly useful functions for general containers.
+ *
+ * @defgroup threads Multi-Threading Support
+ * @ingroup basic
+ * \brief Provides classes for threads and thread synchronization.
+ *
+ * @defgroup system System and Configuration
+ * @ingroup basic
+ * \brief Provides access to information about system and configuration.
+ *
+ * @defgroup containers Containers
+ * \brief This module contains general container data structures and data types.
+ *
+ * @defgroup graphs Graphs and Embeddings
+ * \brief This module contains classes for graphs and cluster graphs, including related data types.
+ *
+ * @defgroup graph-containers Containers Associated with Graphs
+ * @ingroup graphs
+ * \brief Provides various classes of containers associated with graphs.
+ *
+ * @defgroup plan-rep Planarized Representations
+ * @ingroup graphs
+ * \brief Provides specialized graph classes for representing planarized graphs.
+ *
+ * @defgroup graph-generators Graph Generators
+ * @ingroup graphs
+ * \brief Provides various graph generator functions.
+ *
+ * @defgroup graph-algs Graph Algorithms
+ * \brief This module contains various basic and advanced graph algorithms.
+ *
+ * @defgroup ga-multi Self-Loops and Multi-Edges
+ * @ingroup graph-algs
+ * \brief Functions dealing with self-loops and multiple (parallel) edges in graphs.
+ *
+ * @defgroup ga-induced Induced Subgraphs and Cliques
+ * @ingroup graph-algs
+ * \brief Provides functions dealing with induced subgraphs and finding cliques.
+ *
+ * @defgroup ga-digraph Basic Functions for Digraphs
+ * @ingroup graph-algs
+ * \brief Basic functions operating on digraphs like testing for single source or sink, st-graph, bimodal.
+ *
+ * @defgroup ga-tree Basic Functions for Trees and Forests
+ * @ingroup graph-algs
+ * \brief Functions for testing if a graph represents a (free) tree or forest.
+ *
+ * @defgroup ga-connectivity Connectivity in Graphs and Digraphs
+ * @ingroup graph-algs
+ * \brief Provides functions dealing with connectivity in graphs and clustered.
+ *
+ * @defgroup ga-sp Shortest Paths
+ * @ingroup graph-algs
+ * \brief Algorithms for computing shortest paths in graphs (including single-source and all-pairs).
+ *
+ * @defgroup ga-flow Flow Algorithms
+ * @ingroup graph-algs
+ * \brief Algorithms for computing min-cost and maximum flows.
+ *
+ * @defgroup ga-mst Minimum Spanning Trees
+ * @ingroup graph-algs
+ * \brief Provides algorithms for minimum spanning trees.
+ *
+ * @defgroup ga-steiner Steiner Trees
+ * @ingroup graph-algs
+ * \brief Algorithms for computing Steiner trees.
+ *
+ * @defgroup ga-planarity Planarity and Planarization
+ * @ingroup graph-algs
+ * \brief Provides algorithms dealing with planarity of graphs.
+ *
+ * @defgroup ga-planembed Planarity Testing and Embedding
+ * @ingroup ga-planarity
+ * \brief Algorithms for testing planarity and for planar embedding of graphs.
+ *
+ * @defgroup ga-plansub Planar Subgraphs
+ * @ingroup ga-planarity
+ * \brief Algorithms for computing planar subgraphs.
+ *
+ * @defgroup ga-crossmin Crossing Minimization
+ * @ingroup ga-planarity
+ * \brief Heuristics and optimal algorithms for crossing minimization.
+ *
+ * @defgroup ga-insert Edge Insertion
+ * @ingroup ga-planarity
+ * \brief Algorithms for inserting edges into planar graphs with few crossings.
+ *
+ * @defgroup ga-cplanarity Cluster-Planarity and Planarization
+ * @ingroup graph-algs
+ * \brief Provides algorithms dealing with cluster-planarity and embedding.
+ *
+ * @defgroup ga-augment Augmentation
+ * @ingroup graph-algs
+ * \brief Provides algorithms for graph augmentation (e.g., adding edges to make a graph biconnected).
+ *
+ * @defgroup ga-clustering Graph Clustering
+ * @ingroup graph-algs
+ * \brief Provides algorithms for clustering graphs.
+ *
+ * @defgroup ga-orient Orientations
+ * @ingroup graph-algs
+ * \brief Provides functions for orienting graphs like st-numbering.
+ *
+ * @defgroup decomp Graph Decomposition
+ * \brief This module contains data structures for decomposing graphs.
+ *
+ * @defgroup dc-helper Helper Classes for Graph Decomposition
+ * @ingroup decomp
+ * \brief Provides some helper classes that are used with data structures for decomposing graphs.
+ *
+ * @defgroup graph-drawing Graph Drawing
+ * \brief This module contains data structures and algorithms for drawing graphs.
+ *
+ * @defgroup gd-energy Energy-based Layout Algorithms
+ * @ingroup graph-drawing
+ * \brief Various energy-based and force-directed layout algorithms.
+ *
+ * @defgroup gd-multi Modules for the multilevel drawing framework
+ * @ingroup gd-energy
+ * \brief Various modules that can be used in the multilevel drawing framework (e.g., placer and merger).
+ *
+ * @defgroup gd-layered Layer-based Layout Algorithms
+ * @ingroup graph-drawing
+ * \brief Layer-based layout algorithms such as the Sugiyama framework for hierarchical graph drawing.
+ *
+ * @defgroup gd-planlayout Planar and Planarization-based Layout Algorithms
+ * @ingroup graph-drawing
+ * \brief Layout algorithms for planar graphs and layout algorithms based on the planarization approach.
+ *
+ * @defgroup gd-ranking Ranking (Layer Assignment) Modules
+ * @ingroup gd-layered
+ * \brief Various modules that can be used as a ranking module in the Sugiyama framework.
+ *
+ * @defgroup gd-layered-crossmin Crossing Minimization Modules
+ * @ingroup gd-layered
+ * \brief Various modules that can be used for crossings minimization in the Sugiyama framework.
+ *
+ * @defgroup gd-hlm Hierarchy Layout (Coordinate Assignment) Modules
+ * @ingroup gd-layered
+ * \brief Various modules that can be used as a hierarchy layout module in the Sugiyama framework.
+ *
+ * @defgroup gd-cluster Layout Algorithms for Clustered Graphs
+ * @ingroup graph-drawing
+ * \brief Various layout algorithms for clustered graphs, as well as related functionality.
+ *
+ * @defgroup gd-helper Helper Classes for Implementing Layout Algorithms
+ * @ingroup graph-drawing
+ * \brief Various classes that simplify or support the implementation of layout algorithms.
+ */

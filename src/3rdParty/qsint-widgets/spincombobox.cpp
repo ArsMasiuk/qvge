@@ -49,11 +49,9 @@ void SpinComboBox::resizeEvent(QResizeEvent *event)
 {
 	QSpinBox::resizeEvent(event);
 
-	int arrowSize = lineEdit() ? width() - lineEdit()->width() : m_button->width();
+    int arrowSize = m_button->width();
 
-	layout()->setContentsMargins(1, 1, arrowSize - 1, 1);
-
-	//m_button->setFixedWidth(arrowSize);
+    layout()->setContentsMargins(1, 1, arrowSize - 1, 1);
 }
 
 

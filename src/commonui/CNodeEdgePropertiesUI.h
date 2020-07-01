@@ -17,7 +17,7 @@ It can be used freely, maintaining the information above.
 class CEditorScene;
 class CNodeEditorScene;
 class CNode;
-class CDirectEdge;
+class CEdge;
 
 
 namespace Ui {
@@ -62,6 +62,7 @@ protected Q_SLOTS:
     void on_EdgeWeight_valueChanged(double value);
     void on_EdgeStyle_activated(QVariant data);
 	void on_EdgeDirection_activated(QVariant data);
+	void on_EdgeType_activated(QVariant data);
 
     void on_LabelFont_activated(const QFont &font);
 	void on_LabelColor_activated(const QColor &color);
@@ -78,7 +79,7 @@ private:
     bool m_updateLock;
 
 	CNode *m_nodeFactory;
-	CDirectEdge *m_edgeFactory;
+	CEdge *m_edgeFactory;
 
     Ui::CNodeEdgePropertiesUI *ui;
 };

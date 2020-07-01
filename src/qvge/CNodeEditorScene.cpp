@@ -35,9 +35,6 @@ CNodeEditorScene::CNodeEditorScene(QObject *parent) : Super(parent),
 	m_nodesFactory = factory<CNode>();
 	m_edgesFactory = factory<CDirectEdge>();
 
-	// test
-	//setEdgesFactory(factory<CPolyEdge>());
-
 	// go
 	initialize();
 }
@@ -602,14 +599,20 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
 	bool isCtrl = (keyEvent->modifiers() == Qt::ControlModifier);
-	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
-	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
+//	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
+//	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
 
 
-	// Ctrl+Up/Down; alter size by 10%
+	// Ctrl+Up/Down; alter node size by 10%
 	if (keyEvent->key() == Qt::Key_Up && isCtrl)
 	{
 		auto &nodes = getSelectedNodes();
+		if (nodes.isEmpty())
+		{
+			keyEvent->accept();
+			return;
+		}
+
 		for (auto &node : nodes)
 		{
 			node->setAttribute(attr_size, node->getSize() * 1.1);
@@ -625,9 +628,58 @@ void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 	if (keyEvent->key() == Qt::Key_Down && isCtrl)
 	{
 		auto &nodes = getSelectedNodes();
+		if (nodes.isEmpty())
+		{
+			keyEvent->accept();
+			return;
+		}
+
 		for (auto &node : nodes)
 		{
 			node->setAttribute(attr_size, node->getSize() / 1.1);
+		}
+
+		addUndoState();
+
+		keyEvent->accept();
+		return;
+	}
+
+
+	// Ctrl+Left/Right; alter edge weight by 10%
+	if (keyEvent->key() == Qt::Key_Right && isCtrl)
+	{
+		auto &edges = getSelectedEdges();
+		if (edges.isEmpty())
+		{
+			keyEvent->accept();
+			return;
+		}
+
+		for (auto &edge : edges)
+		{
+			edge->setAttribute(attr_weight, edge->getWeight() * 1.1);
+		}
+
+		addUndoState();
+
+		keyEvent->accept();
+		return;
+	}
+
+
+	if (keyEvent->key() == Qt::Key_Left && isCtrl)
+	{
+		auto &edges = getSelectedEdges();
+		if (edges.isEmpty())
+		{
+			keyEvent->accept();
+			return;
+		}
+
+		for (auto &edge : edges)
+		{
+			edge->setAttribute(attr_weight, edge->getWeight() / 1.1);
 		}
 
 		addUndoState();

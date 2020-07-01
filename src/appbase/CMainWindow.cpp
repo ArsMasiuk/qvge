@@ -694,6 +694,30 @@ QStringList CMainWindow::getRecentFilesList() const
 }
 
 
+void CMainWindow::cleanRecentFilesList()
+{
+	QSettings &settings = getApplicationSettings();
+
+	settings.remove("recentFiles");
+}
+
+
+bool CMainWindow::removeRecentDocument(const QString &name)
+{
+	QSettings &settings = getApplicationSettings();
+
+	QStringList recentFiles = settings.value("recentFiles").toStringList();
+	int cnt = recentFiles.removeAll(name);
+	if (cnt)
+	{
+		settings.setValue("recentFiles", recentFiles);
+		return true;
+	}
+
+	return false;
+}
+
+
 void CMainWindow::updateRecentFiles()
 {
 	if (m_currentFileName.isEmpty())
