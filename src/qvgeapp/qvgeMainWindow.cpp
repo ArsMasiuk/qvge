@@ -51,9 +51,29 @@ qvgeMainWindow::qvgeMainWindow()
 
 void qvgeMainWindow::init(const QStringList& args)
 {
+	// check portable start
+	QString localINI = QCoreApplication::applicationDirPath() + "/qvge.ini";
+	m_portable = (QFile::exists(localINI));
+
     Super::init(args);
 
-    statusBar()->showMessage(tr("qvge started."));
+	if (m_portable)
+		statusBar()->showMessage(tr("qvge started (portable edition)."));
+	else
+		statusBar()->showMessage(tr("qvge started."));
+}
+
+
+QSettings& qvgeMainWindow::getApplicationSettings() const
+{
+	if (m_portable)
+	{
+		static QString localINI = QCoreApplication::applicationDirPath() + "/qvge.ini";
+		static QSettings localSettings(localINI, QSettings::IniFormat);
+		return localSettings;
+	}
+
+	return CMainWindow::getApplicationSettings();
 }
 
 

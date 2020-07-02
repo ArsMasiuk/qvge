@@ -18,6 +18,9 @@ OGDF:
 - OGDF updated to v.2020-02 (much more stable than previous one)
 - Davidson-Harel layout added
 
+Windows:
+- portable mode implemented (#54)
+
 Linux:
 - "qmake -r PREFIX=.." should be respected now (#69,#93)
 - fixed menu with opened windows (#88)

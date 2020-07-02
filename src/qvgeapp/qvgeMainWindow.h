@@ -32,6 +32,8 @@ public:
 
     virtual void init(const QStringList& args);
 
+	virtual QSettings& getApplicationSettings() const;
+
 protected:
     virtual bool createDocument(const QByteArray &docType);
 	virtual void destroyDocument();
@@ -48,6 +50,8 @@ private:
     CNodeEditorUIController *m_graphEditController = NULL;
 
     QPlainTextEdit *m_textEditor = NULL;
+
+	bool m_portable = false;
 };
 
 #endif // QVGEMAINWINDOW_H
