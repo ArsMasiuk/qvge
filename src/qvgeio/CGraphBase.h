@@ -14,6 +14,7 @@ It can be used freely, maintaining the information above.
 #include <QVariant>
 #include <QList>
 #include <QColor>
+#include <QPointF>
 
 
 typedef QMap<QByteArray, QVariant> GraphAttributes;
@@ -53,22 +54,30 @@ typedef QMap<QString, NodePort> NodePorts;
 
 struct Node
 {
+	// generic data
 	QByteArray id;
 	GraphAttributes attrs;
 
+	// only for ports
 	NodePorts ports;
 };
 
 
 struct Edge
 {
+	// generic data
 	QByteArray id;
 	GraphAttributes attrs;
 
 	QByteArray startNodeId;
-	QByteArray startPortId;
 	QByteArray endNodeId;
+
+	// only for ports
+	QByteArray startPortId;
 	QByteArray endPortId;
+
+	// only for polylines
+	QList<QPointF> edgePoints;
 };
 
 

@@ -22,6 +22,7 @@ public:
 
 	CPolyEdge(QGraphicsItem *parent = Q_NULLPTR);
 
+	const QList<QPointF>& getPoints() const { return m_polyPoints; }
 	void setPoints(const QList<QPointF> &points);
 	bool insertPointAt(const QPointF &pos);
 

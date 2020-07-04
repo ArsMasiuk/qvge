@@ -125,7 +125,13 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 	// Edges
 	for (const Edge& e : g.edges)
 	{
-		CEdge* edge = createNewConnection();
+		CPolyEdge* polyEdge = e.edgePoints.size() ? new CPolyEdge : nullptr;
+		if (polyEdge)
+		{
+			polyEdge->setPoints(e.edgePoints);
+		}
+
+		CEdge* edge = e.edgePoints.size() ? polyEdge : new CDirectEdge;
 		addItem(edge);
 
 		edge->setId(e.id);
@@ -258,6 +264,15 @@ bool CNodeEditorScene::toGraph(Graph& g)
 		e.endPortId = edge->lastPortId();
 
 		e.attrs = edge->getLocalAttributes();
+
+		// polypoints
+		auto polyEdge = dynamic_cast<CPolyEdge*>(edge);
+		if (polyEdge)
+		{
+			const QList<QPointF>& points = polyEdge->getPoints();
+			if (points.size())
+				e.edgePoints = points;
+		}
 
 		g.edges.append(e);
 	}
