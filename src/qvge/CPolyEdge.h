@@ -37,6 +37,11 @@ public:
 
 	virtual void reverse();
 
+	// attributes
+	virtual bool hasLocalAttribute(const QByteArray& attrId) const;
+	virtual bool setAttribute(const QByteArray& attrId, const QVariant& v);
+	virtual bool removeAttribute(const QByteArray& attrId);
+
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;
 	virtual bool restoreFrom(QDataStream& out, quint64 version64);

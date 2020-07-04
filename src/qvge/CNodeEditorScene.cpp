@@ -125,13 +125,15 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 	// Edges
 	for (const Edge& e : g.edges)
 	{
-		CPolyEdge* polyEdge = e.edgePoints.size() ? new CPolyEdge : nullptr;
+		bool isPolyEdge = e.attrs.contains("points");
+		CPolyEdge* polyEdge = isPolyEdge ? new CPolyEdge : nullptr;
 		if (polyEdge)
 		{
-			polyEdge->setPoints(e.edgePoints);
+			QString pointStr = e.attrs["points"].toString();
+			polyEdge->setPoints(CUtils::pointsFromString(pointStr));
 		}
 
-		CEdge* edge = e.edgePoints.size() ? polyEdge : new CDirectEdge;
+		CEdge* edge = polyEdge ? polyEdge : new CDirectEdge;
 		addItem(edge);
 
 		edge->setId(e.id);
@@ -271,7 +273,7 @@ bool CNodeEditorScene::toGraph(Graph& g)
 		{
 			const QList<QPointF>& points = polyEdge->getPoints();
 			if (points.size())
-				e.edgePoints = points;
+				e.attrs["points"] = CUtils::pointsToString(points);
 		}
 
 		g.edges.append(e);
@@ -333,6 +335,8 @@ void CNodeEditorScene::initialize()
 
     CAttribute styleAttr("style", "Style", "solid", ATTR_FIXED);
     setClassAttribute("edge", styleAttr);
+
+	createClassAttribute("edge", "points", "Polyline Points", "", ATTR_NODEFAULT | ATTR_MAPPED | ATTR_FIXED);
 
 
 	static CAttributeConstrainsList *edgeDirections = new CAttributeConstrainsList();

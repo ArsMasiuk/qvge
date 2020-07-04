@@ -65,7 +65,7 @@ CEdge::~CEdge()
 
 bool CEdge::hasLocalAttribute(const QByteArray& attrId) const
 {
-	if (attrId == "direction")
+	if (attrId == attr_edge_direction)
 		return true;
 	else
 		return Super::hasLocalAttribute(attrId);
@@ -74,7 +74,7 @@ bool CEdge::hasLocalAttribute(const QByteArray& attrId) const
 
 bool CEdge::setAttribute(const QByteArray& attrId, const QVariant& v)
 {
-	if (attrId == "direction")
+	if (attrId == attr_edge_direction)
 	{
 		updateArrowFlags(v.toString());
 	}
@@ -90,9 +90,9 @@ bool CEdge::removeAttribute(const QByteArray& attrId)
 {
 	bool res = Super::removeAttribute(attrId);
 
-	if (attrId == "direction")
+	if (attrId == attr_edge_direction)
 	{
-		updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
+		updateArrowFlags(getAttribute(attr_edge_direction).toString());
 	}
 
 	if (res) update();
@@ -106,7 +106,7 @@ void CEdge::updateCachedItems()
 {
 	Super::updateCachedItems();
 
-	updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
+	updateArrowFlags(getAttribute(attr_edge_direction).toString());
 }
 
 
@@ -142,7 +142,7 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *opti
 	double weight = getVisibleWeight();
 
 	// line style
-	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("style")).toString(), Qt::SolidLine);
+	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(attr_style).toString(), Qt::SolidLine);
 
 	// color & selection
 	bool isSelected = (option->state & QStyle::State_Selected);
@@ -155,7 +155,7 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *opti
     else
 	{
 		// get color (to optimize!)
-		QColor color = getAttribute(QByteArrayLiteral("color")).value<QColor>();
+		QColor color = getAttribute(attr_color).value<QColor>();
 
 		QPen p(color, weight, penStyle, Qt::FlatCap, Qt::MiterJoin);
 

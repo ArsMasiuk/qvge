@@ -131,20 +131,6 @@ void CFormatGraphML::writeEdges(QXmlStreamWriter &xsw, const Graph& graph) const
 		if (edge.endPortId.size())
 			xsw.writeAttribute("endport", edge.endPortId);
 
-		if (edge.edgePoints.size())
-		{
-			QString points;
-			QTextStream ds(&points, QIODevice::WriteOnly);
-			for (const auto& p : edge.edgePoints)
-			{
-				float x = p.x();
-				float y = p.y();
-				ds << x << " "<< y << " ";
-			}
-
-			xsw.writeAttribute("points", points);
-		}
-
 		// attributes
 		for (auto it = edge.attrs.constBegin(); it != edge.attrs.constEnd(); it++)
 		{
@@ -386,20 +372,6 @@ bool CFormatGraphML::readEdge(int /*index*/, const QDomNode &domNode, Graph& gra
 	edge.startPortId = elem.attribute("sourceport", "").toLatin1();
 	edge.endNodeId = elem.attribute("target", "").toLatin1();
 	edge.endPortId = elem.attribute("targetport", "").toLatin1();
-
-	// polyedges
-	QByteArray points = elem.attribute("points", "").toLatin1().trimmed();
-	if (points.size())
-	{
-		float x = 0, y = 0;
-		QTextStream ds(points);
-		while (!ds.atEnd())
-		{
-			ds >> x;
-			ds >> y;	// to do: check validity
-			edge.edgePoints.append(QPointF(x, y));
-		}
-	}
 
 	// common attrs
 	QString id = elem.attribute("id", "");

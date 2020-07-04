@@ -75,9 +75,6 @@ struct Edge
 	// only for ports
 	QByteArray startPortId;
 	QByteArray endPortId;
-
-	// only for polylines
-	QList<QPointF> edgePoints;
 };
 
 

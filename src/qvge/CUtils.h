@@ -34,6 +34,9 @@ public:
 	static QSet<QByteArray> visFromString(const QString& text);
 	static QStringList byteArraySetToStringList(const QSet<QByteArray>& visIds);
 
+	static QString pointsToString(const QList<QPointF>& points);
+	static QList<QPointF> pointsFromString(const QString& text);
+
 	template<class X>
 	static void insertUnique(X& dest, const X& from);
 

@@ -88,6 +88,42 @@ void CPolyEdge::reverse()
 }
 
 
+// attributes
+
+bool CPolyEdge::hasLocalAttribute(const QByteArray& attrId) const
+{
+	if (attrId == "points")
+		return true;
+	else
+		return Super::hasLocalAttribute(attrId);
+}
+
+
+bool CPolyEdge::setAttribute(const QByteArray& attrId, const QVariant& v)
+{
+	if (attrId == "points")
+	{
+		QString pointStr = v.toString();
+		setPoints(CUtils::pointsFromString(pointStr));
+		return true;
+	}
+
+	return Super::setAttribute(attrId, v);
+}
+
+
+bool CPolyEdge::removeAttribute(const QByteArray& attrId)
+{
+	if (attrId == "points")
+	{
+		setPoints({});
+		return true;
+	}
+
+	return Super::removeAttribute(attrId);
+}
+
+
 // serialization 
 
 bool CPolyEdge::storeTo(QDataStream& out, quint64 version64) const
