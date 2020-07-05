@@ -5,7 +5,7 @@
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
   <name>Qt visual graph editor</name>
-  <summary>Application for viewing and manipulating small till middle-sized graphs.</summary>
+  <summary>View and manipulate small till middle-sized graphs.</summary>
   <description>
     <p>
       Application for viewing and manipulating small till middle-sized graphs. It supports several formats (GraphML, GEXF, GML, GraphViz/Dot).
