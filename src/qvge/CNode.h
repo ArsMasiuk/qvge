@@ -50,10 +50,16 @@ public:
 	virtual CItem* clone();
 	virtual void copyDataFrom(CItem* from);
 
-	virtual QSizeF getSize() const		{ return rect().size(); }
-	virtual void setSize(float w, float h);
+	// transformations
+	virtual void transform(const QRectF& oldRect, const QRectF& newRect,
+		double xc, double yc,
+		const QList<QGraphicsItem*> selItems,
+		bool changeSize, bool changePos) override;
 
 	// attributes
+	virtual QSizeF getSize() const { return rect().size(); }
+	virtual void setSize(float w, float h);
+
 	virtual bool hasLocalAttribute(const QByteArray& attrId) const;
 	virtual bool setAttribute(const QByteArray& attrId, const QVariant& v);
 	virtual bool removeAttribute(const QByteArray& attrId);

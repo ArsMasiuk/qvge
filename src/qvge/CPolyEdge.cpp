@@ -88,6 +88,27 @@ void CPolyEdge::reverse()
 }
 
 
+void CPolyEdge::transform(const QRectF & oldRect, const QRectF & newRect, 
+	double xc, double yc, 
+	const QList<QGraphicsItem*> selItems,
+	bool changeSize, bool changePos)
+{
+	Super::transform(oldRect, newRect, xc, yc, selItems, changeSize, changePos);
+
+	// transfrom subpoints as well
+	for (auto &point : m_polyPoints)
+	{
+		double xp = (point.x() - oldRect.left()) / xc + newRect.left();
+		double yp = (point.y() - oldRect.top()) / yc + newRect.top();
+		point.setX(xp);
+		point.setY(yp);
+	}
+
+	createControlPoints();
+	updateShapeFromPoints();
+}
+
+
 // attributes
 
 bool CPolyEdge::hasLocalAttribute(const QByteArray& attrId) const

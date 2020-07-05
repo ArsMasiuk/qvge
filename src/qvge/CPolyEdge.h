@@ -37,6 +37,12 @@ public:
 
 	virtual void reverse();
 
+	// transformations
+	virtual void transform(const QRectF& oldRect, const QRectF& newRect,
+		double xc, double yc,
+		const QList<QGraphicsItem*> selItems,
+		bool changeSize, bool changePos) override;
+
 	// attributes
 	virtual bool hasLocalAttribute(const QByteArray& attrId) const;
 	virtual bool setAttribute(const QByteArray& attrId, const QVariant& v);

@@ -199,18 +199,22 @@ void CTransformRect::doTransformBy(CEditorScene& scene, QRectF oldRect, QRectF n
 	auto selItems = scene.getTransformableItems();
 	for (auto item : selItems)
 	{
-		auto citem = dynamic_cast<CNode*>(item);
+		auto citem = dynamic_cast<CItem*>(item);
 		if (citem)
-		{
-			double w = citem->getSize().width();
-			double h = citem->getSize().height();
-			double wc = w / xc;
-			double hc = h / yc;
-			citem->setSize(wc, hc);
+			citem->transform(oldRect, newRect, xc, yc, selItems, true, true);
 
-			double x = (citem->x() - oldRect.left() - w/2) / xc + newRect.left() + wc/2;
-			double y = (citem->y() - oldRect.top() - h/2) / yc + newRect.top() + hc/2;
-			citem->setPos(x, y);
-		}
+		//auto citem = dynamic_cast<CNode*>(item);
+		//if (citem)
+		//{
+		//	double w = citem->getSize().width();
+		//	double h = citem->getSize().height();
+		//	double wc = w / xc;
+		//	double hc = h / yc;
+		//	citem->setSize(wc, hc);
+
+		//	double x = (citem->x() - oldRect.left() - w/2) / xc + newRect.left() + wc/2;
+		//	double y = (citem->y() - oldRect.top() - h/2) / yc + newRect.top() + hc/2;
+		//	citem->setPos(x, y);
+		//}
 	}
 }

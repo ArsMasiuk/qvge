@@ -113,6 +113,30 @@ CItem* CNode::clone()
 }
 
 
+// transformations
+
+void CNode::transform(
+	const QRectF & oldRect, const QRectF & newRect, 
+	double xc, double yc,
+	const QList<QGraphicsItem*> selItems, 
+	bool changeSize, bool changePos)
+{
+	double w = getSize().width();
+	double h = getSize().height();
+	double wc = changeSize ? w / xc : w;
+	double hc = changeSize ? h / yc : h;
+	
+	if (changeSize)
+		setSize(wc, hc);
+
+	double xp = (x() - oldRect.left() - w / 2) / xc + newRect.left() + wc / 2;
+	double yp = (y() - oldRect.top() - h / 2) / yc + newRect.top() + hc / 2;
+	
+	if (changePos)
+		setPos(xp, yp);
+}
+
+
 // attributes
 
 void CNode::setSize(float w, float h)
