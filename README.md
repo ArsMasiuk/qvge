@@ -46,38 +46,38 @@ Prebuild Windows binaries can be loaded from here:
 
 Or you can get qvge's sources and build them by yourself. In this case you need to have installed Qt 5.x toolkit and corresponding C++ compiler with C++11 support. qvge uses native Qt build system (main project file is qvgeapp.pro) so it should look like:
 
-~~~~
+~~~
 cd <directory-with-qvgeapp.pro>
 qmake -r
-~~~~
+~~~
 
 Linux GCC:
-~~~~
+~~~
 make
-~~~~
+~~~
 
 or Windows MinGW:
-~~~~
+~~~
 mingw32-make
-~~~~
+~~~
 
 or Windows MSVC:
-~~~~
+~~~
 nmake
-~~~~
+~~~
 
 or by Jom:
-~~~~
+~~~
 jom
-~~~~
+~~~
 
 ### Enabling OGDF
 
 In order to build **qvge** with OGDF support (shipped with qvge together):
 before running qmake, open src/config.ini file and make sure that the following option is present:
-~~~~
+~~~
 CONFIG += USE_OGDF
-~~~~
+~~~
 
 Then run qmake + make as desribed in the step before. *Please note:* OGDF is really big, so its compilation takes some time.
 
