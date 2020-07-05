@@ -74,7 +74,7 @@ jom
 ### Enabling OGDF
 
 In order to build **qvge** with OGDF support (shipped with qvge together):
-before running qmake, open src/config.ini file and make sure that the following option is present:
+before running qmake, open the file `src/config.pri` and make sure that the following option is present:
 ~~~
 CONFIG += USE_OGDF
 ~~~
