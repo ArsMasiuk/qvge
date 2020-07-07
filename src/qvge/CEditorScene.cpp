@@ -1187,6 +1187,11 @@ void CEditorScene::onSceneChanged()
 	Q_EMIT sceneChanged();
 
 	layoutItemLabels();
+
+	if (m_editController)
+	{
+		m_editController->onSceneChanged(*this);
+	}
 }
 
 

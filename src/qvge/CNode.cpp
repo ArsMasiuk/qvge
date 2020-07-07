@@ -123,17 +123,30 @@ void CNode::transform(
 {
 	double w = getSize().width();
 	double h = getSize().height();
-	double wc = changeSize ? w / xc : w;
-	double hc = changeSize ? h / yc : h;
+	double wc = w;
+	double hc = h;
 	
 	if (changeSize)
-		setSize(wc, hc);
+	{
+		wc = (w * xc);
+		hc = (h * yc);
 
-	double xp = (x() - oldRect.left() - w / 2) / xc + newRect.left() + wc / 2;
-	double yp = (y() - oldRect.top() - h / 2) / yc + newRect.top() + hc / 2;
-	
+		setSize(wc, hc);
+	}
+	else
+	{
+		w = h = wc = hc = 0.0;
+	}
+
 	if (changePos)
+	{
+		double dx = x() - w / 2;
+		double dy = y() - h / 2;
+		double xp = (dx - oldRect.left()) * xc + newRect.left() + wc / 2;
+		double yp = (dy - oldRect.top()) * yc + newRect.top() + hc / 2;
+
 		setPos(xp, yp);
+	}
 }
 
 

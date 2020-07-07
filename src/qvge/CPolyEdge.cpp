@@ -95,13 +95,26 @@ void CPolyEdge::transform(const QRectF & oldRect, const QRectF & newRect,
 {
 	Super::transform(oldRect, newRect, xc, yc, selItems, changeSize, changePos);
 
+	// snap
+	//auto scene = getScene();
+
 	// transfrom subpoints as well
 	for (auto &point : m_polyPoints)
 	{
-		double xp = (point.x() - oldRect.left()) / xc + newRect.left();
-		double yp = (point.y() - oldRect.top()) / yc + newRect.top();
-		point.setX(xp);
-		point.setY(yp);
+		double xp = (point.x() - oldRect.left()) * xc + newRect.left();
+		double yp = (point.y() - oldRect.top()) * yc + newRect.top();
+
+		//if (scene)
+		//{
+		//	QPointF psnap = scene->getSnapped(QPointF(xp,yp));
+		//	point.setX(psnap.x());
+		//	point.setY(psnap.y());
+		//}
+		//else
+		{
+			point.setX(xp);
+			point.setY(yp);
+		}
 	}
 
 	createControlPoints();

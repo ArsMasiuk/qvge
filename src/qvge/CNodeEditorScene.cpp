@@ -976,10 +976,6 @@ QList<QGraphicsItem*> CNodeEditorScene::getTransformableItems() const
 {
 	QList<QGraphicsItem*> result;
 	
-	//auto nodes = getSelectedNodes();
-	//for (auto node : nodes)
-	//	result << node;
-
 	auto items = getSelectedItems();
 	for (auto item : items)
 		result << item->getSceneItem();
