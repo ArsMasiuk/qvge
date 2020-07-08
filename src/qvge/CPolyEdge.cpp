@@ -67,7 +67,9 @@ CEdge* CPolyEdge::clone()
 
 	// assign directly!
 	c->m_firstNode = m_firstNode;
+	c->m_firstPortId = m_firstPortId;
 	c->m_lastNode = m_lastNode;
+	c->m_lastPortId = m_lastPortId;
 	c->m_polyPoints = m_polyPoints;
 
 	if (scene())

@@ -49,8 +49,8 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Mutual"), tr("Mutual (both ends)"), "mutual");
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Undirected"), tr("None (no ends)"), "undirected");
 
-	ui->EdgeType->addAction(QIcon(":/Icons/Edge-Line"), tr("Direct line"), "line");
-	ui->EdgeType->addAction(QIcon(":/Icons/Edge-Polyline"), tr("Polyline"), "polyline");
+	ui->EdgeType->addAction(QIcon(":/Icons/Edge-Line"), tr("Direct line"), "edge");
+	ui->EdgeType->addAction(QIcon(":/Icons/Edge-Polyline"), tr("Polyline"), "polyedge");
 
     ui->EdgeColor->setColorScheme(QSint::OpenOfficeColors());
 
@@ -405,11 +405,19 @@ void CNodeEdgePropertiesUI::on_EdgeType_activated(QVariant data)
 {
 	if (m_scene)
 	{
-		if (data.toString() == "line")
+		if (data.toString() == "edge")
+		{
 			m_scene->setEdgesFactory(m_scene->factory<CDirectEdge>());
+
+			changeEdgesClass<CDirectEdge>();
+		}
 		else
-		if (data.toString() == "polyline")
+		if (data.toString() == "polyedge")
+		{
 			m_scene->setEdgesFactory(m_scene->factory<CPolyEdge>());
+
+			changeEdgesClass<CPolyEdge>();
+		}
 
 		m_edgeFactory = m_scene->getEdgesFactory();
 	}

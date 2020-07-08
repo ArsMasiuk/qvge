@@ -82,6 +82,47 @@ private:
 	CEdge *m_edgeFactory;
 
     Ui::CNodeEdgePropertiesUI *ui;
+
+private:
+	template<class E>
+	void changeEdgesClass()
+	{
+		if (m_updateLock || m_scene == NULL)
+			return;
+
+		QList<CEdge*> edges = m_scene->getSelectedEdges();
+		if (edges.isEmpty())
+			return;
+
+		for (auto edge : edges)
+		{
+			// same class, dont change
+			if (edge->factoryId() == E::factoryId())
+				continue;
+
+			// clone & kill original
+			E* newEdge = new E;
+			// assign nodes
+			newEdge->setFirstNode(edge->firstNode(), edge->firstPortId());
+			newEdge->setLastNode(edge->lastNode(), edge->lastPortId());
+			// set scene
+			if (edge->scene())
+				edge->scene()->addItem(newEdge);
+			// copy attrs & flags
+			newEdge->copyDataFrom(edge);
+			// copy id
+			QString id = edge->getId();
+			// remove original
+			if (edge->scene())
+				edge->scene()->removeItem(edge);
+			delete edge;
+			// set id to copy
+			newEdge->setId(id);
+		}
+
+		m_scene->addUndoState();
+	}
+
 };
 
 #endif // CNODEPROPERTIESUI_H

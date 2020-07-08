@@ -28,6 +28,10 @@ It can be used freely, maintaining the information above.
 #include <ogdf/COGDFLayout.h>
 #endif
 
+#ifdef USE_GVGRAPH
+#include <gvgraph/CGVGraphLayoutUIController.h>
+#endif
+
 #include <appbase/CMainWindow.h>
 
 #include <qvge/CNode.h>
@@ -115,6 +119,10 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
     // OGDF
 #ifdef USE_OGDF
     m_ogdfController = new COGDFLayoutUIController(parent, m_editorScene);
+#endif
+
+#ifdef USE_GVGRAPH
+	m_gvController = new CGVGraphLayoutUIController(parent, m_editorScene);
 #endif
 
     // workaround for full screen
