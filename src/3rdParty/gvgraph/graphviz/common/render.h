@@ -57,11 +57,11 @@ extern "C" {
     } epsf_t;
 
 /*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#define extern __declspec(dllimport)
-#endif
-#endif
+//#ifdef _WIN32
+//#ifndef GVC_EXPORTS
+//#define extern __declspec(dllimport)
+//#endif
+//#endif
 /*end visual studio*/
 
 	extern void add_box(path *, boxf);

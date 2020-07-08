@@ -23,6 +23,7 @@
 #include "pack.h"
 #include "pointset.h"
 #include <assert.h>
+#include <stdio.h>
 
 #define strneq(a,b,n)		(!strncmp(a,b,n))
 

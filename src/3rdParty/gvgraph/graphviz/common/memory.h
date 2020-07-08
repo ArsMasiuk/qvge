@@ -32,16 +32,20 @@ extern "C" {
 #define ALLOC(size,ptr,type) (ptr? (type*)grealloc(ptr,(size)*sizeof(type)):(type*)gmalloc((size)*sizeof(type)))
 #define RALLOC(size,ptr,type) ((type*)grealloc(ptr,(size)*sizeof(type)))
 #define ZALLOC(size,ptr,type,osize) (ptr? (type*)zrealloc(ptr,size,sizeof(type),osize):(type*)zmalloc((size)*sizeof(type)))
-#ifdef GVDLL
-#define extern __declspec(dllexport)
-#else
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#define extern __declspec(dllimport)
-#endif
-#endif
 
-#endif
+
+//#ifdef GVDLL
+//#define extern __declspec(dllexport)
+//#else
+//#ifdef _WIN32
+//#ifndef GVC_EXPORTS
+//#define extern __declspec(dllimport)
+//#endif
+//#endif
+//
+//#endif
+
+#define extern
 
     extern void *zmalloc(size_t);
     extern void *zrealloc(void *, size_t, size_t, size_t);

@@ -30,7 +30,8 @@ extern "C" {
 //#else
 //#   define CGRAPH_API extern
 //#endif
-#define CGRAPH_API
+
+#define CGRAPH_API extern
 
 #ifndef FALSE
 #define FALSE (0)

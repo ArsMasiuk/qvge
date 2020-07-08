@@ -58,12 +58,13 @@ typedef unsigned int packval_t;
     } pack_info;
 
 /*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#define extern __declspec(dllimport)
-#endif
-#endif
+//#ifdef _WIN32
+//#ifndef GVC_EXPORTS
+//#define extern __declspec(dllimport)
+//#endif
+//#endif
 /*end visual studio*/
+#define extern
 
     extern point *putRects(int ng, boxf* bbs, pack_info* pinfo);
     extern int packRects(int ng, boxf* bbs, pack_info* pinfo);

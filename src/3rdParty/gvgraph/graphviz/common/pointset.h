@@ -23,20 +23,23 @@ extern "C" {
 
     typedef Dict_t PointSet;
     typedef Dict_t PointMap;
-#ifdef GVDLL
-#define extern __declspec(dllexport)
-#else
-#define extern
-#endif
 
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#undef extern
-#define extern __declspec(dllimport)
-#endif
-#endif
-/*end visual studio*/
+//#ifdef GVDLL
+//#define extern __declspec(dllexport)
+//#else
+//#define extern
+//#endif
+//
+///*visual studio*/
+//#ifdef _WIN32
+//#ifndef GVC_EXPORTS
+//#undef extern
+//#define extern __declspec(dllimport)
+//#endif
+//#endif
+///*end visual studio*/
+
+#define extern
 
 	extern PointSet *newPS(void);
     extern void freePS(PointSet *);

@@ -15,6 +15,12 @@
 extern "C" {
 #endif
 
+	typedef struct hsbcolor_t {
+		char *name;
+		unsigned char h, s, b;
+	} hsbcolor_t;
+
+
     hsbcolor_t color_lib[] = {
 	{"aliceblue", 147, 15, 255},
 	{"antiquewhite", 24, 35, 250},

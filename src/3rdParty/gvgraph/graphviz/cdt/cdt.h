@@ -25,7 +25,7 @@ extern "C" {
 //#   define CDT_API extern
 //#endif
 
-#define CDT_API
+#define CDT_API extern
 
 typedef struct _dtlink_s	Dtlink_t;
 typedef struct _dthold_s	Dthold_t;

@@ -31,6 +31,12 @@ USE_EXTERNAL_OGDF{
 	INCLUDEPATH += $$OGDF_INCLUDE_PATH
 }
 
+USE_GVGRAPH{
+	LIBS += -lgvgraph
+	#LIBS += $$GRAPHVIZ_LIBS -L$$GRAPHVIZ_LIB_PATH
+}
+
+
 win32{
     LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
 }

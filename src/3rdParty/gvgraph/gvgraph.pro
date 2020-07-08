@@ -1,4 +1,5 @@
 include(../common.pri)
+include(./gvgraph.pri)
 
 TARGET = gvgraph
 QT += core 
@@ -49,10 +50,8 @@ HEADERS += $$files($$PWD/include/*.h)
 
 HEADERS += $$files($$PWD/boost/*.h)
 HEADERS += $$files($$PWD/boost/*.hpp)
-HEADERS += $$files($$PWD/boost/regex/*.hpp)
-HEADERS += $$files($$PWD/boost/regex/v4/*.hpp)
-SOURCES += $$files($$PWD/boost/*.cpp)
+HEADERS += $$files($$PWD/boost/regex/src/*.hpp)
+SOURCES += $$files($$PWD/boost/regex/src/*.cpp)
 
-INCLUDEPATH += . ./include ./graphviz ./graphviz/common ./boost ./boost/regex
-INCLUDEPATH += ./graphviz/pathplan ./graphviz/gvc ./graphviz/cgraph ./graphviz/cdt ./graphviz/sparse ./graphviz/pack ./graphviz/ast ./graphviz/sfio ./graphviz/label
-INCLUDEPATH += ./graphviz/xdot ./graphviz/fdpgen ./graphviz/neatogen
+SOURCES += $$files($$PWD/graphviz/tools/*.c)
+#HEADERS += $$files($$PWD/graphviz/tools/*.h)

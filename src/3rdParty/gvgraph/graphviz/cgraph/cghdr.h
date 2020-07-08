@@ -29,7 +29,7 @@
 //#   define CGHDR_API extern
 //#endif
 
-#define CGHDR_API
+#define CGHDR_API extern
 
 #include "config.h"
 

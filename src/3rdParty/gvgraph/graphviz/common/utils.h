@@ -20,12 +20,13 @@ extern "C" {
 
 
 /*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#define extern __declspec(dllimport)
-#endif
-#endif
+//#ifdef _WIN32
+//#ifndef GVC_EXPORTS
+//#define extern __declspec(dllimport)
+//#endif
+//#endif
 /*end visual studio*/
+#define extern
 
 #ifndef HAVE_STRCASECMP
     extern int strcasecmp(const char *s1, const char *s2);
