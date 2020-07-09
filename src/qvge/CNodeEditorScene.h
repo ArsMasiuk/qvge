@@ -52,6 +52,9 @@ public:
 		return m_editMode;
 	}
 
+	template<class E>
+	CEdge* changeEdgeClass(CEdge* edge);
+
 	// factorizations
 	virtual CNode* createNewNode() const;
 	CNode* createNewNode(const QPointF& pos);		// calls createNewNode(), attaches to scene and sets pos
@@ -142,3 +145,34 @@ protected:
 };
 
 
+// operations
+
+template<class E>
+inline CEdge* CNodeEditorScene::changeEdgeClass(CEdge* edge)
+{
+	if (!edge)
+		return NULL;
+
+	// same class, dont change
+	if (edge->factoryId() == E::factoryId())
+		return edge;
+
+	// clone & kill original
+	E* newEdge = new E;
+	// assign nodes
+	newEdge->setFirstNode(edge->firstNode(), edge->firstPortId());
+	newEdge->setLastNode(edge->lastNode(), edge->lastPortId());
+	// add to scene
+	addItem(newEdge);
+	// copy attrs & flags
+	newEdge->copyDataFrom(edge);
+	// copy id
+	QString id = edge->getId();
+	// remove original
+	removeItem(edge);
+	delete edge;
+	// set id to copy
+	newEdge->setId(id);
+
+	return newEdge;
+}

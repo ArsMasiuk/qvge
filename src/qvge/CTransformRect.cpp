@@ -174,6 +174,10 @@ bool CTransformRect::onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *
 		if (!deltaPos.isNull())
 		{
 			QRectF newRect = m_lastRect;
+
+			bool isShift = (mouseEvent->modifiers() & Qt::ShiftModifier);
+
+			// default transform
 			switch (m_dragPoint)
 			{
 			case 0:		newRect.setTopLeft(pos);		break;
@@ -186,6 +190,28 @@ bool CTransformRect::onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *
 			case 7:		newRect.setBottomRight(pos);	break;
 			}
 
+			// if shift pressed: mirror around center
+			if (isShift && newRect.isValid())
+			{
+				qreal dx_r = newRect.right() - m_lastRect.right();
+				qreal dx_l = newRect.left() - m_lastRect.left();
+				qreal dy_t = newRect.top() - m_lastRect.top();
+				qreal dy_b = newRect.bottom() - m_lastRect.bottom();
+
+				switch (m_dragPoint)
+				{
+				case 0:		newRect.setBottomRight(m_lastRect.bottomRight() - QPointF(dx_l, dy_t));		break;
+				case 1:		newRect.setBottom(m_lastRect.bottom() - dy_t);								break;
+				case 2:		newRect.setBottomLeft(m_lastRect.bottomLeft() - QPointF(dx_r, dy_t));		break;
+				case 3:		newRect.setRight(m_lastRect.right() - dx_l);								break;
+				case 4:		newRect.setLeft(m_lastRect.left() - dx_r);									break;
+				case 5:		newRect.setTopRight(m_lastRect.topRight() - QPointF(dx_l, dy_b));			break;
+				case 6:		newRect.setTop(m_lastRect.top() - dy_b);									break;
+				case 7:		newRect.setTopLeft(m_lastRect.topLeft() - QPointF(dx_r, dy_b));				break;
+				}
+			}
+
+			// do transform if rect is valid
 			if (newRect.isValid() && newRect.width() >= MIN_RECT_SIZE && newRect.height() >= MIN_RECT_SIZE)
 			{
 				doTransformBy(scene, m_lastRect, newRect);

@@ -94,35 +94,23 @@ private:
 		if (edges.isEmpty())
 			return;
 
+		QList<CItem*> newEdges;
+
 		for (auto edge : edges)
 		{
-			// same class, dont change
-			if (edge->factoryId() == E::factoryId())
-				continue;
+			auto e = m_scene->changeEdgeClass<E>(edge);
 
-			// clone & kill original
-			E* newEdge = new E;
-			// assign nodes
-			newEdge->setFirstNode(edge->firstNode(), edge->firstPortId());
-			newEdge->setLastNode(edge->lastNode(), edge->lastPortId());
-			// set scene
-			if (edge->scene())
-				edge->scene()->addItem(newEdge);
-			// copy attrs & flags
-			newEdge->copyDataFrom(edge);
-			// copy id
-			QString id = edge->getId();
-			// remove original
-			if (edge->scene())
-				edge->scene()->removeItem(edge);
-			delete edge;
-			// set id to copy
-			newEdge->setId(id);
+			if (e && e != edge)
+				newEdges << e;
 		}
 
-		m_scene->addUndoState();
-	}
+		if (newEdges.size())
+		{
+			m_scene->addUndoState();
 
+			m_scene->selectItems(newEdges, false);
+		}
+	}
 };
 
 #endif // CNODEPROPERTIESUI_H

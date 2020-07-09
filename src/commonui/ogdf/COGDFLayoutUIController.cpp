@@ -28,7 +28,7 @@ COGDFLayoutUIController::COGDFLayoutUIController(CMainWindow *parent, CNodeEdito
     m_parent(parent), m_scene(scene)
 {
     // add layout menu
-    QMenu *layoutMenu = new QMenu(tr("&Layout"));
+    QMenu *layoutMenu = new QMenu(tr("&OGDF"));
     m_parent->menuBar()->insertMenu(m_parent->getWindowMenuAction(), layoutMenu);
 
     layoutMenu->addAction(tr("Linear Layout"), this, SLOT(doLinearLayout()));
