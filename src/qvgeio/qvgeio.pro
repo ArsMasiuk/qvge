@@ -19,7 +19,12 @@ HEADERS += $$files($$PWD/*.h)
 #FORMS += $$files($$PWD/*.ui)
 #RESOURCES += $$files($$PWD/*.qrc)
 
-INCLUDEPATH += $$PWD $$PWD/..
+HEADERS += $$files($$PWD/../3rdParty/boost/graph/*.hpp)
+SOURCES += $$files($$PWD/../3rdParty/boost/graph/detail/*.cpp)
+SOURCES += $$files($$PWD/../3rdParty/boost/libs/regex/src/*.cpp)
+
+
+INCLUDEPATH += $$PWD $$PWD/.. $$PWD/../3rdParty
 
 
 # output
