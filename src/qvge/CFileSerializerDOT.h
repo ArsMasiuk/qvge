@@ -44,12 +44,10 @@ public:
 	}
 
 	virtual bool loadSupported() const {
-        return false;
+        return true;
 	}
 
-    virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/, QString* /*lastError = nullptr*/) const {
-        return false;
-    }
+	virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/, QString* /*lastError = nullptr*/) const;
 
 	virtual bool saveSupported() const {
 		return true;

@@ -44,6 +44,8 @@ bool CGVGraphLayoutUIController::doLayout(const QString &engine, CNodeEditorScen
 
 	GVGraph gvg("test");
 
+	gvg.applyLayout();
+
 	return true;
 }
 

@@ -171,6 +171,11 @@ bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QStrin
 			return (CFileSerializerGEXF().load(fileName, *m_editorScene, lastError));
 		}
 
+		if (format == "dot" || format == "gv")
+		{
+			return (CFileSerializerDOT().load(fileName, *m_editorScene, lastError));
+		}
+
 		if (format == "csv")
 		{
 			return importCSV(fileName, lastError);

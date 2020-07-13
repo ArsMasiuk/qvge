@@ -14,8 +14,10 @@ It can be used freely, maintaining the information above.
 #include <QVariant>
 #include <QSettings>
 
+#include <qvge/CNodeEditorScene.h>
+
 class CEditorScene;
-class CNodeEditorScene;
+//class CNodeEditorScene;
 class CNode;
 class CEdge;
 
@@ -29,7 +31,7 @@ class CNodeEdgePropertiesUI : public QWidget
     Q_OBJECT
 
 public:
-    explicit CNodeEdgePropertiesUI(QWidget *parent = 0);
+    explicit CNodeEdgePropertiesUI(QWidget *parent = nullptr);
     ~CNodeEdgePropertiesUI();
 
     void setScene(CNodeEditorScene* scene);

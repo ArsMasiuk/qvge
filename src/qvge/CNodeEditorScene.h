@@ -10,9 +10,10 @@ It can be used freely, maintaining the information above.
 #pragma once
 
 #include "CEditorScene.h"
+#include "CEdge.h"
 
 class CNode;
-class CEdge;
+//class CEdge;
 class CNodePort;
 class CNodeSceneActions;
 

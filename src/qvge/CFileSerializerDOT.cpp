@@ -11,6 +11,8 @@ It can be used freely, maintaining the information above.
 #include "CNode.h"
 #include "CEdge.h"
 
+#include <qvgeio/CFormatDOT.h>
+
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>
@@ -25,7 +27,7 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 	{
         QTextStream ts(&saveFile);
 		ts.setCodec("UTF-8");
-		ts.setGenerateByteOrderMark(true);
+		//ts.setGenerateByteOrderMark(true);
 
         QString graphId = QFileInfo(fileName).completeBaseName();
 
@@ -80,6 +82,17 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 	return false;
 }
 
+
+bool CFileSerializerDOT::load(const QString& fileName, CEditorScene& scene, QString* lastError) const
+{
+	CFormatDOT dot;
+	Graph graphModel;
+
+	if (dot.load(fileName, graphModel, lastError))
+		return scene.fromGraph(graphModel);
+	else
+		return false;
+}
 
 // helpers
 
