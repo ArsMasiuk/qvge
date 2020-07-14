@@ -23,7 +23,6 @@ class CSceneOptionsDialog;
 
 struct OptionsData
 {
-	bool newGraphDialogOnStart = true;
 	int backupPeriod = 10;
 };
 

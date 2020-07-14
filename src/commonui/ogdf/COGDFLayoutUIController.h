@@ -23,6 +23,8 @@ private Q_SLOTS:
 	void doDHLayout();
 	void doSugiyamaLayout();
 
+	void createNewGraph();
+
 private:
     CMainWindow *m_parent;
     CNodeEditorScene *m_scene;

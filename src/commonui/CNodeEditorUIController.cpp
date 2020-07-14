@@ -24,7 +24,6 @@ It can be used freely, maintaining the information above.
 
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
-#include <ogdf/COGDFNewGraphDialog.h>
 #include <ogdf/COGDFLayout.h>
 #endif
 
@@ -584,21 +583,6 @@ void CNodeEditorUIController::onNewDocumentCreated()
     m_editorScene->createClassAttribute("", "creator", "Creator of document", 
 		QApplication::applicationName() + " " + QApplication::applicationVersion(), ATTR_NONE);
 
-#ifdef USE_OGDF
-    if (m_optionsData.newGraphDialogOnStart)
-    {
-        COGDFNewGraphDialog dialog;
-        dialog.exec(*m_editorScene);
-
-        bool show = dialog.isShowOnStart();
-        if (show != m_optionsData.newGraphDialogOnStart)
-        {
-			m_optionsData.newGraphDialogOnStart = show;
-            m_parent->writeSettings();
-        }
-    }
-#endif
-
     // store newly created state
     m_editorScene->addUndoState();
 }
@@ -657,7 +641,6 @@ void CNodeEditorUIController::doReadSettings(QSettings& settings)
 
 	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
 
-	m_optionsData.newGraphDialogOnStart = settings.value("autoCreateGraphDialog", m_optionsData.newGraphDialogOnStart).toBool();
 	m_optionsData.backupPeriod = settings.value("backupPeriod", m_optionsData.backupPeriod).toInt();
 
 	updateSceneOptions();
@@ -688,7 +671,6 @@ void CNodeEditorUIController::doWriteSettings(QSettings& settings)
 
 	settings.setValue("lastExportPath", m_lastExportPath);
 
-	settings.setValue("autoCreateGraphDialog", m_optionsData.newGraphDialogOnStart);
 	settings.setValue("backupPeriod", m_optionsData.backupPeriod);
 
 

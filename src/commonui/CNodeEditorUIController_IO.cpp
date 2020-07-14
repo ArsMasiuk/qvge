@@ -15,7 +15,6 @@ It can be used freely, maintaining the information above.
 
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
-#include <ogdf/COGDFNewGraphDialog.h>
 #include <ogdf/COGDFLayout.h>
 #endif
 

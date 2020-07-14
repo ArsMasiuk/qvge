@@ -5,7 +5,7 @@
 #
 # It can be used freely, maintaining the information above.
 
-#CONFIG += BUILD_OGDF
+CONFIG += BUILD_OGDF
 #CONFIG += USE_LOCAL_OGDF
 #CONFIG += USE_EXTERNAL_OGDF
 

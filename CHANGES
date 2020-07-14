@@ -21,6 +21,7 @@ OGDF:
 - OGDF updated to v.2020-02 (more stable than previous one)
 - qvge can be built & linked against an external OGDF library
 - "Layout" menu is moved under "OGDF" 
+- "Create new graph" dialog is moved under "OGDF" (#97)
 - Davidson-Harel layout added
 
 Windows:
