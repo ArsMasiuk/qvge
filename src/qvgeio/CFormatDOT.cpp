@@ -17,18 +17,7 @@ It can be used freely, maintaining the information above.
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graphviz.hpp>
 
-
-struct DotLabel 
-{
-	// label
-	std::string label;
-	std::string xlabel;
-	std::string fontcolor;
-	std::string fontname;
-	float fontsize = .0;
-};
-
-struct DotVertex: public DotLabel 
+struct DotVertex
 {
 	std::string id;
 	// shape
@@ -41,12 +30,31 @@ struct DotVertex: public DotLabel
 	std::string color;
 	float penwidth = .0;
 	std::string style;
+
+	// label
+	std::string label;
+	std::string xlabel;
+	std::string fontcolor;
+	std::string fontname;
+	float fontsize = .0;
 };
 
-struct DotEdge : public DotLabel
+struct DotEdge
 {
 	std::string id;
+	std::string dir;
+	
 	std::string color;
+	std::string style;
+	float penwidth = .0;
+	float weight = .0;
+
+	// label
+	std::string label;
+	std::string xlabel;
+	std::string fontcolor;
+	std::string fontname;
+	float fontsize = .0;
 };
 
 typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, DotVertex, DotEdge> graph_t;
@@ -66,6 +74,7 @@ static QString fromDotShape(const std::string& shape)
 }
 
 
+template<class DotLabel>
 static void readLabel(const DotLabel &v, GraphAttributes &attrs)
 {
 	if (v.label.size())
@@ -81,7 +90,23 @@ static void readLabel(const DotLabel &v, GraphAttributes &attrs)
 	{
 		QFont f;
 		if (v.fontname.size())
-			f.setFamily(QString::fromStdString(v.fontname));
+		{
+			QString fontstring = QString::fromStdString(v.fontname).toLower();
+			
+			if (fontstring.contains("bold"))
+			{
+				fontstring = fontstring.remove("bold");
+				f.setBold(true);
+			}
+			
+			if (fontstring.contains("italic"))
+			{
+				fontstring = fontstring.remove("italic");
+				f.setItalic(true);
+			}
+
+			f.setFamily(fontstring);
+		}
 
 		if (v.fontsize > .0)
 			f.setPointSizeF(v.fontsize);
@@ -107,19 +132,24 @@ bool CFormatDOT::load(const QString& fileName, Graph& g, QString* lastError) con
 	dp.property("shape", boost::get(&DotVertex::shape, graphviz));
 	dp.property("penwidth", boost::get(&DotVertex::penwidth, graphviz));
 	dp.property("style", boost::get(&DotVertex::style, graphviz));
-	dp.property("label", boost::get(&DotVertex::label, graphviz));
-	dp.property("xlabel", boost::get(&DotVertex::xlabel, graphviz));
 	dp.property("fontcolor", boost::get(&DotVertex::fontcolor, graphviz));
 	dp.property("fontname", boost::get(&DotVertex::fontname, graphviz));
 	dp.property("fontsize", boost::get(&DotVertex::fontsize, graphviz));
+	dp.property("label", boost::get(&DotVertex::label, graphviz));
+	dp.property("xlabel", boost::get(&DotVertex::xlabel, graphviz));
 
 	dp.property("id", boost::get(&DotEdge::id, graphviz));
 	dp.property("color", boost::get(&DotEdge::color, graphviz));
-	dp.property("label", boost::get(&DotEdge::label, graphviz));
-	dp.property("xlabel", boost::get(&DotEdge::xlabel, graphviz));
+	dp.property("penwidth", boost::get(&DotEdge::penwidth, graphviz));
+	dp.property("weight", boost::get(&DotEdge::weight, graphviz));
+	dp.property("dir", boost::get(&DotEdge::dir, graphviz));
+	dp.property("style", boost::get(&DotEdge::style, graphviz));
 	dp.property("fontcolor", boost::get(&DotEdge::fontcolor, graphviz));
 	dp.property("fontname", boost::get(&DotEdge::fontname, graphviz));
 	dp.property("fontsize", boost::get(&DotEdge::fontsize, graphviz));
+	dp.property("label", boost::get(&DotEdge::label, graphviz));
+	dp.property("xlabel", boost::get(&DotEdge::xlabel, graphviz));
+
 
 	std::ifstream dot(fileName.toStdString());
 	bool status = false;
@@ -211,7 +241,18 @@ bool CFormatDOT::load(const QString& fileName, Graph& g, QString* lastError) con
 			e.startNodeId = g.nodes.at(i).id;
 			e.endNodeId = g.nodes.at(gvtarget).id;
 
-			// to do: attrs
+			if (edge.weight > .0)
+				e.attrs["weight"] = edge.weight;
+			else if (edge.penwidth > .0)
+				e.attrs["weight"] = edge.penwidth;
+
+			if (edge.dir == "both")
+				e.attrs["direction"] = "mutual";
+			else if (edge.dir == "none")
+				e.attrs["direction"] = "undirected";
+
+			if (edge.style.size())
+				e.attrs["style"] = QString::fromStdString(edge.style);
 
 			readLabel(edge, e.attrs);
 

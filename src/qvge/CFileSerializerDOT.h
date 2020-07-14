@@ -64,6 +64,8 @@ private:
 	void doWriteEdge(QTextStream& ts, const CEdge& edge, const CEditorScene& scene) const;
 	void doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVariant> edgeAttrs) const;
 
+	void doWriteLabel(QTextStream& ts, QMap<QByteArray, QVariant>& attrs) const;
+
 	bool m_writeBackground = true;
 	bool m_writeAttrs = true;
 };

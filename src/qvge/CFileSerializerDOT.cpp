@@ -195,23 +195,6 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		nodeAttrs.remove("shape");
 	}
 
-	if (nodeAttrs.contains("label")) {
-		ts << ",xlabel = \"" << toDotString(nodeAttrs["label"]) << "\"\n";
-		nodeAttrs.remove("label");
-	}
-
-	if (nodeAttrs.contains("label.color")) {
-		ts << ",fontcolor = \"" << nodeAttrs["label.color"].toString() << "\"\n";
-		nodeAttrs.remove("label.color");
-	}
-
-	if (nodeAttrs.contains("label.font")) {
-		auto f = nodeAttrs["label.font"].value<QFont>();
-		ts << ",fontname = \"" << f.family() << "\"\n";
-		ts << ",fontsize = \"" << f.pointSizeF() << "\"\n";
-		nodeAttrs.remove("label.font");
-	}
-
 	if (nodeAttrs.contains("stroke.color")) {
 		ts << ",color = \"" << nodeAttrs["stroke.color"].toString() << "\"\n";
 		nodeAttrs.remove("stroke.color");
@@ -230,6 +213,9 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		nodeAttrs.remove("stroke.style");
 	}
 	
+	// label
+	doWriteLabel(ts, nodeAttrs);
+
 	// custom attrs
 	for (auto it = nodeAttrs.constBegin(); it != nodeAttrs.constEnd(); ++it)
 	{
@@ -311,22 +297,8 @@ void CFileSerializerDOT::doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		edgeAttrs.remove("weight");
 	}
 
-	if (edgeAttrs.contains("label")) {
-		ts << ",xlabel = \"" << toDotString(edgeAttrs["label"]) << "\"\n";
-		edgeAttrs.remove("label");
-	}
-
-	if (edgeAttrs.contains("label.color")) {
-		ts << ",fontcolor = \"" << edgeAttrs["label.color"].toString() << "\"\n";
-		edgeAttrs.remove("label.color");
-	}
-
-	if (edgeAttrs.contains("label.font")) {
-		auto f = edgeAttrs["label.font"].value<QFont>();
-		ts << ",fontname = \"" << f.family() << "\"\n";
-		ts << ",fontsize = \"" << f.pointSizeF() << "\"\n";
-		edgeAttrs.remove("label.font");
-	}
+	// label
+	doWriteLabel(ts, edgeAttrs);
 
 	// custom attrs
 	for (auto it = edgeAttrs.constBegin(); it != edgeAttrs.constEnd(); ++it)
@@ -335,3 +307,26 @@ void CFileSerializerDOT::doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 	}
 }
 
+
+void CFileSerializerDOT::doWriteLabel(QTextStream& ts, QMap<QByteArray, QVariant>& attrs) const
+{
+	if (attrs.contains("label")) {
+		ts << ",xlabel = \"" << toDotString(attrs["label"]) << "\"\n";
+		attrs.remove("label");
+	}
+
+	if (attrs.contains("label.color")) {
+		ts << ",fontcolor = \"" << attrs["label.color"].toString() << "\"\n";
+		attrs.remove("label.color");
+	}
+
+	if (attrs.contains("label.font")) {
+		auto f = attrs["label.font"].value<QFont>();
+		QString fontname = f.family();
+		if (f.bold()) fontname += " bold";
+		if (f.italic()) fontname += " italic";
+		ts << ",fontname = \"" << fontname << "\"\n";
+		ts << ",fontsize = \"" << f.pointSizeF() << "\"\n";
+		attrs.remove("label.font");
+	}
+}

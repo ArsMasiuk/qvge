@@ -263,6 +263,7 @@ public Q_SLOTS:
 
 	void selectAll();
 	void deselectAll();
+	void selectItem(CItem* item, bool exclusive = true);
 	void selectItems(const QList<CItem*>& items, bool exclusive = true);
 
 	void del();

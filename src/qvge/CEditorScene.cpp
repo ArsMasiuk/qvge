@@ -2248,6 +2248,22 @@ void CEditorScene::deselectAll()
 }
 
 
+void CEditorScene::selectItem(CItem* item, bool exclusive)
+{
+	if (!item)
+		return;
+
+	beginSelection();
+
+	if (exclusive)
+		deselectAll();
+
+	item->getSceneItem()->setSelected(true);
+
+	endSelection();
+}
+
+
 void CEditorScene::selectItems(const QList<CItem*>& items, bool exclusive)
 {
 	beginSelection();
@@ -2256,7 +2272,8 @@ void CEditorScene::selectItems(const QList<CItem*>& items, bool exclusive)
 		deselectAll();
 
 	for (auto item : items)
-		item->getSceneItem()->setSelected(true);
+		if (item)
+			item->getSceneItem()->setSelected(true);
 
 	endSelection();
 }

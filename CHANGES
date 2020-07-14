@@ -5,9 +5,11 @@ QVGE 0.6.0
 - Ctrl+Right/Ctrl+Left change weights of selected edges 
 - Enter begins a new line when editing a label, Esc finishes editing
 - transformation tool: Drag+Shift performs parallel transformation
+- impoved export & import of Graphviz format
 
 - fixed crash after undoing recent drag operation
 - fixed issue when a document could not be opened (#96)
+- fixed issue with setting label properties while label editor is open
 
 - fixed <math.h> include issue (#101)
 

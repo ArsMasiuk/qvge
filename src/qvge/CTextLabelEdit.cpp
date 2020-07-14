@@ -84,6 +84,8 @@ void CTextLabelEdit::startEdit(CItem *item)
 	if (scene == nullptr)
 		return;
 
+	scene->selectItem(m_item);
+
 	m_storedText = m_item->getAttribute("label").toString();
 	m_item->showLabel(false);
 
