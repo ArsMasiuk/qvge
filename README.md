@@ -125,6 +125,8 @@ Special thanks to:
 
 **qvge** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml)
 
+**qvge** at [software-file.com](http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html)<a href="http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html" target="_blank"><img src="http://www.software-file.com/images/fivestar.png" alt="Qt Visual Graph Editor on Software-File.com" border=0></a>
+
 ### Support
 
 Since **qvge** is a free software, it is developed in the free time on my own costs only. If you like the software and wish to support its further development, you could make a small donation using the button below:
