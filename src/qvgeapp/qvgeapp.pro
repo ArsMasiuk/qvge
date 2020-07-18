@@ -63,5 +63,9 @@ unix{
     appdata.path = /usr/share/appdata/
     appdata.files = $$PWD/linux/qvge.appdata.xml
     INSTALLS += appdata
+
+    xgr.path = /usr/share/mime/packages/
+    xgr.files = $$PWD/linux/application-xgr.xml
+    INSTALLS += xgr
 }
 

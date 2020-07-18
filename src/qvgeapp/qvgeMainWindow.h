@@ -47,6 +47,8 @@ protected:
 	virtual void doWriteSettings(QSettings& settings);
 	
 private:
+	void updateFileAssociations();
+
     CNodeEditorUIController *m_graphEditController = NULL;
 
     QPlainTextEdit *m_textEditor = NULL;

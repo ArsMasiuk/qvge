@@ -7,4 +7,4 @@ Exec=qvgeapp %F
 Icon=/usr/share/qvge/qvge.png
 Type=Application
 Categories=Graphics;2DGraphics;Education;Science;DataVisualization;ComputerScience;Math;Viewer;Development;Qt;
-
+MimeType=application/xgr
