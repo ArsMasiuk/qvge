@@ -13,3 +13,8 @@ unix{
         INCLUDEPATH += $$PWD/../3rdParty/qprocessinfo
     }
 }
+
+win32{
+        SOURCES += $$PWD/CPlatformWin32.cpp
+        HEADERS += $$PWD/CPlatformWin32.h
+}

@@ -15,6 +15,7 @@ It can be used freely, maintaining the information above.
 #include <QApplication>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QSettings>
 
 #include <appbase/CPlatformServices.h>
 #include <commonui/CNodeEditorUIController.h>
@@ -46,6 +47,9 @@ qvgeMainWindow::qvgeMainWindow()
     //CDocumentFormat txt = { tr("Plain text file"), "*.txt", { "txt" }, true, true };
     //CDocument text = { tr("Text Document"), tr("Simple text document"), "text", true, {txt} };
     //addDocument(text);
+
+	// default files associations
+	updateFileAssociations();
 }
 
 
@@ -260,4 +264,24 @@ void qvgeMainWindow::doWriteSettings(QSettings& settings)
 	{
 		m_graphEditController->doWriteSettings(settings);
 	}
+}
+
+
+// privates
+
+void qvgeMainWindow::updateFileAssociations()
+{
+#if defined Q_OS_WIN32
+
+	CPlatformWin32::registerFileType("XGR.Document", "QVGE native graph document", ".xgr", 0);
+
+#elif defined Q_OS_LINUX
+
+	// assuming application-xgr has been already added
+	QSettings mimeapps("/usr/share/applications/mimeapps.list", QSettings::NativeFormat);
+	mimeapps.beginGroup("Default Applications");
+	mimeapps.setValue("application/xgr", "qvge.desktop");
+	mimeapps.endGroup();
+
+#endif
 }
