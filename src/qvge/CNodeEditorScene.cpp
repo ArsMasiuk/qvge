@@ -125,7 +125,15 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 	// Edges
 	for (const Edge& e : g.edges)
 	{
-		CEdge* edge = createNewConnection();
+		bool isPolyEdge = e.attrs.contains("points");
+		CPolyEdge* polyEdge = isPolyEdge ? new CPolyEdge : nullptr;
+		if (polyEdge)
+		{
+			QString pointStr = e.attrs["points"].toString();
+			polyEdge->setPoints(CUtils::pointsFromString(pointStr));
+		}
+
+		CEdge* edge = polyEdge ? polyEdge : new CDirectEdge;
 		addItem(edge);
 
 		edge->setId(e.id);
@@ -259,6 +267,15 @@ bool CNodeEditorScene::toGraph(Graph& g)
 
 		e.attrs = edge->getLocalAttributes();
 
+		// polypoints
+		auto polyEdge = dynamic_cast<CPolyEdge*>(edge);
+		if (polyEdge)
+		{
+			const QList<QPointF>& points = polyEdge->getPoints();
+			if (points.size())
+				e.attrs["points"] = CUtils::pointsToString(points);
+		}
+
 		g.edges.append(e);
 	}
 
@@ -318,6 +335,8 @@ void CNodeEditorScene::initialize()
 
     CAttribute styleAttr("style", "Style", "solid", ATTR_FIXED);
     setClassAttribute("edge", styleAttr);
+
+	createClassAttribute("edge", "points", "Polyline Points", "", ATTR_NODEFAULT | ATTR_MAPPED | ATTR_FIXED);
 
 
 	static CAttributeConstrainsList *edgeDirections = new CAttributeConstrainsList();
@@ -957,9 +976,9 @@ QList<QGraphicsItem*> CNodeEditorScene::getTransformableItems() const
 {
 	QList<QGraphicsItem*> result;
 	
-	auto nodes = getSelectedNodes();
-	for (auto node : nodes)
-		result << node;
+	auto items = getSelectedItems();
+	for (auto item : items)
+		result << item->getSceneItem();
 
 	return result;
 }

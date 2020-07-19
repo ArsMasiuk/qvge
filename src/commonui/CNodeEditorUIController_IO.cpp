@@ -15,7 +15,6 @@ It can be used freely, maintaining the information above.
 
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
-#include <ogdf/COGDFNewGraphDialog.h>
 #include <ogdf/COGDFLayout.h>
 #endif
 
@@ -169,6 +168,11 @@ bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QStrin
 		if (format == "gexf")
 		{
 			return (CFileSerializerGEXF().load(fileName, *m_editorScene, lastError));
+		}
+
+		if (format == "dot" || format == "gv")
+		{
+			return (CFileSerializerDOT().load(fileName, *m_editorScene, lastError));
 		}
 
 		if (format == "csv")

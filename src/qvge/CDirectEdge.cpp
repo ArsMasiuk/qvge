@@ -128,6 +128,28 @@ void CDirectEdge::updateLabelPosition()
 }
 
 
+void CDirectEdge::transform(const QRectF& oldRect, const QRectF& newRect,
+	double xc, double yc,
+	const QList<QGraphicsItem*> selItems,
+	bool changeSize, bool changePos)
+{
+	//// check if we need to move 1st point
+	//CNode *n1 = (selItems.contains(m_firstNode->getSceneItem())) ? nullptr : m_firstNode;	
+	//// check if we need to move 2nd point
+	//CNode *n2 = (selItems.contains(m_lastNode->getSceneItem())) ? nullptr : m_lastNode;
+
+	//if (n1)
+	//{
+	//	n1->transform(oldRect, newRect, xc, yc, selItems, false, true);
+	//}
+
+	//if (n2 && n1 != n2)
+	//{
+	//	n2->transform(oldRect, newRect, xc, yc, selItems, false, true);
+	//}
+}
+
+
 // callbacks 
 
 void CDirectEdge::onParentGeometryChanged()

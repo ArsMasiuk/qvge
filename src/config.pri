@@ -5,11 +5,11 @@
 #
 # It can be used freely, maintaining the information above.
 
-#CONFIG += BUILD_OGDF
-CONFIG += USE_LOCAL_OGDF
+CONFIG += BUILD_OGDF
+#CONFIG += USE_LOCAL_OGDF
 #CONFIG += USE_EXTERNAL_OGDF
 
-CONFIG += BUILD_GVGRAPH
+#CONFIG += BUILD_GVGRAPH
 
 BUILD_OGDF{
 	CONFIG += USE_LOCAL_OGDF
@@ -24,7 +24,7 @@ USE_LOCAL_OGDF{
 	# locally build OGDF
 	OGDF_LIB_NAME = ogdf-2020
 	OGDF_LIB_PATH = .
-	OGDF_INCLUDE_PATH += $$PWD/3rdParty/ogdf-2020/include
+	OGDF_INCLUDE_PATH = $$PWD/3rdParty/ogdf-2020/include
 }
 
 USE_EXTERNAL_OGDF{
@@ -38,8 +38,22 @@ USE_EXTERNAL_OGDF{
 }
 
 USE_OGDF{
-    	DEFINES += USE_OGDF
-    	#message(USE_OGDF!)
+	DEFINES += USE_OGDF
+	#message(USE_OGDF!)
+}
+
+BUILD_GVGRAPH{
+	DEFINES += USE_GVGRAPH
+	CONFIG += USE_GVGRAPH
+	
+	GRAPHVIZ_INCLUDE_PATH = $$PWD/3rdParty/gvgraph
+	GRAPHVIZ_LIBS = -lcgraph
+	
+	#temp, win32
+	win32{
+		#GRAPHVIZ_LIB_PATH = "c:/Program Files (x86)/Graphviz 2.44.1/lib/"
+		GRAPHVIZ_LIB_PATH = $$PWD/3rdParty/gvgraph/win32-msvc
+	}
 }
 
 
@@ -56,10 +70,10 @@ CONFIG += c++14
 
 # output
 CONFIG(debug, debug|release){
-        LIBS += -L$$OUT_PWD/../lib.debug
+	LIBS += -L$$OUT_PWD/../lib.debug
 }
 else{
-        LIBS += -L$$OUT_PWD/../lib
+	LIBS += -L$$OUT_PWD/../lib
 }
 
 # temp dirs (unix)

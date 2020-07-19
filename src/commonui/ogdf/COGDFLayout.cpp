@@ -126,7 +126,8 @@ void COGDFLayout::doLayout(ogdf::LayoutModule &layout, CNodeEditorScene &scene)
 
 void COGDFLayout::graphTopologyToScene(const ogdf::Graph &G, const ogdf::GraphAttributes &GA, CNodeEditorScene &scene)
 {
-    scene.reset();
+    //scene.reset();
+	scene.initialize();
 
     // create nodes
     QMap<ogdf::node, CNode*> nodeMap;

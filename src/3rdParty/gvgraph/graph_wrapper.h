@@ -30,8 +30,8 @@
 #define _GRAPH_WRAPPER_H_
 
 #include <iostream>
-#include <graphviz/gvc.h>
-#include <graphviz/cgraph.h>
+#include <graphviz/gvc/gvc.h>
+#include <graphviz/cgraph/cgraph.h>
 //#include <boost/lexical_cast.hpp>
 #include <algorithm>
 #include <vector>

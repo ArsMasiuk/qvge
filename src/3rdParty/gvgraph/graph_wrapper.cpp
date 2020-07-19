@@ -75,7 +75,7 @@ GVC_t* GVGraph::getGVCcontext(void)
 
 Agraph_t* GVGraph::_agopen(string name/*,int kind*/)
 {
-    Agdesc_t desc;
+    Agdesc_s desc;
     desc.directed = 1;
     desc.strict = 1;
     desc.no_loop = 0;

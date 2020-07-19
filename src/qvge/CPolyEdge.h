@@ -22,6 +22,7 @@ public:
 
 	CPolyEdge(QGraphicsItem *parent = Q_NULLPTR);
 
+	const QList<QPointF>& getPoints() const { return m_polyPoints; }
 	void setPoints(const QList<QPointF> &points);
 	bool insertPointAt(const QPointF &pos);
 
@@ -35,6 +36,17 @@ public:
 	CEdge* clone();
 
 	virtual void reverse();
+
+	// transformations
+	virtual void transform(const QRectF& oldRect, const QRectF& newRect,
+		double xc, double yc,
+		const QList<QGraphicsItem*> selItems,
+		bool changeSize, bool changePos) override;
+
+	// attributes
+	virtual bool hasLocalAttribute(const QByteArray& attrId) const;
+	virtual bool setAttribute(const QByteArray& attrId, const QVariant& v);
+	virtual bool removeAttribute(const QByteArray& attrId);
 
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;

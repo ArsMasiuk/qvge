@@ -1,5 +1,6 @@
 #include "COGDFLayoutUIController.h"
 #include "COGDFLayout.h"
+#include "COGDFNewGraphDialog.h"
 
 #include <appbase/CMainWindow.h>
 
@@ -28,7 +29,7 @@ COGDFLayoutUIController::COGDFLayoutUIController(CMainWindow *parent, CNodeEdito
     m_parent(parent), m_scene(scene)
 {
     // add layout menu
-    QMenu *layoutMenu = new QMenu(tr("&Layout"));
+    QMenu *layoutMenu = new QMenu(tr("&OGDF"));
     m_parent->menuBar()->insertMenu(m_parent->getWindowMenuAction(), layoutMenu);
 
     layoutMenu->addAction(tr("Linear Layout"), this, SLOT(doLinearLayout()));
@@ -39,6 +40,16 @@ COGDFLayoutUIController::COGDFLayoutUIController(CMainWindow *parent, CNodeEdito
 	layoutMenu->addAction(tr("Planar Layout"), this, SLOT(doPlanarLayout()));
 	layoutMenu->addAction(tr("Davidson-Harel Layout"), this, SLOT(doDHLayout()));
 	layoutMenu->addAction(tr("Sugiyama Layout"), this, SLOT(doSugiyamaLayout()));
+
+	layoutMenu->addSeparator();
+	layoutMenu->addAction(tr("Create new graph..."), this, SLOT(createNewGraph()));
+}
+
+
+void COGDFLayoutUIController::createNewGraph()
+{
+	COGDFNewGraphDialog dialog;
+	dialog.exec(*m_scene);
 }
 
 

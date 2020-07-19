@@ -12,9 +12,13 @@ It can be used freely, maintaining the information above.
 #include <QGraphicsSceneMouseEvent>
 
 #include "CTransformRect.h"
-#include "CItem.h"
 #include "CEditorScene.h"
+#include "CItem.h"
 #include "CNode.h"
+#include "CEdge.h"
+
+
+const double MIN_RECT_SIZE = 15.0;
 
 
 CTransformRect::CTransformRect()
@@ -39,50 +43,75 @@ void CTransformRect::onActivated(CEditorScene& scene)
 {
 	m_dragPoint = -1;
 
-	scene.update();
+	onSelectionChanged(scene);
 }
 
 
-void CTransformRect::draw(class CEditorScene &scene, QPainter *painter, const QRectF &)
+void CTransformRect::onSelectionChanged(CEditorScene& scene)
 {
 	auto selItems = scene.getTransformableItems();
 	if (selItems.size())
 	{
 		QRectF r = CUtils::getBoundingRect(selItems);
 		m_lastRect = r;
+	}
+	else
+	{
+		m_lastRect = QRectF();
+	}
 
-		// update points
-		m_points[0].pos = r.topLeft();
-		m_points[1].pos = QPointF(r.center().x(), r.top());
-		m_points[2].pos = r.topRight();
-		m_points[3].pos = QPointF(r.left(), r.center().y());
-		m_points[4].pos = QPointF(r.right(), r.center().y());
-		m_points[5].pos = r.bottomLeft();
-		m_points[6].pos = QPointF(r.center().x(), r.bottom());
-		m_points[7].pos = r.bottomRight();
+	scene.update();
+}
 
-		const QPen rectPen(QColor(0x333333), 0, Qt::SolidLine);
-		painter->setPen(rectPen);
-		painter->drawRect(r);
 
-		auto view = scene.getCurrentView();
-		if (view)
+void CTransformRect::onSceneChanged(CEditorScene& scene)
+{
+	onSelectionChanged(scene);
+}
+
+
+void CTransformRect::onDragItem(CEditorScene& scene, QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* /*dragItem*/)
+{
+	onSelectionChanged(scene);
+}
+
+
+void CTransformRect::draw(class CEditorScene &scene, QPainter *painter, const QRectF &)
+{
+	QRectF r = m_lastRect;
+	if (r.isEmpty() || r.isNull() || !r.isValid())
+		return;
+
+	// update points
+	m_points[0].pos = r.topLeft();
+	m_points[1].pos = QPointF(r.center().x(), r.top());
+	m_points[2].pos = r.topRight();
+	m_points[3].pos = QPointF(r.left(), r.center().y());
+	m_points[4].pos = QPointF(r.right(), r.center().y());
+	m_points[5].pos = r.bottomLeft();
+	m_points[6].pos = QPointF(r.center().x(), r.bottom());
+	m_points[7].pos = r.bottomRight();
+
+	const QPen rectPen(QColor(0x333333), 0, Qt::SolidLine);
+	painter->setPen(rectPen);
+	painter->drawRect(r);
+
+	auto view = scene.getCurrentView();
+	if (view)
+	{
+		for (int i = 0; i < 8; ++i)
 		{
-			for (int i = 0; i < 8; ++i)
-			{
-				// zoom-independend control points
-				QPoint viewPos = view->mapFromScene(m_points[i].pos);
-				QPointF topLeft = view->mapToScene(QPoint(viewPos.x() - 4, viewPos.y() - 4));
-				QPointF bottomRight = view->mapToScene(QPoint(viewPos.x() + 4, viewPos.y() + 4));
+			// zoom-independend control points
+			QPoint viewPos = view->mapFromScene(m_points[i].pos);
+			QPointF topLeft = view->mapToScene(QPoint(viewPos.x() - 4, viewPos.y() - 4));
+			QPointF bottomRight = view->mapToScene(QPoint(viewPos.x() + 4, viewPos.y() + 4));
 
-				m_points[i].sceneRect = QRectF(topLeft, bottomRight);
+			m_points[i].sceneRect = QRectF(topLeft, bottomRight);
 
-				painter->fillRect(m_points[i].sceneRect, Qt::SolidPattern);
-			}
-
-			scene.invalidate(/*r.adjusted(-5, -5, 5, 5)*/);
+			painter->fillRect(m_points[i].sceneRect, Qt::SolidPattern);
 		}
 
+		scene.invalidate();
 	}
 }
 
@@ -145,6 +174,10 @@ bool CTransformRect::onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *
 		if (!deltaPos.isNull())
 		{
 			QRectF newRect = m_lastRect;
+
+			bool isShift = (mouseEvent->modifiers() & Qt::ShiftModifier);
+
+			// default transform
 			switch (m_dragPoint)
 			{
 			case 0:		newRect.setTopLeft(pos);		break;
@@ -157,8 +190,35 @@ bool CTransformRect::onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *
 			case 7:		newRect.setBottomRight(pos);	break;
 			}
 
-			doTransformBy(scene, m_lastRect, newRect);
-			m_lastRect = newRect;
+			// if shift pressed: mirror around center
+			if (isShift && newRect.isValid())
+			{
+				qreal dx_r = newRect.right() - m_lastRect.right();
+				qreal dx_l = newRect.left() - m_lastRect.left();
+				qreal dy_t = newRect.top() - m_lastRect.top();
+				qreal dy_b = newRect.bottom() - m_lastRect.bottom();
+
+				switch (m_dragPoint)
+				{
+				case 0:		newRect.setBottomRight(m_lastRect.bottomRight() - QPointF(dx_l, dy_t));		break;
+				case 1:		newRect.setBottom(m_lastRect.bottom() - dy_t);								break;
+				case 2:		newRect.setBottomLeft(m_lastRect.bottomLeft() - QPointF(dx_r, dy_t));		break;
+				case 3:		newRect.setRight(m_lastRect.right() - dx_l);								break;
+				case 4:		newRect.setLeft(m_lastRect.left() - dx_r);									break;
+				case 5:		newRect.setTopRight(m_lastRect.topRight() - QPointF(dx_l, dy_b));			break;
+				case 6:		newRect.setTop(m_lastRect.top() - dy_b);									break;
+				case 7:		newRect.setTopLeft(m_lastRect.topLeft() - QPointF(dx_r, dy_b));				break;
+				}
+			}
+
+			// do transform if rect is valid
+			if (newRect.isValid() && newRect.width() >= MIN_RECT_SIZE && newRect.height() >= MIN_RECT_SIZE)
+			{
+				doTransformBy(scene, m_lastRect, newRect);
+				m_lastRect = newRect;
+			}
+			else
+				return false;
 		}
 
 		m_lastPos = pos;
@@ -193,24 +253,70 @@ void CTransformRect::doTransformBy(CEditorScene& scene, QRectF oldRect, QRectF n
 	if (!oldRect.isValid() || !newRect.isValid())
 		return;
 
-	double xc = oldRect.width() / newRect.width();
-	double yc = oldRect.height() / newRect.height();
+	double xc = newRect.width() / oldRect.width();
+	double yc = newRect.height() / oldRect.height();
+
+	// prepare transform lists
+	QList<CNode*> nodesTransform, nodesMove;
+	QList<CItem*> others;
 
 	auto selItems = scene.getTransformableItems();
+
+	// go for nodes
 	for (auto item : selItems)
 	{
-		auto citem = dynamic_cast<CNode*>(item);
-		if (citem)
+		auto cnode = dynamic_cast<CNode*>(item);
+		if (cnode)
 		{
-			double w = citem->getSize().width();
-			double h = citem->getSize().height();
-			double wc = w / xc;
-			double hc = h / yc;
-			citem->setSize(wc, hc);
-
-			double x = (citem->x() - oldRect.left() - w/2) / xc + newRect.left() + wc/2;
-			double y = (citem->y() - oldRect.top() - h/2) / yc + newRect.top() + hc/2;
-			citem->setPos(x, y);
+			nodesTransform << cnode;
+			continue;
 		}
 	}
+
+	// go for edges & rest
+	for (auto item : selItems)
+	{
+		auto cnode = dynamic_cast<CNode*>(item);
+		if (cnode)
+			continue;
+
+		auto cedge = dynamic_cast<CEdge*>(item);
+		if (cedge)
+		{
+			others << cedge;
+			auto n1 = cedge->firstNode();
+			auto n2 = cedge->lastNode();
+			if (!nodesTransform.contains(n1) && !nodesMove.contains(n1))
+				nodesMove << n1;
+			if (!nodesTransform.contains(n2) && !nodesMove.contains(n2))
+				nodesMove << n2;
+			continue;
+		}
+
+		auto citem = dynamic_cast<CItem*>(item);
+		if (citem)
+		{
+			others << citem;
+			continue;
+		}
+	}
+
+	// run transformation
+	for (auto node : nodesTransform)
+	{
+		node->transform(oldRect, newRect, xc, yc, selItems, true, true);
+	}
+
+	for (auto node : nodesMove)
+	{
+		node->transform(oldRect, newRect, xc, yc, selItems, false, true);
+	}
+
+	for (auto item : others)
+	{
+		item->transform(oldRect, newRect, xc, yc, selItems, true, true);
+	}
+
+	// snap after transform
+	// TO DO...
 }

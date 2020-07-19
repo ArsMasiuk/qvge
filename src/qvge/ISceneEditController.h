@@ -23,6 +23,7 @@ public:
 	virtual void onActivated(CEditorScene& scene) = 0;
 	virtual void onDeactivated(CEditorScene& scene) = 0;
 
+	virtual void onSceneChanged(CEditorScene& scene) = 0;
 	virtual void onSelectionChanged(CEditorScene& scene) = 0;
 	virtual void onDragItem(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* dragItem) = 0;
 

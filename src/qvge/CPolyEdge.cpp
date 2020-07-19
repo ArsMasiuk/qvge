@@ -67,7 +67,9 @@ CEdge* CPolyEdge::clone()
 
 	// assign directly!
 	c->m_firstNode = m_firstNode;
+	c->m_firstPortId = m_firstPortId;
 	c->m_lastNode = m_lastNode;
+	c->m_lastPortId = m_lastPortId;
 	c->m_polyPoints = m_polyPoints;
 
 	if (scene())
@@ -85,6 +87,76 @@ void CPolyEdge::reverse()
 	std::reverse(m_controlPoints.begin(), m_controlPoints.end());
 
 	Super::reverse();
+}
+
+
+void CPolyEdge::transform(const QRectF & oldRect, const QRectF & newRect, 
+	double xc, double yc, 
+	const QList<QGraphicsItem*> selItems,
+	bool changeSize, bool changePos)
+{
+	Super::transform(oldRect, newRect, xc, yc, selItems, changeSize, changePos);
+
+	// snap
+	//auto scene = getScene();
+
+	// transfrom subpoints as well
+	for (auto &point : m_polyPoints)
+	{
+		double xp = (point.x() - oldRect.left()) * xc + newRect.left();
+		double yp = (point.y() - oldRect.top()) * yc + newRect.top();
+
+		//if (scene)
+		//{
+		//	QPointF psnap = scene->getSnapped(QPointF(xp,yp));
+		//	point.setX(psnap.x());
+		//	point.setY(psnap.y());
+		//}
+		//else
+		{
+			point.setX(xp);
+			point.setY(yp);
+		}
+	}
+
+	createControlPoints();
+	updateShapeFromPoints();
+}
+
+
+// attributes
+
+bool CPolyEdge::hasLocalAttribute(const QByteArray& attrId) const
+{
+	if (attrId == "points")
+		return true;
+	else
+		return Super::hasLocalAttribute(attrId);
+}
+
+
+bool CPolyEdge::setAttribute(const QByteArray& attrId, const QVariant& v)
+{
+	if (attrId == "points")
+	{
+		QString pointStr = v.toString();
+		setPoints(CUtils::pointsFromString(pointStr));
+		return true;
+	}
+
+	return Super::setAttribute(attrId, v);
+}
+
+
+bool CPolyEdge::removeAttribute(const QByteArray& attrId)
+{
+	if (attrId == "points")
+	{
+		setPoints({});
+		return true;
+	}
+
+	return Super::removeAttribute(attrId);
 }
 
 

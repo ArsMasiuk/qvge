@@ -113,6 +113,12 @@ public:
 	QRectF getSceneLabelRect() const;
 	virtual QPointF getLabelCenter() const;
 
+	// transformations
+	virtual void transform(const QRectF& oldRect, const QRectF& newRect,
+		double xc, double yc,
+		const QList<QGraphicsItem*> selItems,
+		bool changeSize, bool changePos) {}
+
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;
 	virtual bool restoreFrom(QDataStream& out, quint64 version64);

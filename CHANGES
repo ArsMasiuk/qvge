@@ -1,11 +1,15 @@
 QVGE 0.6.0
 -------------------------------------------------------------------------------
-- (in progress) added polyedges (#23)
+- added polyedges (#23)
 - (in progress) added possibility to clean up the recent files list (#89)
 - Ctrl+Right/Ctrl+Left change weights of selected edges 
+- Enter begins a new line when editing a label, Esc finishes editing
+- transformation tool: Drag+Shift performs parallel transformation
+- impoved export & import of Graphviz format
 
 - fixed crash after undoing recent drag operation
 - fixed issue when a document could not be opened (#96)
+- fixed issue with setting label properties while label editor is open
 
 - fixed <math.h> include issue (#101)
 
@@ -14,9 +18,14 @@ Externals:
 - QSint widgets updated to the latest snapshot (0.4.x)
 
 OGDF:
-- qvge can be built & linked against external OGDF library
-- OGDF updated to v.2020-02 (much more stable than previous one)
+- OGDF updated to v.2020-02 (more stable than previous one)
+- qvge can be built & linked against an external OGDF library
+- "Layout" menu is moved under "OGDF" 
+- "Create new graph" dialog is moved under "OGDF" (#97)
 - Davidson-Harel layout added
+
+Windows:
+- portable mode implemented (#54)
 
 Linux:
 - "qmake -r PREFIX=.." should be respected now (#69,#93)

@@ -42,16 +42,16 @@ void CTextLabelEdit::updateGeometry()
 
 bool CTextLabelEdit::sceneEvent(QEvent *event)
 {
-	if (event->type() == QEvent::KeyPress)
-	{
-		QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
-		if ((keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)
-			&& keyEvent->modifiers() == Qt::NoModifier)
-		{
-			finishEdit(true);
-			return true;
-		}
-	}
+	//if (event->type() == QEvent::KeyPress)
+	//{
+	//	QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
+	//	if ((keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)
+	//		&& keyEvent->modifiers() == Qt::NoModifier)
+	//	{
+	//		finishEdit(true);
+	//		return true;
+	//	}
+	//}
 
 	if (event->type() == QEvent::KeyRelease)
 	{
@@ -83,6 +83,8 @@ void CTextLabelEdit::startEdit(CItem *item)
 	auto scene = m_item->getScene();
 	if (scene == nullptr)
 		return;
+
+	scene->selectItem(m_item);
 
 	m_storedText = m_item->getAttribute("label").toString();
 	m_item->showLabel(false);
