@@ -11,11 +11,13 @@ It can be used freely, maintaining the information above.
 #include "qvgeVersion.h"
 
 #include <QFile>
+#include <QDir>
 #include <QTextStream>
 #include <QApplication>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QSettings>
+#include <QDebug>
 
 #include <appbase/CPlatformServices.h>
 #include <commonui/CNodeEditorUIController.h>
@@ -278,10 +280,13 @@ void qvgeMainWindow::updateFileAssociations()
 #elif defined Q_OS_LINUX
 
 	// assuming application-xgr has been already added
-	QSettings mimeapps("/usr/share/applications/mimeapps.list", QSettings::NativeFormat);
-	mimeapps.beginGroup("Default Applications");
+    //QSettings mimeapps("/usr/share/applications/defaults.list", QSettings::NativeFormat);
+    QSettings mimeapps(QDir::homePath() + "/.config/mimeapps.list", QSettings::IniFormat);
+    mimeapps.beginGroup("Default Applications");
 	mimeapps.setValue("application/xgr", "qvge.desktop");
 	mimeapps.endGroup();
+    mimeapps.sync();
+    qDebug() << mimeapps.status();
 
 #endif
 }

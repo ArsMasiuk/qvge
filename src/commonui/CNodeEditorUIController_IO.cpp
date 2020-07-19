@@ -36,6 +36,7 @@ It can be used freely, maintaining the information above.
 #include <QFileDialog>
 #include <QPageSetupDialog>
 #include <QStatusBar>
+#include <QDebug>
 
 
 bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
@@ -44,7 +45,9 @@ bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
     if (fileName.isEmpty())
         fileName = m_lastExportPath;
     else
-        fileName = QFileInfo(m_lastExportPath).absolutePath() + "/" + QFileInfo(fileName).fileName();
+        fileName = QFileInfo(m_lastExportPath).absolutePath() + "/" + QFileInfo(fileName).fileName() + "." + exporter.defaultFileExtension();
+
+    //qDebug() << "doExport()" << fileName;
 
     QString path = QFileDialog::getSaveFileName(nullptr,
         QObject::tr("Export as") + " " + exporter.description(),

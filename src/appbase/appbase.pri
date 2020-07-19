@@ -1,5 +1,6 @@
-SOURCES     += $$files($$PWD/*.cpp)
-HEADERS     += $$files($$PWD/*.h)
+SOURCES     += $$PWD/CPlatformServices.cpp $$PWD/CMainWindow.cpp $$PWD/CStartPage.cpp
+HEADERS     += $$PWD/CPlatformServices.h $$PWD/CMainWindow.h $$PWD/CStartPage.h
+
 FORMS       += $$files($$PWD/*.ui)
 RESOURCES   += $$files($$PWD/*.qrc)
 

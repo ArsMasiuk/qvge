@@ -165,7 +165,7 @@ CPlatformServices::PIDs CPlatformServices::GetRunningPIDs()
 {
     PIDs result;
 
-    auto procList = QProcessInfo::enumerate();
+    auto procList = QProcessInfo::enumerate(false);
     for (auto &procInfo: procList)
     {
         result << procInfo.pid();
