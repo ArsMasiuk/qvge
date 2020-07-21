@@ -5,7 +5,7 @@ QVGE 0.6.0
 - Ctrl+Right/Ctrl+Left change weights of selected edges 
 - Enter begins a new line when editing a label, Esc finishes editing
 - transformation tool: Drag+Shift performs parallel transformation
-- impoved export & import of Graphviz format
+- impoved export & import of Graphviz format (using boost-BGL instead of OGDF)
 
 - fixed crash after undoing recent drag operation
 - fixed issue when a document could not be opened (#96)
@@ -26,6 +26,8 @@ OGDF:
 
 Windows:
 - portable mode implemented (#54)
+- auto registration of XGR documents after starting the app (#74)
+- (in progress) PDF export: automatically sets page orientation; printer options made persistent (#73)
 
 Linux:
 - "qmake -r PREFIX=.." should be respected now (#69,#93)
@@ -35,6 +37,7 @@ Linux:
 - fixed desktop integration (#91)
 - fixed including Qt5 X11Extras into project (#92)
 - fixed glitches of some UI elements (#99)
+- fixed adding default file extensions while export (#86)
 
 
 

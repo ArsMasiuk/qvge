@@ -10,6 +10,7 @@ It can be used freely, maintaining the information above.
 #include "CFileSerializerDOT.h"
 #include "CNode.h"
 #include "CEdge.h"
+#include "CPolyEdge.h"
 
 #include <qvgeio/CFormatDOT.h>
 
@@ -273,6 +274,21 @@ void CFileSerializerDOT::doWriteEdge(QTextStream& ts, const CEdge& edge, const C
 	if (m_writeAttrs)
 	{
 		doWriteEdgeAttrs(ts, edgeAttrs);
+
+		// polyline: positions
+		//const CPolyEdge *poly = dynamic_cast<const CPolyEdge*>(&edge);
+		//if (poly)
+		//{
+		//	ts << ", pos=\"";
+
+		//	auto points = poly->getPoints();
+		//	for (int i = 0; i < points.count(); i++)
+		//	{
+		//		ts << points.at(i).x() / 72.0 << "," << points.at(i).y() / 72.0 << " ";
+		//	}
+
+		//	ts << "\"\n";
+		//}
 	}
 
 	ts << "];\n\n";
@@ -291,7 +307,8 @@ void CFileSerializerDOT::doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 			ts << ",dir=none" << "\n";
 	}
 
-	if (edgeAttrs.contains("weight")) {
+	if (edgeAttrs.contains("weight")) 
+	{
 		ts << ",weight = \"" << edgeAttrs["weight"].toString() << "\"\n";
 		ts << ",penwidth = \"" << edgeAttrs["weight"].toString() << "\"\n";
 		edgeAttrs.remove("weight");
