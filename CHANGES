@@ -6,6 +6,8 @@ QVGE 0.6.0
 - Enter begins a new line when editing a label, Esc finishes editing
 - transformation tool: Drag+Shift performs parallel transformation
 - impoved export & import of Graphviz format (using boost-BGL instead of OGDF)
+- PDF export: automatically sets page orientation; printer options made persistent (#73)
+- a scene loaded from file is automatically centered by its contents
 
 - fixed crash after undoing recent drag operation
 - fixed issue when a document could not be opened (#96)
@@ -27,7 +29,6 @@ OGDF:
 Windows:
 - portable mode implemented (#54)
 - auto registration of XGR documents after starting the app (#74)
-- (in progress) PDF export: automatically sets page orientation; printer options made persistent (#73)
 
 Linux:
 - "qmake -r PREFIX=.." should be respected now (#69,#93)

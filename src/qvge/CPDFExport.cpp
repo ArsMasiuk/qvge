@@ -30,6 +30,15 @@ CPDFExport::CPDFExport()
 }
 
 
+CPDFExport::~CPDFExport()
+{
+#ifdef Q_OS_WIN32
+#else
+	delete m_printer;
+#endif
+}
+
+
 // impl: setup interface
 
 void CPDFExport::readSettings(QSettings& settings)

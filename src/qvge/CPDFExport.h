@@ -21,6 +21,7 @@ class CPDFExport : public IFileSerializer
 {
 public:
 	CPDFExport();
+	virtual ~CPDFExport();
 
 	// setup interface
 	void readSettings(QSettings& settings);

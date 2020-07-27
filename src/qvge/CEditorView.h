@@ -42,7 +42,10 @@ public:
 	void fitSelectedToView();
 	void zoomBack();
 
+	// center
 	QPointF getCenter() const;
+
+	void centerContent();
 
 	// reimp
 	virtual void mousePressEvent(QMouseEvent *e);

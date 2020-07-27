@@ -616,6 +616,9 @@ void CNodeEditorUIController::onDocumentLoaded(const QString &fileName)
 
 	// store newly created state
 	m_editorScene->setInitialState();
+
+	// center scene contents
+	m_editorView->centerContent();
 }
 
 

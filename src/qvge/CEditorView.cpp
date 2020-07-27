@@ -121,6 +121,13 @@ QPointF CEditorView::getCenter() const
 }
 
 
+void CEditorView::centerContent()
+{
+	fitToView();
+	zoomTo(1);
+}
+
+
 void CEditorView::restoreContextMenu()
 {
 	setContextMenuPolicy(m_menuModeTmp);
