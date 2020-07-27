@@ -20,7 +20,13 @@ It can be used freely, maintaining the information above.
 
 CPDFExport::CPDFExport()
 {
+#ifdef Q_OS_WIN32
 	m_printer = m_pageDialog.printer();
+#else
+    m_printer = new QPrinter;
+#endif
+
+    m_printer->setOutputFormat(QPrinter::NativeFormat);
 }
 
 
@@ -91,9 +97,15 @@ bool CPDFExport::setupDialog(CEditorScene& scene)
 	else
 		m_printer->setOrientation(QPrinter::Portrait);
 
+#ifdef Q_OS_WIN32
 	if (m_pageDialog.exec() == QDialog::Rejected)
 		return false;
-	
+#else
+    QPageSetupDialog pd(m_printer);
+    if (pd.exec() == QDialog::Rejected)
+        return false;
+#endif
+
 	return true;
 }
 
