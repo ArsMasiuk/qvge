@@ -266,7 +266,7 @@ void CPolyEdge::onItemMoved(const QPointF& delta)
 
 // drawing
 
-void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* widget)
+void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	// straight line
 	if (m_polyPoints.isEmpty())
@@ -274,6 +274,9 @@ void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 		Super::paint(painter, option, widget);
 		return;
 	}
+
+	// selection
+	drawSelection(painter, option);
 
 	// polyline
 	setupPainter(painter, option, widget);

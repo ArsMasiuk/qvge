@@ -8,6 +8,7 @@ QVGE 0.6.0
 - impoved export & import of Graphviz format (using boost-BGL instead of OGDF)
 - PDF export: automatically sets page orientation; printer options made persistent (#73)
 - a scene loaded from file is automatically centered by its contents
+- improved drawing of edge selection 
 
 - fixed crash after undoing recent drag operation
 - fixed issue when a document could not be opened (#96)

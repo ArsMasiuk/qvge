@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 
 #include "CDirectEdge.h"
 #include "CNode.h"
+#include "CEditorSceneDefines.h"
 
 
 CDirectEdge::CDirectEdge(QGraphicsItem *parent): Super(parent)
@@ -55,9 +56,12 @@ void CDirectEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 {
 	//qDebug() << boundingRect() << option->exposedRect << option->rect;
 
-	// dowt draw if no cache 
+	// dont draw if no cache 
 	if (m_shapeCachePath.isEmpty())
 		return;
+
+	// selection
+	drawSelection(painter, option);
 
 	// called before draw 
     setupPainter(painter, option, widget);

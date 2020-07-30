@@ -136,31 +136,33 @@ QRectF CEdge::boundingRect() const
 }
 
 
-void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* /*widget*/)
+void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/)
 {
-	// weight
 	double weight = getVisibleWeight();
 
-	// line style
 	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(attr_style).toString(), Qt::SolidLine);
 
-	// color & selection
+	// get color (to optimize!)
+	QColor color = getAttribute(attr_color).value<QColor>();
+
+	QPen p(color, weight, penStyle, Qt::FlatCap, Qt::MiterJoin);
+	painter->setPen(p);
+
+	painter->setOpacity(1.0);
+}
+
+
+void CEdge::drawSelection(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
 	bool isSelected = (option->state & QStyle::State_Selected);
-    if (isSelected)
-    {
-		QPen p(QColor(Qt::darkCyan), weight + 1.0, penStyle, Qt::FlatCap, Qt::MiterJoin);
-		painter->setOpacity(0.5);
-        painter->setPen(p);
-    }
-    else
+	if (isSelected)
 	{
-		// get color (to optimize!)
-		QColor color = getAttribute(attr_color).value<QColor>();
-
-		QPen p(color, weight, penStyle, Qt::FlatCap, Qt::MiterJoin);
-
-		painter->setOpacity(1.0);
+		double weight = getVisibleWeight();
+		QPen p(QColor(Qt::darkCyan), weight * 2 + 2, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin);
+		painter->setOpacity(0.3);
 		painter->setPen(p);
+		painter->setBrush(Qt::NoBrush);
+		painter->drawPath(m_shapeCachePath);
 	}
 }
 

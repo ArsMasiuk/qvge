@@ -87,9 +87,10 @@ public:
 	virtual void onItemRestored();
 
 protected:
-	virtual void setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
-	virtual void drawArrow(QPainter *painter, const QStyleOptionGraphicsItem *option, bool first, const QLineF &direction) const;
-	virtual void drawArrow(QPainter *painter, qreal shift, const QLineF &direction) const;
+	/*virtual*/ void setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
+	/*virtual*/ void drawSelection(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+	/*virtual*/ void drawArrow(QPainter *painter, const QStyleOptionGraphicsItem *option, bool first, const QLineF &direction) const;
+	/*virtual*/ void drawArrow(QPainter *painter, qreal shift, const QLineF &direction) const;
 	QLineF calculateArrowLine(const QPainterPath &path, bool first, const QLineF &direction) const;
 
 	// reimp
