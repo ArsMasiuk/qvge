@@ -308,7 +308,7 @@ void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 	{
 		QLineF arrowLine(m_polyPoints.last(), line().p2());
 		if (arrowLine.length() > ARROW_SIZE * 2)
-			drawArrow(painter, option, false, arrowLine);
+			drawArrow(painter, option, true, arrowLine);
 	}
 }
 
@@ -343,20 +343,38 @@ void CPolyEdge::onParentGeometryChanged()
 	if (m_lastPortId.size() && m_lastNode->getPort(m_lastPortId))
 		p2c = m_lastNode->getPort(m_lastPortId)->scenePos();
 
-	QPointF p1 = m_firstNode->getIntersectionPoint(QLineF(p1c, m_polyPoints.first()), m_firstPortId);
-	QPointF p2 = m_lastNode->getIntersectionPoint(QLineF(p2c, m_polyPoints.last()), m_lastPortId);
+	QLineF l1(p1c, m_polyPoints.first());
+	QPointF p1 = m_firstNode->getIntersectionPoint(l1, m_firstPortId);
+	QLineF l2(p2c, m_polyPoints.last());
+	QPointF p2 = m_lastNode->getIntersectionPoint(l2, m_lastPortId);
 
 	QLineF l(p1, p2);
 	setLine(l);
 
+	// shift line by arrows
+	double arrowSize = getVisibleWeight() + ARROW_SIZE;
+
+	l1 = QLineF(p1, m_polyPoints.first());
+	if (l1.length() < 5)
+		p1 = m_polyPoints.first();
+	else if (m_itemFlags & CF_Start_Arrow)
+	{
+		l1 = CUtils::extendLine(l1, -arrowSize, 0);
+		p1 = l1.p1();
+	}
+
+	l2 = QLineF(m_polyPoints.last(), p2);
+	if (l2.length() < 5)
+		p2 = m_polyPoints.last();
+	else if (m_itemFlags & CF_End_Arrow)
+	{
+		l2 = CUtils::extendLine(l2, 0, arrowSize);
+		p2 = l2.p2();
+	}
+
+
 	// update shape path
 	m_shapeCachePath = QPainterPath();
-
-	if (QLineF(p1, m_polyPoints.first()).length() < 5)
-		p1 = m_polyPoints.first();
-	if (QLineF(p2, m_polyPoints.last()).length() < 5)
-		p2 = m_polyPoints.last();
-
 	m_shapeCachePath.moveTo(p1);
 	
 	for (const QPointF &p : m_polyPoints)

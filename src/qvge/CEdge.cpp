@@ -145,7 +145,7 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem* /*op
 	// get color (to optimize!)
 	QColor color = getAttribute(attr_color).value<QColor>();
 
-	QPen p(color, weight, penStyle, Qt::FlatCap, Qt::MiterJoin);
+	QPen p(color, weight, penStyle, Qt::FlatCap, Qt::RoundJoin);
 	painter->setPen(p);
 
 	painter->setOpacity(1.0);
@@ -158,7 +158,7 @@ void CEdge::drawSelection(QPainter *painter, const QStyleOptionGraphicsItem *opt
 	if (isSelected)
 	{
 		double weight = getVisibleWeight();
-		QPen p(QColor(Qt::darkCyan), weight * 2 + 2, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin);
+		QPen p(QColor(Qt::darkCyan), weight * 2 + 2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin);
 		painter->setOpacity(0.3);
 		painter->setPen(p);
 		painter->setBrush(Qt::NoBrush);

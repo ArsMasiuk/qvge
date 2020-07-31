@@ -2308,10 +2308,15 @@ void CEditorScene::ensureSelectionVisible()
 
 void CEditorScene::moveSelectedItemsBy(const QPointF& d)
 {
-	for (auto sceneItem : selectedItems())
+	auto items = selectedItems();
+	
+	for (auto sceneItem : items)
 	{
 		sceneItem->moveBy(d.x(), d.y());
 	}
+
+	if (items.count())
+		items.first()->ensureVisible();
 }
 
 

@@ -909,6 +909,7 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 {
 	QSet<QGraphicsItem*> items;
 	QSet<CEdge*> edges;
+	QGraphicsItem* focusItem = nullptr;
 
 	// if dragging nodes and there are selected nodes: do not drag not-selected nodes
 	auto dragNode = dynamic_cast<CNode*>(m_startDragItem);
@@ -917,6 +918,9 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 	{
 		if (!(item->flags() & item->ItemIsMovable))
 			continue;
+
+		if (!focusItem) 
+			focusItem = item;
 
 		if (auto edge = dynamic_cast<CEdge*>(item))
 		{
@@ -937,6 +941,9 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 
 	for (auto edge : edges)
 		edge->onItemMoved(d);
+
+	if (focusItem)
+		focusItem->ensureVisible();
 }
 
 
