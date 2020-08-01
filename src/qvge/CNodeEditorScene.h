@@ -23,7 +23,8 @@ enum EditMode
 	EM_Default,
 	EM_AddNodes,
 	EM_AddEdges,
-	EM_Transform
+	EM_Transform,
+	EM_Factor
 };
 
 

@@ -128,6 +128,7 @@ private:
 	QAction *modeDefaultAction;
 	QAction *modeNodesAction;
 	QAction *modeTransformAction;
+	QAction *modeFactorAction;
 
 	QAction *zoomAction;
 	QAction *unzoomAction;

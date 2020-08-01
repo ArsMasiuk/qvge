@@ -228,12 +228,20 @@ void CNodeEditorUIController::createMenus()
     modeNodesAction->setData(EM_AddNodes);
 
 	modeTransformAction = editMenu->addAction(QIcon(":/Icons/Mode-Transform"), tr("Transform"));
-	modeTransformAction->setToolTip(tr("Transformation mode"));
-	modeTransformAction->setStatusTip(tr("Transform selected nodes"));
+	modeTransformAction->setToolTip(tr("Items transformation mode"));
+	modeTransformAction->setStatusTip(tr("Transform selected nodes (scale & move)"));
 	modeTransformAction->setCheckable(true);
 	modeTransformAction->setActionGroup(m_editModesGroup);
 	modeTransformAction->setChecked(m_editorScene->getEditMode() == EM_Transform);
 	modeTransformAction->setData(EM_Transform);
+
+	modeFactorAction = editMenu->addAction(QIcon(":/Icons/Mode-Factor"), tr("Factor"));
+	modeFactorAction->setToolTip(tr("Positions tranformation mode"));
+	modeFactorAction->setStatusTip(tr("Scale position of selected nodes (move only)"));
+	modeFactorAction->setCheckable(true);
+	modeFactorAction->setActionGroup(m_editModesGroup);
+	modeFactorAction->setChecked(m_editorScene->getEditMode() == EM_Factor);
+	modeFactorAction->setData(EM_Factor);
 
 
     // scene actions
@@ -290,6 +298,7 @@ void CNodeEditorUIController::createMenus()
     editModesToolbar->addAction(modeDefaultAction);
     editModesToolbar->addAction(modeNodesAction);
 	editModesToolbar->addAction(modeTransformAction);
+	editModesToolbar->addAction(modeFactorAction);
 
 
     // add view menu
@@ -546,6 +555,7 @@ void CNodeEditorUIController::onEditModeChanged(int mode)
 	modeNodesAction->setChecked(mode == EM_AddNodes);
 	modeDefaultAction->setChecked(mode == EM_Default);
 	modeTransformAction->setChecked(mode == EM_Transform);
+	modeFactorAction->setChecked(mode == EM_Factor);
 }
 
 

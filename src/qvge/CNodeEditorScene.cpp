@@ -372,7 +372,12 @@ void CNodeEditorScene::setEditMode(EditMode mode)
 		{
 		case EM_Transform:
 			getCurrentView()->setDragMode(QGraphicsView::RubberBandDrag);
-			startTransform(true);
+			startTransform(true, false);
+			break;
+
+		case EM_Factor:
+			getCurrentView()->setDragMode(QGraphicsView::RubberBandDrag);
+			startTransform(true, true);
 			break;
 
 		case EM_AddNodes:
@@ -394,6 +399,9 @@ void CNodeEditorScene::setEditMode(EditMode mode)
 bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 {
 	if (m_editMode == EM_Transform)
+		return false;
+
+	if (m_editMode == EM_Factor)
 		return false;
 
 	if (QGraphicsItem* item = getItemAt(pos))

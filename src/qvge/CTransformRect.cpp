@@ -39,6 +39,12 @@ CTransformRect::~CTransformRect()
 }
 
 
+void CTransformRect::setMoveOnly(bool on)
+{
+	m_moveOnlyMode = on;
+}
+
+
 void CTransformRect::onActivated(CEditorScene& scene)
 {
 	m_dragPoint = -1;
@@ -302,9 +308,11 @@ void CTransformRect::doTransformBy(CEditorScene& scene, QRectF oldRect, QRectF n
 	}
 
 	// run transformation
+	bool changeSize = !m_moveOnlyMode;
+
 	for (auto node : nodesTransform)
 	{
-		node->transform(oldRect, newRect, xc, yc, selItems, true, true);
+		node->transform(oldRect, newRect, xc, yc, selItems, changeSize, true);
 	}
 
 	for (auto node : nodesMove)
@@ -314,7 +322,7 @@ void CTransformRect::doTransformBy(CEditorScene& scene, QRectF oldRect, QRectF n
 
 	for (auto item : others)
 	{
-		item->transform(oldRect, newRect, xc, yc, selItems, true, true);
+		item->transform(oldRect, newRect, xc, yc, selItems, changeSize, true);
 	}
 
 	// snap after transform

@@ -40,5 +40,6 @@
         <file alias="GraphML">Icons/Format-GraphML.png</file>
         <file alias="Edge-Line">Icons/Edge-Direct.png</file>
         <file alias="Edge-Polyline">Icons/Edge-Polyline.png</file>
+        <file alias="Mode-Factor">Icons/Mode-Factor.png</file>
     </qresource>
 </RCC>

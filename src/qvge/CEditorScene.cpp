@@ -2375,10 +2375,14 @@ QObject* CEditorScene::createActions()
 
 // edit extenders
 
-void CEditorScene::startTransform(bool on)
+void CEditorScene::startTransform(bool on, bool moveOnly)
 {
 	if (on)
+	{
 		setSceneEditController(&m_pimpl->m_transformRect);
+
+		m_pimpl->m_transformRect.setMoveOnly(moveOnly);
+	}
 	else
 		setSceneEditController(nullptr);
 }

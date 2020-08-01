@@ -28,6 +28,9 @@ public:
 	CTransformRect();
 	~CTransformRect();
 
+	// move-only mode
+	void setMoveOnly(bool on);
+
 	// ISceneEditController
 	virtual void onActivated(CEditorScene& scene);
 	virtual void onDeactivated(CEditorScene& /*scene*/) {}
@@ -56,5 +59,7 @@ protected:
 	QRectF m_dragRect;
 	QPointF m_lastPos;
 	QRectF m_lastRect;
+
+	bool m_moveOnlyMode = false;
 };
 

@@ -73,8 +73,8 @@ void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphic
 	QAction *nodeColorAction = menu.addAction(tr("Node(s) Color..."), sceneActions, SLOT(onActionNodeColor()));
 	nodeColorAction->setEnabled(nodesSelected);
 
-	QAction *factorAction = menu.addAction(tr("Factor Nodes..."), parent(), SLOT(factorNodes()));
-	factorAction->setEnabled(nodesCount > 1);
+	//QAction *factorAction = menu.addAction(tr("Factor Nodes..."), parent(), SLOT(factorNodes()));
+	//factorAction->setEnabled(nodesCount > 1);
 
 	menu.addSeparator();
 

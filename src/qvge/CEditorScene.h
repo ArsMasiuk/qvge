@@ -210,7 +210,7 @@ public:
  
 	// operations
 	void startDrag(QGraphicsItem* dragItem);
-	void startTransform(bool on);
+	void startTransform(bool on, bool moveOnly = false);
 
 	// actions
 	QObject* getActions();
