@@ -22,6 +22,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CEdge.h>
 #include <qvge/CImageExport.h>
 #include <qvge/CPDFExport.h>
+#include <qvge/CSVGExport.h>
 #include <qvge/CNodeEditorScene.h>
 #include <qvge/CFileSerializerGEXF.h>
 #include <qvge/CFileSerializerGraphML.h>
@@ -119,6 +120,27 @@ void CNodeEditorUIController::exportPDF()
 		pdf.writeSettings(settings);
 		doExport(pdf);
 	}
+}
+
+
+void CNodeEditorUIController::exportSVG()
+{
+	m_imageDialog->setScene(*m_editorScene);
+
+	auto& settings = getApplicationSettings();
+	m_imageDialog->doReadSettings(settings);
+
+	if (m_imageDialog->exec() == QDialog::Rejected)
+		return;
+
+	if (!doExport(
+		CSVGExport(
+			m_imageDialog->cutToContent(),
+			m_imageDialog->resolution()
+		)))
+		return;
+
+	m_imageDialog->doWriteSettings(settings);
 }
 
 
