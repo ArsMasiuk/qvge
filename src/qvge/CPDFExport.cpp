@@ -13,6 +13,7 @@ It can be used freely, maintaining the information above.
 #include <QPageLayout> 
 #include <QMarginsF> 
 #include <QDebug> 
+#include <QScopedPointer>
 
 #include "CPDFExport.h"
 #include "CEditorScene.h"
@@ -125,7 +126,8 @@ bool CPDFExport::save(const QString& fileName, CEditorScene& scene, QString* /*l
 {
 	Q_ASSERT(m_printer);
 
-	CEditorScene* tempScene = scene.clone();
+	QScopedPointer<CEditorScene> tempScene(scene.clone());
+
 	tempScene->crop();
 
 	QPdfWriter writer(fileName);
@@ -138,8 +140,6 @@ bool CPDFExport::save(const QString& fileName, CEditorScene& scene, QString* /*l
 	painter.setRenderHint(QPainter::TextAntialiasing);
 	tempScene->render(&painter);
 	painter.end();
-
-	delete tempScene;
 
 	return true;
 }

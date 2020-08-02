@@ -13,6 +13,7 @@ It can be used freely, maintaining the information above.
 #include <QMap>
 #include <QByteArray>
 #include <QSet>
+#include <QScopedPointer>
 
 #include "CImageExport.h"
 #include "CEditorScene.h"
@@ -87,7 +88,7 @@ QString CImageExport::filters() const
 
 bool CImageExport::save(const QString& fileName, CEditorScene& scene, QString* /*lastError*/) const
 {
-	CEditorScene* tempScene = scene.clone();
+	QScopedPointer<CEditorScene> tempScene(scene.clone());
 
 	if (m_cutContent)
 		tempScene->crop();
@@ -119,8 +120,6 @@ bool CImageExport::save(const QString& fileName, CEditorScene& scene, QString* /
 	painter.setRenderHint(QPainter::TextAntialiasing);
 	tempScene->render(&painter, targetRect);
 	painter.end();
-
-	delete tempScene;
 
 	return image.save(fileName);
 }

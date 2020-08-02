@@ -58,6 +58,7 @@ private Q_SLOTS:
 	bool doExport(const IFileSerializer &exporter);
 	void exportFile();
 	void exportPDF();
+	void exportSVG();
 	void exportDOT();
 	bool importCSV(const QString &fileName, QString* lastError);
 

@@ -153,11 +153,15 @@ void CNodeEditorUIController::createMenus()
     exportAction->setText(tr("Export to &Image..."));
     connect(exportAction, &QAction::triggered, this, &CNodeEditorUIController::exportFile);
 
-    QAction *exportActionPDF = new QAction(tr("Export to &PDF..."));
-    m_parent->getFileMenu()->insertAction(exportAction, exportActionPDF);
+	QAction *exportActionSVG = new QAction(QIcon(":/Icons/SVG"), tr("Export to &SVG..."));
+	m_parent->getFileMenu()->insertAction(exportAction, exportActionSVG);
+	connect(exportActionSVG, &QAction::triggered, this, &CNodeEditorUIController::exportSVG);
+
+    QAction *exportActionPDF = new QAction(QIcon(":/Icons/PDF"), tr("Export to &PDF..."));
+    m_parent->getFileMenu()->insertAction(exportActionSVG, exportActionPDF);
     connect(exportActionPDF, &QAction::triggered, this, &CNodeEditorUIController::exportPDF);
 
-    QAction *exportActionDOT = new QAction(tr("Export to &DOT/GraphViz..."));
+    QAction *exportActionDOT = new QAction(QIcon(":/Icons/DOT"), tr("Export to &DOT/GraphViz..."));
     m_parent->getFileMenu()->insertAction(exportActionPDF, exportActionDOT);
     connect(exportActionDOT, &QAction::triggered, this, &CNodeEditorUIController::exportDOT);
 
