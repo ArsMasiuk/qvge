@@ -18,6 +18,14 @@ Since **QVGE** is a free software, it is developed in the free time on my own co
 
 Thank you!
 
+### Support
+
+Since **qvge** is a free software, it is developed in the free time on my own costs only. If you like the software and wish to support its further development, you could make a small donation using the button below:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url)
+
+Thank you!
+
 ### Main Features
 
 - Easy creation and parameterising of small-sized till middle-sized graphs (1000+ nodes/edges)
@@ -28,6 +36,7 @@ Thank you!
 - Custom (user-defined) attributes of graphs and their elements
 - Dynamically maintained list of commutations between nodes
 - Search among the graph elements and their attributes
+
 - Windows: portable mode (no installation required)
 - Auto-creation and auto-layout of graphs (via [OGDF](https://ogdf.uos.de/)):
   - Linear
@@ -150,4 +159,5 @@ Special thanks to:
 **QVGE** at [software-file.com](http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html)<a href="http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html" target="_blank"><img src="http://www.software-file.com/images/fivestar.png" alt="Qt Visual Graph Editor on Software-File.com" border=0></a>
 
 **QVGE** at <a href="https://www.producthunt.com/posts/qt-visual-graph-editor?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-qt-visual-graph-editor" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=217842&theme=dark" alt="Qt Visual Graph Editor - Software to visually create and manipulate graphs | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+
 

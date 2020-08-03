@@ -14,9 +14,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: configure
-      run: ./configure
+      run: cd src
+    - name: qmake
+      run: qmake -r
     - name: make
-      run: make
+      run: make -j 4
     - name: make check
       run: make check
     - name: make distcheck
