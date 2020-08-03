@@ -6,7 +6,7 @@
 **QVGE** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
 in a simple and intuitive way.
 
-![Screenshot1](https://user-images.githubusercontent.com/19762856/85934275-2a985480-b8e1-11ea-81a9-a5b81f3365e2.PNG)
+![Screenshot1](https://user-images.githubusercontent.com/19762856/89233004-f7846780-d5e8-11ea-8a18-ba395794e1d4.PNG)
 
 Please note that **QVGE** is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor.
 
