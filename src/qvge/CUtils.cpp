@@ -4,8 +4,9 @@
 #include <QPointF>
 #include <QColor>
 #include <QFont>
+#include <QTextStream>
 
-#include <math.h>
+#include <cmath>
 
 
 QVariant CUtils::textToVariant(const QString& text, int type)
@@ -133,6 +134,42 @@ QStringList CUtils::byteArraySetToStringList(const QSet<QByteArray>& ids)
 	for (const auto& id : ids)
 		sl << id;
 	return sl;
+}
+
+
+QString CUtils::pointsToString(const QList<QPointF>& points)
+{
+	QString s;
+	QTextStream ds(&s, QIODevice::WriteOnly);
+	for (const auto& p : points)
+	{
+		float x = p.x();
+		float y = p.y();
+		ds << x << " " << y << " ";
+	}
+
+	return s;
+}
+
+
+QList<QPointF> CUtils::pointsFromString(const QString& text)
+{
+	QList<QPointF> pl;
+
+	QString str(text.trimmed());
+	if (str.size())
+	{
+		float x = 0, y = 0;
+		QTextStream ds(&str);
+		while (!ds.atEnd())
+		{
+			ds >> x;
+			ds >> y;	// to do: check validity
+			pl.append(QPointF(x, y));
+		}
+	}
+
+	return pl;
 }
 
 

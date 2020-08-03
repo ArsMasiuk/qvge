@@ -23,10 +23,6 @@ CSceneOptionsDialog::CSceneOptionsDialog(QWidget *parent) :
 
     ui->BackgroundColor->setColorScheme(QSint::OpenOfficeColors());
     ui->GridColor->setColorScheme(QSint::OpenOfficeColors());
-
-#ifndef USE_OGDF
-	ui->StartupGB->hide();
-#endif
 }
 
 CSceneOptionsDialog::~CSceneOptionsDialog()
@@ -57,8 +53,6 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsDat
 	ui->EnableBackups->setChecked(data.backupPeriod > 0);
 	ui->BackupPeriod->setValue(data.backupPeriod);
 
-	ui->AutoCreateGraph->setChecked(data.newGraphDialogOnStart);
-
 
 	if (QDialog::exec() == QDialog::Rejected)
 		return QDialog::Rejected;
@@ -80,8 +74,6 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsDat
 	QPixmapCache::setCacheLimit(ui->CacheSlider->value() * 1024);
 
 	data.backupPeriod = ui->EnableBackups->isChecked() ? ui->BackupPeriod->value() : 0;
-
-	data.newGraphDialogOnStart = ui->AutoCreateGraph->isChecked();
 
 	return QDialog::Accepted;
 }

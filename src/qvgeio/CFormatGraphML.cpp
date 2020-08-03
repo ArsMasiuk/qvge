@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 
 #include <QFile>
 #include <QDebug>
+#include <QTextStream>
 
 
 // reimp

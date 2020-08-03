@@ -1,10 +1,63 @@
+QVGE 0.6.0
+-------------------------------------------------------------------------------
+New features/improvements:
+- added polyedges (#23)
+- added export to SVG format
+- recent files list entries can be cleaned up (#89)
+- Ctrl+Right/Ctrl+Left change weights of selected edges 
+- when editing a label, Enter begins a new line, Esc finishes editing
+- transformation tool: Drag+Shift performs parallel transformation
+- "Factor" mode added next to "Transform" (#102)
+- impoved export & import of Graphviz format (using boost-BGL instead of OGDF)
+- PDF export: automatically sets page orientation; printer options made persistent (#73)
+- a scene loaded from file is automatically centered by its contents
+- improved drawing of edge selection
+ 
+Bugfixes:
+- fixed crash after undoing recent drag operation
+- fixed issue when a document could not be opened (#96)
+- fixed issue with setting label properties while label editor is open
+- fixed issue with drawing arrows (#14)
+- fixed: objects being moved are always ensured to be visible during the movement
+- fixed: scroll offset during drag made constant (avoiding acceleration issue with dragging at viewport's edges)
+
+GCC/MinGW:
+- fixed <math.h> include issue (#101)
+
+Externals:
+- read_proc is deprecated and replaced by QProcessInfo
+- QSint widgets updated to the latest snapshot (0.4.x)
+
+OGDF:
+- OGDF updated to v.2020-02 (more stable than previous one)
+- qvge can be built & linked against an external OGDF library 
+- "Layout" menu is moved under "OGDF" submenu
+- "Create new graph" dialog is moved under "OGDF" menu (#97)
+- Davidson-Harel layout added
+
+Windows:
+- portable mode implemented (#54)
+- auto registration of XGR documents after starting the app (#74)
+
+Linux:
+- "qmake -r PREFIX=.." should be respected now (#69,#93)
+- fixed menu with opened windows (#88)
+- fixed "Segmentation fault" issue when loading documents (#82)
+- fixed "Buffer/Memory containment" issues (#80)
+- fixed desktop integration (#91)
+- fixed including Qt5 X11Extras into project (#92)
+- fixed glitches of some UI elements (#99)
+- fixed adding default file extensions while export (#86)
+
+
+
 QVGE 0.5.5
 -------------------------------------------------------------------------------
 - support of Qt 5.13
 - support of MSVC 2017
 - support of MinGW 7
 
-- label editing can be finished with Enter as well (#77)
+- label editing can be finished with Enter; Shift+Enter starts new line (#77)
 - when exporting to image, a resolution can be customized (#73)
 - added export to GraphML format; node ports supported now (#28)
 - nodes & edges editor UI improved

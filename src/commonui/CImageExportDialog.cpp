@@ -64,11 +64,9 @@ void CImageExportDialog::setScene(CEditorScene& scene)
 
 void CImageExportDialog::updateTargetSize()
 {
-	CEditorScene* tempScene = m_scene->clone();
+	QSize size = m_scene->sceneRect().size().toSize();
 	if (cutToContent())
-		tempScene->crop();
-	QSize size = tempScene->sceneRect().size().toSize();
-	delete tempScene;
+		size = m_scene->itemsBoundingRect().adjusted(-20, -20, 20, 20).size().toSize();
 
 	int res = resolution();
 	if (res <= 0)

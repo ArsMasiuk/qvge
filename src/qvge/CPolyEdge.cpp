@@ -67,7 +67,9 @@ CEdge* CPolyEdge::clone()
 
 	// assign directly!
 	c->m_firstNode = m_firstNode;
+	c->m_firstPortId = m_firstPortId;
 	c->m_lastNode = m_lastNode;
+	c->m_lastPortId = m_lastPortId;
 	c->m_polyPoints = m_polyPoints;
 
 	if (scene())
@@ -85,6 +87,76 @@ void CPolyEdge::reverse()
 	std::reverse(m_controlPoints.begin(), m_controlPoints.end());
 
 	Super::reverse();
+}
+
+
+void CPolyEdge::transform(const QRectF & oldRect, const QRectF & newRect, 
+	double xc, double yc, 
+	const QList<QGraphicsItem*> selItems,
+	bool changeSize, bool changePos)
+{
+	Super::transform(oldRect, newRect, xc, yc, selItems, changeSize, changePos);
+
+	// snap
+	//auto scene = getScene();
+
+	// transfrom subpoints as well
+	for (auto &point : m_polyPoints)
+	{
+		double xp = (point.x() - oldRect.left()) * xc + newRect.left();
+		double yp = (point.y() - oldRect.top()) * yc + newRect.top();
+
+		//if (scene)
+		//{
+		//	QPointF psnap = scene->getSnapped(QPointF(xp,yp));
+		//	point.setX(psnap.x());
+		//	point.setY(psnap.y());
+		//}
+		//else
+		{
+			point.setX(xp);
+			point.setY(yp);
+		}
+	}
+
+	createControlPoints();
+	updateShapeFromPoints();
+}
+
+
+// attributes
+
+bool CPolyEdge::hasLocalAttribute(const QByteArray& attrId) const
+{
+	if (attrId == "points")
+		return true;
+	else
+		return Super::hasLocalAttribute(attrId);
+}
+
+
+bool CPolyEdge::setAttribute(const QByteArray& attrId, const QVariant& v)
+{
+	if (attrId == "points")
+	{
+		QString pointStr = v.toString();
+		setPoints(CUtils::pointsFromString(pointStr));
+		return true;
+	}
+
+	return Super::setAttribute(attrId, v);
+}
+
+
+bool CPolyEdge::removeAttribute(const QByteArray& attrId)
+{
+	if (attrId == "points")
+	{
+		setPoints({});
+		return true;
+	}
+
+	return Super::removeAttribute(attrId);
 }
 
 
@@ -194,7 +266,7 @@ void CPolyEdge::onItemMoved(const QPointF& delta)
 
 // drawing
 
-void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* widget)
+void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	// straight line
 	if (m_polyPoints.isEmpty())
@@ -202,6 +274,9 @@ void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 		Super::paint(painter, option, widget);
 		return;
 	}
+
+	// selection
+	drawSelection(painter, option);
 
 	// polyline
 	setupPainter(painter, option, widget);
@@ -233,7 +308,7 @@ void CPolyEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 	{
 		QLineF arrowLine(m_polyPoints.last(), line().p2());
 		if (arrowLine.length() > ARROW_SIZE * 2)
-			drawArrow(painter, option, false, arrowLine);
+			drawArrow(painter, option, true, arrowLine);
 	}
 }
 
@@ -268,20 +343,38 @@ void CPolyEdge::onParentGeometryChanged()
 	if (m_lastPortId.size() && m_lastNode->getPort(m_lastPortId))
 		p2c = m_lastNode->getPort(m_lastPortId)->scenePos();
 
-	QPointF p1 = m_firstNode->getIntersectionPoint(QLineF(p1c, m_polyPoints.first()), m_firstPortId);
-	QPointF p2 = m_lastNode->getIntersectionPoint(QLineF(p2c, m_polyPoints.last()), m_lastPortId);
+	QLineF l1(p1c, m_polyPoints.first());
+	QPointF p1 = m_firstNode->getIntersectionPoint(l1, m_firstPortId);
+	QLineF l2(p2c, m_polyPoints.last());
+	QPointF p2 = m_lastNode->getIntersectionPoint(l2, m_lastPortId);
 
 	QLineF l(p1, p2);
 	setLine(l);
 
+	// shift line by arrows
+	double arrowSize = getVisibleWeight() + ARROW_SIZE;
+
+	l1 = QLineF(p1, m_polyPoints.first());
+	if (l1.length() < 5)
+		p1 = m_polyPoints.first();
+	else if (m_itemFlags & CF_Start_Arrow)
+	{
+		l1 = CUtils::extendLine(l1, -arrowSize, 0);
+		p1 = l1.p1();
+	}
+
+	l2 = QLineF(m_polyPoints.last(), p2);
+	if (l2.length() < 5)
+		p2 = m_polyPoints.last();
+	else if (m_itemFlags & CF_End_Arrow)
+	{
+		l2 = CUtils::extendLine(l2, 0, arrowSize);
+		p2 = l2.p2();
+	}
+
+
 	// update shape path
 	m_shapeCachePath = QPainterPath();
-
-	if (QLineF(p1, m_polyPoints.first()).length() < 5)
-		p1 = m_polyPoints.first();
-	if (QLineF(p2, m_polyPoints.last()).length() < 5)
-		p2 = m_polyPoints.last();
-
 	m_shapeCachePath.moveTo(p1);
 	
 	for (const QPointF &p : m_polyPoints)

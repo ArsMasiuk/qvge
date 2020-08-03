@@ -158,7 +158,7 @@ void CNodePort::onClick(QGraphicsSceneMouseEvent* /*mouseEvent*/)
 
 // serialization 
 
-bool CNodePort::storeTo(QDataStream& out, quint64 version64) const
+bool CNodePort::storeTo(QDataStream& out, quint64 /*version64*/) const
 {
 	out << m_id;
 	out << m_align << m_xoff << m_yoff;

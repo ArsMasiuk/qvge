@@ -46,7 +46,7 @@ static CDPSERecoder s_dpseRecoder;
 
 // reimp
 
-bool CFileSerializerXGR::load(const QString& fileName, CEditorScene& scene, QString* lastError) const
+bool CFileSerializerXGR::load(const QString& fileName, CEditorScene& scene, QString* /*lastError*/) const
 {
 	// read file into document
 	QFile openFile(fileName);
@@ -72,7 +72,7 @@ bool CFileSerializerXGR::load(const QString& fileName, CEditorScene& scene, QStr
 }
 
 
-bool CFileSerializerXGR::save(const QString& fileName, CEditorScene& scene, QString* lastError) const
+bool CFileSerializerXGR::save(const QString& fileName, CEditorScene& scene, QString* /*lastError*/) const
 {
 	QFile saveFile(fileName);
 	if (saveFile.open(QFile::WriteOnly))

@@ -1,0 +1,125 @@
+/**
+ * \page ex-layout Calling Layout Algorithms
+ *
+ * \section sec-ex-layout-1 Hierarchical layout
+ * This example shows how to read a graph from a file and use a layout algorithm to
+ * retrieve a hierarchical visualization of it.
+ *
+ * \include hierarchical.cpp
+ *
+ * <h3>Step-by-step explanation</h3>
+ *
+ * -# What we see here for the first time is how to read a graph from a file. To achieve this
+ *    we first have to enable all the attributes we want to be filled in using the information
+ *    from the specified file. When calling ogdf::GraphIO::read() (again specifying the correct
+ *    reader function for .gml files) any attribute enabled in <tt>GA</tt> will be parsed from
+ *    the file -- if present.
+ * -# We then set up the configuration for a hierarchical layout algorithm called
+ *    ogdf::SugiyamaLayout. As can be seen the algorithm is highly modular. In this case
+ *    we specify
+ *    -# A ranking module that will determine the layering of the graph
+ *    -# A module that handles the minimization of two-layer crossing
+ *    -# The main module that computes the actual graph layout
+ * -# Although this is done by passing dynamically allocated configuration objects we don't have
+ *    to worry about cleaning them up, as the layout class takes care of that. Also there is
+ *    default values for all modules so you need not explicitly set all of them.
+ * -# Calling the layout algorithm on an ogdf::GraphAttribute object relies on node size information
+ *    and will alter the xy-coordinates of the nodes but will leave the other attributes untouched,
+ *    so the svg visualization that is output in the end will still use the information initially
+ *    read from the .gml file.
+ *
+ * \section sec-ex-layout-2 Hierarchical layout with predefined layering
+ * This example shows a slight modification of the previous one in that layering is not done
+ * by an optimization module but instead is specified in advance.
+ *
+ * \include hierarchical-ranking.cpp
+ *  There is just one new concept we encounter here which is ogdf::NodeArray<T>, a templated class
+ *  used for direct mapping from ogdf::node handles to any type <tt>T</tt>. In this case it holds
+ *  a rank value for each node which is later passed together with <tt>GA</tt> to the layout algorithm.
+ *  In this case the ranking optimization module has no effect. Note that we also disable the
+ *  separate layout and arranging of connected components by the default packing module using
+ *  ogdf::SugiyamaLayout::arrangeCCs().
+ *
+ * \section sec-ex-layout-3 Energy-based layout
+ *  This example shows yet another layout algorithm, ogdf::FMMMLayout (fast multipole multilevel layout),
+ *  suited for very large graphs and based on potential-field and force computations.
+ *
+ * \include energybased.cpp
+ *
+ * <h3>Step-by-step explanation</h3>
+ *
+ * -# An important thing to note here is that after loading the graph from a file we can access
+ *    node width and height without explicitly enabling ogdf::GraphAttributes::nodeGraphics in
+ *    <tt>GA</tt>. This is because ogdf::GraphAttributes::nodeGraphics and
+ *    ogdf::GraphAttributes::edgeGraphics are enabled by default.
+ * -# ogdf::FMMMLayout can be configured in two ways: using high-level options (recommended) or
+ *    low-level options (requires good knowledge of the algorithm). For this example we will use
+ *    the few high-level options ogdf::FMMMLayout provides and thus set the respective flag to true
+ *    before actually setting anything.
+ * -# We then set the unit edge length (a scaling factor if you will), enable initial replacing of
+ *    nodes and choose one of the available options from ogdf::FMMMOptions::QualityVsSpeed to tune
+ *    tradeoffs between speed and aesthetic of the resulting graph. The only remaining high-level
+ *    option is ogdf::FMMMOptions::PageFormatType which defaults to a Square if not explicitly set.
+ *    These high-level options will then be used to derive the low-level settings accordingly.
+ * -# After calling the algorithm on our read graph instance the same instance augmented by
+ *    the node positions in the resulting graph layout is written back out to a .gml and a .svg file.
+ *
+ * \section sec-ex-layout-4 Orthogonal layout
+ *  This example shows how to layout a graph so that all edges propagate only parallel to the
+ *  x- or y-axis meaning any edge bends have an angle of 90°. This is called an orthogonal drawing.
+ *
+ * \include orthogonal.cpp
+ *
+ * <h3>Step-by-step explanation</h3>
+ * -# Here, we use ogdf::PlanarizationLayout as our base layout algorithm, again configuring
+ *    it to our needs by passing dynamically allocated module instances.
+ * -# The first module we specify is the ogdf::CrossingMinimizationModule for which we choose
+ *    ogdf::SubgraphPlanarizer. It works in two core phases, the former will compute a planar subgraph
+ *    while the latter then reinserts the remaining edges while trying to minimize the resulting crossings.
+ *    We alter its default configuration by setting the number of randomized reruns for
+ *    planar subgraph computation and making it consider all edges in the postprocessing step during
+ *    edge reinsertion.
+ * -# The next submodule we configure is ogdf::EmbedderModule for which we use a default instance of
+ *    ogdf::EmbedderMinDepthMaxFaceLayers.
+ * -# The final module supplied to <tt>pl</tt> is ogdf::LayoutPlanRepModule. We use ogdf::OrthoLayout
+ *    to achieve the main feature we wanted to achieve from the beginning and configure the minimum allowed
+ *    distance between edges and vertices (and their corners).
+ * -# As always, after calling the composed algorithm on the graph instance the result is once again
+ *    written to out to .gml and .svg files.
+ *
+ * \section sec-ex-layout-5 Hypergraph layout
+ *  This example shows the interface for IO and layout of hypergraphs.
+ *  There are only few algorithms for hypergraphs in the OGDF.
+ *
+ * \include hypergraph.cpp
+ *
+ * <h3>Step-by-step explanation</h3>
+ * -# While ogdf::Hypergraph is the direct analogon to ogdf::Graph, ogdf::HypergraphAttributesES
+ *    is the analogon of ogdf::GraphAttributes for edge-standard representation.
+ * -# The input file is read via a dedicated hypergraph reader function
+ *    ogdf::Hypergraph::readBenchHypergraph.
+ * -# The hypergraph attributes get initialized and the option ogdf::EdgeStandardType that
+ *    governs the internal representation of hyperedges is set to a tree representation.
+ *    Note that only ogdf::EdgeStandardType::star and ogdf::EdgeStandardType::tree will insert dummy
+ *    nodes which might be useful (as in this example) to generate a representation of the hypergraph using
+ *    the standard ogdf::Graph and ogdf::GraphAttributes interfaces.
+ * -# The base layout algorithm ogdf::HypergraphLayoutES that is then used has basically the same
+ *    interface for modular configuring as the standard graph layout algorithms but on top of that
+ *    it also has an option to choose between the general profiles ogdf::HypergraphLayoutES::Profile::Normal
+ *    and ogdf::HypergraphLayoutES::Profile::ElectricCircuit.
+ * -# After calling the layout algorithm on our hypergraph instance we can access the ogdf::GraphAttributes
+ *    component of <tt>hlES</tt> as the internal representation works on a wrapped instance of
+ *    ogdf::GraphAttributes with some dummy nodes added anyways. This is especially useful for using
+ *    the standard ogdf::GraphIO interface to output a reduced representation of the resulting hypergraph
+ *    layout.
+ *
+ * \section sec-ex-layout-6 Multilevel layout mixer
+ *  This example shows the use of the modular multilevel mixer class that can be used
+ *  to build energybased multilevel layouts. Since it is modular one can
+ *  easily assemble different layouts by using different coarsening
+ *  techniques (merger), placer and single level layouts. As this example is quite exhaustive
+ *  explanation is provided in place as inline comments.
+ *
+ * \include multilevelmixer.cpp
+ *
+ */

@@ -121,6 +121,13 @@ QPointF CEditorView::getCenter() const
 }
 
 
+void CEditorView::centerContent()
+{
+	fitToView();
+	zoomTo(1);
+}
+
+
 void CEditorView::restoreContextMenu()
 {
 	setContextMenuPolicy(m_menuModeTmp);
@@ -129,6 +136,8 @@ void CEditorView::restoreContextMenu()
 
 void CEditorView::onScrollTimeout()
 {
+	const int ScrollStep = 100;
+
 	if (QGuiApplication::mouseButtons() & Qt::LeftButton)
 	{
 		auto globTopLeft = viewport()->mapToGlobal(QPoint(viewport()->x(), viewport()->y()));
@@ -136,27 +145,31 @@ void CEditorView::onScrollTimeout()
 
 		if (QCursor::pos().x() > globRect.right())
 		{
-			int dx = QCursor::pos().x() - globRect.right();
+			//int dx = QCursor::pos().x() - globRect.right();
+			int dx = ScrollStep;
 			horizontalScrollBar()->setValue(horizontalScrollBar()->value() + dx);
 		}
 		else
-			if (QCursor::pos().x() < globRect.left())
-			{
-				int dx = globRect.left() - QCursor::pos().x();
-				horizontalScrollBar()->setValue(horizontalScrollBar()->value() - dx);
-			}
+		if (QCursor::pos().x() < globRect.left())
+		{
+			//int dx = globRect.left() - QCursor::pos().x();
+			int dx = ScrollStep;
+			horizontalScrollBar()->setValue(horizontalScrollBar()->value() - dx);
+		}
 
 		if (QCursor::pos().y() > globRect.bottom())
 		{
-			int dy = QCursor::pos().y() - globRect.bottom();
+			int dy = ScrollStep;
+			//int dy = QCursor::pos().y() - globRect.bottom();
 			verticalScrollBar()->setValue(verticalScrollBar()->value() + dy);
 		}
 		else
-			if (QCursor::pos().y() < globRect.top())
-			{
-				int dy = globRect.top() - QCursor::pos().y();
-				verticalScrollBar()->setValue(verticalScrollBar()->value() - dy);
-			}
+		if (QCursor::pos().y() < globRect.top())
+		{
+			int dy = ScrollStep;
+			//int dy = globRect.top() - QCursor::pos().y();
+			verticalScrollBar()->setValue(verticalScrollBar()->value() - dy);
+		}
 	}
 }
 

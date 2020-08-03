@@ -595,6 +595,31 @@ background: #eee;
           </property>
          </spacer>
         </item>
+        <item>
+         <widget class="QSint::QSplitButton" name="EdgeType">
+          <property name="minimumSize">
+           <size>
+            <width>44</width>
+            <height>28</height>
+           </size>
+          </property>
+          <property name="statusTip">
+           <string>Set type of the selected edges</string>
+          </property>
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>18</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="popupMode">
+           <enum>QToolButton::MenuButtonPopup</enum>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>

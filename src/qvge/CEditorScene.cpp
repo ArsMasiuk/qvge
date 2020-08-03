@@ -1187,6 +1187,11 @@ void CEditorScene::onSceneChanged()
 	Q_EMIT sceneChanged();
 
 	layoutItemLabels();
+
+	if (m_editController)
+	{
+		m_editController->onSceneChanged(*this);
+	}
 }
 
 
@@ -1725,6 +1730,10 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem* dragItem, bool dragCancelled)
 {
+	// cleanup drag state
+	m_startDragItem = NULL;
+	m_dragInProgress = false;
+
 	if (dragItem)
 	{
 		// deactivate left hovers
@@ -1773,9 +1782,6 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 			addUndoState();
 		}
 	}
-
-	m_startDragItem = NULL;
-	m_dragInProgress = false;
 }
 
 
@@ -2242,6 +2248,22 @@ void CEditorScene::deselectAll()
 }
 
 
+void CEditorScene::selectItem(CItem* item, bool exclusive)
+{
+	if (!item)
+		return;
+
+	beginSelection();
+
+	if (exclusive)
+		deselectAll();
+
+	item->getSceneItem()->setSelected(true);
+
+	endSelection();
+}
+
+
 void CEditorScene::selectItems(const QList<CItem*>& items, bool exclusive)
 {
 	beginSelection();
@@ -2250,7 +2272,8 @@ void CEditorScene::selectItems(const QList<CItem*>& items, bool exclusive)
 		deselectAll();
 
 	for (auto item : items)
-		item->getSceneItem()->setSelected(true);
+		if (item)
+			item->getSceneItem()->setSelected(true);
 
 	endSelection();
 }
@@ -2285,10 +2308,15 @@ void CEditorScene::ensureSelectionVisible()
 
 void CEditorScene::moveSelectedItemsBy(const QPointF& d)
 {
-	for (auto sceneItem : selectedItems())
+	auto items = selectedItems();
+	
+	for (auto sceneItem : items)
 	{
 		sceneItem->moveBy(d.x(), d.y());
 	}
+
+	if (items.count())
+		items.first()->ensureVisible();
 }
 
 
@@ -2347,10 +2375,14 @@ QObject* CEditorScene::createActions()
 
 // edit extenders
 
-void CEditorScene::startTransform(bool on)
+void CEditorScene::startTransform(bool on, bool moveOnly)
 {
 	if (on)
+	{
 		setSceneEditController(&m_pimpl->m_transformRect);
+
+		m_pimpl->m_transformRect.setMoveOnly(moveOnly);
+	}
 	else
 		setSceneEditController(nullptr);
 }

@@ -10,6 +10,7 @@ It can be used freely, maintaining the information above.
 #include "CFileSerializerGEXF.h"
 #include "CNode.h"
 #include "CDirectEdge.h"
+#include "CPolyEdge.h"
 
 #include <QFile>
 #include <QDate>
@@ -289,9 +290,26 @@ bool CFileSerializerGEXF::readEdge(int /*index*/, const QDomNode &domNode, const
 {
 	QDomElement elem = domNode.toElement();
 
-	auto* link = scene.createItemOfType<CDirectEdge>();
-	if (!link)
-		return false;
+	CEdge *link = nullptr;
+
+	// polypoints (qvge specific: not a part of v1.2)
+	QDomNodeList viz_points = elem.elementsByTagName("qvge:points");
+	if (viz_points.size()) 
+	{
+		link = scene.createItemOfType<CPolyEdge>();
+		if (!link)
+			return false;
+
+		QDomElement viz_elem = viz_points.at(0).toElement();
+		QString v = viz_elem.attribute("data", "");
+		link->setAttribute("points", v);
+	}
+	else
+	{
+		link = scene.createItemOfType<CDirectEdge>();
+		if (!link)
+			return false;
+	}
 
 	// common attrs
 	QString id = elem.attribute("id", "");
@@ -630,6 +648,17 @@ void CFileSerializerGEXF::writeEdges(QTextStream &ts, const CEditorScene& scene)
 		{
 			QString shape = edgeAttrs.take("style").toString();
 			ts << "            <viz:shape value=\"" << shape << "\"/>\n";
+		}
+
+		// polypoints
+		auto polyEdge = dynamic_cast<CPolyEdge*>(edge);
+		if (polyEdge)
+		{
+			const QList<QPointF>& points = polyEdge->getPoints();
+			if (points.size()){
+				QString pointStr = CUtils::pointsToString(points);
+				ts << "            <qvge:points data=\"" << pointStr << "\"/>\n";
+			}
 		}
 
 		writeAttValues(ts, edgeAttrs);

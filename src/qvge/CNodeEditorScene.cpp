@@ -35,9 +35,6 @@ CNodeEditorScene::CNodeEditorScene(QObject *parent) : Super(parent),
 	m_nodesFactory = factory<CNode>();
 	m_edgesFactory = factory<CDirectEdge>();
 
-	// test
-	//setEdgesFactory(factory<CPolyEdge>());
-
 	// go
 	initialize();
 }
@@ -128,7 +125,15 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 	// Edges
 	for (const Edge& e : g.edges)
 	{
-		CEdge* edge = createNewConnection();
+		bool isPolyEdge = e.attrs.contains("points");
+		CPolyEdge* polyEdge = isPolyEdge ? new CPolyEdge : nullptr;
+		if (polyEdge)
+		{
+			QString pointStr = e.attrs["points"].toString();
+			polyEdge->setPoints(CUtils::pointsFromString(pointStr));
+		}
+
+		CEdge* edge = polyEdge ? polyEdge : new CDirectEdge;
 		addItem(edge);
 
 		edge->setId(e.id);
@@ -262,6 +267,15 @@ bool CNodeEditorScene::toGraph(Graph& g)
 
 		e.attrs = edge->getLocalAttributes();
 
+		// polypoints
+		auto polyEdge = dynamic_cast<CPolyEdge*>(edge);
+		if (polyEdge)
+		{
+			const QList<QPointF>& points = polyEdge->getPoints();
+			if (points.size())
+				e.attrs["points"] = CUtils::pointsToString(points);
+		}
+
 		g.edges.append(e);
 	}
 
@@ -322,6 +336,8 @@ void CNodeEditorScene::initialize()
     CAttribute styleAttr("style", "Style", "solid", ATTR_FIXED);
     setClassAttribute("edge", styleAttr);
 
+	createClassAttribute("edge", "points", "Polyline Points", "", ATTR_NODEFAULT | ATTR_MAPPED | ATTR_FIXED);
+
 
 	static CAttributeConstrainsList *edgeDirections = new CAttributeConstrainsList();
 	if (edgeDirections->ids.isEmpty()) {
@@ -356,7 +372,12 @@ void CNodeEditorScene::setEditMode(EditMode mode)
 		{
 		case EM_Transform:
 			getCurrentView()->setDragMode(QGraphicsView::RubberBandDrag);
-			startTransform(true);
+			startTransform(true, false);
+			break;
+
+		case EM_Factor:
+			getCurrentView()->setDragMode(QGraphicsView::RubberBandDrag);
+			startTransform(true, true);
 			break;
 
 		case EM_AddNodes:
@@ -378,6 +399,9 @@ void CNodeEditorScene::setEditMode(EditMode mode)
 bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 {
 	if (m_editMode == EM_Transform)
+		return false;
+
+	if (m_editMode == EM_Factor)
 		return false;
 
 	if (QGraphicsItem* item = getItemAt(pos))
@@ -602,14 +626,20 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
 	bool isCtrl = (keyEvent->modifiers() == Qt::ControlModifier);
-	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
-	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
+//	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
+//	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
 
 
-	// Ctrl+Up/Down; alter size by 10%
+	// Ctrl+Up/Down; alter node size by 10%
 	if (keyEvent->key() == Qt::Key_Up && isCtrl)
 	{
 		auto &nodes = getSelectedNodes();
+		if (nodes.isEmpty())
+		{
+			keyEvent->accept();
+			return;
+		}
+
 		for (auto &node : nodes)
 		{
 			node->setAttribute(attr_size, node->getSize() * 1.1);
@@ -625,9 +655,58 @@ void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 	if (keyEvent->key() == Qt::Key_Down && isCtrl)
 	{
 		auto &nodes = getSelectedNodes();
+		if (nodes.isEmpty())
+		{
+			keyEvent->accept();
+			return;
+		}
+
 		for (auto &node : nodes)
 		{
 			node->setAttribute(attr_size, node->getSize() / 1.1);
+		}
+
+		addUndoState();
+
+		keyEvent->accept();
+		return;
+	}
+
+
+	// Ctrl+Left/Right; alter edge weight by 10%
+	if (keyEvent->key() == Qt::Key_Right && isCtrl)
+	{
+		auto &edges = getSelectedEdges();
+		if (edges.isEmpty())
+		{
+			keyEvent->accept();
+			return;
+		}
+
+		for (auto &edge : edges)
+		{
+			edge->setAttribute(attr_weight, edge->getWeight() * 1.1);
+		}
+
+		addUndoState();
+
+		keyEvent->accept();
+		return;
+	}
+
+
+	if (keyEvent->key() == Qt::Key_Left && isCtrl)
+	{
+		auto &edges = getSelectedEdges();
+		if (edges.isEmpty())
+		{
+			keyEvent->accept();
+			return;
+		}
+
+		for (auto &edge : edges)
+		{
+			edge->setAttribute(attr_weight, edge->getWeight() / 1.1);
 		}
 
 		addUndoState();
@@ -838,6 +917,7 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 {
 	QSet<QGraphicsItem*> items;
 	QSet<CEdge*> edges;
+	QGraphicsItem* focusItem = nullptr;
 
 	// if dragging nodes and there are selected nodes: do not drag not-selected nodes
 	auto dragNode = dynamic_cast<CNode*>(m_startDragItem);
@@ -846,6 +926,9 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 	{
 		if (!(item->flags() & item->ItemIsMovable))
 			continue;
+
+		if (!focusItem) 
+			focusItem = item;
 
 		if (auto edge = dynamic_cast<CEdge*>(item))
 		{
@@ -866,6 +949,9 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 
 	for (auto edge : edges)
 		edge->onItemMoved(d);
+
+	if (focusItem)
+		focusItem->ensureVisible();
 }
 
 
@@ -905,9 +991,9 @@ QList<QGraphicsItem*> CNodeEditorScene::getTransformableItems() const
 {
 	QList<QGraphicsItem*> result;
 	
-	auto nodes = getSelectedNodes();
-	for (auto node : nodes)
-		result << node;
+	auto items = getSelectedItems();
+	for (auto item : items)
+		result << item->getSceneItem();
 
 	return result;
 }

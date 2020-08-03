@@ -53,12 +53,6 @@ COGDFNewGraphDialog::~COGDFNewGraphDialog()
 }
 
 
-bool COGDFNewGraphDialog::isShowOnStart() const 
-{
-	return ui->ShowOnStart->isChecked();
-}
-
-
 void COGDFNewGraphDialog::on_List_itemActivated(QListWidgetItem *item)
 {
 	if (item)
@@ -157,7 +151,11 @@ bool COGDFNewGraphDialog::exec(CNodeEditorScene &scene)
         break;
     }
 
+	scene.addUndoState();
+
     COGDFLayout::graphTopologyToScene(G, GA, scene);
+
+	scene.addUndoState();
 
     return true;
 }

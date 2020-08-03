@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 
 #include "CDirectEdge.h"
 #include "CNode.h"
+#include "CEditorSceneDefines.h"
 
 
 CDirectEdge::CDirectEdge(QGraphicsItem *parent): Super(parent)
@@ -55,9 +56,12 @@ void CDirectEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 {
 	//qDebug() << boundingRect() << option->exposedRect << option->rect;
 
-	// dowt draw if no cache 
+	// dont draw if no cache 
 	if (m_shapeCachePath.isEmpty())
 		return;
+
+	// selection
+	drawSelection(painter, option);
 
 	// called before draw 
     setupPainter(painter, option, widget);
@@ -128,6 +132,14 @@ void CDirectEdge::updateLabelPosition()
 }
 
 
+void CDirectEdge::transform(const QRectF& oldRect, const QRectF& newRect,
+	double xc, double yc,
+	const QList<QGraphicsItem*> selItems,
+	bool changeSize, bool changePos)
+{
+}
+
+
 // callbacks 
 
 void CDirectEdge::onParentGeometryChanged()
@@ -162,7 +174,7 @@ void CDirectEdge::onParentGeometryChanged()
 	// update shape path
 	m_shapeCachePath = QPainterPath();
 
-	double arrowSize = getWeight() + ARROW_SIZE;
+	double arrowSize = getVisibleWeight() + ARROW_SIZE;
 
 	// circled connection 
 	if (isCircled())

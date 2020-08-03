@@ -15,7 +15,6 @@ It can be used freely, maintaining the information above.
 
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
-#include <ogdf/COGDFNewGraphDialog.h>
 #include <ogdf/COGDFLayout.h>
 #endif
 
@@ -23,6 +22,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CEdge.h>
 #include <qvge/CImageExport.h>
 #include <qvge/CPDFExport.h>
+#include <qvge/CSVGExport.h>
 #include <qvge/CNodeEditorScene.h>
 #include <qvge/CFileSerializerGEXF.h>
 #include <qvge/CFileSerializerGraphML.h>
@@ -35,8 +35,8 @@ It can be used freely, maintaining the information above.
 
 #include <QFileInfo>
 #include <QFileDialog>
-#include <QPageSetupDialog>
 #include <QStatusBar>
+#include <QDebug>
 
 
 bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
@@ -45,7 +45,9 @@ bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
     if (fileName.isEmpty())
         fileName = m_lastExportPath;
     else
-        fileName = QFileInfo(m_lastExportPath).absolutePath() + "/" + QFileInfo(fileName).fileName();
+        fileName = QFileInfo(m_lastExportPath).absolutePath() + "/" + QFileInfo(fileName).fileName() + "." + exporter.defaultFileExtension();
+
+    //qDebug() << "doExport()" << fileName;
 
     QString path = QFileDialog::getSaveFileName(nullptr,
         QObject::tr("Export as") + " " + exporter.description(),
@@ -108,15 +110,37 @@ void CNodeEditorUIController::exportDOT()
 
 void CNodeEditorUIController::exportPDF()
 {
-	QPageSetupDialog pageDialog;
-	if (pageDialog.exec() == QDialog::Rejected)
+	auto& settings = getApplicationSettings();
+
+	CPDFExport pdf;
+	pdf.readSettings(settings);
+
+	if (pdf.setupDialog(*m_editorScene))
+	{
+		pdf.writeSettings(settings);
+		doExport(pdf);
+	}
+}
+
+
+void CNodeEditorUIController::exportSVG()
+{
+	m_imageDialog->setScene(*m_editorScene);
+
+	auto& settings = getApplicationSettings();
+	m_imageDialog->doReadSettings(settings);
+
+	if (m_imageDialog->exec() == QDialog::Rejected)
 		return;
 
-	QPrinter* pagePrinter = pageDialog.printer();
+	if (!doExport(
+		CSVGExport(
+			m_imageDialog->cutToContent(),
+			m_imageDialog->resolution()
+		)))
+		return;
 
-	CPDFExport pdf(pagePrinter);
-
-    doExport(pdf);
+	m_imageDialog->doWriteSettings(settings);
 }
 
 
@@ -154,32 +178,44 @@ bool CNodeEditorUIController::importCSV(const QString &fileName, QString* lastEr
 
 bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QString &format, QString* lastError)
 {
-    if (format == "xgr")
-    {
-        return (CFileSerializerXGR().load(fileName, *m_editorScene, lastError));
-    }
+	try 
+	{
+		if (format == "xgr")
+		{
+			return (CFileSerializerXGR().load(fileName, *m_editorScene, lastError));
+		}
 
-    if (format == "graphml")
-    {
-        return (CFileSerializerGraphML().load(fileName, *m_editorScene, lastError));
-    }
+		if (format == "graphml")
+		{
+			return (CFileSerializerGraphML().load(fileName, *m_editorScene, lastError));
+		}
 
-    if (format == "gexf")
-    {
-        return (CFileSerializerGEXF().load(fileName, *m_editorScene, lastError));
-    }
+		if (format == "gexf")
+		{
+			return (CFileSerializerGEXF().load(fileName, *m_editorScene, lastError));
+		}
 
-    if (format == "csv")
-    {
-		return importCSV(fileName, lastError);
-    }
+		if (format == "dot" || format == "gv")
+		{
+			return (CFileSerializerDOT().load(fileName, *m_editorScene, lastError));
+		}
 
-    // else via ogdf
+		if (format == "csv")
+		{
+			return importCSV(fileName, lastError);
+		}
+
+		// else via ogdf
 #ifdef USE_OGDF
-    return (COGDFLayout::loadGraph(fileName, *m_editorScene, lastError));
+		return (COGDFLayout::loadGraph(fileName, *m_editorScene, lastError));
 #else
-    return false;
+		return false;
 #endif
+	}
+	catch (...)
+	{
+		return false;
+	}
 }
 
 

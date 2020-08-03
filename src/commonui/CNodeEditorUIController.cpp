@@ -24,8 +24,11 @@ It can be used freely, maintaining the information above.
 
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
-#include <ogdf/COGDFNewGraphDialog.h>
 #include <ogdf/COGDFLayout.h>
+#endif
+
+#ifdef USE_GVGRAPH
+#include <gvgraph/CGVGraphLayoutUIController.h>
 #endif
 
 #include <appbase/CMainWindow.h>
@@ -117,6 +120,10 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
     m_ogdfController = new COGDFLayoutUIController(parent, m_editorScene);
 #endif
 
+#ifdef USE_GVGRAPH
+	m_gvController = new CGVGraphLayoutUIController(parent, m_editorScene);
+#endif
+
     // workaround for full screen
 #ifndef Q_OS_WIN32
     if (parent->isMaximized())
@@ -146,11 +153,15 @@ void CNodeEditorUIController::createMenus()
     exportAction->setText(tr("Export to &Image..."));
     connect(exportAction, &QAction::triggered, this, &CNodeEditorUIController::exportFile);
 
-    QAction *exportActionPDF = new QAction(tr("Export to &PDF..."));
-    m_parent->getFileMenu()->insertAction(exportAction, exportActionPDF);
+	QAction *exportActionSVG = new QAction(QIcon(":/Icons/SVG"), tr("Export to &SVG..."));
+	m_parent->getFileMenu()->insertAction(exportAction, exportActionSVG);
+	connect(exportActionSVG, &QAction::triggered, this, &CNodeEditorUIController::exportSVG);
+
+    QAction *exportActionPDF = new QAction(QIcon(":/Icons/PDF"), tr("Export to &PDF..."));
+    m_parent->getFileMenu()->insertAction(exportActionSVG, exportActionPDF);
     connect(exportActionPDF, &QAction::triggered, this, &CNodeEditorUIController::exportPDF);
 
-    QAction *exportActionDOT = new QAction(tr("Export to &DOT/GraphViz..."));
+    QAction *exportActionDOT = new QAction(QIcon(":/Icons/DOT"), tr("Export to &DOT/GraphViz..."));
     m_parent->getFileMenu()->insertAction(exportActionPDF, exportActionDOT);
     connect(exportActionDOT, &QAction::triggered, this, &CNodeEditorUIController::exportDOT);
 
@@ -221,12 +232,20 @@ void CNodeEditorUIController::createMenus()
     modeNodesAction->setData(EM_AddNodes);
 
 	modeTransformAction = editMenu->addAction(QIcon(":/Icons/Mode-Transform"), tr("Transform"));
-	modeTransformAction->setToolTip(tr("Transformation mode"));
-	modeTransformAction->setStatusTip(tr("Transform selected nodes"));
+	modeTransformAction->setToolTip(tr("Items transformation mode"));
+	modeTransformAction->setStatusTip(tr("Transform selected nodes (scale & move)"));
 	modeTransformAction->setCheckable(true);
 	modeTransformAction->setActionGroup(m_editModesGroup);
 	modeTransformAction->setChecked(m_editorScene->getEditMode() == EM_Transform);
 	modeTransformAction->setData(EM_Transform);
+
+	modeFactorAction = editMenu->addAction(QIcon(":/Icons/Mode-Factor"), tr("Factor"));
+	modeFactorAction->setToolTip(tr("Positions tranformation mode"));
+	modeFactorAction->setStatusTip(tr("Scale position of selected nodes (move only)"));
+	modeFactorAction->setCheckable(true);
+	modeFactorAction->setActionGroup(m_editModesGroup);
+	modeFactorAction->setChecked(m_editorScene->getEditMode() == EM_Factor);
+	modeFactorAction->setData(EM_Factor);
 
 
     // scene actions
@@ -283,6 +302,7 @@ void CNodeEditorUIController::createMenus()
     editModesToolbar->addAction(modeDefaultAction);
     editModesToolbar->addAction(modeNodesAction);
 	editModesToolbar->addAction(modeTransformAction);
+	editModesToolbar->addAction(modeFactorAction);
 
 
     // add view menu
@@ -487,7 +507,7 @@ void CNodeEditorUIController::onSceneStatusChanged(int status)
 {
 	bool isAddNodesMode = (m_editorScene->getEditMode() == EM_AddNodes);
 
-	const QString arrowMoveHint = tr(" | Ctrl + Arrow keys - move selected items by one point | Shift + Arrow keys - move selected items by grid step");
+	const QString arrowMoveHint = tr(" | Cursor keys - move selected items by one point | Shift + Cursor keys - move selected items by grid step");
  
     switch (status)
     {
@@ -499,7 +519,7 @@ void CNodeEditorUIController::onSceneStatusChanged(int status)
 		if (isAddNodesMode)
 			onSceneHint(tr("Click & drag - create new connection | Double click - edit item's label") + arrowMoveHint);
 		else
-			onSceneHint(tr("Ctrl+Click - (un)select item | Click & drag or Ctrl/Shift + Arrow keys - move selected items | Ctrl+Click & drag - clone selected items | Double click - edit item's label"));
+			onSceneHint(tr("Ctrl + Click - (un)select item | Click & drag or Ctrl/Shift + Cursor keys - move selected items | Ctrl + Click & drag - clone selected items | Double click - edit item's label"));
         return;
 
     case SIS_Drag:
@@ -539,6 +559,7 @@ void CNodeEditorUIController::onEditModeChanged(int mode)
 	modeNodesAction->setChecked(mode == EM_AddNodes);
 	modeDefaultAction->setChecked(mode == EM_Default);
 	modeTransformAction->setChecked(mode == EM_Transform);
+	modeFactorAction->setChecked(mode == EM_Factor);
 }
 
 
@@ -576,21 +597,6 @@ void CNodeEditorUIController::onNewDocumentCreated()
     m_editorScene->createClassAttribute("", "creator", "Creator of document", 
 		QApplication::applicationName() + " " + QApplication::applicationVersion(), ATTR_NONE);
 
-#ifdef USE_OGDF
-    if (m_optionsData.newGraphDialogOnStart)
-    {
-        COGDFNewGraphDialog dialog;
-        dialog.exec(*m_editorScene);
-
-        bool show = dialog.isShowOnStart();
-        if (show != m_optionsData.newGraphDialogOnStart)
-        {
-			m_optionsData.newGraphDialogOnStart = show;
-            m_parent->writeSettings();
-        }
-    }
-#endif
-
     // store newly created state
     m_editorScene->addUndoState();
 }
@@ -624,6 +630,9 @@ void CNodeEditorUIController::onDocumentLoaded(const QString &fileName)
 
 	// store newly created state
 	m_editorScene->setInitialState();
+
+	// center scene contents
+	m_editorView->centerContent();
 }
 
 
@@ -649,7 +658,6 @@ void CNodeEditorUIController::doReadSettings(QSettings& settings)
 
 	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
 
-	m_optionsData.newGraphDialogOnStart = settings.value("autoCreateGraphDialog", m_optionsData.newGraphDialogOnStart).toBool();
 	m_optionsData.backupPeriod = settings.value("backupPeriod", m_optionsData.backupPeriod).toInt();
 
 	updateSceneOptions();
@@ -680,7 +688,6 @@ void CNodeEditorUIController::doWriteSettings(QSettings& settings)
 
 	settings.setValue("lastExportPath", m_lastExportPath);
 
-	settings.setValue("autoCreateGraphDialog", m_optionsData.newGraphDialogOnStart);
 	settings.setValue("backupPeriod", m_optionsData.backupPeriod);
 
 

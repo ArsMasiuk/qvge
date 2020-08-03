@@ -13,13 +13,24 @@ include($$PWD/../appbase/appbase.pri)
 
 # includes 
 INCLUDEPATH += $$PWD $$PWD/.. 
+INCLUDEPATH += $$PWD/../3rdParty
 INCLUDEPATH += $$PWD/../3rdParty/qsint-widgets 
 INCLUDEPATH += $$PWD/../3rdParty/qtpropertybrowser 
 
 USE_OGDF{
-    INCLUDEPATH += $$PWD/../3rdParty/ogdf/include
+    INCLUDEPATH += $$OGDF_INCLUDE_PATH
 
     SOURCES += $$files($$PWD/ogdf/*.cpp)
     HEADERS += $$files($$PWD/ogdf/*.h)
     FORMS += $$files($$PWD/ogdf/*.ui)
 }
+
+USE_GVGRAPH{
+    #INCLUDEPATH += $$GRAPHVIZ_INCLUDE_PATH
+
+	include($$PWD/../3rdParty/gvgraph/gvgraph.pri)
+
+    SOURCES += $$files($$PWD/gvgraph/*.cpp)
+    HEADERS += $$files($$PWD/gvgraph/*.h)
+}
+

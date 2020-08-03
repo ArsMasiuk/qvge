@@ -9,6 +9,7 @@ It can be used freely, maintaining the information above.
 
 #include "CEdge.h"
 #include "CNode.h"
+#include "CEditorSceneDefines.h"
 
 #include <QPen>
 #include <QPainter>
@@ -64,7 +65,7 @@ CEdge::~CEdge()
 
 bool CEdge::hasLocalAttribute(const QByteArray& attrId) const
 {
-	if (attrId == "direction")
+	if (attrId == attr_edge_direction)
 		return true;
 	else
 		return Super::hasLocalAttribute(attrId);
@@ -73,7 +74,7 @@ bool CEdge::hasLocalAttribute(const QByteArray& attrId) const
 
 bool CEdge::setAttribute(const QByteArray& attrId, const QVariant& v)
 {
-	if (attrId == "direction")
+	if (attrId == attr_edge_direction)
 	{
 		updateArrowFlags(v.toString());
 	}
@@ -89,9 +90,9 @@ bool CEdge::removeAttribute(const QByteArray& attrId)
 {
 	bool res = Super::removeAttribute(attrId);
 
-	if (attrId == "direction")
+	if (attrId == attr_edge_direction)
 	{
-		updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
+		updateArrowFlags(getAttribute(attr_edge_direction).toString());
 	}
 
 	if (res) update();
@@ -105,7 +106,7 @@ void CEdge::updateCachedItems()
 {
 	Super::updateCachedItems();
 
-	updateArrowFlags(getAttribute(QByteArrayLiteral("direction")).toString());
+	updateArrowFlags(getAttribute(attr_edge_direction).toString());
 }
 
 
@@ -135,31 +136,33 @@ QRectF CEdge::boundingRect() const
 }
 
 
-void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* /*widget*/)
+void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/)
 {
-	// weight
-	double weight = getWeight();
+	double weight = getVisibleWeight();
 
-	// line style
-	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(QByteArrayLiteral("style")).toString(), Qt::SolidLine);
+	Qt::PenStyle penStyle = (Qt::PenStyle) CUtils::textToPenStyle(getAttribute(attr_style).toString(), Qt::SolidLine);
 
-	// color & selection
+	// get color (to optimize!)
+	QColor color = getAttribute(attr_color).value<QColor>();
+
+	QPen p(color, weight, penStyle, Qt::FlatCap, Qt::RoundJoin);
+	painter->setPen(p);
+
+	painter->setOpacity(1.0);
+}
+
+
+void CEdge::drawSelection(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
 	bool isSelected = (option->state & QStyle::State_Selected);
-    if (isSelected)
-    {
-		QPen p(QColor(Qt::darkCyan), weight + 1.0, penStyle, Qt::FlatCap, Qt::MiterJoin);
-		painter->setOpacity(0.5);
-        painter->setPen(p);
-    }
-    else
+	if (isSelected)
 	{
-		// get color (to optimize!)
-		QColor color = getAttribute(QByteArrayLiteral("color")).value<QColor>();
-
-		QPen p(color, weight, penStyle, Qt::FlatCap, Qt::MiterJoin);
-
-		painter->setOpacity(1.0);
+		double weight = getVisibleWeight();
+		QPen p(QColor(Qt::darkCyan), weight * 2 + 2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin);
+		painter->setOpacity(0.3);
 		painter->setPen(p);
+		painter->setBrush(Qt::NoBrush);
+		painter->drawPath(m_shapeCachePath);
 	}
 }
 
@@ -167,7 +170,15 @@ void CEdge::setupPainter(QPainter *painter, const QStyleOptionGraphicsItem *opti
 double CEdge::getWeight() const
 {
 	bool ok = false;
-	double weight = qMax(0.1, getAttribute(QByteArrayLiteral("weight")).toDouble(&ok));
+	double weight = getAttribute(attr_weight).toDouble(&ok);
+	return ok ? weight : 1;
+}
+
+
+double CEdge::getVisibleWeight() const
+{
+	bool ok = false;
+	double weight = qMax(0.1, getAttribute(attr_weight).toDouble(&ok));
 	if (!ok) 
 		return 1;
 	else

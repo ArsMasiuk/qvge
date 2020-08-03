@@ -34,6 +34,12 @@ public:
 		return m_controlPoint;
 	}
 
+	// transformations
+	virtual void transform(const QRectF& oldRect, const QRectF& newRect,
+		double xc, double yc,
+		const QList<QGraphicsItem*> selItems,
+		bool changeSize, bool changePos) override;
+
 protected:
 	// reimp
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);

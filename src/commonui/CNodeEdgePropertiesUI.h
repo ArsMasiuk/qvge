@@ -14,10 +14,12 @@ It can be used freely, maintaining the information above.
 #include <QVariant>
 #include <QSettings>
 
+#include <qvge/CNodeEditorScene.h>
+
 class CEditorScene;
-class CNodeEditorScene;
+//class CNodeEditorScene;
 class CNode;
-class CDirectEdge;
+class CEdge;
 
 
 namespace Ui {
@@ -29,7 +31,7 @@ class CNodeEdgePropertiesUI : public QWidget
     Q_OBJECT
 
 public:
-    explicit CNodeEdgePropertiesUI(QWidget *parent = 0);
+    explicit CNodeEdgePropertiesUI(QWidget *parent = nullptr);
     ~CNodeEdgePropertiesUI();
 
     void setScene(CNodeEditorScene* scene);
@@ -62,6 +64,7 @@ protected Q_SLOTS:
     void on_EdgeWeight_valueChanged(double value);
     void on_EdgeStyle_activated(QVariant data);
 	void on_EdgeDirection_activated(QVariant data);
+	void on_EdgeType_activated(QVariant data);
 
     void on_LabelFont_activated(const QFont &font);
 	void on_LabelColor_activated(const QColor &color);
@@ -78,9 +81,38 @@ private:
     bool m_updateLock;
 
 	CNode *m_nodeFactory;
-	CDirectEdge *m_edgeFactory;
+	CEdge *m_edgeFactory;
 
     Ui::CNodeEdgePropertiesUI *ui;
+
+private:
+	template<class E>
+	void changeEdgesClass()
+	{
+		if (m_updateLock || m_scene == NULL)
+			return;
+
+		QList<CEdge*> edges = m_scene->getSelectedEdges();
+		if (edges.isEmpty())
+			return;
+
+		QList<CItem*> newEdges;
+
+		for (auto edge : edges)
+		{
+			auto e = m_scene->changeEdgeClass<E>(edge);
+
+			if (e && e != edge)
+				newEdges << e;
+		}
+
+		if (newEdges.size())
+		{
+			m_scene->addUndoState();
+
+			m_scene->selectItems(newEdges, false);
+		}
+	}
 };
 
 #endif // CNODEPROPERTIESUI_H

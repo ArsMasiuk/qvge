@@ -44,12 +44,10 @@ public:
 	}
 
 	virtual bool loadSupported() const {
-        return false;
+        return true;
 	}
 
-    virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/, QString* /*lastError = nullptr*/) const {
-        return false;
-    }
+	virtual bool load(const QString& /*fileName*/, CEditorScene& /*scene*/, QString* /*lastError = nullptr*/) const;
 
 	virtual bool saveSupported() const {
 		return true;
@@ -65,6 +63,8 @@ private:
 	void doWriteEdgeDefaults(QTextStream& ts, const CEditorScene& scene) const;
 	void doWriteEdge(QTextStream& ts, const CEdge& edge, const CEditorScene& scene) const;
 	void doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVariant> edgeAttrs) const;
+
+	void doWriteLabel(QTextStream& ts, QMap<QByteArray, QVariant>& attrs) const;
 
 	bool m_writeBackground = true;
 	bool m_writeAttrs = true;

@@ -21,8 +21,6 @@ public:
 
     bool exec(CNodeEditorScene &scene);
 
-	bool isShowOnStart() const;
-
 private Q_SLOTS:
     void on_List_currentRowChanged(int currentRow);
 	void on_List_itemActivated(QListWidgetItem *item);

@@ -58,6 +58,7 @@ private Q_SLOTS:
 	bool doExport(const IFileSerializer &exporter);
 	void exportFile();
 	void exportPDF();
+	void exportSVG();
 	void exportDOT();
 	bool importCSV(const QString &fileName, QString* lastError);
 
@@ -128,6 +129,7 @@ private:
 	QAction *modeDefaultAction;
 	QAction *modeNodesAction;
 	QAction *modeTransformAction;
+	QAction *modeFactorAction;
 
 	QAction *zoomAction;
 	QAction *unzoomAction;
@@ -148,22 +150,26 @@ private:
 	QTimer m_backupTimer;
 
 #ifdef USE_OGDF
-	class COGDFLayoutUIController *m_ogdfController;
+	class COGDFLayoutUIController *m_ogdfController = nullptr;
 #endif
 
-	class CColorSchemesUIController *m_schemesController;
+#ifdef USE_GVGRAPH
+	class CGVGraphLayoutUIController *m_gvController = nullptr;
+#endif
 
-	class CNodeEdgePropertiesUI *m_propertiesPanel;
-	class CCommutationTable *m_connectionsPanel;
-	class CClassAttributesEditorUI *m_defaultsPanel;
-	class CQuickHelpUI *m_quickHelpPanel;
+	class CColorSchemesUIController *m_schemesController = nullptr;
 
-	class CSearchDialog *m_searchDialog;
+	class CNodeEdgePropertiesUI *m_propertiesPanel = nullptr;
+	class CCommutationTable *m_connectionsPanel = nullptr;
+	class CClassAttributesEditorUI *m_defaultsPanel = nullptr;
+	class CQuickHelpUI *m_quickHelpPanel = nullptr;
+
+	class CSearchDialog *m_searchDialog = nullptr;
 
 
 	// IO
-	class CDOTExportDialog *m_dotDialog;
-	class CImageExportDialog *m_imageDialog;
+	class CDOTExportDialog *m_dotDialog = nullptr;
+	class CImageExportDialog *m_imageDialog = nullptr;
 
 	QString m_lastExportPath;
 };

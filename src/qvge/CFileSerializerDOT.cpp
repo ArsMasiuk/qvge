@@ -10,6 +10,9 @@ It can be used freely, maintaining the information above.
 #include "CFileSerializerDOT.h"
 #include "CNode.h"
 #include "CEdge.h"
+#include "CPolyEdge.h"
+
+#include <qvgeio/CFormatDOT.h>
 
 #include <QFile>
 #include <QTextStream>
@@ -25,7 +28,7 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 	{
         QTextStream ts(&saveFile);
 		ts.setCodec("UTF-8");
-		ts.setGenerateByteOrderMark(true);
+		//ts.setGenerateByteOrderMark(true);
 
         QString graphId = QFileInfo(fileName).completeBaseName();
 
@@ -80,6 +83,17 @@ bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QStr
 	return false;
 }
 
+
+bool CFileSerializerDOT::load(const QString& fileName, CEditorScene& scene, QString* lastError) const
+{
+	CFormatDOT dot;
+	Graph graphModel;
+
+	if (dot.load(fileName, graphModel, lastError))
+		return scene.fromGraph(graphModel);
+	else
+		return false;
+}
 
 // helpers
 
@@ -182,23 +196,6 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		nodeAttrs.remove("shape");
 	}
 
-	if (nodeAttrs.contains("label")) {
-		ts << ",xlabel = \"" << toDotString(nodeAttrs["label"]) << "\"\n";
-		nodeAttrs.remove("label");
-	}
-
-	if (nodeAttrs.contains("label.color")) {
-		ts << ",fontcolor = \"" << nodeAttrs["label.color"].toString() << "\"\n";
-		nodeAttrs.remove("label.color");
-	}
-
-	if (nodeAttrs.contains("label.font")) {
-		auto f = nodeAttrs["label.font"].value<QFont>();
-		ts << ",fontname = \"" << f.family() << "\"\n";
-		ts << ",fontsize = \"" << f.pointSizeF() << "\"\n";
-		nodeAttrs.remove("label.font");
-	}
-
 	if (nodeAttrs.contains("stroke.color")) {
 		ts << ",color = \"" << nodeAttrs["stroke.color"].toString() << "\"\n";
 		nodeAttrs.remove("stroke.color");
@@ -217,6 +214,9 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		nodeAttrs.remove("stroke.style");
 	}
 	
+	// label
+	doWriteLabel(ts, nodeAttrs);
+
 	// custom attrs
 	for (auto it = nodeAttrs.constBegin(); it != nodeAttrs.constEnd(); ++it)
 	{
@@ -274,6 +274,21 @@ void CFileSerializerDOT::doWriteEdge(QTextStream& ts, const CEdge& edge, const C
 	if (m_writeAttrs)
 	{
 		doWriteEdgeAttrs(ts, edgeAttrs);
+
+		// polyline: positions
+		//const CPolyEdge *poly = dynamic_cast<const CPolyEdge*>(&edge);
+		//if (poly)
+		//{
+		//	ts << ", pos=\"";
+
+		//	auto points = poly->getPoints();
+		//	for (int i = 0; i < points.count(); i++)
+		//	{
+		//		ts << points.at(i).x() / 72.0 << "," << points.at(i).y() / 72.0 << " ";
+		//	}
+
+		//	ts << "\"\n";
+		//}
 	}
 
 	ts << "];\n\n";
@@ -292,28 +307,15 @@ void CFileSerializerDOT::doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 			ts << ",dir=none" << "\n";
 	}
 
-	if (edgeAttrs.contains("weight")) {
+	if (edgeAttrs.contains("weight")) 
+	{
 		ts << ",weight = \"" << edgeAttrs["weight"].toString() << "\"\n";
 		ts << ",penwidth = \"" << edgeAttrs["weight"].toString() << "\"\n";
 		edgeAttrs.remove("weight");
 	}
 
-	if (edgeAttrs.contains("label")) {
-		ts << ",xlabel = \"" << toDotString(edgeAttrs["label"]) << "\"\n";
-		edgeAttrs.remove("label");
-	}
-
-	if (edgeAttrs.contains("label.color")) {
-		ts << ",fontcolor = \"" << edgeAttrs["label.color"].toString() << "\"\n";
-		edgeAttrs.remove("label.color");
-	}
-
-	if (edgeAttrs.contains("label.font")) {
-		auto f = edgeAttrs["label.font"].value<QFont>();
-		ts << ",fontname = \"" << f.family() << "\"\n";
-		ts << ",fontsize = \"" << f.pointSizeF() << "\"\n";
-		edgeAttrs.remove("label.font");
-	}
+	// label
+	doWriteLabel(ts, edgeAttrs);
 
 	// custom attrs
 	for (auto it = edgeAttrs.constBegin(); it != edgeAttrs.constEnd(); ++it)
@@ -322,3 +324,26 @@ void CFileSerializerDOT::doWriteEdgeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 	}
 }
 
+
+void CFileSerializerDOT::doWriteLabel(QTextStream& ts, QMap<QByteArray, QVariant>& attrs) const
+{
+	if (attrs.contains("label")) {
+		ts << ",xlabel = \"" << toDotString(attrs["label"]) << "\"\n";
+		attrs.remove("label");
+	}
+
+	if (attrs.contains("label.color")) {
+		ts << ",fontcolor = \"" << attrs["label.color"].toString() << "\"\n";
+		attrs.remove("label.color");
+	}
+
+	if (attrs.contains("label.font")) {
+		auto f = attrs["label.font"].value<QFont>();
+		QString fontname = f.family();
+		if (f.bold()) fontname += " bold";
+		if (f.italic()) fontname += " italic";
+		ts << ",fontname = \"" << fontname << "\"\n";
+		ts << ",fontsize = \"" << f.pointSizeF() << "\"\n";
+		attrs.remove("label.font");
+	}
+}

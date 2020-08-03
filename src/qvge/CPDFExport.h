@@ -11,6 +11,8 @@ It can be used freely, maintaining the information above.
 
 #include <QString>
 #include <QPrinter>
+#include <QSettings>
+#include <QPageSetupDialog>
 
 #include "qvge/IFileSerializer.h"
 
@@ -18,9 +20,15 @@ It can be used freely, maintaining the information above.
 class CPDFExport : public IFileSerializer
 {
 public:
-	CPDFExport(QPrinter* printer = NULL);
+	CPDFExport();
+	virtual ~CPDFExport();
 
-	// reimp
+	// setup interface
+	void readSettings(QSettings& settings);
+	void writeSettings(QSettings& settings);
+	bool setupDialog(CEditorScene& scene);
+
+	// reimp: IFileSerializer
 	virtual QString description() const {
 		return "Adobe Portable Document Format";
 	}
@@ -49,4 +57,5 @@ public:
 
 private:
 	mutable QPrinter *m_printer = nullptr;
+	QPageSetupDialog m_pageDialog;
 };
