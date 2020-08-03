@@ -9,8 +9,6 @@
 CONFIG += USE_LOCAL_OGDF
 #CONFIG += USE_EXTERNAL_OGDF
 
-#CONFIG += BUILD_GVGRAPH
-
 BUILD_OGDF{
 	CONFIG += USE_LOCAL_OGDF
 	CONFIG -= USE_EXTERNAL_OGDF
@@ -41,21 +39,6 @@ USE_OGDF{
 	DEFINES += USE_OGDF
 	#message(USE_OGDF!)
 }
-
-BUILD_GVGRAPH{
-	DEFINES += USE_GVGRAPH
-	CONFIG += USE_GVGRAPH
-	
-	GRAPHVIZ_INCLUDE_PATH = $$PWD/3rdParty/gvgraph
-	GRAPHVIZ_LIBS = -lcgraph
-	
-	#temp, win32
-	win32{
-		#GRAPHVIZ_LIB_PATH = "c:/Program Files (x86)/Graphviz 2.44.1/lib/"
-		GRAPHVIZ_LIB_PATH = $$PWD/3rdParty/gvgraph/win32-msvc
-	}
-}
-
 
 # compiler stuff
 win32-msvc*{
