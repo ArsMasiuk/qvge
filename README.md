@@ -21,29 +21,44 @@ Thank you!
 ### Main Features
 
 - Easy creation and parameterising of small-sized till middle-sized graphs (1000+ nodes/edges)
-- Directed, undirected and mixed graphs supported
-- Node ports supported as well
-- Hierarchical attribute model for graph elements 
+- Common visual properties of nodes and edges: shapes, sizes, colors, labels etc.
+- Directed, undirected and mixed graphs
+- Node ports
+- Straight and polygonal edges
+- Custom (user-defined) attributes of graphs and their elements
 - Dynamically maintained list of commutations between nodes
 - Search among the graph elements and their attributes
-- Auto-creation and auto-layout of graphs (via [OGDF](https://ogdf.uos.de/))
-- Export into PDF and popular image formats
-- Graph file format support:
-  - Native graph persistence format (XGR)
-  - GEXF (read/write of common subset)
+- Windows: portable mode (no installation required)
+- Auto-creation and auto-layout of graphs (via [OGDF](https://ogdf.uos.de/)):
+  - Linear
+  - Balloon
+  - Circular
+  - FMMM
+  - Planar
+  - Sugiyama
+  - Davidson-Harel
+- Export of graphs into:
+  - PDF
+  - SVG
+  - various image formats (BMP, PNG, JPG, TIFF etc.)
+- Graph file formats supported:
+  - XGR (native graph persistence format)
+  - GEXF (read/write of common subset, except clusters and dynamic properties)
   - GraphML (read/write)
   - GML (read via OGDF, write via QVGE)
   - [GraphViz DOT](https://graphviz.org/) (read/write, only common subset for now)
 
 ### Some users' feedback
 
->"Qt Visual Graph Editor is a fairly straightforward, open-source tool that enables users to design relatively simple graphs for their >projects. It comes with a decent set of features and is very intuitive."
+>"Qt Visual Graph Editor is a fairly straightforward, open-source tool that enables users to design relatively simple graphs for their projects. It comes with a decent set of features and is very intuitive."
 
 >"It seems to me that my development have become more efficient after when I began using QVGE. This is much more useful than UML, because that I don't have to change sheets and to remember several usages and I can draw graphs swiftly."
 
 >"Lightweight, multi-platform graph editor that allows users to edit two-dimensional graphs in a quick and intuitive way, as an alternative to more complex software."
 
-> "It's user experience is very good. It's because how to operate is sophisticated so intuitive and very simple. Because of that, it's easy to begin using. A user can entirely concentrate to essence of content the whole time. Because of simpleness, the content is not noisy and easy to understand, and usable much generally to design, refactor and output a structure such as a organization, a software, logic, routes and all other relationships without learning usage separately."
+> "Its user experience is very good. It's because how to operate is sophisticated so intuitive and very simple. A user can entirely concentrate on essence of content the whole time. Because of simpleness, the content is not noisy and easy to understand, and usable much generally to design, refactor and output a structure such as a organization, a software, logic, routes and all other relationships without learning usage separately."
+
+> "I have been using QVGE for a few hours a week for over a year. It made my life better."
 
 ### Installation
 
@@ -86,8 +101,8 @@ before running qmake, open the file `src/config.pri` and make sure that the foll
 CONFIG += USE_OGDF
 ~~~
 
-Then run qmake + make as desribed in the step before. *Please note:* OGDF is really big, so its compilation takes some time.
-
+Then run qmake + make as desribed in the step before. 
+*Please note:* OGDF is really big, so its compilation takes some time.
 
 ### Supported compilers
 
