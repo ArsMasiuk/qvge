@@ -13,7 +13,7 @@ It can be used freely, maintaining the information above.
 #include <QVersionNumber>
 
 
-static QString qvgeVersionString("0.6.a (preview)");
+static QString qvgeVersionString("0.6.0");
 static QVersionNumber qvgeVersion = QVersionNumber::fromString(qvgeVersionString);
 
 

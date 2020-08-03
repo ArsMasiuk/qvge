@@ -42,7 +42,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+;Source: "vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 
 Source: "..\LICENSE"; DestDir: "{app}"
 Source: "..\CHANGES"; DestDir: "{app}"
@@ -57,7 +57,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 Name: "{group}\{cm:UninstallProgram, {#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Run]
-Filename: {tmp}\vcredist_x64.exe; \
+;Filename: {tmp}\vcredist_x64.exe; \
     Parameters: "/q /passive /Q:a /c:""msiexec /q /i vcredist.msi"""; \
     StatusMsg: "Installing VC++ 2015 Redistributables..."
 
