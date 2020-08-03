@@ -6,9 +6,9 @@
 **QVGE** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
 in a simple and intuitive way.
 
-Please note that **QVGE** is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor :)
-
 ![Screenshot1](https://user-images.githubusercontent.com/19762856/85934275-2a985480-b8e1-11ea-81a9-a5b81f3365e2.PNG)
+
+Please note that **QVGE** is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor.
 
 ### Support
 
@@ -66,7 +66,7 @@ Prebuild Windows binaries can be loaded from here:
 
 [![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)](https://github.com/ArsMasiuk/qvge/releases/latest)
 
-Or you can get qvge's sources and build them by yourself. In this case you need to have installed Qt 5.x toolkit and corresponding C++ compiler with C++11 support. qvge uses native Qt build system (main project file is qvgeapp.pro) so it should look like:
+Or you can get QVGE's sources and build them by yourself. In this case you need to have installed Qt 5.x toolkit and corresponding C++ compiler with C++11 support. QVGE uses native Qt build system (main project file is qvgeapp.pro) so it should look like:
 
 ~~~
 cd <directory-with-qvgeapp.pro>
@@ -95,7 +95,7 @@ jom
 
 ### Enabling OGDF
 
-In order to build **QVGE** with OGDF support (shipped with qvge together):
+In order to build **QVGE** with OGDF support (shipped with QVGE together):
 before running qmake, open the file `src/config.pri` and make sure that the following option is present:
 ~~~
 CONFIG += USE_OGDF
@@ -143,7 +143,7 @@ Special thanks to:
 
 ### Extenal Links
 
-**QVGE** at [![Download qvge](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
+**QVGE** at [![Download QVGE](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
 
 **QVGE** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml)
 
