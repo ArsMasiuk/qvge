@@ -101,7 +101,7 @@ before running qmake, open the file `src/config.pri` and make sure that one of t
 
 ~~~
 CONFIG += BUILD_OGDF
-~~
+~~~
 
 This switch will compile & link against OGDF bundled under 3rdParty-directory.
 ogdf-2020.lib (Windows) or libogdf-2020.a will be created after the build is done.
