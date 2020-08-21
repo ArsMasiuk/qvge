@@ -97,13 +97,45 @@ jom
 ### Enabling OGDF
 
 In order to build **QVGE** with OGDF support (shipped with QVGE together):
-before running qmake, open the file `src/config.pri` and make sure that the following option is present:
+before running qmake, open the file `src/config.pri` and make sure that one of the following options present:
+
 ~~~
-CONFIG += USE_OGDF
+CONFIG += BUILD_OGDF
 ~~~
 
-Then run qmake + make as desribed in the step before. 
+This switch will compile & link against OGDF bundled under 3rdParty-directory.
+ogdf-2020.lib (Windows) or libogdf-2020.a will be created after the build is done.
+
 *Please note:* OGDF is really big, so its compilation takes some time.
+
+~~~
+CONFIG += USE_LOCAL_OGDF
+~~~
+
+Once OGDF has been compiled locally, you can use this switch to make sure that OGDF never recompiles.
+
+*Please note:* Do not delete ogdf-2020 library file because it is supposed to be used by linker.
+
+~~~
+CONFIG += USE_EXTERNAL_OGDF
+~~~
+
+Allows to link against OGDF library which is already present in the system.
+In this case, the following lines have to be changed accordingly:
+
+~~~
+USE_EXTERNAL_OGDF{
+	...
+	
+	# system-specific OGDF setup
+	OGDF_LIB_NAME = <name of installed OGDF library>
+	OGDF_LIB_PATH = <path to installed OGDF library file>
+	OGDF_INCLUDE_PATH = <path to headers of the installed OGDF library>
+}
+~~~
+ 
+
+Then run qmake + make as desribed in the step before. 
 
 ### Supported compilers
 

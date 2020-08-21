@@ -51,20 +51,19 @@ unix{
 
     INSTALLS += target
 
-    desktop.path = /usr/share/applications/
+    desktop.path = $$PREFIX_DIR/share/applications/
     desktop.files = $$PWD/linux/qvge.desktop
     INSTALLS += desktop
 
-    #icon.path = /usr/share/icons/hicolor/256x256/apps/
-    icon.path = /usr/share/qvge
+    icon.path = $PREFIX_DIR/share/pixmaps
     icon.files = $$PWD/linux/qvge.png
     INSTALLS += icon
 
-    appdata.path = /usr/share/appdata/
+    appdata.path = $$PREFIX_DIR/share/appdata/
     appdata.files = $$PWD/linux/qvge.appdata.xml
     INSTALLS += appdata
 
-    xgr.path = /usr/share/mime/packages/
+    xgr.path = $$PREFIX_DIR/share/mime/packages/
     xgr.files = $$PWD/linux/application-xgr.xml
     INSTALLS += xgr
 }
