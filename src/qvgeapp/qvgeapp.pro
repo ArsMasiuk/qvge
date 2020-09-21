@@ -55,7 +55,7 @@ unix{
     desktop.files = $$PWD/linux/qvge.desktop
     INSTALLS += desktop
 
-    icon.path = $PREFIX_DIR/share/pixmaps
+    icon.path = $$PREFIX_DIR/share/pixmaps
     icon.files = $$PWD/linux/qvge.png
     INSTALLS += icon
 
