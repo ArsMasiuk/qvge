@@ -1,0 +1,83 @@
+[DEBREATE-0.7.13]
+<<CTRL>>
+Package: qvge
+Version: 0.6.0-2
+Maintainer: Ars L. Masiuk <ars.masiuk@gmail.com>
+Section: editors
+Source: https://github.com/ArsMasiuk/qvge
+Homepage: https://github.com/ArsMasiuk/qvge
+Architecture: amd64
+Priority: optional
+Depends: libqt5widgets5 (>=5.9)
+Description: Qt Visual Graph Editor
+ Application for viewing and manipulating small till middle-sized graphs.
+ .
+ QVGE supports several formats (GraphML, GEXF, GML, GraphViz/Dot).
+
+<</CTRL>>
+<<FILES>>
+1
+/home/osboxes/Work/qvge/build-qvgeapp-Desktop-Release/bin/qvgeapp* -> qvgeapp -> /usr/bin
+/home/osboxes/Work/qvge/icon.png -> icon.png -> /usr/share/qvge
+<</FILES>>
+<<SCRIPTS>>
+<<PREINST>>
+0
+<</PREINST>>
+<<POSTINST>>
+0
+<</POSTINST>>
+<<PRERM>>
+0
+<</PRERM>>
+<<POSTRM>>
+0
+<</POSTRM>>
+<</SCRIPTS>>
+<<CHANGELOG>>
+<<DEST>>DEFAULT<</DEST>>
+
+<</CHANGELOG>>
+<<COPYRIGHT>>
+The MIT-X (MIT/X11) License
+
+Copyright © <year(s)> <copyright holder(s)> [<email>]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+<</COPYRIGHT>>
+<<MENU>>
+1
+[FILENAME=qvge]
+Name=Qt Visual Graph Editor
+Version=1.0
+Exec=qvgeapp
+Comment=View and manipulate small till middle-sized graphs
+Icon=/usr/share/qvge/icon.png
+Type=Application
+Terminal=false
+StartupNotify=true
+Encoding=UTF-8
+Categories=2DGraphics;Graphics;Qt;Education;
+<</MENU>>
+<<BUILD>>
+1
+1
+1
+strip
+<</BUILD>>

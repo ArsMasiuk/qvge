@@ -45,6 +45,10 @@ win32-msvc*{
   	QMAKE_CXXFLAGS += /MP
 }
 
+gcc{
+    QMAKE_CXXFLAGS += -Wno-unused-variable
+}
+
 
 # common config
 QT += core gui widgets xml opengl network printsupport svg
