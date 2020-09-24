@@ -347,6 +347,7 @@ protected:
 	QPointF m_leftClickPos;
 	QPointF m_mousePos;
 	bool m_doubleClick = false;
+	bool m_cancelled = false;
 	bool m_dragInProgress = false;
 	QGraphicsItem *m_startDragItem = nullptr;
 	QPointF m_lastDragPos;

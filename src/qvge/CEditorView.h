@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 #define CEDITORVIEW_H
 
 #include <QGraphicsView>
+#include <QGraphicsItem>
 #include <QPaintEvent>
 #include <QTimer>
 
@@ -47,10 +48,20 @@ public:
 
 	void centerContent();
 
+	// scene
+	QGraphicsItem* getDragItem()
+	{
+		if (scene())
+			return scene()->mouseGrabberItem();
+		else
+			return nullptr;
+	}
+
 	// reimp
 	virtual void mousePressEvent(QMouseEvent *e);
 	virtual void mouseMoveEvent(QMouseEvent *e);
 	virtual void mouseReleaseEvent(QMouseEvent *e);
+	virtual void contextMenuEvent(QContextMenuEvent *e);
 	virtual void wheelEvent(QWheelEvent *e);
 
 	void paintEvent(QPaintEvent * event)

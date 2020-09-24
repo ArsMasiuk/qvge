@@ -1368,6 +1368,11 @@ void CEditorScene::needUpdate()
 
 void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+	if (mouseEvent->button() == Qt::LeftButton)
+	{
+		m_cancelled = false;
+	}
+
 	if (m_editController)
 	{
 		if (m_editItem)
@@ -1458,37 +1463,51 @@ void CEditorScene::onRightButtonPressed(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+	// by some reason (Qt bug?) this method can be entered twice -> stack overflow
+	// so this is an ugly workaround...
+	static bool entered = false;
+	if (entered) 
+		return;
+	entered = true;
+
+	// ignore if cancelled
+	if (m_cancelled)
+	{
+		entered = false;
+		return;
+	}
+
 	if (m_editController)
 	{
 		if (m_editController->onMouseMove(*this, mouseEvent))
 		{
-			mouseEvent->setAccepted(true);
+			mouseEvent->accept();
+			entered = false;
 			return;
 		}
 		else
-			mouseEvent->setAccepted(false);
+			mouseEvent->ignore();
 	}
 
 	if (m_editItem)
 	{
 		// call super
 		Super::mouseMoveEvent(mouseEvent);
+		entered = false;
 		return;
 	}
 
 	// store the last position
 	m_mousePos = mouseEvent->scenePos();
 
-	bool isDragging = (mouseEvent->buttons() & Qt::LeftButton);
-
-
 	if (m_doubleClick)
 	{
 		m_doubleClick = false;
 
 		// moved after double click?
-		if (isDragging && !onDoubleClickDrag(mouseEvent, m_leftClickPos))
+		if (m_dragInProgress && !onDoubleClickDrag(mouseEvent, m_leftClickPos))
 		{
+			entered = false;
 			return;
 		}
 	}
@@ -1497,9 +1516,10 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	if (m_startDragItem == NULL)
 	{
 		// moved after single click?
-		if (isDragging && onClickDrag(mouseEvent, m_leftClickPos))
+		if (m_dragInProgress && onClickDrag(mouseEvent, m_leftClickPos))
 		{
 			moveDrag(mouseEvent, m_startDragItem, true);
+			entered = false;
 			return;
 		}
 
@@ -1512,11 +1532,14 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 		updateCursorState();
 
+		entered = false;
 		return;
 	}
 
 	// custom dragging
-	moveDrag(mouseEvent, m_startDragItem, isDragging);
+	moveDrag(mouseEvent, m_startDragItem, m_dragInProgress);
+
+	entered = false;
 }
 
 
@@ -1525,6 +1548,7 @@ void CEditorScene::startDrag(QGraphicsItem* dragItem)
 	m_startDragItem = dragItem;
 	m_dragInProgress = true;
 	m_lastDragPos = m_leftClickPos;
+	m_cancelled = false;
 }
 
 
@@ -1689,6 +1713,15 @@ void CEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+	// ignore if cancelled
+	if (m_cancelled && (mouseEvent->button() == Qt::LeftButton))
+	{
+		m_cancelled = false;
+		Super::mouseReleaseEvent(mouseEvent);
+		return;
+	}
+
+
 	if (m_editController)
 	{
 		if (m_editController->onMouseReleased(*this, mouseEvent))
@@ -1725,6 +1758,7 @@ void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	m_doubleClick = false;
 	m_dragInProgress = false;
+	m_cancelled = false;
 }
 
 
@@ -1733,6 +1767,15 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 	// cleanup drag state
 	m_startDragItem = NULL;
 	m_dragInProgress = false;
+
+	m_cancelled = dragCancelled;
+	if (m_cancelled)
+	{
+		m_leftClickPos = QPointF();
+		m_lastDragPos = QPointF();
+		m_mousePos = QPointF();
+		m_draggedItem = NULL;
+	}
 
 	if (dragItem)
 	{
@@ -2070,19 +2113,33 @@ void CEditorScene::keyReleaseEvent(QKeyEvent *keyEvent)
 {
 	Super::keyReleaseEvent(keyEvent);
 
+	if (m_editController)
+	{
+		m_editController->onKeyReleased(*this, keyEvent);
+		return;
+	}
+
 	updateCursorState();
 }
 
 
 void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
+	Super::keyPressEvent(keyEvent);
+
+	if (m_editController)
+	{
+		m_editController->onKeyPressed(*this, keyEvent);
+		return;
+	}
+
+
+	updateCursorState();
+
+
 	bool isCtrl = (keyEvent->modifiers() == Qt::ControlModifier);
 	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
 	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
-
-	Super::keyPressEvent(keyEvent);
-
-	updateCursorState();
 
 	if (isAlt || keyEvent->isAccepted())
 		return;

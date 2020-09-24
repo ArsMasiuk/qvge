@@ -46,7 +46,7 @@ win32-msvc*{
 }
 
 gcc{
-    QMAKE_CXXFLAGS += -Wno-unused-variable
+    	QMAKE_CXXFLAGS += -Wno-unused-variable -Wno-unused-parameter
 }
 
 

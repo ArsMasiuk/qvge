@@ -1,3 +1,17 @@
+QVGE 0.6.1
+-------------------------------------------------------------------------------
+Bugfixes:
+- fixed item transformation with pressed Shift key
+- fixed disappearing of the cursor when a key was pressed during transformation
+- fixed potential stack overflow during dragging (Qt bug?)
+- fixed cancelling the drag via Esc key
+- right clicks during drag are ignored
+
+Linux:
+- fixed various "make install" related issues (#110, #113, #114, #115)
+
+
+
 QVGE 0.6.0
 -------------------------------------------------------------------------------
 New features/improvements:
@@ -14,7 +28,7 @@ New features/improvements:
 - improved drawing of edge selection
  
 Bugfixes:
-- fixed crash after undoing recent drag operation
+- fixed crash after undoing of a recent drag operation
 - fixed issue when a document could not be opened (#96)
 - fixed issue with setting label properties while label editor is open
 - fixed issue with drawing arrows (#14)

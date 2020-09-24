@@ -600,18 +600,13 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		}
 	}
 
-	// call super
+	// finish or cancel drag
 	finishDrag(mouseEvent, m_startDragItem, m_state == IS_Cancelling);
 
-	// finish
+	// finalize
 	if (m_state == IS_Cancelling)
 	{
 		cancel(mouseEvent->scenePos());
-	}
-	else
-	if (m_state == IS_Finishing)
-	{
-		//m_connection->setSelected(true);
 	}
 
 	m_state = IS_None;

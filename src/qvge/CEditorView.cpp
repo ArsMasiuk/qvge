@@ -179,13 +179,34 @@ void CEditorView::onScrollTimeout()
 #if defined Q_OS_WIN && !defined Q_OS_CYGWIN		// Windows-conform panning & context menu
 
 
+void CEditorView::contextMenuEvent(QContextMenuEvent *e)
+{
+	// ignore when dragging
+	if (getDragItem())
+	{
+		e->accept();
+		return;
+	}
+
+	Super::contextMenuEvent(e);
+}
+
+
 void CEditorView::mousePressEvent(QMouseEvent *e)
 {
+	// ignore when dragging
+	if (e->button() == Qt::RightButton && getDragItem())
+	{
+		e->accept();
+		return;
+	}
+
 	Super::mousePressEvent(e);
 
-	if (e->buttons() == Qt::LeftButton)
+	// start scroll when dragging
+	if (e->button() == Qt::LeftButton)
 	{
-		m_scrollTimer.start();
+		//m_scrollTimer.start();
 	}
 }
 
@@ -212,19 +233,6 @@ void CEditorView::mouseMoveEvent(QMouseEvent *e)
 	}
 
 	Super::mouseMoveEvent(e);
-
-	// else check LMB selection
-	if (e->buttons() == Qt::LeftButton)
-	{
-		//auto globTopLeft = viewport()->mapToGlobal(QPoint(viewport()->x(), viewport()->y()));
-		//QRect globRect = QRect(globTopLeft, viewport()->size());
-		//if (QCursor::pos().x() > globRect.right())
-		//{
-		//	scrollContentsBy(-5, 0);
-		//	invalidateScene();
-		//	//viewport()->repaint();
-		//}
-	}
 }
 
 

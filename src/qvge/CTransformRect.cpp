@@ -134,12 +134,14 @@ bool CTransformRect::onMousePressed(CEditorScene& /*scene*/, QGraphicsSceneMouse
 	{
 		if (m_points[i].sceneRect.contains(pos))
 		{
+			m_dragRect = m_lastRect;
 			m_dragPos = m_lastPos = pos;
 			m_dragPoint = i;
 			return true;
 		}
 	}
 
+	m_dragRect = QRectF();
 	m_dragPos = m_lastPos = QPointF();
 	m_dragPoint = -1;
 	return false;
@@ -197,23 +199,23 @@ bool CTransformRect::onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *
 			}
 
 			// if shift pressed: mirror around center
-			if (isShift && newRect.isValid())
+			if (isShift && newRect.isValid() && m_dragRect.isValid())
 			{
-				qreal dx_r = newRect.right() - m_lastRect.right();
-				qreal dx_l = newRect.left() - m_lastRect.left();
-				qreal dy_t = newRect.top() - m_lastRect.top();
-				qreal dy_b = newRect.bottom() - m_lastRect.bottom();
+				qreal dx_r = newRect.right() - m_dragRect.right();
+				qreal dx_l = newRect.left() - m_dragRect.left();
+				qreal dy_t = newRect.top() - m_dragRect.top();
+				qreal dy_b = newRect.bottom() - m_dragRect.bottom();
 
 				switch (m_dragPoint)
 				{
-				case 0:		newRect.setBottomRight(m_lastRect.bottomRight() - QPointF(dx_l, dy_t));		break;
-				case 1:		newRect.setBottom(m_lastRect.bottom() - dy_t);								break;
-				case 2:		newRect.setBottomLeft(m_lastRect.bottomLeft() - QPointF(dx_r, dy_t));		break;
-				case 3:		newRect.setRight(m_lastRect.right() - dx_l);								break;
-				case 4:		newRect.setLeft(m_lastRect.left() - dx_r);									break;
-				case 5:		newRect.setTopRight(m_lastRect.topRight() - QPointF(dx_l, dy_b));			break;
-				case 6:		newRect.setTop(m_lastRect.top() - dy_b);									break;
-				case 7:		newRect.setTopLeft(m_lastRect.topLeft() - QPointF(dx_r, dy_b));				break;
+				case 0:		newRect.setBottomRight(m_dragRect.bottomRight() - QPointF(dx_l, dy_t));		break;
+				case 1:		newRect.setBottom(m_dragRect.bottom() - dy_t);								break;
+				case 2:		newRect.setBottomLeft(m_dragRect.bottomLeft() - QPointF(dx_r, dy_t));		break;
+				case 3:		newRect.setRight(m_dragRect.right() - dx_l);								break;
+				case 4:		newRect.setLeft(m_dragRect.left() - dx_r);									break;
+				case 5:		newRect.setTopRight(m_dragRect.topRight() - QPointF(dx_l, dy_b));			break;
+				case 6:		newRect.setTop(m_dragRect.top() - dy_b);									break;
+				case 7:		newRect.setTopLeft(m_dragRect.topLeft() - QPointF(dx_r, dy_b));				break;
 				}
 			}
 
