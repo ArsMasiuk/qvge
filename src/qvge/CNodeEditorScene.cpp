@@ -472,16 +472,13 @@ void CNodeEditorScene::cancel(const QPointF& /*pos*/)
 	{
 		// cancel current drag operation
 		Super::finishDrag(NULL, m_startDragItem, true);
-
-		// if no creating state: return
-		if (m_state != IS_Creating)
-		{
-			m_state = IS_None;
-			return;
-		}
 	}
 
 	m_state = IS_None;
+
+	// if no creating state: return
+	if (m_connection == NULL)
+		return;
 
 	// kill connector
 	m_connection->setFirstNode(NULL);
@@ -567,6 +564,13 @@ void CNodeEditorScene::setEdgesFactory(CEdge* edgeFactory)
 
 void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+	if (m_cancelled)
+	{
+		// call super
+		Super::mouseReleaseEvent(mouseEvent);
+		return;
+	}
+
 	if (m_editItem)
 	{
 		// call super
@@ -579,6 +583,13 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		// call super
  		Super::mouseReleaseEvent(mouseEvent);
 		return;
+	}
+	else 
+	// cancel on RMB
+	if (mouseEvent->button() == Qt::RightButton)
+	{
+		m_state = IS_Cancelling;
+		m_skipMenuEvent = true;
 	}
 
 	// release local grabber if any

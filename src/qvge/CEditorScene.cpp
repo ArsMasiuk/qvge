@@ -1499,6 +1499,7 @@ void CEditorScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 	// store the last position
 	m_mousePos = mouseEvent->scenePos();
+	m_dragInProgress = mouseEvent->buttons() == Qt::LeftButton;
 
 	if (m_doubleClick)
 	{
@@ -1601,8 +1602,6 @@ void CEditorScene::moveDrag(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem*
 {
 	if (dragItem)
 	{
-		m_dragInProgress = true;
-
 		if (dragItem->flags() & dragItem->ItemIsMovable)
 		{
 			if (performDrag)
@@ -1714,9 +1713,11 @@ void CEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void CEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 	// ignore if cancelled
-	if (m_cancelled && (mouseEvent->button() == Qt::LeftButton))
+	if (m_cancelled)
 	{
-		m_cancelled = false;
+		if (mouseEvent->button() == Qt::LeftButton)
+			m_cancelled = false;
+
 		Super::mouseReleaseEvent(mouseEvent);
 		return;
 	}
