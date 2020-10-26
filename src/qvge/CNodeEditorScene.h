@@ -115,10 +115,7 @@ protected:
 
     // draw
     virtual void drawBackground(QPainter *painter, const QRectF &);
-    virtual void drawItems(QPainter *painter, int numItems,
-                           QGraphicsItem *items[],
-                           const QStyleOptionGraphicsItem options[],
-                           QWidget *widget = Q_NULLPTR);
+
 protected:
 	// edit mode
 	EditMode m_editMode;

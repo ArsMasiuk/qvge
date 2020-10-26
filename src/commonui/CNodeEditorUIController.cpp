@@ -37,15 +37,11 @@ It can be used freely, maintaining the information above.
 #include <qvge/CEdge.h>
 #include <qvge/CImageExport.h>
 #include <qvge/CPDFExport.h>
+#include <qvge/CFileSerializerXGR.h>
 #include <qvge/CNodeEditorScene.h>
 #include <qvge/CNodeSceneActions.h>
 #include <qvge/CEditorSceneDefines.h>
 #include <qvge/CEditorView.h>
-#include <qvge/CFileSerializerGEXF.h>
-#include <qvge/CFileSerializerGraphML.h>
-#include <qvge/CFileSerializerXGR.h>
-#include <qvge/CFileSerializerDOT.h>
-#include <qvge/CFileSerializerCSV.h>
 #include <qvge/ISceneItemFactory.h>
 
 #include <QMenuBar>

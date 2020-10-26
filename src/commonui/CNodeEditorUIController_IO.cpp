@@ -28,6 +28,7 @@ It can be used freely, maintaining the information above.
 #include <qvge/CFileSerializerGraphML.h>
 #include <qvge/CFileSerializerXGR.h>
 #include <qvge/CFileSerializerDOT.h>
+#include <qvge/CFileSerializerPlainDOT.h>
 #include <qvge/CFileSerializerCSV.h>
 #include <qvge/ISceneItemFactory.h>
 
@@ -198,6 +199,11 @@ bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QStrin
 		if (format == "dot" || format == "gv")
 		{
 			return (CFileSerializerDOT().load(fileName, *m_editorScene, lastError));
+		}
+
+		if (format == "plain" || format == "txt")
+		{
+			return (CFileSerializerPlainDOT().load(fileName, *m_editorScene, lastError));
 		}
 
 		if (format == "csv")

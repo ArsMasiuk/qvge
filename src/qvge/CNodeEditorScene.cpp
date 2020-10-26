@@ -1049,44 +1049,6 @@ void CNodeEditorScene::drawBackground(QPainter *painter, const QRectF &r)
 }
 
 
-void CNodeEditorScene::drawItems(QPainter *painter, int numItems, QGraphicsItem *items[],
-                                 const QStyleOptionGraphicsItem options[],
-                                 QWidget *widget)
-{
-    QElapsedTimer tm;
-    tm.start();
-
-    static int maxtime = 0;
-
-    // test only
-//    Super::drawItems(painter, numItems, items, options, widget);
-
-    for (int i = m_nextIndex; i < numItems; ++i)
-    {
-        // Draw the item
-        painter->save();
-        painter->setTransform(items[i]->sceneTransform(), true);
-        items[i]->paint(painter, &options[i], widget);
-        painter->restore();
-
-//        if (tm.elapsed() > 50)
-//        {
-//            m_nextIndex = i+1;
-//            update();
-//            return;
-//        }
-    }
-
-    m_nextIndex = 0;
-
-    if (tm.elapsed() > maxtime)
-    {
-        maxtime = tm.elapsed();
-        qDebug() << tm.elapsed();
-    }
-}
-
-
 
 // selections
 

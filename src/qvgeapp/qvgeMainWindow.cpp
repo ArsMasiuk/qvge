@@ -35,15 +35,16 @@ qvgeMainWindow::qvgeMainWindow()
     QApplication::setApplicationDisplayName(QString("%1 %2 (%3)")
 		.arg(QApplication::applicationName(), QApplication::applicationVersion(), bitString));
 
-	CDocumentFormat xgr = { "XGR binary graph format", "*.xgr",{ "xgr" }, true, true };
+	CDocumentFormat xgr = { "XGR binary graph format", "*.xgr", { "xgr" }, true, true };
 	CDocumentFormat gexf = { "GEXF", "*.gexf", {"gexf"}, true, true };
-	CDocumentFormat graphml = { "GraphML", "*.graphml", {"graphml"}, true, true };
+	CDocumentFormat graphml = { "GraphML", "*.graphml", { "graphml" }, true, true };
     CDocumentFormat gml = { "GML", "*.gml", { "gml" }, false, true };
     CDocumentFormat csv = { "CSV text file", "*.csv", { "csv" }, false, true };
-	CDocumentFormat dot = { "DOT/GraphViz", "*.dot *.gv",{ "dot", "gv" }, true, true };
+	CDocumentFormat dot = { "DOT/GraphViz", "*.dot *.gv", { "dot", "gv" }, true, true };
+	CDocumentFormat dotplain = { "Plain DOT/GraphViz", "*.plain *.txt", { "plain", "txt" }, false, true };
 
     CDocument graph = { tr("Graph Document"), tr("Directed or undirected graph"), "graph", true,
-                        { xgr, gexf, graphml, gml, csv, dot} };
+                        { xgr, gexf, graphml, gml, csv, dot, dotplain } };
     addDocument(graph);
 
     //CDocumentFormat txt = { tr("Plain text file"), "*.txt", { "txt" }, true, true };
