@@ -24,6 +24,8 @@ private:
 		float g_scale = 1.0;
 		float g_x = 1.0;
 		float g_y = 1.0;
+
+		Graph* g = nullptr;
 	};
 
 	bool parseGraph(QString& line, const QVector<QStringRef>& refs, GraphInternal &gi) const;

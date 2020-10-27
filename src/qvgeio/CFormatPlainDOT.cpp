@@ -17,7 +17,7 @@ It can be used freely, maintaining the information above.
 
 // helpers
 
-static QString fromDotShape(const QString& shape)
+static QString fromDotNodeShape(const QString& shape)
 {
 	// rename to conform dot
 	if (shape == "ellipse")		return "disc";
@@ -29,13 +29,22 @@ static QString fromDotShape(const QString& shape)
 }
 
 
-static QString fromDotStyle(const QString& style)
+static void fromDotNodeStyle(const QString& style, GraphAttributes& nodeAttr)
 {
-	// rename to conform dot
-	QStringList sl = style.split(',');
+	if (style.contains("dashed"))
+		nodeAttr["stroke.style"] = "dashed";
+	else
+	if (style.contains("dotted"))
+		nodeAttr["stroke.style"] = "dotted";
 
-	// else take original
-	return style;
+	if (style.contains("invis"))
+		nodeAttr["stroke.size"] = 0;
+	else
+	if (style.contains("solid"))
+		nodeAttr["stroke.size"] = 1;
+	else
+	if (style.contains("bold"))
+		nodeAttr["stroke.size"] = 3;
 }
 
 
@@ -71,6 +80,16 @@ public:
 	QStringRefsConstIterator(const QVector<QStringRef>& refs): m_refs(refs)
 	{
 		m_pos = (m_refs.size()) ? 0 : -1;
+	}
+
+	int pos() const
+	{
+		return m_pos;
+	}
+
+	int restCount() const
+	{
+		return canNext() ? m_refs.count() - m_pos : 0;
 	}
 
 	bool canNext() const
@@ -251,8 +270,8 @@ bool CFormatPlainDOT::parseNode(QString& line, const QVector<QStringRef> &refs, 
 	node.attrs["height"] = height * 72.0 * gi.g_scale;
 
 	node.attrs["label"] = label;
-	node.attrs["shape"] = fromDotShape(shape);
-	//node.attrs["style"] = fromDotStyle(style);	// to do
+	node.attrs["shape"] = fromDotNodeShape(shape);
+	fromDotNodeStyle(style, node.attrs);
 	node.attrs["color"] = fillcolor;
 	node.attrs["stroke.color"] = color;
 
@@ -264,21 +283,23 @@ bool CFormatPlainDOT::parseNode(QString& line, const QVector<QStringRef> &refs, 
 
 bool CFormatPlainDOT::parseEdge(QString& line, const QVector<QStringRef> &refs, GraphInternal &gi) const
 {
-	QTextStream ts(&line);
-	QString dummy; ts >> dummy;
+	QStringRefsConstIterator rit(refs);
+	rit.next();	// skip header
 
 	Edge edge;
-	ts >> edge.startNodeId >> edge.endNodeId;
+	rit.next(edge.startNodeId);
+	rit.next(edge.endNodeId);
 
 	int jointCount = 0;
 	float x, y;
-	ts >> jointCount;
+	rit.next(jointCount);
 	if (jointCount > 0)
 	{
 		QString points;
 		for (int i = 0; i < jointCount; ++i)
 		{
-			ts >> x >> y;
+			rit.next(x);
+			rit.next(y);
 			x = x * 72.0 * gi.g_scale;
 			y = y * 72.0 * gi.g_scale;
 			points += QString("%1 %2 ").arg(x).arg(y);
@@ -287,19 +308,28 @@ bool CFormatPlainDOT::parseEdge(QString& line, const QVector<QStringRef> &refs, 
 	}
 
 
-	int parsedCount = 4 + jointCount * 2;
-	int parsedRest = refs.size() - parsedCount;
-	if (parsedRest > 2)
+	if (rit.restCount() > 2)
 	{
 		QString label;
-		ts >> label >> x >> y;
+		rit.next(label);
+		rit.next(x);
+		rit.next(y);
 		edge.attrs["label"] = label;
 		edge.attrs["label.x"] = x * 72.0 * gi.g_scale;
 		edge.attrs["label.y"] = y * 72.0 * gi.g_scale;
 	}
 
-	edge.attrs["style"] = refs.at(refs.size() - 2).toString();
-	edge.attrs["color"] = refs.at(refs.size() - 1).toString();
+	if (rit.canNext())
+	{
+		QString style; rit.next(style);	
+		edge.attrs["style"] = style;
+	}
+
+	if (rit.canNext())
+	{
+		QString color; rit.next(color);
+		edge.attrs["color"] = color;
+	}
 
 	gi.g->edges << edge;
 

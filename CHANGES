@@ -1,5 +1,8 @@
 QVGE 0.6.1
 -------------------------------------------------------------------------------
+New features/improvements:
+- added import of plain/plain_ext GraphViz format
+
 Bugfixes:
 - fixed item transformation with pressed Shift key
 - fixed disappearing of the cursor when a key was pressed during transformation
