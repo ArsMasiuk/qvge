@@ -20,8 +20,7 @@
 #include <QToolButton>
 
 
-CMainWindow::CMainWindow(QWidget *parent) :
-    QMainWindow(parent),
+CMainWindow::CMainWindow(QWidget *parent) : QMainWindow(parent),
     m_isChanged(false)
 { 
 	qint64 pid = qApp->applicationPid();

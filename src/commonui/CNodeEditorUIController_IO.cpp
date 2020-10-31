@@ -18,6 +18,10 @@ It can be used freely, maintaining the information above.
 #include <ogdf/COGDFLayout.h>
 #endif
 
+#ifdef USE_GVGRAPH
+#include <gvgraph/CGVGraphLayoutUIController.h>
+#endif
+
 #include <qvge/CNode.h>
 #include <qvge/CEdge.h>
 #include <qvge/CImageExport.h>
@@ -198,6 +202,13 @@ bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QStrin
 
 		if (format == "dot" || format == "gv")
 		{
+			// try to load via graphviz
+#ifdef USE_GVGRAPH
+			bool ok = m_gvController->loadGraph(fileName, *m_editorScene, lastError);
+			if (ok)
+				return true;
+			else
+#endif
 			return (CFileSerializerDOT().load(fileName, *m_editorScene, lastError));
 		}
 

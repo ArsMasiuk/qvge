@@ -58,7 +58,7 @@ It can be used freely, maintaining the information above.
 
 
 CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
-    QObject(parent),
+    QObject(nullptr),
     m_parent(parent)
 {
 	// backup timer
@@ -79,7 +79,7 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 
 	connect(m_editorScene, &CEditorScene::sceneDoubleClicked, this, &CNodeEditorUIController::onSceneDoubleClicked);
 
-    CSceneMenuUIController *menuController = new CSceneMenuUIController(this);
+    CSceneMenuUIController *menuController = new CSceneMenuUIController(parent);
     m_editorScene->setContextMenuController(menuController);
 
     // connect view
@@ -98,7 +98,7 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
     m_statusLabel = new QLabel();
     parent->statusBar()->addPermanentWidget(m_statusLabel);
 
-    // update actions
+	// update actions
     onSceneChanged();
     onSelectionChanged();
     onZoomChanged(1);

@@ -16,10 +16,10 @@ BUILD_OGDF{
     ogdf.file = $$PWD/3rdParty/ogdf-2020/ogdf-2020.pro
 }
 
-BUILD_GVGRAPH{
-    SUBDIRS += gvgraph
-    gvgraph.file = $$PWD/3rdParty/gvgraph/gvgraph.pro
-}
+#BUILD_GVGRAPH{
+#    SUBDIRS += gvgraph
+#    gvgraph.file = $$PWD/3rdParty/gvgraph/gvgraph.pro
+#}
 
 SUBDIRS += qtpropertybrowser
 qtpropertybrowser.file = $$PWD/3rdParty/qtpropertybrowser/qtpropertybrowser.pro

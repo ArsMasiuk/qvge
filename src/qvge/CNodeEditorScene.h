@@ -121,18 +121,18 @@ protected:
 	EditMode m_editMode;
 
 	// creating
-	CNode *m_startNode, *m_endNode;
-	CEdge *m_connection;
-	bool m_realStart;
-	CNodePort *m_startNodePort, *m_endNodePort;
+	CNode *m_startNode = nullptr, *m_endNode = nullptr;
+	CEdge *m_connection = nullptr;
+	bool m_realStart = false;
+	CNodePort *m_startNodePort = nullptr, *m_endNodePort = nullptr;
 
 	enum InternState {
 		IS_None, IS_Creating, IS_Finishing, IS_Cancelling
 	};
 	InternState m_state = IS_None;
 
-	CNode *m_nodesFactory = 0;
-	CEdge *m_edgesFactory = 0;
+	CNode *m_nodesFactory = nullptr;
+	CEdge *m_edgesFactory = nullptr;
 
     // cached selections
     mutable QList<CNode*> m_selNodes;

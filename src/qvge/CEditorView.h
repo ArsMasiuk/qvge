@@ -28,9 +28,6 @@ public:
 	CEditorView(QWidget *parent = NULL);
 	virtual ~CEditorView();
 
-	// actions
-	QAction *pasteAction;
-
 	// zoom
 	double getZoom() const { return m_currentZoom; }
 	// target is % value to zoom to (1.0 = 100% = reset zoom, 0.25 = 25% = 1/4 etc.)

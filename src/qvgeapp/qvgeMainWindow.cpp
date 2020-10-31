@@ -23,7 +23,7 @@ It can be used freely, maintaining the information above.
 #include <commonui/CNodeEditorUIController.h>
 
 
-qvgeMainWindow::qvgeMainWindow()
+qvgeMainWindow::qvgeMainWindow(QWidget *parent): CMainWindow(parent)
 {
     QString bitString;
 	int bits = CPlatformServices::GetPlatformBits();
@@ -53,6 +53,13 @@ qvgeMainWindow::qvgeMainWindow()
 
 	// default files associations
 	updateFileAssociations();
+}
+
+
+qvgeMainWindow::~qvgeMainWindow()
+{
+	// causes crash here
+	//destroyDocument();
 }
 
 

@@ -26,9 +26,9 @@ USE_OGDF{
 }
 
 USE_GVGRAPH{
-    #INCLUDEPATH += $$GRAPHVIZ_INCLUDE_PATH
+    DEFINES += USE_GVGRAPH
 
-	include($$PWD/../3rdParty/gvgraph/gvgraph.pri)
+    INCLUDEPATH += $$PWD/gvgraph
 
     SOURCES += $$files($$PWD/gvgraph/*.cpp)
     HEADERS += $$files($$PWD/gvgraph/*.h)

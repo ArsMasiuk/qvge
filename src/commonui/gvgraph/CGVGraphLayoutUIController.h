@@ -13,6 +13,9 @@ class CGVGraphLayoutUIController : public QObject
 public:
     explicit CGVGraphLayoutUIController(CMainWindow *parent, CNodeEditorScene *scene);
 
+	// file IO (think: to move?)
+	bool loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError = nullptr);
+
 private Q_SLOTS:
     void doDotLayout();
 

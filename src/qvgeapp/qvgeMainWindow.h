@@ -19,7 +19,7 @@ It can be used freely, maintaining the information above.
 class CNodeEditorUIController;
 
 
-class qvgeMainWindow : public CMainWindow
+class qvgeMainWindow : virtual public CMainWindow
 {
     Q_OBJECT
 
@@ -28,7 +28,8 @@ public:
 
     friend class CNodeEditorUIController;
 
-    qvgeMainWindow();
+	qvgeMainWindow(QWidget *parent = nullptr);
+	virtual ~qvgeMainWindow();
 
     virtual void init(const QStringList& args);
 
@@ -49,9 +50,9 @@ protected:
 private:
 	void updateFileAssociations();
 
-    CNodeEditorUIController *m_graphEditController = NULL;
+    CNodeEditorUIController *m_graphEditController = nullptr;
 
-    QPlainTextEdit *m_textEditor = NULL;
+    QPlainTextEdit *m_textEditor = nullptr;
 
 	bool m_portable = false;
 };

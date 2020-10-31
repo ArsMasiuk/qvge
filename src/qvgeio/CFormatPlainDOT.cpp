@@ -191,7 +191,6 @@ bool CFormatPlainDOT::load(const QString& fileName, Graph& g, QString* lastError
 		if (line.isEmpty())
 			continue;
 
-		//auto refs = line.splitRef(" ", QString::SkipEmptyParts);
 		auto refs = tokenize(line);
 		if (refs.first() == "stop")
 			break;

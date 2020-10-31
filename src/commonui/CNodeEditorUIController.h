@@ -113,17 +113,17 @@ private:
 	void editNodePort(CNodePort &port);
 
 private:
-    CMainWindow *m_parent;
-	CNodeEditorScene *m_editorScene;
-	CEditorView *m_editorView;
+    CMainWindow *m_parent = nullptr;
+	CNodeEditorScene *m_editorScene = nullptr;
+	CEditorView *m_editorView = nullptr;
 
-    class QSint::Slider2d *m_sliderView;
+    class QSint::Slider2d *m_sliderView = nullptr;
 
-    QLabel *m_statusLabel;
+    QLabel *m_statusLabel = nullptr;
 
-	QMenu *m_viewMenu;
+	QMenu *m_viewMenu = nullptr;
 
-	QAction *findAction;
+	QAction *findAction = nullptr;
 
 	QActionGroup *m_editModesGroup;
 	QAction *modeDefaultAction;
