@@ -55,11 +55,9 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsDat
 
 #ifdef USE_GVGRAPH
 	ui->ExtraSection->setVisible(true);
-	ui->GraphvizPath->setObjectsToPick(QSint::PathPicker::PF_EXISTING_FILE);
-#ifdef Q_OS_WIN32
-	ui->GraphvizPath->setFilters("*.exe");
-#endif
-	ui->GraphvizPath->setCurrentPath(data.pathToGraphviz);
+	ui->GraphvizPath->setObjectsToPick(QSint::PathPicker::PF_EXISTING_DIR);
+	ui->GraphvizPath->setCurrentPath(data.graphvizPath);
+	ui->GraphvizDefaultEngine->setCurrentText(data.graphvizDefaultEngine);
 #else
 	ui->ExtraSection->setVisible(false);
 #endif
@@ -87,7 +85,8 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsDat
 	data.backupPeriod = ui->EnableBackups->isChecked() ? ui->BackupPeriod->value() : 0;
 
 #ifdef USE_GVGRAPH
-	data.pathToGraphviz = ui->GraphvizPath->currentPath();
+	data.graphvizPath = ui->GraphvizPath->currentPath();
+	data.graphvizDefaultEngine = ui->GraphvizDefaultEngine->currentText();
 #endif
 
 	return QDialog::Accepted;

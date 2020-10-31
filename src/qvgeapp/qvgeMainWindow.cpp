@@ -97,7 +97,10 @@ bool qvgeMainWindow::createDocument(const QByteArray &docType)
     if (docType == "graph")
     {
 		if (m_graphEditController == nullptr)
+		{
 			m_graphEditController = new CNodeEditorUIController(this);
+			m_graphEditController->doReadSettings(getApplicationSettings());
+		}
 
         return true;
     }

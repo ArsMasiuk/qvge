@@ -90,5 +90,6 @@ struct Graph
 
 	// methods
 	void clear();
+	int findNodeIndex(const QString &id) const;
 };
 

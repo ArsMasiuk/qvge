@@ -14,12 +14,18 @@ public:
     explicit CGVGraphLayoutUIController(CMainWindow *parent, CNodeEditorScene *scene);
 
 	void setPathToGraphviz(const QString &pathToGraphviz);
+	void setDefaultEngine(const QString &engine);
 
 	// file IO (think: to move?)
 	bool loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError = nullptr);
 
 private Q_SLOTS:
-    void doDotLayout();
+	void doDotLayout()		{ doLayout("dot", *m_scene); }
+	void doNeatoLayout()	{ doLayout("neato", *m_scene); }
+	void doFDPLayout()		{ doLayout("fpd", *m_scene); }
+	void doSFDPLayout()		{ doLayout("sfpd", *m_scene); }
+	void doTwopiLayout()	{ doLayout("twopi", *m_scene); }
+	void doCircularLayout() { doLayout("circo", *m_scene); }
 
 private:
 	bool doLayout(const QString &engine, CNodeEditorScene &scene);
@@ -28,4 +34,5 @@ private:
     CNodeEditorScene *m_scene = nullptr;
 
 	QString m_pathToGraphviz;
+	QString m_defaultEngine;
 };
