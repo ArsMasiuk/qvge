@@ -3,6 +3,7 @@ QVGE 0.6.1
 New features/improvements:
 - added import of plain/plain_ext GraphViz format
 - added import of dot files via GraphViz engine (#116)
+- added layout via GraphViz engine (#118)
 
 Bugfixes:
 - fixed item transformation with pressed Shift key

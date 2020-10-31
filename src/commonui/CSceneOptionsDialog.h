@@ -25,7 +25,9 @@ struct OptionsData
 {
 	int backupPeriod = 10;
 
-	QString pathToGraphviz;
+	QString graphvizPath;
+	//QStringList graphvizEngines;
+	QString graphvizDefaultEngine;
 };
 
 

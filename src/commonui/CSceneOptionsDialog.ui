@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>455</height>
+    <width>423</width>
+    <height>475</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
        <widget class="QLabel" name="label_4">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -86,7 +86,7 @@
        <widget class="QLabel" name="label">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -132,7 +132,7 @@
        <widget class="QLabel" name="label_3">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -199,7 +199,7 @@
        <widget class="QLabel" name="label_5">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -231,7 +231,7 @@
        <widget class="QLabel" name="label_6">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -314,7 +314,7 @@
        <widget class="QLabel" name="label_8">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -340,22 +340,72 @@
      <property name="flat">
       <bool>true</bool>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="1">
+       <widget class="QSint::PathPicker" name="GraphvizPath"/>
+      </item>
+      <item row="0" column="0">
        <widget class="QLabel" name="label_9">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
         <property name="text">
-         <string>GraphViz DOT executable</string>
+         <string>Path to GraphViz binaries</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QSint::PathPicker" name="GraphvizPath"/>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Default layout engine</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="GraphvizDefaultEngine">
+        <property name="editable">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>dot</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>neato</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>fdp</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sfdp</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>twopi</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>circo</string>
+         </property>
+        </item>
+       </widget>
       </item>
      </layout>
     </widget>

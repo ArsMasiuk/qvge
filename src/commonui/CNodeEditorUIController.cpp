@@ -120,13 +120,14 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 	m_gvController = new CGVGraphLayoutUIController(parent, m_editorScene);
 
 #ifdef Q_OS_WIN32
-	QString dotPath = QCoreApplication::applicationDirPath() + "/../tools/graphviz/dot.exe";
-	m_optionsData.pathToGraphviz = QFileInfo(dotPath).absoluteFilePath();
+	QString pathToGraphviz = QCoreApplication::applicationDirPath() + "/../tools/graphviz";
+	m_optionsData.graphvizPath = QFileInfo(pathToGraphviz).absoluteFilePath();
 #else
-	m_optionsData.pathToGraphviz = "dot";
+	m_optionsData.graphvizPath = "";
 #endif
+	m_gvController->setPathToGraphviz(m_optionsData.graphvizPath);
 
-	m_gvController->setPathToGraphviz(m_optionsData.pathToGraphviz);
+	m_optionsData.graphvizDefaultEngine = "dot";
 #endif
 
     // workaround for full screen
@@ -664,7 +665,11 @@ void CNodeEditorUIController::doReadSettings(QSettings& settings)
 	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
 
 	m_optionsData.backupPeriod = settings.value("backupPeriod", m_optionsData.backupPeriod).toInt();
-	m_optionsData.pathToGraphviz = settings.value("pathToGraphviz", m_optionsData.pathToGraphviz).toString();
+
+	settings.beginGroup("GraphViz");
+	m_optionsData.graphvizPath = settings.value("path", m_optionsData.graphvizPath).toString();
+	m_optionsData.graphvizDefaultEngine = settings.value("defaultEngine", m_optionsData.graphvizDefaultEngine).toString();
+	settings.endGroup();
 
 	updateSceneOptions();
 
@@ -696,7 +701,12 @@ void CNodeEditorUIController::doWriteSettings(QSettings& settings)
 
 	settings.setValue("backupPeriod", m_optionsData.backupPeriod);
 
-	settings.setValue("pathToGraphviz", m_optionsData.pathToGraphviz);
+
+	// Graphviz
+	settings.beginGroup("GraphViz");
+	settings.setValue("path", m_optionsData.graphvizPath);
+	settings.setValue("defaultEngine", m_optionsData.graphvizDefaultEngine);
+	settings.endGroup();
 
 
 	// IO
@@ -809,7 +819,10 @@ void CNodeEditorUIController::sceneOptions()
 void CNodeEditorUIController::updateSceneOptions()
 {
 	if (m_gvController)
-		m_gvController->setPathToGraphviz(m_optionsData.pathToGraphviz);
+	{
+		m_gvController->setPathToGraphviz(m_optionsData.graphvizPath);
+		m_gvController->setDefaultEngine(m_optionsData.graphvizDefaultEngine);
+	}
 
 	if (m_optionsData.backupPeriod > 0) 
 	{
