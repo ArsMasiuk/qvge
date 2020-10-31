@@ -24,6 +24,8 @@ class CSceneOptionsDialog;
 struct OptionsData
 {
 	int backupPeriod = 10;
+
+	QString pathToGraphviz;
 };
 
 

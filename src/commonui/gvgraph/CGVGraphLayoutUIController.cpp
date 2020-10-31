@@ -33,12 +33,18 @@ CGVGraphLayoutUIController::CGVGraphLayoutUIController(CMainWindow *parent, CNod
 }
 
 
+void CGVGraphLayoutUIController::setPathToGraphviz(const QString &pathToGraphviz)
+{
+	m_pathToGraphviz = pathToGraphviz;
+}
+
+
 bool CGVGraphLayoutUIController::loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError /*= nullptr*/)
 {
 	// run dot to convert filename.dot -> filename.temp.plain	
-	QString pathToDotDir = QCoreApplication::applicationDirPath() + "/../tools/graphviz";
-	pathToDotDir = QFileInfo(pathToDotDir).canonicalFilePath();
-	QString pathToDot = pathToDotDir + "/dot.exe";
+	//QString pathToDotDir = QCoreApplication::applicationDirPath() + "/../tools/graphviz";
+	//pathToDotDir = QFileInfo(pathToDotDir).canonicalFilePath();
+	//QString pathToDot = pathToDotDir + "/dot.exe";
 
 	QTemporaryFile tempFile(QDir::tempPath() + "/qvge-XXXXXX.plain");
 	if (!tempFile.open())
@@ -47,10 +53,10 @@ bool CGVGraphLayoutUIController::loadGraph(const QString &filename, CNodeEditorS
 		return false;
 	}
 
-	QString cmd = QString("%1 -Tplain-ext \"%2\" -o\"%3\"").arg(pathToDot).arg(filename).arg(tempFile.fileName());
+	QString cmd = QString("\"%1\" -Tplain-ext \"%2\" -o\"%3\"").arg(m_pathToGraphviz).arg(filename).arg(tempFile.fileName());
 
 	QProcess process;
-	process.setWorkingDirectory(pathToDotDir);
+	process.setWorkingDirectory(m_pathToGraphviz);
 	int res = QProcess::execute(cmd);
 	if (res == 0)
 	{

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>451</height>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="SceneSection">
      <property name="title">
       <string>Scene</string>
      </property>
@@ -71,7 +71,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="GridSection">
      <property name="title">
       <string>Grid</string>
      </property>
@@ -187,7 +187,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
+    <widget class="QGroupBox" name="PerformanceSection">
      <property name="title">
       <string>Performance</string>
      </property>
@@ -266,7 +266,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_4">
+    <widget class="QGroupBox" name="DataSection">
      <property name="title">
       <string>Data security</string>
      </property>
@@ -333,6 +333,34 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="ExtraSection">
+     <property name="title">
+      <string>Extra tools</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>GraphViz DOT executable</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSint::PathPicker" name="GraphvizPath"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -368,12 +396,17 @@
   <customwidget>
    <class>QSint::ColorButton</class>
    <extends>QToolButton</extends>
-   <header>colorbutton.h</header>
+   <header location="global">colorbutton.h</header>
   </customwidget>
   <customwidget>
    <class>QSint::SpinSlider</class>
    <extends>QSlider</extends>
    <header location="global">spinslider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QSint::PathPicker</class>
+   <extends>QLineEdit</extends>
+   <header location="global">pathpicker.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

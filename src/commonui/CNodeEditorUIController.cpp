@@ -118,6 +118,15 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 
 #ifdef USE_GVGRAPH
 	m_gvController = new CGVGraphLayoutUIController(parent, m_editorScene);
+
+#ifdef Q_OS_WIN32
+	QString dotPath = QCoreApplication::applicationDirPath() + "/../tools/graphviz/dot.exe";
+	m_optionsData.pathToGraphviz = QFileInfo(dotPath).absoluteFilePath();
+#else
+	m_optionsData.pathToGraphviz = "dot";
+#endif
+
+	m_gvController->setPathToGraphviz(m_optionsData.pathToGraphviz);
 #endif
 
     // workaround for full screen
@@ -655,6 +664,7 @@ void CNodeEditorUIController::doReadSettings(QSettings& settings)
 	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
 
 	m_optionsData.backupPeriod = settings.value("backupPeriod", m_optionsData.backupPeriod).toInt();
+	m_optionsData.pathToGraphviz = settings.value("pathToGraphviz", m_optionsData.pathToGraphviz).toString();
 
 	updateSceneOptions();
 
@@ -685,6 +695,8 @@ void CNodeEditorUIController::doWriteSettings(QSettings& settings)
 	settings.setValue("lastExportPath", m_lastExportPath);
 
 	settings.setValue("backupPeriod", m_optionsData.backupPeriod);
+
+	settings.setValue("pathToGraphviz", m_optionsData.pathToGraphviz);
 
 
 	// IO
@@ -796,6 +808,9 @@ void CNodeEditorUIController::sceneOptions()
 
 void CNodeEditorUIController::updateSceneOptions()
 {
+	if (m_gvController)
+		m_gvController->setPathToGraphviz(m_optionsData.pathToGraphviz);
+
 	if (m_optionsData.backupPeriod > 0) 
 	{
 		m_backupTimer.setInterval(m_optionsData.backupPeriod * 60000);

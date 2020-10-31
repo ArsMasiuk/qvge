@@ -53,6 +53,17 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsDat
 	ui->EnableBackups->setChecked(data.backupPeriod > 0);
 	ui->BackupPeriod->setValue(data.backupPeriod);
 
+#ifdef USE_GVGRAPH
+	ui->ExtraSection->setVisible(true);
+	ui->GraphvizPath->setObjectsToPick(QSint::PathPicker::PF_EXISTING_FILE);
+#ifdef Q_OS_WIN32
+	ui->GraphvizPath->setFilters("*.exe");
+#endif
+	ui->GraphvizPath->setCurrentPath(data.pathToGraphviz);
+#else
+	ui->ExtraSection->setVisible(false);
+#endif
+
 
 	if (QDialog::exec() == QDialog::Rejected)
 		return QDialog::Rejected;
@@ -74,6 +85,10 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsDat
 	QPixmapCache::setCacheLimit(ui->CacheSlider->value() * 1024);
 
 	data.backupPeriod = ui->EnableBackups->isChecked() ? ui->BackupPeriod->value() : 0;
+
+#ifdef USE_GVGRAPH
+	data.pathToGraphviz = ui->GraphvizPath->currentPath();
+#endif
 
 	return QDialog::Accepted;
 }
