@@ -30,7 +30,7 @@ private Q_SLOTS:
 
 private:
 	Ui::CStartPage ui;
-	CMainWindow *m_parent;
+	CMainWindow *m_parent = nullptr;
 
 	QMap<int, QWidget*> m_buttons;
 };

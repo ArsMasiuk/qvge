@@ -19,6 +19,10 @@ public:
 	// file IO (think: to move?)
 	bool loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError = nullptr);
 
+Q_SIGNALS:
+	void loadFinished();
+	void layoutFinished();
+
 private Q_SLOTS:
 	void doDotLayout()		{ doLayout("dot", *m_scene); }
 	void doNeatoLayout()	{ doLayout("neato", *m_scene); }

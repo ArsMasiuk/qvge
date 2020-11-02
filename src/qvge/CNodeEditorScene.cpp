@@ -19,7 +19,8 @@
 #include <QElapsedTimer>
 
 
-CNodeEditorScene::CNodeEditorScene(QObject *parent) : Super(parent),
+CNodeEditorScene::CNodeEditorScene(QObject *parent) : 
+	Super(parent),
 	m_editMode(EM_Default),
 	m_startNode(NULL),
 	m_endNode(NULL),

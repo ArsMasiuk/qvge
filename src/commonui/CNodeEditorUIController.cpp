@@ -61,9 +61,6 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
     QObject(nullptr),
     m_parent(parent)
 {
-	// backup timer
-	connect(&m_backupTimer, &QTimer::timeout, this, &CNodeEditorUIController::doBackup);
-
     // create document
     m_editorScene = new CNodeEditorScene(parent);
     m_editorView = new CEditorView(m_editorScene, parent);
@@ -79,7 +76,7 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 
 	connect(m_editorScene, &CEditorScene::sceneDoubleClicked, this, &CNodeEditorUIController::onSceneDoubleClicked);
 
-    CSceneMenuUIController *menuController = new CSceneMenuUIController(parent);
+    CSceneMenuUIController *menuController = new CSceneMenuUIController(this);
     m_editorScene->setContextMenuController(menuController);
 
     // connect view
@@ -118,6 +115,7 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 
 #ifdef USE_GVGRAPH
 	m_gvController = new CGVGraphLayoutUIController(parent, m_editorScene);
+	connect(m_gvController, SIGNAL(layoutFinished()), this, SLOT(onLayoutFinished()));
 
 #ifdef Q_OS_WIN32
 	QString pathToGraphviz = QCoreApplication::applicationDirPath() + "/../tools/graphviz";
@@ -141,6 +139,9 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 
 	// default scene settings
 	readDefaultSceneSettings();
+
+	// backup timer
+	connect(&m_backupTimer, &QTimer::timeout, this, &CNodeEditorUIController::doBackup);
 }
 
 
@@ -653,14 +654,14 @@ QSettings& CNodeEditorUIController::getApplicationSettings() const
 void CNodeEditorUIController::doReadSettings(QSettings& settings)
 {
 	// options
+	int cacheRam = QPixmapCache::cacheLimit();
+	cacheRam = settings.value("cacheRam", cacheRam).toInt();
+	QPixmapCache::setCacheLimit(cacheRam);
+
 	bool isAA = m_editorView->renderHints().testFlag(QPainter::Antialiasing);
 	isAA = settings.value("antialiasing", isAA).toBool();
 	m_editorView->setRenderHint(QPainter::Antialiasing, isAA);
 	m_editorScene->setFontAntialiased(isAA);
-
-	int cacheRam = QPixmapCache::cacheLimit();
-	cacheRam = settings.value("cacheRam", cacheRam).toInt();
-	QPixmapCache::setCacheLimit(cacheRam);
 
 	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
 
@@ -818,11 +819,13 @@ void CNodeEditorUIController::sceneOptions()
 
 void CNodeEditorUIController::updateSceneOptions()
 {
+#ifdef USE_GVGRAPH
 	if (m_gvController)
 	{
 		m_gvController->setPathToGraphviz(m_optionsData.graphvizPath);
 		m_gvController->setDefaultEngine(m_optionsData.graphvizDefaultEngine);
 	}
+#endif
 
 	if (m_optionsData.backupPeriod > 0) 
 	{
@@ -856,6 +859,12 @@ void CNodeEditorUIController::updateFromActions()
 		m_editorScene->setClassAttributeVisible(class_node, attr_id, m_actionShowNodeIds->isChecked());
 		m_editorScene->setClassAttributeVisible(class_edge, attr_id, m_actionShowEdgeIds->isChecked());
 	}
+}
+
+
+void CNodeEditorUIController::onLayoutFinished()
+{
+	m_editorView->fitToView();
 }
 
 

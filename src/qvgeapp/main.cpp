@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 //	a.setStyle("windows");
 
 	qvgeMainWindow w;
-	w.init(QCoreApplication::arguments());
+	w.init(a.arguments());
 
 	return a.exec();
 }

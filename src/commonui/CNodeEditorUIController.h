@@ -97,6 +97,8 @@ private Q_SLOTS:
 
 	void find();
 
+	void onLayoutFinished();
+
 private:
 	void createMenus();
 	void createPanels();

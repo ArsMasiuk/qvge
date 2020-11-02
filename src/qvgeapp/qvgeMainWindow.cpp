@@ -23,7 +23,8 @@ It can be used freely, maintaining the information above.
 #include <commonui/CNodeEditorUIController.h>
 
 
-qvgeMainWindow::qvgeMainWindow(QWidget *parent): CMainWindow(parent)
+qvgeMainWindow::qvgeMainWindow(QWidget *parent): 
+	Super(parent)
 {
     QString bitString;
 	int bits = CPlatformServices::GetPlatformBits();

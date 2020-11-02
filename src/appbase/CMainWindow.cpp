@@ -20,14 +20,15 @@
 #include <QToolButton>
 
 
-CMainWindow::CMainWindow(QWidget *parent) : QMainWindow(parent),
+CMainWindow::CMainWindow(QWidget *parent) :
+    QMainWindow(parent),
     m_isChanged(false)
 { 
 	qint64 pid = qApp->applicationPid();
 	m_stringPID = QString::number(pid);
 
-	QApplication::setOrganizationName("home");
-	QApplication::setApplicationName("application");
+	qApp->setOrganizationName("home");
+	qApp->setApplicationName("application");
 
 	setAcceptDrops(true);
 
@@ -949,8 +950,11 @@ QString CMainWindow::getAboutText() const
 
 QSettings& CMainWindow::getApplicationSettings() const
 {
-	static QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-	return settings;
+	//static QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+	//return settings;
+
+	static QSettings* settings = new QSettings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+	return *settings;
 }
 
 
@@ -1001,7 +1005,6 @@ void CMainWindow::doReadSettings(QSettings& settings)
     }
 	else
 		showNormal();
-
 
 	// path
 	m_lastPath = settings.value("lastPath").toString();

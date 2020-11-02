@@ -12,7 +12,7 @@ namespace QSint
 
 
 ColorGrid::ColorGrid(QWidget *parent) : QWidget(parent),
-    m_cellSize(12),
+    m_cellSize(16),
     m_widthInCells(32),
     m_autoSize(false),
     m_row(-1), m_col(-1), m_idx(-1),

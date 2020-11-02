@@ -40,7 +40,8 @@ const quint64 version64 = 12;	// build
 const char* versionId = "VersionId";
 
 
-CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent), 
+CEditorScene::CEditorScene(QObject *parent): 
+	Super(parent),
     m_doubleClick(false),
 	m_dragInProgress(false),
     m_startDragItem(NULL),
@@ -69,7 +70,7 @@ CEditorScene::CEditorScene(QObject *parent): QGraphicsScene(parent),
     
 	setMinimumRenderSize(5);
 
-	QPixmapCache::setCacheLimit(200000);
+	QPixmapCache::setCacheLimit(100000);
 
 	// connections
 	connect(this, &CEditorScene::selectionChanged, this, &CEditorScene::onSelectionChanged, Qt::DirectConnection);

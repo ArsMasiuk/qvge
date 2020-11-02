@@ -5,7 +5,7 @@
 #
 # It can be used freely, maintaining the information above.
 
-CONFIG += BUILD_OGDF
+#CONFIG += BUILD_OGDF
 #CONFIG += USE_LOCAL_OGDF
 #CONFIG += USE_EXTERNAL_OGDF
 
@@ -23,7 +23,7 @@ USE_LOCAL_OGDF{
 	
 	# locally build OGDF
 	OGDF_LIB_NAME = ogdf-2020
-	OGDF_LIB_PATH = .
+        OGDF_LIB_PATH = .
 	OGDF_INCLUDE_PATH = $$PWD/3rdParty/ogdf-2020/include
 }
 

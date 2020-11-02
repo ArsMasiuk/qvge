@@ -19,7 +19,7 @@ It can be used freely, maintaining the information above.
 class CNodeEditorUIController;
 
 
-class qvgeMainWindow : virtual public CMainWindow
+class qvgeMainWindow : public CMainWindow
 {
     Q_OBJECT
 

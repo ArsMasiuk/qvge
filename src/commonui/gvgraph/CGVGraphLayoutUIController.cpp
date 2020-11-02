@@ -72,7 +72,10 @@ bool CGVGraphLayoutUIController::loadGraph(const QString &filename, CNodeEditorS
 	if (res == 0)
 	{
 		// import generated plain text
-		return CFileSerializerPlainDOT().load(tempFile.fileName(), scene, lastError);
+		bool ok = CFileSerializerPlainDOT().load(tempFile.fileName(), scene, lastError);
+		if (ok)
+			Q_EMIT loadFinished();
+		return ok;
 	}
 
 	if (lastError)
@@ -151,6 +154,8 @@ bool CGVGraphLayoutUIController::doLayout(const QString &engine, CNodeEditorScen
 	}
 
 	scene.addUndoState();
+
+	Q_EMIT layoutFinished();
 
 	return true;
 }

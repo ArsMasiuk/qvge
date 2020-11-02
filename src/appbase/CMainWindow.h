@@ -35,7 +35,7 @@ class CMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    CMainWindow(QWidget *parent = nullptr);
+    explicit CMainWindow(QWidget *parent = nullptr);
     virtual ~CMainWindow();
 
     virtual void init(const QStringList& args);
