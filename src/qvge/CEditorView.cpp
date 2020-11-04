@@ -336,6 +336,11 @@ void CEditorView::mouseReleaseEvent(QMouseEvent *e)
 	Super::mouseReleaseEvent(e);
 }
 
+void CEditorView::contextMenuEvent(QContextMenuEvent *e)
+{
+	Super::contextMenuEvent(e);
+}
+
 #endif
 
 
