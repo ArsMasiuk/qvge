@@ -51,11 +51,13 @@ Thank you!
 
 ### Some users' feedback
 
->"Qt Visual Graph Editor is a fairly straightforward, open-source tool that enables users to design relatively simple graphs for their projects. It comes with a decent set of features and is very intuitive."
+> "This graph editor is very promising for every day modeling." 
 
->"It seems to me that my development have become more efficient after when I began using QVGE. This is much more useful than UML, because that I don't have to change sheets and to remember several usages and I can draw graphs swiftly."
+> "Qt Visual Graph Editor is a fairly straightforward, open-source tool that enables users to design relatively simple graphs for their projects. It comes with a decent set of features and is very intuitive."
 
->"Lightweight, multi-platform graph editor that allows users to edit two-dimensional graphs in a quick and intuitive way, as an alternative to more complex software."
+> "It seems to me that my development have become more efficient after when I began using QVGE. This is much more useful than UML, because that I don't have to change sheets and to remember several usages and I can draw graphs swiftly."
+
+> "Lightweight, multi-platform graph editor that allows users to edit two-dimensional graphs in a quick and intuitive way, as an alternative to more complex software."
 
 > "Its user experience is very good. It's because how to operate is sophisticated so intuitive and very simple. A user can entirely concentrate on essence of content the whole time. Because of simpleness, the content is not noisy and easy to understand, and usable much generally to design, refactor and output a structure such as a organization, a software, logic, routes and all other relationships without learning usage separately."
 
@@ -95,6 +97,8 @@ jom
 ~~~
 
 ### Enabling OGDF
+
+#### WARNING: bundled OGDF support will be removed since QVGE 0.6.1 due to memory access issues
 
 In order to build **QVGE** with OGDF support (shipped with QVGE together):
 before running qmake, open the file `src/config.pri` and make sure that one of the following options present:
