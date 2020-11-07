@@ -22,13 +22,16 @@ else{
 
 LIBS += -lcommonui -lqvge -lqvgeio -lqtpropertybrowser -lqsint-widgets
 
-USE_LOCAL_OGDF{
-    LIBS += -logdf-2020
+
+USE_OGDF{
+        LIBS += -L$$OGDF_LIB_PATH -l$$OGDF_LIB_NAME
+	INCLUDEPATH += $$OGDF_INCLUDE_PATH
 }
 
-USE_EXTERNAL_OGDF{
-	LIBS += -l$$OGDF_LIB_NAME -L$$OGDF_LIB_PATH
-	INCLUDEPATH += $$OGDF_INCLUDE_PATH
+
+USE_BOOST{
+        LIBS += -L$$BOOST_LIB_PATH -l$$BOOST_LIB_NAME
+        INCLUDEPATH += $$BOOST_INCLUDE_PATH
 }
 
 
@@ -36,9 +39,10 @@ win32{
     LIBS += -lopengl32 -lglu32 -lshell32 -luser32 -lpsapi
 }
 
+
 unix{
     !haiku{
-		QT += x11extras
+        QT += x11extras
         LIBS += -lX11
     }
 }

@@ -1,5 +1,0 @@
-graph firstname secondname {
-	a -- b -- c;
-	b -- d;
-}
-

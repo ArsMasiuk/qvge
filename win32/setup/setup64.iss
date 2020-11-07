@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Qt Visual Graph Editor"
-#define MyAppVersion "0.6 (64 bit)"
+#define MyAppVersion "0.6.1 (64 bit)"
 #define MyAppPublisher "Ars L. Masiuk"
 #define MyAppURL "https://sourceforge.net/projects/qvge"
 #define MyAppExeName "qvgeapp.exe"
@@ -19,15 +19,17 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\QVGE
-DefaultGroupName={#MyAppName}
+DefaultGroupName={#MyAppName} {#MyAppVersion}
 AllowNoIcons=yes
-LicenseFile=..\LICENSE
-OutputDir=..\..\..\_releases\win32
-OutputBaseFilename=qvge-0.6-setup-64bit
-SetupIconFile=..\icon.ico
+LicenseFile=..\..\LICENSE
+SetupIconFile=icon.ico
 Compression=lzma
 SolidCompression=yes
+
+ArchitecturesInstallIn64BitMode=x64
+OutputDir=..\..\..\..\_releases\win32
+OutputBaseFilename=qvge-0.6.1-setup-64bit
+DefaultDirName={pf}\QVGE
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -40,14 +42,16 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "bin64\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;Source: "vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 
-Source: "..\LICENSE"; DestDir: "{app}"
-Source: "..\CHANGES"; DestDir: "{app}"
-Source: "..\..\..\repo\qvge\README.md"; DestDir: "{app}"
-Source: "..\..\..\repo\qvge\examples\*"; DestDir: "{app}\examples"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\LICENSE"; DestDir: "{app}"
+Source: "..\..\CHANGES"; DestDir: "{app}"
+Source: "..\..\README.md"; DestDir: "{app}"
+Source: "..\..\examples\*"; DestDir: "{app}\examples"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\3rdParty\tools\*"; DestDir: "{app}\tools"; Flags: ignoreversion recursesubdirs createallsubdirs
+
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\bin\{#MyAppExeName}"

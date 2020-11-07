@@ -57,14 +57,15 @@ void COGDFLayoutUIController::doPlanarLayout()
 {
     ogdf::PlanarizationLayout layout;
     COGDFLayout::doLayout(layout, *m_scene);
+    Q_EMIT layoutFinished();
 }
 
 
 void COGDFLayoutUIController::doLinearLayout()
 {
     ogdf::LinearLayout layout;
-	//layout.setCustomOrder(true);
     COGDFLayout::doLayout(layout, *m_scene);
+    Q_EMIT layoutFinished();
 }
 
 
@@ -72,6 +73,7 @@ void COGDFLayoutUIController::doBalloonLayout()
 {
     ogdf::BalloonLayout layout;
     COGDFLayout::doLayout(layout, *m_scene);
+    Q_EMIT layoutFinished();
 }
 
 
@@ -79,6 +81,7 @@ void COGDFLayoutUIController::doCircularLayout()
 {
     ogdf::CircularLayout layout;
     COGDFLayout::doLayout(layout, *m_scene);
+    Q_EMIT layoutFinished();
 }
 
 
@@ -86,6 +89,7 @@ void COGDFLayoutUIController::doFMMMLayout()
 {
 	ogdf::FMMMLayout layout;
     COGDFLayout::doLayout(layout, *m_scene);
+    Q_EMIT layoutFinished();
 }
 
 
@@ -93,6 +97,7 @@ void COGDFLayoutUIController::doTreeLayout()
 {
 	ogdf::RadialTreeLayout layout;	// crashing
 	COGDFLayout::doLayout(layout, *m_scene);
+    Q_EMIT layoutFinished();
 }
 
 
@@ -102,6 +107,7 @@ void COGDFLayoutUIController::doDHLayout()
 	//layout.setSpeed(ogdf::DavidsonHarelLayout::SpeedParameter::Fast);
 	//layout.fixSettings(ogdf::DavidsonHarelLayout::SettingsParameter::Repulse);
 	COGDFLayout::doLayout(layout, *m_scene);
+    Q_EMIT layoutFinished();
 }
 
 
@@ -109,4 +115,5 @@ void COGDFLayoutUIController::doSugiyamaLayout()
 {
 	ogdf::SugiyamaLayout layout;
 	COGDFLayout::doLayout(layout, *m_scene);
+    Q_EMIT layoutFinished();
 }

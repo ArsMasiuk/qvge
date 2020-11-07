@@ -111,8 +111,10 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
     // OGDF
 #ifdef USE_OGDF
     m_ogdfController = new COGDFLayoutUIController(parent, m_editorScene);
+    connect(m_ogdfController, SIGNAL(layoutFinished()), this, SLOT(onLayoutFinished()));
 #endif
 
+    // GraphViz
 #ifdef USE_GVGRAPH
 	m_gvController = new CGVGraphLayoutUIController(parent, m_editorScene);
 	connect(m_gvController, SIGNAL(layoutFinished()), this, SLOT(onLayoutFinished()));

@@ -40,7 +40,7 @@ public:
 		return false;
 	}
 
-	virtual bool save(const QString& /*fileName*/, CEditorScene& /*scene*/, QString* lastError = nullptr) const {
+	virtual bool save(const QString& /*fileName*/, CEditorScene& /*scene*/, QString* /*lastError = nullptr*/) const {
 		return false;
 	}
 

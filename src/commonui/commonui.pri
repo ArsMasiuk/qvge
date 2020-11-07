@@ -9,7 +9,6 @@ RESOURCES += $$files($$PWD/*.qrc)
 
 # base sources
 include($$PWD/../appbase/appbase.pri)
-#include($$PWD/../qvge/qvge.pri)
 
 # includes 
 INCLUDEPATH += $$PWD $$PWD/.. 
@@ -25,12 +24,12 @@ USE_OGDF{
     FORMS += $$files($$PWD/ogdf/*.ui)
 }
 
-USE_GVGRAPH{
-    DEFINES += USE_GVGRAPH
-
-    INCLUDEPATH += $$PWD/gvgraph
-
-    SOURCES += $$files($$PWD/gvgraph/*.cpp)
-    HEADERS += $$files($$PWD/gvgraph/*.h)
+USE_BOOST{
+    INCLUDEPATH += $$BOOST_INCLUDE_PATH
 }
 
+USE_GVGRAPH{
+    SOURCES += $$files($$PWD/gvgraph/*.cpp)
+    HEADERS += $$files($$PWD/gvgraph/*.h)
+    #FORMS += $$files($$PWD/ogdf/*.ui)
+}

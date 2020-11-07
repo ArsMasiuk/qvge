@@ -18,8 +18,8 @@ win32{
 }
 
 
-include(../config.pri)
-include(../app.pri)
+include($$PWD/../config.pri)
+include($$PWD/../app.pri)
 
 
 # app sources

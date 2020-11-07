@@ -207,9 +207,11 @@ bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QStrin
 			bool ok = m_gvController->loadGraph(fileName, *m_editorScene, lastError);
 			if (ok)
 				return true;
-			else
 #endif
+			// try to load via boost
+#ifdef USE_BOOST
 			return (CFileSerializerDOT().load(fileName, *m_editorScene, lastError));
+#endif
 		}
 
 		if (format == "plain" || format == "txt")
@@ -224,7 +226,7 @@ bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QStrin
 
 		// else via ogdf
 #ifdef USE_OGDF
-		return (COGDFLayout::loadGraph(fileName, *m_editorScene, lastError));
+        return (COGDFLayout::loadGraph(fileName, *m_editorScene, lastError));
 #else
 		return false;
 #endif

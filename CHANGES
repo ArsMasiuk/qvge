@@ -12,8 +12,15 @@ Bugfixes:
 - fixed cancelling the drag via Esc key
 - right clicks during drag are ignored
 
+Externals:
+- OGDF and Boost removed from source tree (only external libraries can be used for now)
+
 Linux:
 - fixed various "make install" related issues (#110, #113, #114, #115)
+
+Windows:
+- fixed installer issue with putting 64-bit executable under Program Files (x86)
+- GraphViz 2.38 binaries are shipped together
 
 
 

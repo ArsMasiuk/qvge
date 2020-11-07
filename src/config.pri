@@ -5,50 +5,45 @@
 #
 # It can be used freely, maintaining the information above.
 
-#CONFIG += BUILD_OGDF
-#CONFIG += USE_LOCAL_OGDF
-#CONFIG += USE_EXTERNAL_OGDF
-
+#CONFIG += USE_OGDF
 CONFIG += USE_GVGRAPH
+#CONFIG += USE_BOOST
 
-BUILD_OGDF{
-	CONFIG += USE_LOCAL_OGDF
-	CONFIG -= USE_EXTERNAL_OGDF
-	CONFIG += USE_OGDF
-}
 
-USE_LOCAL_OGDF{
-	CONFIG += USE_OGDF
-	CONFIG -= USE_EXTERNAL_OGDF
-	
-	# locally build OGDF
-	OGDF_LIB_NAME = ogdf-2020
-        OGDF_LIB_PATH = .
-	OGDF_INCLUDE_PATH = $$PWD/3rdParty/ogdf-2020/include
-}
-
-USE_EXTERNAL_OGDF{
-	CONFIG += USE_OGDF
-	CONFIG -= USE_LOCAL_OGDF
-	
-	# system-specific OGDF setup
-	OGDF_LIB_NAME = ogdf
-	OGDF_LIB_PATH =
-	OGDF_INCLUDE_PATH = /usr/share/ogdf/include
-}
-
+# external OGDF
 USE_OGDF{
-	DEFINES += USE_OGDF
-	#message(USE_OGDF!)
+    DEFINES += USE_OGDF
+
+    # system-specific OGDF setup
+    OGDF_LIB_NAME = ogdf
+    OGDF_LIB_PATH =
+    OGDF_INCLUDE_PATH = /usr/share/ogdf/include
 }
+
+# external boost::graph
+USE_BOOST{
+    DEFINES += USE_BOOST
+
+    # system-specific Boost setup
+    BOOST_LIB_NAME = boost_graph
+    BOOST_LIB_PATH =
+    BOOST_INCLUDE_PATH = /usr/share/boost/include
+}
+
+# external GraphViz (only #define)
+USE_GVGRAPH{
+    DEFINES += USE_GVGRAPH
+}
+
 
 # compiler stuff
 win32-msvc*{
-  	QMAKE_CXXFLAGS += /MP
+    QMAKE_CXXFLAGS += /MP
 }
 
 gcc{
-    	QMAKE_CXXFLAGS += -Wno-unused-variable -Wno-unused-parameter
+    QMAKE_CXXFLAGS += -Wno-unused-variable -Wno-unused-parameter -Wno-misleading-indentation
+    QMAKE_CXXFLAGS += -isystem
 }
 
 
@@ -59,16 +54,16 @@ CONFIG += c++14
 
 # output
 CONFIG(debug, debug|release){
-	LIBS += -L$$OUT_PWD/../lib.debug
+    LIBS += -L$$OUT_PWD/../lib.debug
 }
 else{
-	LIBS += -L$$OUT_PWD/../lib
+    LIBS += -L$$OUT_PWD/../lib
 }
 
 # temp dirs (unix)
 unix{
-	MOC_DIR = $$OUT_PWD/_generated
-	OBJECTS_DIR = $$OUT_PWD/_generated
-	UI_DIR = $$OUT_PWD/_generated
-	RCC_DIR = $$OUT_PWD/_generated
+    MOC_DIR = $$OUT_PWD/_generated
+    OBJECTS_DIR = $$OUT_PWD/_generated
+    UI_DIR = $$OUT_PWD/_generated
+    RCC_DIR = $$OUT_PWD/_generated
 }

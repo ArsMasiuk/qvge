@@ -10,8 +10,12 @@ class CNodeEditorScene;
 class COGDFLayoutUIController : public QObject
 {
     Q_OBJECT
+
 public:
     explicit COGDFLayoutUIController(CMainWindow *parent, CNodeEditorScene *scene);
+
+Q_SIGNALS:
+    void layoutFinished();
 
 private Q_SLOTS:
     void doPlanarLayout();

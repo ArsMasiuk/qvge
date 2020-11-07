@@ -253,7 +253,7 @@ QString qvgeMainWindow::getAboutText() const
             "<br>&nbsp; - QProcessInfo &copy; <i>Baldur Karlsson</i>"
 			"<br>&nbsp; - menu & toolbar graphics &copy; <i>Inkscape project</i>"
 #ifdef USE_OGDF
-			"<br>&nbsp; - OGDF &copy; <i>OGDF development team</i>"
+            "<br>&nbsp; - OGDF &copy; <i>OGDF development team</i>"
 #endif
 		);
 }

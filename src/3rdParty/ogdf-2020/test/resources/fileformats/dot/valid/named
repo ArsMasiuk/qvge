@@ -1,5 +1,0 @@
-graph foobar {
-	a -- b -- c;
-	b -- d;
-}
-

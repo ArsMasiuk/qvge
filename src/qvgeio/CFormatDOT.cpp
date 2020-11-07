@@ -14,8 +14,10 @@ It can be used freely, maintaining the information above.
 #include <QTextStream>
 #include <QFont>
 
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/graphviz.hpp>
+#ifdef USE_BOOST
+    #include <boost/graph/adjacency_list.hpp>
+    #include <boost/graph/graphviz.hpp>
+#endif
 
 struct DotVertex
 {
@@ -57,7 +59,9 @@ struct DotEdge
 	float fontsize = .0;
 };
 
-typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, DotVertex, DotEdge> graph_t;
+#ifdef USE_BOOST
+    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, DotVertex, DotEdge> graph_t;
+#endif
 
 
 // helpers
@@ -120,6 +124,7 @@ static void readLabel(const DotLabel &v, GraphAttributes &attrs)
 
 bool CFormatDOT::load(const QString& fileName, Graph& g, QString* lastError) const
 {
+#ifdef USE_BOOST
 	graph_t graphviz;
 	boost::dynamic_properties dp(boost::ignore_other_properties);
 
@@ -262,13 +267,15 @@ bool CFormatDOT::load(const QString& fileName, Graph& g, QString* lastError) con
 
 	// done
     return status;
+
+#else
+	return false;
+#endif
 }
 
 
 bool CFormatDOT::save(const QString& fileName, Graph& graph, QString* lastError) const
 {
-
-
-	return true;
+	return false;
 }
 
