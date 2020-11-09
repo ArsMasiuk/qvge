@@ -1,7 +1,7 @@
 [DEBREATE-0.7.13]
 <<CTRL>>
 Package: qvge
-Version: 0.6.0-2
+Version: 0.6.1
 Maintainer: Ars L. Masiuk <ars.masiuk@gmail.com>
 Section: editors
 Source: https://github.com/ArsMasiuk/qvge
@@ -9,6 +9,7 @@ Homepage: https://github.com/ArsMasiuk/qvge
 Architecture: amd64
 Priority: optional
 Depends: libqt5widgets5 (>=5.9)
+Recommends: graphviz (>=2.38)
 Description: Qt Visual Graph Editor
  Application for viewing and manipulating small till middle-sized graphs.
  .
@@ -17,8 +18,8 @@ Description: Qt Visual Graph Editor
 <</CTRL>>
 <<FILES>>
 1
-/home/osboxes/Work/qvge/build-qvgeapp-Desktop-Release/bin/qvgeapp* -> qvgeapp -> /usr/bin
 /home/osboxes/Work/qvge/icon.png -> icon.png -> /usr/share/qvge
+/home/osboxes/Work/qvge/src/bin/qvgeapp* -> qvgeapp -> /usr/bin
 <</FILES>>
 <<SCRIPTS>>
 <<PREINST>>
@@ -36,12 +37,20 @@ Description: Qt Visual Graph Editor
 <</SCRIPTS>>
 <<CHANGELOG>>
 <<DEST>>DEFAULT<</DEST>>
+qvge (0.6.1) ; urgency=medium
+
+  * Tighter integration with GraphViz (reading of DOT format, layout via GraphViz engines)
+  * OGDF is no more shipped together due to its instability (can be linked as 3rdparty-library hovewer)
+  * boost is no more shipped together (can be linked as 3rdparty-library hovewer)
+  * Various bugfixes and minor improvements
+
+ -- Ars L. Masiuk <ars.masiuk@gmail.com>  Mon, 09 Nov 2020 06:30:06 +0100
 
 <</CHANGELOG>>
 <<COPYRIGHT>>
 The MIT-X (MIT/X11) License
 
-Copyright © <year(s)> <copyright holder(s)> [<email>]
+Copyright © 2016-2020 Ars L. Masiuk [ars.masiuk@gmail.com]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
