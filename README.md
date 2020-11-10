@@ -30,6 +30,7 @@ Thank you!
 - Search among the graph elements and their attributes
 
 - Windows: portable mode (no installation required)
+- Auto-layout of graphs via [GraphViz](https://graphviz.org/) engines (dot, neato, fdp, circo...)
 - Auto-creation and auto-layout of graphs (via [OGDF](https://ogdf.uos.de/)):
   - Linear
   - Balloon
@@ -47,7 +48,7 @@ Thank you!
   - GEXF (read/write of common subset, except clusters and dynamic properties)
   - GraphML (read/write)
   - GML (read via OGDF, write via QVGE)
-  - [GraphViz DOT](https://graphviz.org/) (read/write, only common subset for now)
+  - [GraphViz DOT](https://graphviz.org/) (read via GraphViz/boost/OGDF, write via QVGE)
 
 ### Some users' feedback
 
@@ -69,12 +70,20 @@ Prebuild Windows binaries can be loaded from here:
 
 [![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)](https://github.com/ArsMasiuk/qvge/releases/latest)
 
-Or you can get QVGE's sources and build them by yourself. In this case you need to have installed Qt 5.x toolkit and corresponding C++ compiler with C++11 support. QVGE uses native Qt build system (main project file is qvgeapp.pro) so it should look like:
+Or you can get QVGE's sources and build them by yourself. In this case you need to have installed Qt 5.x toolkit and corresponding C++ compiler with C++11 support. QVGE uses native Qt build system (main project file is qvgeapp.pro) so it should look like the following for Windows and common Linux distibutions:
 
 ~~~
 cd <directory-with-qvgeapp.pro>
 qmake -r
 ~~~
+
+or, for Fedora-based distributions:
+~~~
+cd <directory-with-qvgeapp.pro>
+qmake-qt5 -r
+~~~
+
+Then run corresponding 'make' command to build the application: 
 
 Linux GCC:
 ~~~
@@ -96,35 +105,23 @@ or by Jom:
 jom
 ~~~
 
+Linux only: once the application is compiled, install it using
+~~~
+sudo make install
+~~~
+
 ### Enabling OGDF
 
-#### WARNING: bundled OGDF support will be removed since QVGE 0.6.1 due to memory access issues
+#### WARNING: bundled OGDF support has been removed since QVGE 0.6.1 due to memory access issues
 
-In order to build **QVGE** with OGDF support (shipped with QVGE together):
-before running qmake, open the file `src/config.pri` and make sure that one of the following options present:
-
-~~~
-CONFIG += BUILD_OGDF
-~~~
-
-This switch will compile & link against OGDF bundled under 3rdParty-directory.
-ogdf-2020.lib (Windows) or libogdf-2020.a will be created after the build is done.
-
-*Please note:* OGDF is really big, so its compilation takes some time.
-
-~~~
-CONFIG += USE_LOCAL_OGDF
-~~~
-
-Once OGDF has been compiled locally, you can use this switch to make sure that OGDF never recompiles.
-
-*Please note:* Do not delete ogdf-2020 library file because it is supposed to be used by linker.
+In order to build **QVGE** with external OGDF support (installed in your system):
+before running qmake, open the file `src/config.pri` and uncomment the following option:
 
 ~~~
 CONFIG += USE_EXTERNAL_OGDF
 ~~~
 
-Allows to link against OGDF library which is already present in the system.
+This will allow to link against OGDF library which is already present in the system.
 In this case, the following lines have to be changed accordingly:
 
 ~~~
@@ -137,7 +134,6 @@ USE_EXTERNAL_OGDF{
 	OGDF_INCLUDE_PATH = <path to headers of the installed OGDF library>
 }
 ~~~
- 
 
 Then run qmake + make as desribed in the step before. 
 
@@ -154,7 +150,7 @@ Hopefully it can also be compiled with others compilers. If not please do not he
 
 ### Supported OS
 
-**QVGE** has been tested on Microsoft Windows 10 and several Linux OS (Mint, Mageia etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
+**QVGE** has been tested on Microsoft Windows 10 and several Linux OS (Mint, Mageia, Fedora etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
 
 **QVGE** can be compiled & run under Cygwin.
 
@@ -170,7 +166,6 @@ Hopefully it can also be compiled with others compilers. If not please do not he
 - [Qt property browser](https://github.com/qtproject/qt-solutions)
 - [QProcessInfo](https://github.com/baldurk/qprocessinfo)
 - [QSint widgets library](https://sourceforge.net/projects/qsint)
-- [OGDF - Open Graph Drawing Framework](http://www.ogdf.net)
 - SVG icons from [Inkscape](https://inkscape.org)
 
 Special thanks to:
