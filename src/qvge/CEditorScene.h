@@ -354,7 +354,11 @@ protected:
 	QGraphicsItem *m_draggedItem = nullptr;
 	QSet<IInteractive*> m_acceptedHovers, m_rejectedHovers;
 	bool m_skipMenuEvent = false;
+
 	CItem *m_editItem = nullptr;
+
+	// pimpl
+	class CEditorScene_p* m_pimpl = nullptr;
 
 private:
 	int m_infoStatus;
@@ -391,9 +395,6 @@ private:
 	bool m_labelsEnabled, m_labelsUpdate;
 
 	bool m_isFontAntialiased = true;
-
-	// pimpl
-	class CEditorScene_p* m_pimpl = nullptr;
 };
 
 

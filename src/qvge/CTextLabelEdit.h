@@ -12,6 +12,7 @@ It can be used freely, maintaining the information above.
 #include <QGraphicsTextItem> 
 
 class CItem;
+class CEditorScene;
 
 
 class CTextLabelEdit: public QGraphicsTextItem
@@ -24,6 +25,9 @@ public:
 
 	void startEdit(CItem *item);
 	void finishEdit(bool accept = true);
+
+	virtual bool onKeyPressed(CEditorScene& scene, QKeyEvent *keyEvent);
+	virtual bool onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent);
 
 Q_SIGNALS:
 	void editingStarted(CItem *item);

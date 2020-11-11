@@ -7,6 +7,7 @@
 #include "CPolyEdge.h"
 #include "CControlPoint.h"
 #include "CEditorSceneDefines.h"
+#include "CEditorScene_p.h"
 
 #include <qvgeio/CGraphBase.h>
 
@@ -468,6 +469,10 @@ bool CNodeEditorScene::startNewConnection(const QPointF& pos)
 
 void CNodeEditorScene::cancel(const QPointF& /*pos*/)
 {
+	// nothing to cancel
+	if (m_state == IS_None)
+		return;
+
 	// if not cancelling already
 	if (m_state != IS_Cancelling)
 	{
@@ -630,12 +635,33 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 }
 
 
+void CNodeEditorScene::keyReleaseEvent(QKeyEvent *keyEvent)
+{
+	// forward scene events if in text editor mode
+	if (m_editItem)
+	{
+		bool done = m_pimpl->m_labelEditor.onKeyReleased(*this, keyEvent);
+		if (done)
+			updateCursorState();
+		return;
+	}
+
+	Super::keyReleaseEvent(keyEvent);
+}
+
+
 void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
+	// forward scene events if in text editor mode
+	if (m_editItem)
+	{
+		m_pimpl->m_labelEditor.onKeyPressed(*this, keyEvent);
+		return;
+	}
+
 	bool isCtrl = (keyEvent->modifiers() == Qt::ControlModifier);
 //	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
 //	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
-
 
 	// Ctrl+Up/Down; alter node size by 10%
 	if (keyEvent->key() == Qt::Key_Up && isCtrl)

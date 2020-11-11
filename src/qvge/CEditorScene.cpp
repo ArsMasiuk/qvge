@@ -2113,11 +2113,10 @@ void CEditorScene::setSceneCursor(const QCursor& c)
 
 void CEditorScene::keyReleaseEvent(QKeyEvent *keyEvent)
 {
-	Super::keyReleaseEvent(keyEvent);
-
 	if (m_editController)
 	{
 		m_editController->onKeyReleased(*this, keyEvent);
+		updateCursorState();
 		return;
 	}
 
@@ -2127,17 +2126,14 @@ void CEditorScene::keyReleaseEvent(QKeyEvent *keyEvent)
 
 void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
-	Super::keyPressEvent(keyEvent);
-
 	if (m_editController)
 	{
 		m_editController->onKeyPressed(*this, keyEvent);
+		updateCursorState();
 		return;
 	}
 
-
 	updateCursorState();
-
 
 	bool isCtrl = (keyEvent->modifiers() == Qt::ControlModifier);
 	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);

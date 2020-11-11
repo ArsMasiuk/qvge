@@ -97,6 +97,7 @@ protected:
 	//virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
 	virtual void keyPressEvent(QKeyEvent *keyEvent);
+	virtual void keyReleaseEvent(QKeyEvent *keyEvent);
 
 	virtual void onLeftButtonPressed(QGraphicsSceneMouseEvent *mouseEvent);
 	// called on drag after single click; returns true if handled
