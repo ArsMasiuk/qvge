@@ -37,6 +37,7 @@ void CStartPage::createActions()
 			);
 
 			newFileButton->setIcon(QIcon(":/Icons/New"));
+			newFileButton->setMinimumHeight(64);
 			
 			QAction *newFile = new QAction(newFileButton);
 			newFile->setData(doc.type);
@@ -58,6 +59,7 @@ void CStartPage::createActions()
 	);
 
 	openFileButton->setIcon(QIcon(":/Icons/Open"));
+	openFileButton->setMinimumHeight(64);
 
 	connect(openFileButton, &QCommandLinkButton::clicked, m_parent, &CMainWindow::selectAndOpenDocument);
 
@@ -103,6 +105,8 @@ void CStartPage::createRecentDocs()
 			fi.lastModified().toString() + " | " + fileName,
 			host
 		);
+
+		fileButton->setMinimumHeight(64);
 
 		QAction *recentAction = new QAction(fileName, fileButton);
 		recentAction->setData(i);

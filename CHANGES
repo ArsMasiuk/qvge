@@ -1,3 +1,15 @@
+QVGE 0.6.2
+-------------------------------------------------------------------------------
+New features/improvements:
+- import of GraphML in SocNetV format supported
+
+Bugfixes:
+- fixed crash when pressing Escape after creating of a node and immediately editing of a text label (#123)
+- fixed issue with forwarding keyboard events during editing of a text label (#124)
+- fixed importing default GraphML attributes
+
+
+
 QVGE 0.6.1
 -------------------------------------------------------------------------------
 New features/improvements:

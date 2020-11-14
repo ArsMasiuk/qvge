@@ -149,9 +149,9 @@ void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos
 		xsw.writeStartElement("key");
 
 		xsw.writeAttribute("id", attr.id);
-		//xsw.writeAttribute("attr.name", attr.id);		// GraphML::name = qvge::id
+		xsw.writeAttribute("attr.name", attr.id);		// GraphML::name = qvge::id
 		//xsw.writeAttribute("attr.title", attr.name);	// GraphML::title = qvge::name
-		xsw.writeAttribute("attr.name", attr.name);
+		//xsw.writeAttribute("attr.name", attr.name);
 
 		if (classId.size())
 			xsw.writeAttribute("for", classId);
@@ -251,45 +251,57 @@ bool CFormatGraphML::readAttrKey(int /*index*/, const QDomNode& domNode, Graph& 
 {
 	QDomElement elem = domNode.toElement();
 
+	auto childElem = elem.elementsByTagName("default");
+	QString defaultValue;
+	if (childElem.size())
+		defaultValue = childElem.at(0).toElement().text();
+
 	QString keyId = elem.attribute("id", "");
-	//QString attrId = elem.attribute("attr.name", "");
-	//QString nameId = elem.attribute("attr.title", "");
-	QString attrId = keyId;
-	QString nameId = elem.attribute("attr.name", "");
+	QString attrId = elem.attribute("attr.id", "");
+	QString attrName = elem.attribute("attr.name", "");
 
 	QString classId = elem.attribute("for", "");
 	QString valueType = elem.attribute("attr.type", "");
 
-	if (keyId.isEmpty() || attrId.isEmpty())
+	if (keyId.isEmpty())
+		keyId = attrId.isEmpty() ? attrName : attrId;
+
+	if (keyId.isEmpty())
 		return false;
+
+	if (attrId.isEmpty())
+		attrId = attrName.isEmpty() ? keyId : attrName;
+
+	if (attrName.isEmpty())
+		attrName = attrId.isEmpty() ? keyId : attrId;
 
 	AttrInfo attr;
 	attr.id = attrId.toLatin1();
-	attr.name = nameId.isEmpty() ? attrId : nameId;
+	attr.name = attrName;
 
 	if (valueType == "integer"/* || valueType == "long"*/) {
 		attr.valueType = QVariant::Int;
-		attr.defaultValue.setValue(elem.text().toInt());
+		attr.defaultValue.setValue(defaultValue.toInt());
 	}
 	else if (valueType == "long") {
 		attr.valueType = QVariant::LongLong;
-		attr.defaultValue.setValue(elem.text().toLongLong());
+		attr.defaultValue.setValue(defaultValue.toLongLong());
 	}
 	else if (valueType == "double") {
 		attr.valueType = QVariant::Double;
-		attr.defaultValue.setValue(elem.text().toDouble());
+		attr.defaultValue.setValue(defaultValue.toDouble());
 	}
 	else if (valueType == "float") {
 		attr.valueType = QMetaType::Float;
-		attr.defaultValue.setValue(elem.text().toFloat());
+		attr.defaultValue.setValue(defaultValue.toFloat());
 	}
 	else if (valueType == "boolean") {
 		attr.valueType = QMetaType::Bool;
-		attr.defaultValue.setValue(!!elem.text().toInt());
+		attr.defaultValue.setValue(!!defaultValue.toInt());
 	}
 	else {
 		attr.valueType = QMetaType::QString;
-		attr.defaultValue.setValue(elem.text());
+		attr.defaultValue.setValue(defaultValue);
 	}
 
 	QByteArray attrClassId = classId.toLower().toLatin1();
@@ -333,8 +345,14 @@ bool CFormatGraphML::readNode(int /*index*/, const QDomNode &domNode, Graph& gra
 			continue;
 
 		QVariant value = de.text();
-
 		node.attrs[attrId] = value;
+
+		// import SocNetV coordinates as well
+		if (attrId == "x_coordinate")
+			node.attrs["x"] = value.toDouble() * 1000;
+		else
+		if (attrId == "y_coordinate")
+			node.attrs["y"] = value.toDouble() * 1000;
 	}
 
 	// ports
