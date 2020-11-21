@@ -13,6 +13,7 @@ It can be used freely, maintaining the information above.
 #include <QMouseEvent> 
 #include <QScrollBar> 
 #include <QGuiApplication>
+#include <QGLWidget>
 #include <QDebug> 
 
 
@@ -22,6 +23,7 @@ CEditorView::CEditorView(QWidget *parent)
 {
     setAttribute(Qt::WA_TranslucentBackground, false);
 	setViewportUpdateMode(BoundingRectViewportUpdate);
+	//setViewport(new QGLWidget);
 
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);

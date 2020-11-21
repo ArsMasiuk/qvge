@@ -33,6 +33,9 @@ private Q_SLOTS:
 
 private:
 	bool doLayout(const QString &engine, CNodeEditorScene &scene);
+	bool doRunDOT(const QString &engine, const QString &dotFilePath, QString &plainFilePath, QString* lastError /*= nullptr*/);
+	QString errorNotWritable(const QString &path) const;
+	QString errorCannotRun(const QString &path) const;
 
     CMainWindow *m_parent = nullptr;
     CNodeEditorScene *m_scene = nullptr;

@@ -48,52 +48,85 @@ void CGVGraphLayoutUIController::setDefaultEngine(const QString &engine)
 }
 
 
-bool CGVGraphLayoutUIController::loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError /*= nullptr*/)
+QString CGVGraphLayoutUIController::errorNotWritable(const QString &path) const
+{
+	return QObject::tr("Cannot create GraphViz output in %1. Check if the directory is writable.").arg(path);
+}
+
+
+QString CGVGraphLayoutUIController::errorCannotRun(const QString &path) const
+{
+	return QObject::tr("Cannot run %1. Check if GraphViz has been correctly installed.").arg(path);
+}
+
+
+bool CGVGraphLayoutUIController::doRunDOT(const QString &engine, const QString &dotFilePath, QString &plainFilePath, QString* lastError /*= nullptr*/)
 {
 	// run dot to convert filename.dot -> filename.temp.plain	
 	QTemporaryFile tempFile(QDir::tempPath() + "/qvge-XXXXXX.plain");
 	if (!tempFile.open())
 	{
 		if (lastError)
-			*lastError = QObject::tr("Cannot create GraphViz output in %1. Check if the directory is writable.").arg(QDir::tempPath());
+			*lastError = errorNotWritable(QDir::tempPath());
 
 		return false;
 	}
 
-	QString pathToDot = m_defaultEngine;
-	if (m_pathToGraphviz.size())
-		pathToDot = m_pathToGraphviz + "/" + m_defaultEngine;
+	plainFilePath = tempFile.fileName();
+	tempFile.setAutoRemove(false);
 
-	QString cmd = QString("\"%1\" -Tplain-ext \"%2\" -o\"%3\"").arg(pathToDot).arg(filename).arg(tempFile.fileName());
+	QString pathToDot = "dot";
+	if (m_pathToGraphviz.size())
+		pathToDot = m_pathToGraphviz + "/dot";
+
+	QString cmd = QString("\"%1\" -K\"%2\" -Tplain-ext \"%3\" -o\"%4\"").arg(pathToDot, engine).arg(dotFilePath).arg(plainFilePath);
 
 	QProcess process;
 	process.setWorkingDirectory(m_pathToGraphviz);
 	int res = QProcess::execute(cmd);
-	if (res == 0)
+	if (res != 0)
 	{
-		// import generated plain text
-		bool ok = CFileSerializerPlainDOT().load(tempFile.fileName(), scene, lastError);
-		if (ok)
-			Q_EMIT loadFinished();
-		return ok;
+		if (lastError)
+			*lastError = errorCannotRun(pathToDot);
+
+		return false;
 	}
 
-	if (lastError)
-		*lastError = QObject::tr("Cannot run %1. Check if GraphViz has been correctly installed.").arg(pathToDot);
+	// run successful
+	return true;
+}
 
-	return false;
+
+bool CGVGraphLayoutUIController::loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError /*= nullptr*/)
+{
+	// run dot to convert filename.dot -> filename.temp.plain	
+	QString plainFilePath;
+	if (!doRunDOT(m_defaultEngine, filename, plainFilePath, lastError))
+		return false;
+
+	// import generated plain text
+	bool ok = CFileSerializerPlainDOT().load(plainFilePath, scene, lastError);
+	if (ok)
+		Q_EMIT loadFinished();
+	else
+		if (lastError)
+			*lastError = tr("Cannot load file content");
+
+	QFile::remove(plainFilePath);
+	return ok;
 }
 
 
 bool CGVGraphLayoutUIController::doLayout(const QString &engine, CNodeEditorScene &scene)
 {
 	QString lastError;
+	QString plainFilePath;
 
 	// export to dot
 	QTemporaryFile tempFile(QDir::tempPath() + "/qvge-XXXXXX.dot");
 	if (!tempFile.open())
 	{
-		lastError = QObject::tr("Cannot create GraphViz output in %1. Check if the directory is writable.").arg(QDir::tempPath());
+		lastError = errorNotWritable(QDir::tempPath());
 		QMessageBox::critical(m_parent, tr("Layout failed"), lastError);
 		return false;
 	}
@@ -105,42 +138,25 @@ bool CGVGraphLayoutUIController::doLayout(const QString &engine, CNodeEditorScen
 		return false;
 	}
 
-
 	// convert dot -> plain
-	QTemporaryFile tempFilePlain(QDir::tempPath() + "/qvge-XXXXXX.plain");
-	if (!tempFilePlain.open())
+	if (!doRunDOT(engine, tempFile.fileName(), plainFilePath, &lastError))
 	{
-		lastError = QObject::tr("Cannot create GraphViz output in %1. Check if the directory is writable.").arg(QDir::tempPath());
 		QMessageBox::critical(m_parent, tr("Layout failed"), lastError);
 		return false;
 	}
-
-	QString pathToDot = engine;
-	if (m_pathToGraphviz.size())
-		pathToDot = m_pathToGraphviz + "/" + engine;
-
-	QString cmd = QString("\"%1\" -Tplain-ext \"%2\" -o\"%3\"").arg(pathToDot).arg(tempFile.fileName()).arg(tempFilePlain.fileName());
-
-	QProcess process;
-	process.setWorkingDirectory(m_pathToGraphviz);
-	int res = QProcess::execute(cmd);
-	if (res != 0)
-	{
-		lastError = QObject::tr("Cannot run %1. Check if GraphViz has been correctly installed.").arg(pathToDot);
-		QMessageBox::critical(m_parent, tr("Layout failed"), lastError);
-		return false;
-	}
-
 
 	// import layout only
 	CFormatPlainDOT graphFormat;
 	Graph graphModel;
-	if (!graphFormat.load(tempFilePlain.fileName(), graphModel, &lastError))
+	if (!graphFormat.load(plainFilePath, graphModel, &lastError))
 	{
+		QFile::remove(plainFilePath);
+
 		QMessageBox::critical(m_parent, tr("Layout failed"), lastError);
 		return false;
 	}
 
+	// update node positions
 	auto nodes = scene.getItems<CNode>();
 	for (auto & node : nodes)
 	{
@@ -156,6 +172,8 @@ bool CGVGraphLayoutUIController::doLayout(const QString &engine, CNodeEditorScen
 	scene.addUndoState();
 
 	Q_EMIT layoutFinished();
+
+	QFile::remove(plainFilePath);
 
 	return true;
 }
