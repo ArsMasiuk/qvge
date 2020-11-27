@@ -26,6 +26,7 @@ class CMainWindow;
 class CNodeEditorScene;
 class CNodePort;
 class CEditorView;
+
 class IFileSerializer;
 
 
@@ -41,8 +42,8 @@ public:
 	void doReadSettings(QSettings& settings);
 	void doWriteSettings(QSettings& settings);
 
-	bool loadFromFile(const QString &fileName, const QString &format, QString* lastError);
-	bool saveToFile(const QString &fileName, const QString &format, QString* lastError);
+	bool loadFromFile(const QString &format, const QString &fileName, QString* lastError);
+	bool saveToFile(const QString &format, const QString &fileName, QString* lastError);
 
     // callbacks
     void onNewDocumentCreated();
@@ -55,7 +56,7 @@ protected:
     }
 
 private Q_SLOTS:
-	bool doExport(const IFileSerializer &exporter);
+	// tbd: move to export controller
 	void exportFile();
 	void exportPDF();
 	void exportSVG();
@@ -161,17 +162,12 @@ private:
 
 	class CColorSchemesUIController *m_schemesController = nullptr;
 
+	class CImportExportUIController *m_ioController = nullptr;
+
 	class CNodeEdgePropertiesUI *m_propertiesPanel = nullptr;
 	class CCommutationTable *m_connectionsPanel = nullptr;
 	class CClassAttributesEditorUI *m_defaultsPanel = nullptr;
 	class CQuickHelpUI *m_quickHelpPanel = nullptr;
 
 	class CSearchDialog *m_searchDialog = nullptr;
-
-
-	// IO
-	class CDOTExportDialog *m_dotDialog = nullptr;
-	class CImageExportDialog *m_imageDialog = nullptr;
-
-	QString m_lastExportPath;
 };

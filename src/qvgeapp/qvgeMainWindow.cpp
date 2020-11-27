@@ -164,7 +164,7 @@ bool qvgeMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 
         if (createDocument(docType))
 		{
-			if (m_graphEditController->loadFromFile(fileName, format, &lastError))
+			if (m_graphEditController->loadFromFile(format, fileName, &lastError))
 			{
 				m_graphEditController->onDocumentLoaded(fileName);
 				return true;
@@ -230,7 +230,7 @@ bool qvgeMainWindow::saveDocument(const QString &fileName, const QString &/*sele
 
 		QString lastError;	// TODO
 
-        return m_graphEditController->saveToFile(fileName, extType, &lastError);
+        return m_graphEditController->saveToFile(extType, fileName, &lastError);
 	}
 
     // unknown type

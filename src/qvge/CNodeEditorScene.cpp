@@ -353,7 +353,7 @@ void CNodeEditorScene::initialize()
 
 	static CAttributeConstrainsList *nodeShapes = new CAttributeConstrainsList();
 	if (nodeShapes->ids.isEmpty()) {
-		nodeShapes->names << tr("Dics") << tr("Square") << tr("Triangle (up)") << tr("Triangle (down)") << tr("Diamond") << tr("Hexagon");
+		nodeShapes->names << tr("Disc") << tr("Square") << tr("Triangle (up)") << tr("Triangle (down)") << tr("Diamond") << tr("Hexagon");
 		nodeShapes->ids << "disc" << "square" << "triangle" << "triangle2" << "diamond" << "hexagon";
 		nodeShapes->icons << QIcon(":/Icons/Node-Disc") << QIcon(":/Icons/Node-Square") << QIcon(":/Icons/Node-Triangle") 
 			<< QIcon(":/Icons/Node-Triangle-Down") << QIcon(":/Icons/Node-Diamond") << QIcon(":/Icons/Node-Hexagon");

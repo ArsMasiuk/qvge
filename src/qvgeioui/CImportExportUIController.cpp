@@ -7,20 +7,22 @@ QVGE - Qt Visual Graph Editor
 It can be used freely, maintaining the information above.
 */
 
-#include <CNodeEditorUIController.h>
+#include <CImportExportUIController.h>
 #include <CDOTExportDialog.h>
 #include <CImageExportDialog.h>
 #include <CCSVImportDialog.h>
-#include <CExtListInputDialog.h>
 
 #ifdef USE_OGDF
-#include <ogdf/COGDFLayoutUIController.h>
-#include <ogdf/COGDFLayout.h>
+#include <commonui/ogdf/COGDFLayoutUIController.h>
+#include <commonui/ogdf/COGDFLayout.h>
 #endif
 
 #ifdef USE_GVGRAPH
-#include <gvgraph/CGVGraphLayoutUIController.h>
+#include <commonui/gvgraph/CGVGraphLayoutUIController.h>
 #endif
+
+#include <commonui/CExtListInputDialog.h>
+#include <appbase/CMainWindow.h>
 
 #include <qvge/CNode.h>
 #include <qvge/CEdge.h>
@@ -36,15 +38,47 @@ It can be used freely, maintaining the information above.
 #include <qvge/CFileSerializerCSV.h>
 #include <qvge/ISceneItemFactory.h>
 
-#include <appbase/CMainWindow.h>
-
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QStatusBar>
 #include <QDebug>
 
 
-bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
+CImportExportUIController::CImportExportUIController(CMainWindow *parent): QObject(parent)
+{
+	m_parent = parent;
+
+	// export dialogs
+	m_dotDialog = new CDOTExportDialog(parent);
+	m_imageDialog = new CImageExportDialog(parent);
+}
+
+
+// Settings
+
+void CImportExportUIController::doReadSettings(QSettings& settings)
+{
+	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
+
+	settings.beginGroup("ImageExport");
+	m_imageDialog->doReadSettings(settings);
+	settings.endGroup();
+}
+
+
+void CImportExportUIController::doWriteSettings(QSettings& settings)
+{
+	settings.setValue("lastExportPath", m_lastExportPath);
+
+	settings.beginGroup("ImageExport");
+	m_imageDialog->doWriteSettings(settings);
+	settings.endGroup();
+}
+
+
+// IO
+
+bool CImportExportUIController::doExport(CEditorScene& scene, const IFileSerializer &exporter)
 {
     QString fileName = CUtils::cutLastSuffix(m_parent->getCurrentFileName());
     if (fileName.isEmpty())
@@ -65,7 +99,7 @@ bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
 
     m_lastExportPath = path;
 
-    if (exporter.save(path, *m_editorScene))
+    if (exporter.save(path, scene))
     {
         m_parent->statusBar()->showMessage(tr("Export successful (%1)").arg(path));
         return true;
@@ -78,18 +112,17 @@ bool CNodeEditorUIController::doExport(const IFileSerializer &exporter)
 }
 
 
-void CNodeEditorUIController::exportFile()
+void CImportExportUIController::exportImage(CEditorScene& scene)
 {
-	m_imageDialog->setScene(*m_editorScene);
+	m_imageDialog->setScene(scene);
 
-	auto& settings = getApplicationSettings();
+	auto& settings = m_parent->getApplicationSettings();
 	m_imageDialog->doReadSettings(settings);
 
 	if (m_imageDialog->exec() == QDialog::Rejected)
 		return;
 
-	if (!doExport(
-		CImageExport(
+	if (!doExport(scene, CImageExport(
 			m_imageDialog->cutToContent(),
 			m_imageDialog->resolution()
 		))) 
@@ -99,13 +132,12 @@ void CNodeEditorUIController::exportFile()
 }
 
 
-void CNodeEditorUIController::exportDOT()
+void CImportExportUIController::exportDOT(CEditorScene& scene)
 {
 	if (m_dotDialog->exec() == QDialog::Rejected)
 		return;
 
-    doExport(
-		CFileSerializerDOT(
+    doExport(scene,	CFileSerializerDOT(
 			m_dotDialog->writeBackground(),
 			m_dotDialog->writeAttributes()
 		)
@@ -113,33 +145,32 @@ void CNodeEditorUIController::exportDOT()
 }
 
 
-void CNodeEditorUIController::exportPDF()
+void CImportExportUIController::exportPDF(CEditorScene& scene)
 {
-	auto& settings = getApplicationSettings();
+	auto& settings = m_parent->getApplicationSettings();
 
 	CPDFExport pdf;
 	pdf.readSettings(settings);
 
-	if (pdf.setupDialog(*m_editorScene))
+	if (pdf.setupDialog(scene))
 	{
 		pdf.writeSettings(settings);
-		doExport(pdf);
+		doExport(scene, pdf);
 	}
 }
 
 
-void CNodeEditorUIController::exportSVG()
+void CImportExportUIController::exportSVG(CEditorScene& scene)
 {
-	m_imageDialog->setScene(*m_editorScene);
+	m_imageDialog->setScene(scene);
 
-	auto& settings = getApplicationSettings();
+	auto& settings = m_parent->getApplicationSettings();
 	m_imageDialog->doReadSettings(settings);
 
 	if (m_imageDialog->exec() == QDialog::Rejected)
 		return;
 
-	if (!doExport(
-		CSVGExport(
+	if (!doExport(scene, CSVGExport(
 			m_imageDialog->cutToContent(),
 			m_imageDialog->resolution()
 		)))
@@ -149,7 +180,7 @@ void CNodeEditorUIController::exportSVG()
 }
 
 
-bool CNodeEditorUIController::importCSV(const QString &fileName, QString* lastError)
+bool CImportExportUIController::importCSV(CEditorScene& scene, const QString &fileName, QString* lastError)
 {
 	CCSVImportDialog csvDialog;
 	csvDialog.setFileName(fileName);
@@ -177,56 +208,59 @@ bool CNodeEditorUIController::importCSV(const QString &fileName, QString* lastEr
 	default:    csvLoader.setDelimiter('\t');   break;
 	}
 
-	return (csvLoader.load(fileName, *m_editorScene, lastError));
+	return (csvLoader.load(fileName, scene, lastError));
 }
 
 
-bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QString &format, QString* lastError)
+bool CImportExportUIController::loadFromFile(const QString &format, const QString &fileName, CEditorScene& scene, QString* lastError)
 {
 	try 
 	{
 		if (format == "xgr")
 		{
-			return (CFileSerializerXGR().load(fileName, *m_editorScene, lastError));
+			return (CFileSerializerXGR().load(fileName, scene, lastError));
 		}
 
 		if (format == "graphml")
 		{
-			return (CFileSerializerGraphML().load(fileName, *m_editorScene, lastError));
+			return (CFileSerializerGraphML().load(fileName, scene, lastError));
 		}
 
 		if (format == "gexf")
 		{
-			return (CFileSerializerGEXF().load(fileName, *m_editorScene, lastError));
+			return (CFileSerializerGEXF().load(fileName, scene, lastError));
 		}
 
 		if (format == "dot" || format == "gv")
 		{
 			// try to load via graphviz
 #ifdef USE_GVGRAPH
-			bool ok = m_gvController->loadGraph(fileName, *m_editorScene, lastError);
-			if (ok)
-				return true;
+			if (m_gvController) 
+			{
+				bool ok = m_gvController->loadGraph(fileName, scene, lastError);
+				if (ok)
+					return true;
+			}
 #endif
 			// try to load via boost
 #ifdef USE_BOOST
-			return (CFileSerializerDOT().load(fileName, *m_editorScene, lastError));
+			return (CFileSerializerDOT().load(fileName, scene, lastError));
 #endif
 		}
 
 		if (format == "plain" || format == "txt")
 		{
-			return (CFileSerializerPlainDOT().load(fileName, *m_editorScene, lastError));
+			return (CFileSerializerPlainDOT().load(fileName, scene, lastError));
 		}
 
 		if (format == "csv")
 		{
-			return importCSV(fileName, lastError);
+			return importCSV(scene, fileName, lastError);
 		}
 
 		// else via ogdf
 #ifdef USE_OGDF
-        return (COGDFLayout::loadGraph(fileName, *m_editorScene, lastError));
+        return (COGDFLayout::loadGraph(fileName, scene, lastError));
 #else
 		return false;
 #endif
@@ -238,19 +272,19 @@ bool CNodeEditorUIController::loadFromFile(const QString &fileName, const QStrin
 }
 
 
-bool CNodeEditorUIController::saveToFile(const QString &fileName, const QString &format, QString* lastError)
+bool CImportExportUIController::saveToFile(const QString &format, const QString &fileName, CEditorScene& scene, QString* lastError)
 {
     if (format == "xgr")
-        return (CFileSerializerXGR().save(fileName, *m_editorScene, lastError));
+        return (CFileSerializerXGR().save(fileName, scene, lastError));
 
     if (format == "dot" || format == "gv")
-        return (CFileSerializerDOT().save(fileName, *m_editorScene, lastError));
+        return (CFileSerializerDOT().save(fileName, scene, lastError));
 
     if (format == "gexf")
-        return (CFileSerializerGEXF().save(fileName, *m_editorScene, lastError));
+        return (CFileSerializerGEXF().save(fileName, scene, lastError));
 
 	if (format == "graphml")
-		return (CFileSerializerGraphML().save(fileName, *m_editorScene, lastError));
+		return (CFileSerializerGraphML().save(fileName, scene, lastError));
 
     return false;
 }

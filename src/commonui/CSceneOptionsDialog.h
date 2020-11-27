@@ -42,6 +42,12 @@ public:
 public Q_SLOTS:
 	virtual int exec(CEditorScene &scene, CEditorView &view, OptionsData &data);
 
+Q_SIGNALS:
+	void testGraphviz(const QString &graphvizPath);
+
+private Q_SLOTS:
+	void on_GraphvizTest_clicked();
+
 private:
     Ui::CSceneOptionsDialog *ui;
 };

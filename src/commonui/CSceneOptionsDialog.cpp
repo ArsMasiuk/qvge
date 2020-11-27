@@ -91,3 +91,9 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsDat
 
 	return QDialog::Accepted;
 }
+
+
+void CSceneOptionsDialog::on_GraphvizTest_clicked()
+{
+	Q_EMIT testGraphviz(ui->GraphvizPath->currentPath());
+}

@@ -3,7 +3,7 @@
 #include <QObject>
 
 class CMainWindow;
-class CNodeEditorScene;
+class CEditorScene;
 
 
 class CGVGraphLayoutUIController : public QObject
@@ -11,17 +11,20 @@ class CGVGraphLayoutUIController : public QObject
     Q_OBJECT
 
 public:
-    explicit CGVGraphLayoutUIController(CMainWindow *parent, CNodeEditorScene *scene);
+    explicit CGVGraphLayoutUIController(CMainWindow *parent, CEditorScene *scene);
 
 	void setPathToGraphviz(const QString &pathToGraphviz);
 	void setDefaultEngine(const QString &engine);
 
 	// file IO (think: to move?)
-	bool loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError = nullptr);
+	bool loadGraph(const QString &filename, CEditorScene &scene, QString* lastError = nullptr);
 
 Q_SIGNALS:
 	void loadFinished();
 	void layoutFinished();
+
+public Q_SLOTS:
+	void runGraphvizTest(const QString &graphvizPath);
 
 private Q_SLOTS:
 	void doDotLayout()		{ doLayout("dot", *m_scene); }
@@ -32,13 +35,14 @@ private Q_SLOTS:
 	void doCircularLayout() { doLayout("circo", *m_scene); }
 
 private:
-	bool doLayout(const QString &engine, CNodeEditorScene &scene);
+	bool doLayout(const QString &engine, CEditorScene &scene);
 	bool doRunDOT(const QString &engine, const QString &dotFilePath, QString &plainFilePath, QString* lastError /*= nullptr*/);
 	QString errorNotWritable(const QString &path) const;
 	QString errorCannotRun(const QString &path) const;
+	QString errorCannotFinish(const QString &path) const;
 
     CMainWindow *m_parent = nullptr;
-    CNodeEditorScene *m_scene = nullptr;
+    CEditorScene *m_scene = nullptr;
 
 	QString m_pathToGraphviz;
 	QString m_defaultEngine;

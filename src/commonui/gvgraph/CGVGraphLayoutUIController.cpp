@@ -16,9 +16,10 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QMessageBox>
+#include <QProgressDialog>
 
 
-CGVGraphLayoutUIController::CGVGraphLayoutUIController(CMainWindow *parent, CNodeEditorScene *scene) :
+CGVGraphLayoutUIController::CGVGraphLayoutUIController(CMainWindow *parent, CEditorScene *scene) :
     m_parent(parent), m_scene(scene),
 	m_defaultEngine("dot")
 {
@@ -60,6 +61,12 @@ QString CGVGraphLayoutUIController::errorCannotRun(const QString &path) const
 }
 
 
+QString CGVGraphLayoutUIController::errorCannotFinish(const QString &path) const
+{
+	return QObject::tr("Execution of %1 took too long and has been therefore cancelled by user.").arg(path);
+}
+
+
 bool CGVGraphLayoutUIController::doRunDOT(const QString &engine, const QString &dotFilePath, QString &plainFilePath, QString* lastError /*= nullptr*/)
 {
 	// run dot to convert filename.dot -> filename.temp.plain	
@@ -81,9 +88,37 @@ bool CGVGraphLayoutUIController::doRunDOT(const QString &engine, const QString &
 
 	QString cmd = QString("\"%1\" -K\"%2\" -Tplain-ext \"%3\" -o\"%4\"").arg(pathToDot, engine).arg(dotFilePath).arg(plainFilePath);
 
+	QProgressDialog progressDialog(tr("Running dot takes longer than expected.\n\nAbort execution?"), tr("Abort"), 0, 100);
+	progressDialog.setWindowModality(Qt::ApplicationModal);
+	progressDialog.setAutoReset(false);
+	progressDialog.setMinimumDuration(1000);
+
 	QProcess process;
 	process.setWorkingDirectory(m_pathToGraphviz);
-	int res = QProcess::execute(cmd);
+	process.start(cmd);
+	int res = 0;
+	process.waitForStarted(1000);
+	while (process.state() != QProcess::NotRunning)
+	{
+		process.waitForFinished(100);
+		qApp->processEvents();
+
+		if (progressDialog.wasCanceled())
+		{
+			if (lastError)
+				*lastError = errorCannotFinish(pathToDot);
+
+			return false;
+		}
+
+		if (progressDialog.isVisible()) {
+			progressDialog.setValue(progressDialog.value() + 1);
+			if (progressDialog.value() > 30)
+				progressDialog.setMaximum(progressDialog.maximum() + 1);
+		}
+	}
+
+	//int res = QProcess::execute(cmd);
 	if (res != 0)
 	{
 		if (lastError)
@@ -97,7 +132,7 @@ bool CGVGraphLayoutUIController::doRunDOT(const QString &engine, const QString &
 }
 
 
-bool CGVGraphLayoutUIController::loadGraph(const QString &filename, CNodeEditorScene &scene, QString* lastError /*= nullptr*/)
+bool CGVGraphLayoutUIController::loadGraph(const QString &filename, CEditorScene &scene, QString* lastError /*= nullptr*/)
 {
 	// run dot to convert filename.dot -> filename.temp.plain	
 	QString plainFilePath;
@@ -117,7 +152,7 @@ bool CGVGraphLayoutUIController::loadGraph(const QString &filename, CNodeEditorS
 }
 
 
-bool CGVGraphLayoutUIController::doLayout(const QString &engine, CNodeEditorScene &scene)
+bool CGVGraphLayoutUIController::doLayout(const QString &engine, CEditorScene &scene)
 {
 	QString lastError;
 	QString plainFilePath;
@@ -169,8 +204,6 @@ bool CGVGraphLayoutUIController::doLayout(const QString &engine, CNodeEditorScen
 		}
 	}
 
-	scene.addUndoState();
-
 	Q_EMIT layoutFinished();
 
 	QFile::remove(plainFilePath);
@@ -178,3 +211,25 @@ bool CGVGraphLayoutUIController::doLayout(const QString &engine, CNodeEditorScen
 	return true;
 }
 
+
+void CGVGraphLayoutUIController::runGraphvizTest(const QString &graphvizPath)
+{
+	QString pathToDot = "dot";
+	if (graphvizPath.size())
+		pathToDot = graphvizPath + "/dot";
+
+	QString cmd = QString("\"%1\" -V").arg(pathToDot);
+
+	QProcess process;
+	process.setProcessChannelMode(QProcess::MergedChannels);
+	process.setWorkingDirectory(graphvizPath);
+	process.start(cmd);
+	bool done = process.waitForFinished(5000);
+	if (done) {
+		QString outputText = process.readAll();
+		QMessageBox::information(nullptr, tr("Test passed"), outputText);
+	}
+	else {
+		QMessageBox::critical(nullptr, tr("Test failed"), tr("Was not able to run %1").arg(cmd));
+	}
+}

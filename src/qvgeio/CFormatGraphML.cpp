@@ -203,15 +203,11 @@ bool CFormatGraphML::load(const QString& fileName, Graph& graph, QString* lastEr
 	QDomDocument doc("graphml");
 	if (!doc.setContent(&file, false, &errorString, &errorLine, &errorColumn))
 	{
-		file.close();
-
 		if (lastError)
 			*lastError = QObject::tr("%1\nline: %2, column: %3").arg(errorString).arg(errorLine).arg(errorColumn);
 
 		return false;
 	}
-
-	file.close();
 
 	// try to parse
 	graph.clear();

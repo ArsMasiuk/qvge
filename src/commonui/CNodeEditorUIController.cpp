@@ -19,9 +19,6 @@ It can be used freely, maintaining the information above.
 #include <CNodePortEditorDialog.h>
 #include <CSearchDialog.h>
 
-#include <CDOTExportDialog.h>
-#include <CImageExportDialog.h>
-
 #ifdef USE_OGDF
 #include <ogdf/COGDFLayoutUIController.h>
 #include <ogdf/COGDFLayout.h>
@@ -30,6 +27,8 @@ It can be used freely, maintaining the information above.
 #ifdef USE_GVGRAPH
 #include <gvgraph/CGVGraphLayoutUIController.h>
 #endif
+
+#include <qvgeioui/CImportExportUIController.h>
 
 #include <appbase/CMainWindow.h>
 
@@ -104,9 +103,10 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
     // search dialog
     m_searchDialog = new CSearchDialog(parent);
 
-	// export dialogs
-	m_dotDialog = new CDOTExportDialog(parent);
-	m_imageDialog = new CImageExportDialog(parent);
+
+	// IO
+	m_ioController = new CImportExportUIController(parent);
+
 
     // OGDF
 #ifdef USE_OGDF
@@ -128,7 +128,10 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 	m_gvController->setPathToGraphviz(m_optionsData.graphvizPath);
 
 	m_optionsData.graphvizDefaultEngine = "dot";
+
+	m_ioController->setGVGraphController(m_gvController);
 #endif
+
 
     // workaround for full screen
 #ifndef Q_OS_WIN32
@@ -149,6 +152,41 @@ CNodeEditorUIController::CNodeEditorUIController(CMainWindow *parent) :
 
 CNodeEditorUIController::~CNodeEditorUIController()
 {
+}
+
+
+// IO
+
+bool CNodeEditorUIController::loadFromFile(const QString &format, const QString &fileName, QString* lastError)
+{
+	if (m_ioController)
+		return m_ioController->loadFromFile(format, fileName, *m_editorScene, lastError);
+	else
+		return false;
+}
+
+
+bool CNodeEditorUIController::saveToFile(const QString &format, const QString &fileName, QString* lastError)
+{
+	if (m_ioController)
+		return m_ioController->saveToFile(format, fileName, *m_editorScene, lastError);
+	else
+		return false;
+}
+
+
+// tbd: move to m_ioController
+void CNodeEditorUIController::exportFile()	{ m_ioController->exportImage(*m_editorScene); }
+
+void CNodeEditorUIController::exportPDF()	{ m_ioController->exportPDF(*m_editorScene); }
+
+void CNodeEditorUIController::exportSVG()	{ m_ioController->exportSVG(*m_editorScene); }
+
+void CNodeEditorUIController::exportDOT()	{ m_ioController->exportDOT(*m_editorScene); }
+
+bool CNodeEditorUIController::importCSV(const QString &fileName, QString* lastError)
+{
+	return m_ioController->importCSV(*m_editorScene, fileName, lastError);
 }
 
 
@@ -665,8 +703,6 @@ void CNodeEditorUIController::doReadSettings(QSettings& settings)
 	m_editorView->setRenderHint(QPainter::Antialiasing, isAA);
 	m_editorScene->setFontAntialiased(isAA);
 
-	m_lastExportPath = settings.value("lastExportPath", m_lastExportPath).toString();
-
 	m_optionsData.backupPeriod = settings.value("backupPeriod", m_optionsData.backupPeriod).toInt();
 
 	settings.beginGroup("GraphViz");
@@ -675,6 +711,12 @@ void CNodeEditorUIController::doReadSettings(QSettings& settings)
 	settings.endGroup();
 
 	updateSceneOptions();
+
+	
+	// IO
+	settings.beginGroup("IO");
+	m_ioController->doReadSettings(settings);
+	settings.endGroup();
 
 
 	// UI elements
@@ -700,8 +742,6 @@ void CNodeEditorUIController::doWriteSettings(QSettings& settings)
 	int cacheRam = QPixmapCache::cacheLimit();
 	settings.setValue("cacheRam", cacheRam);
 
-	settings.setValue("lastExportPath", m_lastExportPath);
-
 	settings.setValue("backupPeriod", m_optionsData.backupPeriod);
 
 
@@ -713,8 +753,8 @@ void CNodeEditorUIController::doWriteSettings(QSettings& settings)
 
 
 	// IO
-	settings.beginGroup("IO/ImageExport");
-	m_imageDialog->doWriteSettings(settings);
+	settings.beginGroup("IO");
+	m_ioController->doWriteSettings(settings);
 	settings.endGroup();
 
 
@@ -810,6 +850,10 @@ void CNodeEditorUIController::sceneOptions()
 {
 	CSceneOptionsDialog dialog;
 
+#ifdef USE_GVGRAPH
+	connect(&dialog, &CSceneOptionsDialog::testGraphviz, m_gvController, &CGVGraphLayoutUIController::runGraphvizTest);
+#endif
+
 	if (dialog.exec(*m_editorScene, *m_editorView, m_optionsData))
 	{
 		updateSceneOptions();
@@ -866,6 +910,8 @@ void CNodeEditorUIController::updateFromActions()
 
 void CNodeEditorUIController::onLayoutFinished()
 {
+	m_editorScene->crop();
+
 	m_editorView->fitToView();
 }
 

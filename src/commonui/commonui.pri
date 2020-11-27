@@ -31,5 +31,4 @@ USE_BOOST{
 USE_GVGRAPH{
     SOURCES += $$files($$PWD/gvgraph/*.cpp)
     HEADERS += $$files($$PWD/gvgraph/*.h)
-    #FORMS += $$files($$PWD/ogdf/*.ui)
 }

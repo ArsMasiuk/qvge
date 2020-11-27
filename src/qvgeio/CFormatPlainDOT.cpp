@@ -316,6 +316,8 @@ bool CFormatPlainDOT::parseEdge(QString& line, const QVector<QStringRef> &refs, 
 		edge.attrs["label"] = label;
 		edge.attrs["label.x"] = x * 72.0 * gi.g_scale;
 		edge.attrs["label.y"] = y * 72.0 * gi.g_scale;
+
+		edge.id = label.toUtf8();
 	}
 
 	if (rit.canNext())
@@ -328,6 +330,13 @@ bool CFormatPlainDOT::parseEdge(QString& line, const QVector<QStringRef> &refs, 
 	{
 		QString color; rit.next(color);
 		edge.attrs["color"] = color;
+	}
+
+	 
+	// check id
+	if (edge.id.isEmpty())
+	{
+		edge.id = edge.startNodeId + "-" + edge.endNodeId;
 	}
 
 	gi.g->edges << edge;

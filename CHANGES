@@ -2,11 +2,15 @@ QVGE 0.6.2
 -------------------------------------------------------------------------------
 New features/improvements:
 - import of GraphML in SocNetV format supported
+- GraphViz accessibility and version can be checked out of the Options dialog
+- if GraphViz layout engine happens to freeze, it can be aborted by user via GUI (no need to call Task Manager anymore)
 
 Bugfixes:
 - fixed crash when pressing Escape after creating of a node and immediately editing of a text label (#123)
 - fixed issue with forwarding keyboard events during editing of a text label (#124)
 - fixed importing default GraphML attributes
+- fixed a typo in the default attribute name (#125)
+- fixed loading edge id from DOT format
 
 
 

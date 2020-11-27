@@ -987,7 +987,7 @@ void CMainWindow::doReadSettings(QSettings& settings)
 
 
     // toolbars & dock widgets
-    QApplication::processEvents();
+    //QApplication::processEvents();
     const QByteArray state = settings.value("windowState").toByteArray();
     if (!state.isEmpty())
         restoreState(state);
