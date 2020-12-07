@@ -912,7 +912,8 @@ void CNodeEditorUIController::onLayoutFinished()
 {
 	m_editorScene->crop();
 
-	m_editorView->fitToView();
+	// make an option??
+	//m_editorView->fitToView();
 }
 
 
