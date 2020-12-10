@@ -44,17 +44,17 @@ CEditorScene::CEditorScene(QObject *parent):
 	Super(parent),
     m_doubleClick(false),
 	m_dragInProgress(false),
-    m_startDragItem(NULL),
-	m_infoStatus(-1),
+    m_startDragItem(nullptr),
+    m_draggedItem(nullptr),
+    m_pimpl(new CEditorScene_p(this)),
+    m_infoStatus(-1),
     //m_undoManager(new CSimpleUndoManager(*this)),
 	m_undoManager(new CDiffUndoManager(*this)),
-	m_menuTriggerItem(NULL),
-    m_draggedItem(NULL),
+    m_menuTriggerItem(nullptr),
     m_needUpdateItems(true),
-	m_isFontAntialiased(true),
 	m_labelsEnabled(true),
 	m_labelsUpdate(false),
-	m_pimpl(new CEditorScene_p(this))
+    m_isFontAntialiased(true)
 {
     m_gridSize = 25;
     m_gridEnabled = true;
@@ -107,14 +107,14 @@ void CEditorScene::initialize()
 	m_classAttributesConstrains.clear();
 
 	// default item attrs
-	createClassAttribute(class_item, "label", "Label", "", ATTR_NODEFAULT | ATTR_FIXED, 0, true);
+    createClassAttribute(class_item, "label", "Label", "", ATTR_NODEFAULT | ATTR_FIXED, nullptr, true);
 	createClassAttribute(class_item, "label.color", "Label Color", QColor(Qt::black));
 
 	QFont labelFont;
 	CAttribute labelFontAttr("label.font", "Label Font", labelFont, ATTR_FIXED);
 	setClassAttribute(class_item, labelFontAttr);
 
-	createClassAttribute(class_item, "id", "ID", "", ATTR_NODEFAULT | ATTR_FIXED, 0, true);
+    createClassAttribute(class_item, "id", "ID", "", ATTR_NODEFAULT | ATTR_FIXED, nullptr, true);
 
 
 	// labels policy
