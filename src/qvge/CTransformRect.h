@@ -13,10 +13,14 @@ It can be used freely, maintaining the information above.
 #include <QPainter>
 #include <QRectF>
 #include <QPointF>
+#include <QList>
 
 #include "ISceneEditController.h"
 
 class CEditorScene;
+class CItem;
+class CNode;
+
 class QGraphicsItem;
 
 
@@ -42,7 +46,9 @@ public:
 	virtual bool onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent);
 	virtual bool onMouseReleased(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent);
 
-protected:
+private:
+	void doSetupItems(CEditorScene& scene);
+	void doReset();
 	void doTransformBy(CEditorScene& scene, QRectF oldRect, QRectF newRect);
 
 	struct ControlPoint
@@ -61,5 +67,9 @@ protected:
 	QRectF m_lastRect;
 
 	bool m_moveOnlyMode = false;
+
+	// transform lists
+	QList<CNode*> m_nodesTransform, m_nodesMove;
+	QList<CItem*> m_others;
 };
 

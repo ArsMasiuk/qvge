@@ -71,7 +71,7 @@ public:
 	CEdge* getEdgesFactory() { return m_edgesFactory; }
 
     // selections
-    virtual void moveSelectedItemsBy(const QPointF& d);
+    virtual void moveSelectedItemsBy(const QPointF& d, bool snapped = false);
 
 	virtual int getBoundingMargin() const { return 5; }
 

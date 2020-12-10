@@ -32,8 +32,8 @@ public:
 	virtual bool onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent) = 0;
 	virtual bool onMouseReleased(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent) = 0;
 
-	virtual bool onKeyPressed(CEditorScene& scene, QKeyEvent *keyEvent) { return true; }
-	virtual bool onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent) { return true; }
+	virtual bool onKeyPressed(CEditorScene& scene, QKeyEvent *keyEvent) { return false; }
+	virtual bool onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent) { return false; }
 
 	virtual void draw(CEditorScene& scene, QPainter *painter, const QRectF &r) = 0;
 };

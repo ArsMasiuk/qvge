@@ -946,7 +946,7 @@ void CNodeEditorScene::moveSelectedEdgesBy(const QPointF& d)
 
 // reimp
 
-void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
+void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d, bool snapped)
 {
 	QSet<QGraphicsItem*> items;
 	QSet<CEdge*> edges;
@@ -979,6 +979,10 @@ void CNodeEditorScene::moveSelectedItemsBy(const QPointF& d)
 
 	for (auto item : items)
 		item->moveBy(d.x(), d.y());
+
+	if (snapped)
+		for (auto item : items)
+			item->setPos(getSnapped(item->pos()));
 
 	for (auto edge : edges)
 		edge->onItemMoved(d);

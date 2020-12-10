@@ -2115,9 +2115,11 @@ void CEditorScene::keyReleaseEvent(QKeyEvent *keyEvent)
 {
 	if (m_editController)
 	{
-		m_editController->onKeyReleased(*this, keyEvent);
-		updateCursorState();
-		return;
+		if (m_editController->onKeyReleased(*this, keyEvent))
+		{
+			updateCursorState();
+			return;
+		}
 	}
 
 	updateCursorState();
@@ -2128,19 +2130,21 @@ void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 {
 	if (m_editController)
 	{
-		m_editController->onKeyPressed(*this, keyEvent);
-		updateCursorState();
-		return;
+		if (m_editController->onKeyPressed(*this, keyEvent))
+		{
+			updateCursorState();
+			return;
+		}
 	}
 
 	updateCursorState();
 
-	bool isCtrl = (keyEvent->modifiers() == Qt::ControlModifier);
-	bool isAlt = (keyEvent->modifiers() == Qt::AltModifier);
-	bool isShift = (keyEvent->modifiers() == Qt::ShiftModifier);
+	bool isCtrl = (keyEvent->modifiers() & Qt::ControlModifier);
+	bool isAlt = (keyEvent->modifiers() & Qt::AltModifier);
+	bool isShift = (keyEvent->modifiers() & Qt::ShiftModifier);
 
-	if (isAlt || keyEvent->isAccepted())
-		return;
+	//if (isAlt /*|| keyEvent->isAccepted()*/)
+	//	return;
 
 
 	if (keyEvent->key() == Qt::Key_Delete)
@@ -2163,10 +2167,11 @@ void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 	// no modifier moves by 1 pixel, shift moves by grid size
 	int moveStep = isShift ? m_gridSize : 1;
+	bool moveSnapped = isShift;
 
 	if (keyEvent->key() == Qt::Key_Right)
 	{
-		moveSelectedItemsBy(moveStep, 0);
+		moveSelectedItemsBy(moveStep, 0, moveSnapped);
 		addUndoState();
 
 		keyEvent->accept();
@@ -2175,7 +2180,7 @@ void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 	if (keyEvent->key() == Qt::Key_Left)
 	{
-		moveSelectedItemsBy(-moveStep, 0);
+		moveSelectedItemsBy(-moveStep, 0, moveSnapped);
 		addUndoState();
 
 		keyEvent->accept();
@@ -2184,7 +2189,7 @@ void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 	if (keyEvent->key() == Qt::Key_Up)
 	{
-		moveSelectedItemsBy(0, -moveStep);
+		moveSelectedItemsBy(0, -moveStep, moveSnapped);
 		addUndoState();
 
 		keyEvent->accept();
@@ -2193,7 +2198,7 @@ void CEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 	if (keyEvent->key() == Qt::Key_Down)
 	{
-		moveSelectedItemsBy(0, moveStep);
+		moveSelectedItemsBy(0, moveStep, moveSnapped);
 		addUndoState();
 
 		keyEvent->accept();
@@ -2361,7 +2366,7 @@ void CEditorScene::ensureSelectionVisible()
 }
 
 
-void CEditorScene::moveSelectedItemsBy(const QPointF& d)
+void CEditorScene::moveSelectedItemsBy(const QPointF& d, bool /*snapped*/)
 {
 	auto items = selectedItems();
 	

@@ -53,7 +53,6 @@ public:
 	// transformations
 	virtual void transform(const QRectF& oldRect, const QRectF& newRect,
 		double xc, double yc,
-		const QList<QGraphicsItem*> selItems,
 		bool changeSize, bool changePos) override;
 
 	// attributes

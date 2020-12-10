@@ -132,14 +132,6 @@ void CDirectEdge::updateLabelPosition()
 }
 
 
-void CDirectEdge::transform(const QRectF& oldRect, const QRectF& newRect,
-	double xc, double yc,
-	const QList<QGraphicsItem*> selItems,
-	bool changeSize, bool changePos)
-{
-}
-
-
 // callbacks 
 
 void CDirectEdge::onParentGeometryChanged()

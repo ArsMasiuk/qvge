@@ -122,7 +122,7 @@ void CTransformRect::draw(class CEditorScene &scene, QPainter *painter, const QR
 }
 
 
-bool CTransformRect::onMousePressed(CEditorScene& /*scene*/, QGraphicsSceneMouseEvent* mouseEvent)
+bool CTransformRect::onMousePressed(CEditorScene& scene, QGraphicsSceneMouseEvent* mouseEvent)
 {
 	bool isDragging = (mouseEvent->button() == Qt::LeftButton);
 	if (!isDragging)
@@ -137,13 +137,14 @@ bool CTransformRect::onMousePressed(CEditorScene& /*scene*/, QGraphicsSceneMouse
 			m_dragRect = m_lastRect;
 			m_dragPos = m_lastPos = pos;
 			m_dragPoint = i;
+
+			doSetupItems(scene);
 			return true;
 		}
 	}
 
-	m_dragRect = QRectF();
-	m_dragPos = m_lastPos = QPointF();
-	m_dragPoint = -1;
+	doReset();
+
 	return false;
 }
 
@@ -160,12 +161,28 @@ bool CTransformRect::onMouseReleased(CEditorScene& scene, QGraphicsSceneMouseEve
 
 	// else finish the drag
 	if (m_lastPos != m_dragPos)
+	{
+		// snap after transform
+		//if (scene.gridSnapEnabled())
+		{
+			for (auto node : m_nodesTransform)
+			{
+				node->setPos(scene.getSnapped(node->pos()));
+			}
+
+			for (auto node : m_nodesMove)
+			{
+				node->setPos(scene.getSnapped(node->pos()));
+			}
+		}
+
 		scene.addUndoState();
+	}
 
 	scene.setSceneCursor(Qt::ArrowCursor);
 
-	m_dragPos = m_lastPos = QPointF();
-	m_dragPoint = -1;
+	doReset();
+
 	return true;
 }
 
@@ -248,6 +265,66 @@ bool CTransformRect::onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *
 }
 
 
+// privates
+
+void CTransformRect::doReset()
+{
+	m_dragRect = QRectF();
+	m_dragPos = m_lastPos = QPointF();
+	m_dragPoint = -1;
+
+	m_nodesTransform.clear();
+	m_nodesMove.clear();
+	m_others.clear();
+}
+
+
+void CTransformRect::doSetupItems(CEditorScene& scene)
+{
+	// prepare transform lists
+	auto selItems = scene.getTransformableItems();
+
+	// go for nodes
+	for (auto item : selItems)
+	{
+		auto cnode = dynamic_cast<CNode*>(item);
+		if (cnode)
+		{
+			m_nodesTransform << cnode;
+			continue;
+		}
+	}
+
+	// go for edges & rest
+	for (auto item : selItems)
+	{
+		auto cnode = dynamic_cast<CNode*>(item);
+		if (cnode)
+			continue;
+
+		auto cedge = dynamic_cast<CEdge*>(item);
+		if (cedge)
+		{
+			m_others << cedge;
+			auto n1 = cedge->firstNode();
+			auto n2 = cedge->lastNode();
+			if (!m_nodesTransform.contains(n1) && !m_nodesMove.contains(n1))
+				m_nodesMove << n1;
+			if (!m_nodesTransform.contains(n2) && !m_nodesMove.contains(n2))
+				m_nodesMove << n2;
+			continue;
+		}
+
+		auto citem = dynamic_cast<CItem*>(item);
+		if (citem)
+		{
+			m_others << citem;
+			continue;
+		}
+	}
+}
+
+
 void CTransformRect::doTransformBy(CEditorScene& scene, QRectF oldRect, QRectF newRect)
 {
 	if (oldRect == newRect)
@@ -264,69 +341,21 @@ void CTransformRect::doTransformBy(CEditorScene& scene, QRectF oldRect, QRectF n
 	double xc = newRect.width() / oldRect.width();
 	double yc = newRect.height() / oldRect.height();
 
-	// prepare transform lists
-	QList<CNode*> nodesTransform, nodesMove;
-	QList<CItem*> others;
-
-	auto selItems = scene.getTransformableItems();
-
-	// go for nodes
-	for (auto item : selItems)
-	{
-		auto cnode = dynamic_cast<CNode*>(item);
-		if (cnode)
-		{
-			nodesTransform << cnode;
-			continue;
-		}
-	}
-
-	// go for edges & rest
-	for (auto item : selItems)
-	{
-		auto cnode = dynamic_cast<CNode*>(item);
-		if (cnode)
-			continue;
-
-		auto cedge = dynamic_cast<CEdge*>(item);
-		if (cedge)
-		{
-			others << cedge;
-			auto n1 = cedge->firstNode();
-			auto n2 = cedge->lastNode();
-			if (!nodesTransform.contains(n1) && !nodesMove.contains(n1))
-				nodesMove << n1;
-			if (!nodesTransform.contains(n2) && !nodesMove.contains(n2))
-				nodesMove << n2;
-			continue;
-		}
-
-		auto citem = dynamic_cast<CItem*>(item);
-		if (citem)
-		{
-			others << citem;
-			continue;
-		}
-	}
-
 	// run transformation
 	bool changeSize = !m_moveOnlyMode;
 
-	for (auto node : nodesTransform)
+	for (auto node : m_nodesTransform)
 	{
-		node->transform(oldRect, newRect, xc, yc, selItems, changeSize, true);
+		node->transform(oldRect, newRect, xc, yc, changeSize, true);
 	}
 
-	for (auto node : nodesMove)
+	for (auto node : m_nodesMove)
 	{
-		node->transform(oldRect, newRect, xc, yc, selItems, false, true);
+		node->transform(oldRect, newRect, xc, yc, false, true);
 	}
 
-	for (auto item : others)
+	for (auto item : m_others)
 	{
-		item->transform(oldRect, newRect, xc, yc, selItems, changeSize, true);
+		item->transform(oldRect, newRect, xc, yc, changeSize, true);
 	}
-
-	// snap after transform
-	// TO DO...
 }

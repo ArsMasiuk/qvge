@@ -92,10 +92,9 @@ void CPolyEdge::reverse()
 
 void CPolyEdge::transform(const QRectF & oldRect, const QRectF & newRect, 
 	double xc, double yc, 
-	const QList<QGraphicsItem*> selItems,
 	bool changeSize, bool changePos)
 {
-	Super::transform(oldRect, newRect, xc, yc, selItems, changeSize, changePos);
+	Super::transform(oldRect, newRect, xc, yc, changeSize, changePos);
 
 	// snap
 	//auto scene = getScene();

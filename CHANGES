@@ -11,6 +11,11 @@ Bugfixes:
 - fixed importing default GraphML attributes
 - fixed a typo in the default attribute name (#125)
 - fixed loading edge id from DOT format
+- fixed moving nodes via keyboard
+- fixed nodes snapping after transformation
+
+Windows:
+- GraphViz 2.44 binaries are shipped together
 
 
 

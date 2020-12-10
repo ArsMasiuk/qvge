@@ -194,11 +194,11 @@ public:
 
 	void ensureSelectionVisible();
 
-	void moveSelectedItemsBy(double x, double y) {
-		moveSelectedItemsBy(QPointF(x, y));
+	void moveSelectedItemsBy(double x, double y, bool snapped = false) {
+		moveSelectedItemsBy(QPointF(x, y), snapped);
 	}
 
-	virtual void moveSelectedItemsBy(const QPointF& d);
+	virtual void moveSelectedItemsBy(const QPointF& d, bool snapped = false);
 
 	virtual QList<CItem*> cloneSelectedItems();
 

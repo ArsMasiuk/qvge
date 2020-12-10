@@ -116,10 +116,12 @@ CItem* CNode::clone()
 // transformations
 
 void CNode::transform(
-	const QRectF & oldRect, const QRectF & newRect, 
-	double xc, double yc,
-	const QList<QGraphicsItem*> selItems, 
-	bool changeSize, bool changePos)
+	const QRectF &oldRect, 
+	const QRectF &newRect, 
+	double xc, 
+	double yc,
+	bool changeSize, 
+	bool changePos)
 {
 	double w = getSize().width();
 	double h = getSize().height();
