@@ -1,7 +1,7 @@
 [DEBREATE-0.7.13]
 <<CTRL>>
 Package: qvge
-Version: 0.6.1
+Version: 0.6.2
 Maintainer: Ars L. Masiuk <ars.masiuk@gmail.com>
 Section: editors
 Source: https://github.com/ArsMasiuk/qvge
@@ -18,8 +18,8 @@ Description: Qt Visual Graph Editor
 <</CTRL>>
 <<FILES>>
 1
-/home/osboxes/Work/qvge/icon.png -> icon.png -> /usr/share/qvge
 /home/osboxes/Work/qvge/src/bin/qvgeapp* -> qvgeapp -> /usr/bin
+/home/osboxes/Work/qvge/icon.png -> icon.png -> /usr/share/qvge
 <</FILES>>
 <<SCRIPTS>>
 <<PREINST>>
@@ -37,6 +37,26 @@ Description: Qt Visual Graph Editor
 <</SCRIPTS>>
 <<CHANGELOG>>
 <<DEST>>DEFAULT<</DEST>>
+qvge (0.6.2) ; urgency=medium
+
+New features/improvements:
+  * import of GraphML in SocNetV format supported
+  * GraphViz accessibility and version can be checked out of the Options dialog
+  * if GraphViz layout engine happens to freeze, it can be aborted by user via GUI (no need to call Task Manager anymore)
+Bugfixes:
+  * fixed crash when pressing Escape after creating of a node and immediately editing of a text label (#123)
+  * fixed issue with forwarding keyboard events during editing of a text label (#124)
+  * fixed importing default GraphML attributes
+  * fixed a typo in the default attribute name (#125)
+  * fixed loading edge id from DOT format
+  * fixed moving nodes via keyboard
+  * fixed nodes snapping after transformation
+Windows:
+  * GraphViz 2.44 binaries are shipped together
+
+ -- Ars L. Masiuk <ars.masiuk@gmail.com>  Sat, 12 Dec 2020 21:12:10 +0100
+
+
 qvge (0.6.1) ; urgency=medium
 
   * Tighter integration with GraphViz (reading of DOT format, layout via GraphViz engines)
