@@ -1,5 +1,5 @@
 Name:		qvge
-Version:	0.6.1
+Version:	0.6.2
 Release:	1
 Summary:	Qt Visual Graph Editor
 License:	MIT
@@ -36,6 +36,19 @@ cp /usr/local/share/mime/packages/application-xgr.xml %buildroot/usr/local/share
 /usr/local/share/mime/packages/application-xgr.xml
 
 %changelog
+-------------------------------------------------------------------------------
+* Sat Dec 12 2020 Ars Masiuk <ars.masiuk@gmail.com> 0.6.2
+- import of GraphML in SocNetV format supported
+- GraphViz accessibility and version can be checked out of the Options dialog
+- if GraphViz layout engine happens to freeze, it can be aborted by user via GUI (no need to call Task Manager anymore)
+- fixed crash when pressing Escape after creating of a node and immediately editing of a text label (#123)
+- fixed issue with forwarding keyboard events during editing of a text label (#124)
+- fixed importing default GraphML attributes
+- fixed a typo in the default attribute name (#125)
+- fixed loading edge id from DOT format
+- fixed moving nodes via keyboard
+- fixed nodes snapping after transformation
+
 * Mon Nov 11 2020 Ars Masiuk <ars.masiuk@gmail.com> 0.6.1
 - Tighter integration with GraphViz
 - Various bugfixes and minor improvements
