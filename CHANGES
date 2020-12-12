@@ -13,6 +13,8 @@ Bugfixes:
 - fixed loading edge id from DOT format
 - fixed moving nodes via keyboard
 - fixed nodes snapping after transformation
+- fixed restoring windows & panels layout
+- Fedora 32, Qt 5.14: too big font on startup buttons (#120)
 
 Windows:
 - GraphViz 2.44 binaries are shipped together
