@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file alias="AppIcon">Icons/AppIcon.png</file>
+    </qresource>
+    <qresource prefix="/Help">
+        <file alias="Mini_EN">lang/en/help.htm</file>
+    </qresource>
+</RCC>

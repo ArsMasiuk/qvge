@@ -32,4 +32,5 @@ qvgeioui.file = $$PWD/qvgeioui/qvgeioui.pro
 SUBDIRS += qvgeapp
 qvgeapp.file = $$PWD/qvgeapp/qvgeapp.pro
 
-
+SUBDIRS += qvgedot
+qvgedot.file= $$PWD/qvgedot/qvgedot.pro
