@@ -8,7 +8,7 @@ in a simple and intuitive way.
 
 ![Screenshot1](https://user-images.githubusercontent.com/19762856/89233004-f7846780-d5e8-11ea-8a18-ba395794e1d4.PNG)
 
-Please note that **QVGE** is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor.
+Please note that **QVGE** is not a replacement for such a software like Gephi, Inkscape, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor with some advanced features (i.e. GraphViz integration).
 
 ### Support
 
@@ -28,17 +28,13 @@ Thank you!
 - Custom (user-defined) attributes of graphs and their elements
 - Dynamically maintained list of commutations between nodes
 - Search among the graph elements and their attributes
-
 - Windows: portable mode (no installation required)
-- Auto-layout of graphs via [GraphViz](https://graphviz.org/) engines (dot, neato, fdp, circo...)
-- Auto-creation and auto-layout of graphs (via [OGDF](https://ogdf.uos.de/)):
-  - Linear
-  - Balloon
-  - Circular
-  - FMMM
-  - Planar
-  - Sugiyama
-  - Davidson-Harel
+- Auto-layout of graphs via [GraphViz](https://graphviz.org/) engines:
+  - dot
+  - neato
+  - fdp
+  - sfdp
+  - circo
 - Export of graphs into:
   - PDF
   - SVG
@@ -112,6 +108,15 @@ sudo make install
 
 ### Enabling OGDF
 
+Integration with [OGDF](https://ogdf.uos.de/) enables auto-creation and auto-layout of graphs using following algorithms:
+  - Linear
+  - Balloon
+  - Circular
+  - FMMM
+  - Planar
+  - Sugiyama
+  - Davidson-Harel
+  
 #### WARNING: bundled OGDF support has been removed since QVGE 0.6.1 due to memory access issues
 
 In order to build **QVGE** with external OGDF support (installed in your system):
@@ -178,6 +183,8 @@ Special thanks to:
 **QVGE** at [![Download QVGE](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
 
 **QVGE** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml)
+
+**QVGE** at [SoftX64.com](https://www.softx64.com/windows/qt-visual-graph-editor.html)
 
 **QVGE** at [software-file.com](http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html)<a href="http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html" target="_blank"><img src="http://www.software-file.com/images/fivestar.png" alt="Qt Visual Graph Editor on Software-File.com" border=0></a>
 
