@@ -184,9 +184,9 @@ Special thanks to:
 
 **QVGE** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml)
 
-**QVGE** at [SoftX64.com](https://www.softx64.com/windows/qt-visual-graph-editor.html)
+**QVGE** at [SoftX64.com](https://www.softx64.com/windows/qt-visual-graph-editor.html) <a target="_blank" href="https://www.softx64.com/windows/qt-visual-graph-editor.html" title="Qt Visual Graph Editor review"><img src="https://www.softx64.com/softx64-review.png" alt="Qt Visual Graph Editor review" /></a>
 
-**QVGE** at [software-file.com](http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html)<a href="http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html" target="_blank"><img src="http://www.software-file.com/images/fivestar.png" alt="Qt Visual Graph Editor on Software-File.com" border=0></a>
+**QVGE** at [software-file.com](http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html) <a href="http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html" target="_blank"><img src="http://www.software-file.com/images/fivestar.png" alt="Qt Visual Graph Editor on Software-File.com" border=0></a>
 
 **QVGE** at <a href="https://www.producthunt.com/posts/qt-visual-graph-editor?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-qt-visual-graph-editor" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=217842&theme=dark" alt="Qt Visual Graph Editor - Software to visually create and manipulate graphs | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
 
