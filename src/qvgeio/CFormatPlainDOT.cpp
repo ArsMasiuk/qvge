@@ -214,6 +214,20 @@ static QStringList parseLine(QTextStream &ts)
 }
 
 
+static void splitEdgePortIds(QByteArray& nodeId, QByteArray& portId)
+{
+	int index = nodeId.indexOf(':');
+	if (index <= 0) 
+	{
+		portId.clear();
+		return;
+	}
+
+	portId = nodeId.mid(index + 1);
+	nodeId = nodeId.left(index);
+}
+
+
 // reimp
 
 bool CFormatPlainDOT::load(const QString& fileName, Graph& g, QString* lastError) const
@@ -381,6 +395,12 @@ bool CFormatPlainDOT::parseEdge(const QStringList &refs, GraphInternal &gi) cons
 	{
 		edge.id = edge.startNodeId + "-" + edge.endNodeId;
 	}
+
+
+	// split ports if any
+	splitEdgePortIds(edge.startNodeId, edge.startPortId);
+	splitEdgePortIds(edge.endNodeId, edge.endPortId);
+
 
 	gi.g->edges << edge;
 
