@@ -158,15 +158,21 @@ void CCommutationTable::onSceneChanged()
 
 		m_edgeItemMap[edge] = item;
 
-		if (edge->firstPortId().size())
-			item->setText(StartNodeId, edge->firstNode()->getId() + ":" + edge->firstPortId());
-		else
-			item->setText(StartNodeId, edge->firstNode()->getId());
+		if (edge->firstNode())
+		{
+			if (edge->firstPortId().size())
+				item->setText(StartNodeId, edge->firstNode()->getId() + ":" + edge->firstPortId());
+			else
+				item->setText(StartNodeId, edge->firstNode()->getId());
+		}
 		
-		if (edge->lastPortId().size())
-			item->setText(EndNodeId, edge->lastNode()->getId() + ":" + edge->lastPortId());
-		else
-			item->setText(EndNodeId, edge->lastNode()->getId());
+		if (edge->lastNode())
+		{
+			if (edge->lastPortId().size())
+				item->setText(EndNodeId, edge->lastNode()->getId() + ":" + edge->lastPortId());
+			else
+				item->setText(EndNodeId, edge->lastNode()->getId());
+		}
 
 		item->setText(EdgeId, edge->getId());
 

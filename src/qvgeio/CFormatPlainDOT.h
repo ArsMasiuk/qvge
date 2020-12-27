@@ -28,9 +28,9 @@ private:
 		Graph* g = nullptr;
 	};
 
-	bool parseGraph(QString& line, const QVector<QStringRef>& refs, GraphInternal &gi) const;
-	bool parseNode(QString& line, const QVector<QStringRef>& refs, GraphInternal &gi) const;
-	bool parseEdge(QString& line, const QVector<QStringRef>& refs, GraphInternal &gi) const;
+	bool parseGraph(const QStringList& refs, GraphInternal &gi) const;
+	bool parseNode(const QStringList& refs, GraphInternal &gi) const;
+	bool parseEdge(const QStringList& refs, GraphInternal &gi) const;
 };
 
 

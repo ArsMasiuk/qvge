@@ -48,36 +48,10 @@ static void fromDotNodeStyle(const QString& style, GraphAttributes& nodeAttr)
 }
 
 
-static QVector<QStringRef> tokenize(const QString& str)
-{
-	QVector<QStringRef> refs;
-
-	// split on quotes keeping empties
-	auto tempRefs = str.splitRef('"', QString::KeepEmptyParts);
-
-	// split every even ref on spaces
-	for (int i = 0; i < tempRefs.count(); i++)
-	{
-		if (i & 1)
-		{
-			refs << tempRefs.at(i);
-		}
-		else
-		{
-			auto tempSpaced = tempRefs.at(i).split(' ', QString::SkipEmptyParts);
-			for (auto ref : tempSpaced)
-				refs << ref;
-		}
-	}
-
-	return refs;
-}
-
-
 class QStringRefsConstIterator
 {
 public:
-	QStringRefsConstIterator(const QVector<QStringRef>& refs): m_refs(refs)
+	QStringRefsConstIterator(const QStringList& refs): m_refs(refs)
 	{
 		m_pos = (m_refs.size()) ? 0 : -1;
 	}
@@ -144,7 +118,7 @@ public:
 	{
 		if (canNext())
 		{
-			s = m_refs.at(m_pos++).toString();
+			s = m_refs.at(m_pos++);
 			return true;
 		}
 
@@ -163,9 +137,81 @@ public:
 	}
 
 private:
-	const QVector<QStringRef>& m_refs;
+	const QStringList& m_refs;
 	int m_pos = -1;
 };
+
+
+// parsing plain dot
+
+static QStringList parseLine(QTextStream &ts)
+{
+	QStringList tokens;
+
+	// normal mode
+	while (!ts.atEnd())
+	{
+		QString line = ts.readLine().trimmed();
+		if (line.isEmpty())
+			continue;
+
+		// add EOL
+		line += '\0';
+
+		int i = 0;
+
+	_loop:
+		// skip to next token
+		while (line[i].isSpace())
+			i++;
+		if (line[i] == '\0')
+			break;
+
+		// check for "
+		if (line[i] == '"')
+		{
+			i++;
+			QString token;
+			while (line[i] != '"' && line[i] != '\0')
+				token += line[i++];
+			tokens << token;
+
+			goto _loop;
+		}
+
+		// check for < + eol
+		if (line[i] == '<' && line[i+1] == '\0')
+		{
+			QString token;
+			while (!ts.atEnd())
+			{
+				QString l = ts.readLine();
+				QString lt = l.trimmed() + '\0';
+				if (lt[0] == '>' && (lt[1].isSpace() || lt[1] == '\0'))
+				{
+					tokens << token;
+					line = lt;
+					i = 1;
+					goto _loop;
+				}
+				else
+				{
+					token += l + "\n";
+				}
+			}
+		}
+		
+		// read normal tokens
+		QString token;
+		while (line[i] != '\0' && !line[i].isSpace())
+			token += line[i++];
+
+		tokens << token;
+		goto _loop;
+	}
+
+	return tokens;
+}
 
 
 // reimp
@@ -185,31 +231,28 @@ bool CFormatPlainDOT::load(const QString& fileName, Graph& g, QString* lastError
 	}
 
 	QTextStream ts(&f);
+
 	while (!ts.atEnd())
 	{
-		QString line = ts.readLine();
-		if (line.isEmpty())
-			continue;
-
-		auto refs = tokenize(line);
+		auto refs = parseLine(ts);
 		if (refs.first() == "stop")
 			break;
 
 		if (refs.first() == "graph")
 		{
-			parseGraph(line, refs, gi);
+			parseGraph(refs, gi);
 			continue;
 		}
 
 		if (refs.first() == "node")
 		{
-			parseNode(line, refs, gi);
+			parseNode(refs, gi);
 			continue;
 		}
 
 		if (refs.first() == "edge")
 		{
-			parseEdge(line, refs, gi);
+			parseEdge(refs, gi);
 			continue;
 		}
 	}
@@ -229,7 +272,7 @@ bool CFormatPlainDOT::save(const QString& fileName, Graph& g, QString* lastError
 
 // privates
 
-bool CFormatPlainDOT::parseGraph(QString& line, const QVector<QStringRef> &refs, GraphInternal &gi) const
+bool CFormatPlainDOT::parseGraph(const QStringList &refs, GraphInternal &gi) const
 {
 	QStringRefsConstIterator rit(refs);
 	rit.next();	// skip header
@@ -241,7 +284,7 @@ bool CFormatPlainDOT::parseGraph(QString& line, const QVector<QStringRef> &refs,
 }
 
 
-bool CFormatPlainDOT::parseNode(QString& line, const QVector<QStringRef> &refs, GraphInternal &gi) const
+bool CFormatPlainDOT::parseNode(const QStringList &refs, GraphInternal &gi) const
 {
 	QStringRefsConstIterator rit(refs);
 	rit.next();	// skip header
@@ -280,7 +323,7 @@ bool CFormatPlainDOT::parseNode(QString& line, const QVector<QStringRef> &refs, 
 }
 
 
-bool CFormatPlainDOT::parseEdge(QString& line, const QVector<QStringRef> &refs, GraphInternal &gi) const
+bool CFormatPlainDOT::parseEdge(const QStringList &refs, GraphInternal &gi) const
 {
 	QStringRefsConstIterator rit(refs);
 	rit.next();	// skip header
