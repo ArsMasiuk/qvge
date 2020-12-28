@@ -2,11 +2,11 @@
 
 #include <appbase/CMainWindow.h>
 
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CNode.h>
-#include <qvge/CEdge.h>
-#include <qvge/CFileSerializerDOT.h>
-#include <qvge/CFileSerializerPlainDOT.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CEdge.h>
+#include <qvgelib/CFileSerializerDOT.h>
+#include <qvgelib/CFileSerializerPlainDOT.h>
 #include <qvgeio/CFormatPlainDOT.h>
 
 #include <QMenuBar>

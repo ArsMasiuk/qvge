@@ -7,14 +7,14 @@
 
 
 TEMPLATE = app
-TARGET = qvgeapp
+TARGET = qdot
 
 win32{
-	VERSION = 0.6.2.0
+	VERSION = 0.0.1.0
 	RC_ICONS = $$PWD/win32/icon.ico
 	QMAKE_TARGET_COPYRIGHT = (C) 2016-2020 Ars L. Masiuk
-	QMAKE_TARGET_DESCRIPTION = Qt Visual Graph Editor
-	QMAKE_TARGET_PRODUCT = qvge
+	QMAKE_TARGET_DESCRIPTION = Qt Visual GraphViz Assistent
+	QMAKE_TARGET_PRODUCT = qdot
 }
 
 
@@ -52,19 +52,15 @@ unix{
     INSTALLS += target
 
     desktop.path = $$PREFIX_DIR/share/applications/
-    desktop.files = $$PWD/linux/qvge.desktop
+    desktop.files = $$PWD/linux/qdot.desktop
     INSTALLS += desktop
 
     icon.path = $$PREFIX_DIR/share/pixmaps
-    icon.files = $$PWD/linux/qvge.png
+    icon.files = $$PWD/linux/qdot.png
     INSTALLS += icon
 
     appdata.path = $$PREFIX_DIR/share/appdata/
-    appdata.files = $$PWD/linux/qvge.appdata.xml
+    appdata.files = $$PWD/linux/qdot.appdata.xml
     INSTALLS += appdata
-
-    xgr.path = $$PREFIX_DIR/share/mime/packages/
-    xgr.files = $$PWD/linux/application-xgr.xml
-    INSTALLS += xgr
 }
 

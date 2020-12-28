@@ -66,7 +66,7 @@ qdotMainWindow::~qdotMainWindow()
 void qdotMainWindow::init(const QStringList& args)
 {
 	// check portable start
-	QString localINI = QCoreApplication::applicationDirPath() + "/qvge.ini";
+	QString localINI = QCoreApplication::applicationDirPath() + "/qdot.ini";
 	m_portable = (QFile::exists(localINI));
 
     Super::init(args);
@@ -82,7 +82,7 @@ QSettings& qdotMainWindow::getApplicationSettings() const
 {
 	if (m_portable)
 	{
-		static QString localINI = QCoreApplication::applicationDirPath() + "/qvge.ini";
+		static QString localINI = QCoreApplication::applicationDirPath() + "/qdot.ini";
 		static QSettings localSettings(localINI, QSettings::IniFormat);
 		return localSettings;
 	}

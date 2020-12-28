@@ -14,7 +14,7 @@ It can be used freely, maintaining the information above.
 #include <QVariant>
 #include <QSettings>
 
-#include <qvge/CNodeEditorScene.h>
+#include <qvgelib/CNodeEditorScene.h>
 
 class CEditorScene;
 //class CNodeEditorScene;

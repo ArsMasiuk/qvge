@@ -13,7 +13,7 @@ It can be used freely, maintaining the information above.
 #include <QByteArray>
 #include <QVariant>
 
-#include "qvge/IFileSerializer.h"
+#include "qvgelib/IFileSerializer.h"
 
 class CNode;
 class CEdge;

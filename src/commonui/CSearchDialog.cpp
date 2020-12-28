@@ -10,10 +10,10 @@ It can be used freely, maintaining the information above.
 #include "CSearchDialog.h"
 #include "ui_CSearchDialog.h"
 
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CItem.h>
-#include <qvge/CNode.h>
-#include <qvge/CEdge.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CItem.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CEdge.h>
 
 #include <QMessageBox>
 #include <QTreeWidgetItem>

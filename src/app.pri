@@ -22,7 +22,7 @@ else{
 
 # workaround for #126
 CONFIG += no_lflags_merge
-LIBS += -lcommonui -lqvgeioui -lcommonui -lqvge -lqvgeio -lqtpropertybrowser -lqsint-widgets
+LIBS += -lcommonui -lqvgeioui -lcommonui -lqvgelib -lqvgeio -lqtpropertybrowser -lqsint-widgets
 
 
 USE_OGDF{

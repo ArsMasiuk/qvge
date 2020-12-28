@@ -32,16 +32,16 @@ It can be used freely, maintaining the information above.
 
 #include <appbase/CMainWindow.h>
 
-#include <qvge/CNode.h>
-#include <qvge/CEdge.h>
-#include <qvge/CImageExport.h>
-#include <qvge/CPDFExport.h>
-#include <qvge/CFileSerializerXGR.h>
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CNodeSceneActions.h>
-#include <qvge/CEditorSceneDefines.h>
-#include <qvge/CEditorView.h>
-#include <qvge/ISceneItemFactory.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CEdge.h>
+#include <qvgelib/CImageExport.h>
+#include <qvgelib/CPDFExport.h>
+#include <qvgelib/CFileSerializerXGR.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CNodeSceneActions.h>
+#include <qvgelib/CEditorSceneDefines.h>
+#include <qvgelib/CEditorView.h>
+#include <qvgelib/ISceneItemFactory.h>
 
 #include <QMenuBar>
 #include <QStatusBar>

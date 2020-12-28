@@ -1,8 +1,8 @@
 #include "CNodePortEditorDialog.h"
 #include "ui_CNodePortEditorDialog.h"
 
-#include <qvge/CNode.h>
-#include <qvge/CNodePort.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CNodePort.h>
 
 
 CNodePortEditorDialog::CNodePortEditorDialog(): ui(new Ui::CNodePortEditorDialog)

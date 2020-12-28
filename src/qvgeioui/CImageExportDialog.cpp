@@ -10,7 +10,7 @@ It can be used freely, maintaining the information above.
 #include "CImageExportDialog.h"
 #include "ui_CImageExportDialog.h"
 
-#include <qvge/CEditorScene.h>
+#include <qvgelib/CEditorScene.h>
 
 
 CImageExportDialog::CImageExportDialog(QWidget *parent): 

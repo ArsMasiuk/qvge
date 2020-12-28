@@ -4,11 +4,11 @@
 #include <QGraphicsItem>
 #include <QGraphicsSceneContextMenuEvent>
 
-#include <qvge/CEditorView.h>
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CNodeSceneActions.h>
-#include <qvge/CNode.h>
-#include <qvge/CEdge.h>
+#include <qvgelib/CEditorView.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CNodeSceneActions.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CEdge.h>
 
 
 CSceneMenuUIController::CSceneMenuUIController(QObject *parent) : QObject(parent)

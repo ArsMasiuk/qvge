@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QMenu>
 
-#include <qvge/ISceneMenuController.h>
+#include <qvgelib/ISceneMenuController.h>
 
 class CNodeEditorScene;
 

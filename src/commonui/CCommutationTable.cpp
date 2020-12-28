@@ -9,9 +9,9 @@ It can be used freely, maintaining the information above.
 
 #include "CCommutationTable.h"
 
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CEdge.h>
-#include <qvge/CNode.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CEdge.h>
+#include <qvgelib/CNode.h>
 
 #include <QDebug>
 #include <QElapsedTimer>

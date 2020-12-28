@@ -15,13 +15,13 @@ It can be used freely, maintaining the information above.
 #include "CNodeEdgePropertiesUI.h"
 #include "ui_CNodeEdgePropertiesUI.h"
 
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CNode.h>
-#include <qvge/CEdge.h>
-#include <qvge/CDirectEdge.h>
-#include <qvge/CPolyEdge.h>
-#include <qvge/CAttribute.h>
-#include <qvge/CEditorSceneDefines.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CEdge.h>
+#include <qvgelib/CDirectEdge.h>
+#include <qvgelib/CPolyEdge.h>
+#include <qvgelib/CAttribute.h>
+#include <qvgelib/CEditorSceneDefines.h>
 
 
 CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :

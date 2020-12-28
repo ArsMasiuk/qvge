@@ -20,8 +20,8 @@ qsint.file = $$PWD/3rdParty/qsint-widgets/qsint-widgets.pro
 SUBDIRS += qvgeio
 qvgeio.file = $$PWD/qvgeio/qvgeio.pro
 
-SUBDIRS += qvge
-qvge.file = $$PWD/qvge/qvge.pro
+SUBDIRS += qvgelib
+qvgelib.file = $$PWD/qvgelib/qvgelib.pro
 
 SUBDIRS += commonui
 commonui.file = $$PWD/commonui/commonui.pro
@@ -29,8 +29,8 @@ commonui.file = $$PWD/commonui/commonui.pro
 SUBDIRS += qvgeioui
 qvgeioui.file = $$PWD/qvgeioui/qvgeioui.pro
 
-SUBDIRS += qvgeapp
-qvgeapp.file = $$PWD/qvgeapp/qvgeapp.pro
+SUBDIRS += qvge
+qvge.file = $$PWD/qvge/qvge.pro
 
-SUBDIRS += qvgedot
-qvgedot.file= $$PWD/qvgedot/qvgedot.pro
+SUBDIRS += qdot
+qdot.file= $$PWD/qdot/qdot.pro

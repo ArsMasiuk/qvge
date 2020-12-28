@@ -851,7 +851,7 @@ void CEditorScene::copy()
 
 	// create mime object
 	QMimeData* mimeData = new QMimeData;
-	mimeData->setData("qvge/selection", buffer);
+	mimeData->setData("qvgelib/selection", buffer);
 	QApplication::clipboard()->setMimeData(mimeData);
 
 	// paste it to a temp scene & render into mime image
@@ -914,13 +914,13 @@ void CEditorScene::pasteAt(const QPointF &anchor)
 	const QMimeData *mimeData = clipboard->mimeData();
     if (!mimeData)
 		return;
-	if (!mimeData->hasFormat("qvge/selection"))
+	if (!mimeData->hasFormat("qvgelib/selection"))
 		return;
 
 	deselectAll();
 
 	// read items from the buffer
-	QByteArray buffer = mimeData->data("qvge/selection");
+	QByteArray buffer = mimeData->data("qvgelib/selection");
 	QDataStream out(buffer);
 
 	// version

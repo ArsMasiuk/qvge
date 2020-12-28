@@ -11,7 +11,7 @@ It can be used freely, maintaining the information above.
 
 #include <QtCore/QSettings>
 
-#include "qvge/IFileSerializer.h"
+#include "qvgelib/IFileSerializer.h"
 
 
 class CNode;

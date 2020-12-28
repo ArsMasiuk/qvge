@@ -1,6 +1,6 @@
 #include "CColorSchemesUIController.h"
 
-#include <qvge/CEditorScene.h>
+#include <qvgelib/CEditorScene.h>
 
 
 CColorSchemesUIController::CColorSchemesUIController(QObject *parent) : QObject(parent)

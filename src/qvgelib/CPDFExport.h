@@ -14,7 +14,7 @@ It can be used freely, maintaining the information above.
 #include <QSettings>
 #include <QPageSetupDialog>
 
-#include "qvge/IFileSerializer.h"
+#include "qvgelib/IFileSerializer.h"
 
 
 class CPDFExport : public IFileSerializer

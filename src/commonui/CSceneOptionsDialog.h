@@ -12,8 +12,8 @@ It can be used freely, maintaining the information above.
 
 #include <QDialog>
 
-#include <qvge/CEditorScene.h>
-#include <qvge/CEditorView.h>
+#include <qvgelib/CEditorScene.h>
+#include <qvgelib/CEditorView.h>
 
 
 namespace Ui {

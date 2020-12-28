@@ -11,26 +11,28 @@ It can be used freely, maintaining the information above.
 
 #include <QString>
 
-#include "qvge/IFileSerializer.h"
+#include "qvgelib/IFileSerializer.h"
 
 
-class CImageExport : public IFileSerializer
+class CSVGExport : public IFileSerializer
 {
 public:
-	CImageExport(bool cutContent = true, int resolution = 0) :
+	CSVGExport(bool cutContent = true, int resolution = 0) :
 		m_cutContent(cutContent),
 		m_resolution(resolution)
 	{}
 
 	// reimp
 	virtual QString description() const {
-		return "Image Format";
+		return "Scalable Vector Graphics Format";
 	}
 
-	virtual QString filters() const;
+	virtual QString filters() const {
+		return "Scalable Vector Graphics (*.svg)";
+	}
 
 	virtual QString defaultFileExtension() const {
-		return "bmp";
+		return "svg";
 	}
 
 	virtual bool loadSupported() const {

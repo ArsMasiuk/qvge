@@ -1,8 +1,8 @@
 #include "CNodesFactorDialog.h"
 #include "ui_CNodesFactorDialog.h"
 
-#include <qvge/CNode.h>
-#include <qvge/CNodeEditorScene.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CNodeEditorScene.h>
 
 
 CNodesFactorDialog::CNodesFactorDialog(): ui(new Ui::CNodesFactorDialog)

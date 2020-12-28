@@ -24,19 +24,19 @@ It can be used freely, maintaining the information above.
 #include <commonui/CExtListInputDialog.h>
 #include <appbase/CMainWindow.h>
 
-#include <qvge/CNode.h>
-#include <qvge/CEdge.h>
-#include <qvge/CImageExport.h>
-#include <qvge/CPDFExport.h>
-#include <qvge/CSVGExport.h>
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CFileSerializerGEXF.h>
-#include <qvge/CFileSerializerGraphML.h>
-#include <qvge/CFileSerializerXGR.h>
-#include <qvge/CFileSerializerDOT.h>
-#include <qvge/CFileSerializerPlainDOT.h>
-#include <qvge/CFileSerializerCSV.h>
-#include <qvge/ISceneItemFactory.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CEdge.h>
+#include <qvgelib/CImageExport.h>
+#include <qvgelib/CPDFExport.h>
+#include <qvgelib/CSVGExport.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CFileSerializerGEXF.h>
+#include <qvgelib/CFileSerializerGraphML.h>
+#include <qvgelib/CFileSerializerXGR.h>
+#include <qvgelib/CFileSerializerDOT.h>
+#include <qvgelib/CFileSerializerPlainDOT.h>
+#include <qvgelib/CFileSerializerCSV.h>
+#include <qvgelib/ISceneItemFactory.h>
 
 #include <QFileInfo>
 #include <QFileDialog>

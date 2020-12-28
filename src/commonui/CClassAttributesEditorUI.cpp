@@ -10,8 +10,8 @@ It can be used freely, maintaining the information above.
 #include "CClassAttributesEditorUI.h"
 #include "CNewAttributeDialog.h"
 
-#include <qvge/CEditorScene.h>
-#include <qvge/CItem.h>
+#include <qvgelib/CEditorScene.h>
+#include <qvgelib/CItem.h>
 
 #include <QMessageBox>
 #include <QDebug>
