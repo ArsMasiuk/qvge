@@ -182,7 +182,7 @@ Special thanks to:
 
 **QVGE** at [![Download QVGE](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
 
-**QVGE** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml)
+**QVGE** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml) <a target="_blank" href="https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml"><img src="https://cdnssl.softpedia.com/_img/sp100free.png?1"/></a>
 
 **QVGE** at [SoftX64.com](https://www.softx64.com/windows/qt-visual-graph-editor.html) <a target="_blank" href="https://www.softx64.com/windows/qt-visual-graph-editor.html" title="Qt Visual Graph Editor review"><img src="https://www.softx64.com/softx64-review.png" alt="Qt Visual Graph Editor review" /></a>
 
