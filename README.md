@@ -180,7 +180,7 @@ Special thanks to:
 
 ### Extenal Links
 
-**QVGE** at [![Download QVGE](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
+**QVGE** at [![Download qvge](https://sourceforge.net/sflogo.php?type=14&group_id=2914953)](https://sourceforge.net/p/qvge/) [![Download qvge](https://img.shields.io/sourceforge/dt/qvge.svg)](https://sourceforge.net/projects/qvge/files/latest/download)
 
 **QVGE** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml) <a target="_blank" href="https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml"><img src="https://cdnssl.softpedia.com/_img/sp100free.png?1"/></a>
 
