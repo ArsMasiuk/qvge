@@ -29,6 +29,9 @@ commonui.file = $$PWD/commonui/commonui.pro
 SUBDIRS += qvgeioui
 qvgeioui.file = $$PWD/qvgeioui/qvgeioui.pro
 
+SUBDIRS += qvgeui
+qvgeui.file = $$PWD/qvgeui/qvgeui.pro
+
 SUBDIRS += qvge
 qvge.file = $$PWD/qvge/qvge.pro
 

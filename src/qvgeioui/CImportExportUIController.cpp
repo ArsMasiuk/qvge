@@ -7,21 +7,27 @@ QVGE - Qt Visual Graph Editor
 It can be used freely, maintaining the information above.
 */
 
+#include <QFileInfo>
+#include <QFileDialog>
+#include <QStatusBar>
+#include <QDebug>
+
 #include <CImportExportUIController.h>
 #include <CDOTExportDialog.h>
 #include <CImageExportDialog.h>
 #include <CCSVImportDialog.h>
 
 #ifdef USE_OGDF
-#include <commonui/ogdf/COGDFLayoutUIController.h>
-#include <commonui/ogdf/COGDFLayout.h>
+#include <qvgeui/ogdf/COGDFLayoutUIController.h>
+#include <qvgeui/ogdf/COGDFLayout.h>
 #endif
 
 #ifdef USE_GVGRAPH
-#include <commonui/gvgraph/CGVGraphLayoutUIController.h>
+#include <qvgeui/gvgraph/CGVGraphLayoutUIController.h>
 #endif
 
 #include <commonui/CExtListInputDialog.h>
+
 #include <appbase/CMainWindow.h>
 
 #include <qvgelib/CNode.h>
@@ -37,11 +43,6 @@ It can be used freely, maintaining the information above.
 #include <qvgelib/CFileSerializerPlainDOT.h>
 #include <qvgelib/CFileSerializerCSV.h>
 #include <qvgelib/ISceneItemFactory.h>
-
-#include <QFileInfo>
-#include <QFileDialog>
-#include <QStatusBar>
-#include <QDebug>
 
 
 CImportExportUIController::CImportExportUIController(CMainWindow *parent): QObject(parent)

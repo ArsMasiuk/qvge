@@ -145,7 +145,7 @@
   <customwidget>
    <class>CEasyTableWidget</class>
    <extends>QTableWidget</extends>
-   <header>CEasyTableWidget.h</header>
+   <header>commonui/CEasyTableWidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

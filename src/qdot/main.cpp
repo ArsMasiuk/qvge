@@ -15,7 +15,7 @@ It can be used freely, maintaining the information above.
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-    Q_INIT_RESOURCE(commonui);
+    Q_INIT_RESOURCE(qvgeui);
     Q_INIT_RESOURCE(appbase);
 	a.setWindowIcon(QIcon(":/Icons/AppIcon"));
 //	a.setStyle("fusion");

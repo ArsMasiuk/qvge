@@ -13,8 +13,6 @@ It can be used freely, maintaining the information above.
 #include <CCommutationTable.h>
 #include <CNodeEdgePropertiesUI.h>
 #include <CClassAttributesEditorUI.h>
-#include <CQuickHelpUI.h>
-#include <CExtListInputDialog.h>
 #include <CNodesFactorDialog.h>
 #include <CNodePortEditorDialog.h>
 #include <CSearchDialog.h>
@@ -31,6 +29,9 @@ It can be used freely, maintaining the information above.
 #include <qvgeioui/CImportExportUIController.h>
 
 #include <appbase/CMainWindow.h>
+
+#include <commonui/CQuickHelpUI.h>
+#include <commonui/CExtListInputDialog.h>
 
 #include <qvgelib/CNode.h>
 #include <qvgelib/CEdge.h>

@@ -82,7 +82,7 @@
   <customwidget>
    <class>CPropertyEditorUIBase</class>
    <extends>QTreeWidget</extends>
-   <header location="global">CPropertyEditorUIBase.h</header>
+   <header location="global">commonui/CPropertyEditorUIBase.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

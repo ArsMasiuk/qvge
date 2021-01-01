@@ -20,7 +20,7 @@ It can be used freely, maintaining the information above.
 #include <QDebug>
 
 #include <appbase/CPlatformServices.h>
-#include <commonui/CNodeEditorUIController.h>
+#include <qvgeui/CNodeEditorUIController.h>
 
 
 qvgeMainWindow::qvgeMainWindow(QWidget *parent): 

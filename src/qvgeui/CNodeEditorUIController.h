@@ -18,7 +18,7 @@ It can be used freely, maintaining the information above.
 
 #include <slider2d.h>
 
-#include <commonui/CSceneOptionsDialog.h>
+#include "CSceneOptionsDialog.h"
 
 
 class CMainWindow;

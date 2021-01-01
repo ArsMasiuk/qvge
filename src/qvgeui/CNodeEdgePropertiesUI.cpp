@@ -10,10 +10,7 @@ It can be used freely, maintaining the information above.
 #include <QInputDialog>
 #include <QMessageBox>
 
-#include "CAttributesEditorUI.h"
-#include "CPropertyEditorUIBase.h"
-#include "CNodeEdgePropertiesUI.h"
-#include "ui_CNodeEdgePropertiesUI.h"
+#include <commonui/CPropertyEditorUIBase.h>
 
 #include <qvgelib/CNodeEditorScene.h>
 #include <qvgelib/CNode.h>
@@ -22,6 +19,10 @@ It can be used freely, maintaining the information above.
 #include <qvgelib/CPolyEdge.h>
 #include <qvgelib/CAttribute.h>
 #include <qvgelib/CEditorSceneDefines.h>
+
+#include "CAttributesEditorUI.h"
+#include "CNodeEdgePropertiesUI.h"
+#include "ui_CNodeEdgePropertiesUI.h"
 
 
 CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
