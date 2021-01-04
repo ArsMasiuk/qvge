@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2021 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -244,7 +244,7 @@ QString qvgeMainWindow::getAboutText() const
 		+ QString(
 			"<p>This is a free software."
 			"<br>It comes without warranty of any kind. Use it on your own risk."
-			"<p>&copy; 2016-2020 Ars L. Masiuk"
+			"<p>&copy; 2016-2021 Ars L. Masiuk"
 			"<hr>"
 			"<p><i>Credits:</i>"
 			"<br>&nbsp; - Qt framework &copy; <i>The Qt Company Ltd</i>"

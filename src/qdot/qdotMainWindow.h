@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2021 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -13,6 +13,9 @@ It can be used freely, maintaining the information above.
 #include <QStatusBar>
 
 #include <appbase/CMainWindow.h>
+
+
+class CDOTPreviewPage;
 
 
 class qdotMainWindow : public CMainWindow
@@ -46,7 +49,7 @@ protected:
 private:
 	void updateFileAssociations();
 
-    QPlainTextEdit *m_textEditor = nullptr;
+    CDOTPreviewPage* m_dotPreviewPage = nullptr;
 
 	bool m_portable = false;
 };

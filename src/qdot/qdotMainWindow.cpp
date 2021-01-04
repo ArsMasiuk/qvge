@@ -2,13 +2,15 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2021 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
 
 #include "qdotMainWindow.h"
 #include "qdotVersion.h"
+
+#include "CDOTPreviewPage.h"
 
 #include <QFile>
 #include <QDir>
@@ -96,11 +98,17 @@ void qdotMainWindow::createStartPage()
 
 }
 
+
 bool qdotMainWindow::createDocument(const QByteArray &docType)
 {
     // scene
     if (docType == "graphviz")
     {
+        if (!m_dotPreviewPage)
+        {
+            m_dotPreviewPage = new CDOTPreviewPage(this);
+            setCentralWidget(m_dotPreviewPage);
+        }
 
         return true;
     }
@@ -136,13 +144,13 @@ bool qdotMainWindow::openDocument(const QString &fileName, QByteArray &docType)
 
         if (createDocument(docType))
 		{
-			// ...
-			return true;
+            if (m_dotPreviewPage->load(fileName, &lastError))
+                return true;
 		}
 
 		if (lastError.size())
 		{
-			QMessageBox::critical(NULL, fileName, lastError);
+            QMessageBox::critical(nullptr, fileName, lastError);
 		}
 
 		return false;
@@ -173,7 +181,7 @@ QString qdotMainWindow::getAboutText() const
 		+ QString(
 			"<p>This is a free software."
 			"<br>It comes without warranty of any kind. Use it on your own risk."
-			"<p>&copy; 2016-2020 Ars L. Masiuk"
+			"<p>&copy; 2016-2021 Ars L. Masiuk"
 			"<hr>"
 			"<p><i>Credits:</i>"
 			"<br>&nbsp; - Qt framework &copy; <i>The Qt Company Ltd</i>"
