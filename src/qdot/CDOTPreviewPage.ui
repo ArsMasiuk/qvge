@@ -20,7 +20,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QTextEdit" name="DotEditor"/>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QGraphicsView" name="GraphPreview"/>
@@ -61,7 +61,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="RunLayout">
+           <widget class="QPushButton" name="RunPreview">
             <property name="text">
              <string>Run...</string>
             </property>
