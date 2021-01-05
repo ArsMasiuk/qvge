@@ -20,8 +20,12 @@ public:
 
     bool load(const QString &fileName, QString *lastError = nullptr);
 
+Q_SIGNALS:
+	void documentChanged(bool changed);
+
 private Q_SLOTS:
 	void on_RunPreview_clicked();
+	void on_DotEditor_undoAvailable(bool available);
 
 private:
 	bool runPreview(const QString &engine, const QString &dotFilePath, QString &svgFilePath, QString* lastError = nullptr) const;

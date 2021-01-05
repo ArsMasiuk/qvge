@@ -16,6 +16,8 @@ CDOTPreviewPage::CDOTPreviewPage(QWidget *parent) :
     ui->setupUi(this);
 
 	ui->GraphPreview->setScene(&m_previewScene);
+
+	connect(this, SIGNAL(documentChanged(bool)), parent, SLOT(onDocumentChangedState(bool)));
 }
 
 
@@ -128,27 +130,48 @@ bool CDOTPreviewPage::load(const QString &fileName, QString *lastError)
 }
 
 
+void CDOTPreviewPage::on_DotEditor_undoAvailable(bool available)
+{
+	Q_EMIT documentChanged(available);
+}
+
+
 void CDOTPreviewPage::on_RunPreview_clicked()
 {
 	m_previewScene.clear();
-	//m_previewScene.setSceneRect(-10, -10, 20, 20);
 
 	QString engine = ui->EngineSelector->currentText();
+	QString dotFileName = m_dotFileName;
+
+	bool isChanged = ui->DotEditor->document()->isUndoAvailable();
+	if (isChanged) 
+	{
+		QTemporaryFile tempFile(QDir::tempPath() + "/qdot-XXXXXX.dot");
+		tempFile.open();
+		dotFileName = tempFile.fileName();
+		tempFile.setAutoRemove(false);
+
+		QString text = ui->DotEditor->toPlainText();
+		tempFile.write(text.toUtf8());
+	}
 
 	QString lastError;
 	QString svgFileName;
-	if (!runPreview(engine, m_dotFileName, svgFileName, &lastError))
+	if (runPreview(engine, dotFileName, svgFileName, &lastError))
 	{
+		QGraphicsSvgItem *svgItem = new QGraphicsSvgItem(svgFileName);
+		m_previewScene.addItem(svgItem);
+		m_previewScene.setSceneRect(m_previewScene.itemsBoundingRect());
 
+		ui->GraphPreview->fitInView(svgItem, Qt::KeepAspectRatio);
+	}
+	else
+	{
 		//
-		return;
 	}
 
-	QGraphicsSvgItem *svgItem = new QGraphicsSvgItem(svgFileName);
-	m_previewScene.addItem(svgItem);
-
-	ui->GraphPreview->fitInView(svgItem, Qt::KeepAspectRatio);
-
 	QFile::remove(svgFileName);
+	if (isChanged)
+		QFile::remove(dotFileName);
 }
 

@@ -59,6 +59,7 @@ public:
 	QString getCurrentFileName() const { return m_currentFileName; }
 
 public Q_SLOTS:
+	virtual void onDocumentChangedState(bool changed);
 	virtual void onDocumentChanged();
 	virtual void onAboutApplication();
 

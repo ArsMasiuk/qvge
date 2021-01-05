@@ -321,6 +321,17 @@ void CMainWindow::onDocumentChanged()
 }
 
 
+void CMainWindow::onDocumentChangedState(bool changed)
+{
+	if (m_isChanged == changed)
+		return;
+
+	m_isChanged = changed;
+
+	onCurrentFileChanged();
+}
+
+
 void CMainWindow::onCurrentFileChanged()
 {
 	m_mainTitleText = m_currentFileName;
