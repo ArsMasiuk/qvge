@@ -168,11 +168,12 @@ Hopefully it can also be compiled with others compilers. If not please do not he
 
 **QVGE** uses following 3rd party components:
 
-- [Qt](https://www.qt.io)
-- [Qt property browser](https://github.com/qtproject/qt-solutions)
-- [QProcessInfo](https://github.com/baldurk/qprocessinfo)
-- [QSint widgets library](https://sourceforge.net/projects/qsint)
-- SVG icons from [Inkscape](https://inkscape.org)
+- [Qt](https://www.qt.io) - licensed under LGPLv3
+- [Qt property browser](https://github.com/qtproject/qt-solutions) - licensed under BSD
+- [QProcessInfo](https://github.com/baldurk/qprocessinfo) - licensed under BSD
+- [QSint widgets library](https://sourceforge.net/projects/qsint) - licensed under LGPLv3
+- SVG icons from [Inkscape](https://inkscape.org) - licensed under GPL (more details here: https://inkscape.org/de/ueber/lizenzierung/)
+- [GraphViz](https://graphviz.org) - licensed under CPLv1.0 (more details here: https://graphviz.org/license/)
 
 Special thanks to:
 
