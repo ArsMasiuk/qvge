@@ -193,59 +193,57 @@ bool CNodeEditorUIController::importCSV(const QString &fileName, QString* lastEr
 
 // UI
 
-void CNodeEditorUIController::createMenus()
+void CNodeEditorUIController::createFileMenu()
 {
-    // file actions
-    QAction *exportAction = m_parent->getFileExportAction();
-    exportAction->setVisible(true);
-    exportAction->setText(tr("Export to &Image..."));
-    connect(exportAction, &QAction::triggered, this, &CNodeEditorUIController::exportFile);
+	// file actions
+	QAction *exportAction = m_parent->getFileExportAction();
+	exportAction->setVisible(true);
+	exportAction->setText(tr("Export to &Image..."));
+	connect(exportAction, &QAction::triggered, this, &CNodeEditorUIController::exportFile);
 
 	QAction *exportActionSVG = new QAction(QIcon(":/Icons/SVG"), tr("Export to &SVG..."));
 	m_parent->getFileMenu()->insertAction(exportAction, exportActionSVG);
 	connect(exportActionSVG, &QAction::triggered, this, &CNodeEditorUIController::exportSVG);
 
-    QAction *exportActionPDF = new QAction(QIcon(":/Icons/PDF"), tr("Export to &PDF..."));
-    m_parent->getFileMenu()->insertAction(exportActionSVG, exportActionPDF);
-    connect(exportActionPDF, &QAction::triggered, this, &CNodeEditorUIController::exportPDF);
+	QAction *exportActionPDF = new QAction(QIcon(":/Icons/PDF"), tr("Export to &PDF..."));
+	m_parent->getFileMenu()->insertAction(exportActionSVG, exportActionPDF);
+	connect(exportActionPDF, &QAction::triggered, this, &CNodeEditorUIController::exportPDF);
 
-    QAction *exportActionDOT = new QAction(QIcon(":/Icons/DOT"), tr("Export to &DOT/GraphViz..."));
-    m_parent->getFileMenu()->insertAction(exportActionPDF, exportActionDOT);
-    connect(exportActionDOT, &QAction::triggered, this, &CNodeEditorUIController::exportDOT);
+	QAction *exportActionDOT = new QAction(QIcon(":/Icons/DOT"), tr("Export to &DOT/GraphViz..."));
+	m_parent->getFileMenu()->insertAction(exportActionPDF, exportActionDOT);
+	connect(exportActionDOT, &QAction::triggered, this, &CNodeEditorUIController::exportDOT);
 
-    m_parent->getFileMenu()->insertSeparator(exportActionDOT);
+	m_parent->getFileMenu()->insertSeparator(exportActionDOT);
+}
 
 
-    // add edit menu
-    QMenu *editMenu = new QMenu(tr("&Edit"));
-    m_parent->menuBar()->insertMenu(m_parent->getWindowMenuAction(), editMenu);
+void CNodeEditorUIController::createEditMenu()
+{
 
-    QAction *undoAction = editMenu->addAction(QIcon(":/Icons/Undo"), tr("&Undo"));
-    undoAction->setStatusTip(tr("Undo latest action"));
-    undoAction->setShortcut(QKeySequence::Undo);
-    connect(undoAction, &QAction::triggered, this, &CNodeEditorUIController::undo);
-    connect(m_editorScene, &CEditorScene::undoAvailable, undoAction, &QAction::setEnabled);
-    undoAction->setEnabled(m_editorScene->availableUndoCount());
+	// add edit menu
+	QMenu *editMenu = new QMenu(tr("&Edit"));
+	m_parent->menuBar()->insertMenu(m_parent->getWindowMenuAction(), editMenu);
 
-    QAction *redoAction = editMenu->addAction(QIcon(":/Icons/Redo"), tr("&Redo"));
-    redoAction->setStatusTip(tr("Redo latest action"));
-    redoAction->setShortcut(QKeySequence::Redo);
-    connect(redoAction, &QAction::triggered, this, &CNodeEditorUIController::redo);
-    connect(m_editorScene, &CEditorScene::redoAvailable, redoAction, &QAction::setEnabled);
-    redoAction->setEnabled(m_editorScene->availableRedoCount());
+	QAction *undoAction = editMenu->addAction(QIcon(":/Icons/Undo"), tr("&Undo"));
+	undoAction->setStatusTip(tr("Undo latest action"));
+	undoAction->setShortcut(QKeySequence::Undo);
+	connect(undoAction, &QAction::triggered, this, &CNodeEditorUIController::undo);
+	connect(m_editorScene, &CEditorScene::undoAvailable, undoAction, &QAction::setEnabled);
+	undoAction->setEnabled(m_editorScene->availableUndoCount());
 
-    editMenu->addSeparator();
+	QAction *redoAction = editMenu->addAction(QIcon(":/Icons/Redo"), tr("&Redo"));
+	redoAction->setStatusTip(tr("Redo latest action"));
+	redoAction->setShortcut(QKeySequence::Redo);
+	connect(redoAction, &QAction::triggered, this, &CNodeEditorUIController::redo);
+	connect(m_editorScene, &CEditorScene::redoAvailable, redoAction, &QAction::setEnabled);
+	redoAction->setEnabled(m_editorScene->availableRedoCount());
+
+	editMenu->addSeparator();
 
 	editMenu->addAction(m_editorScene->actions()->cutAction);
 	editMenu->addAction(m_editorScene->actions()->copyAction);
 	editMenu->addAction(m_editorScene->actions()->pasteAction);
 	editMenu->addAction(m_editorScene->actions()->delAction);
-
-	QAction *selAction = editMenu->addAction(QIcon(":/Icons/SelectAll"), tr("Select All"));
-	selAction->setStatusTip(tr("Select all items on the scene"));
-	selAction->setToolTip(tr("Select all items"));
-	selAction->setShortcut(QKeySequence::SelectAll);
-	connect(selAction, &QAction::triggered, m_editorScene, &CEditorScene::selectAll);
 
 	editMenu->addSeparator();
 
@@ -256,28 +254,28 @@ void CNodeEditorUIController::createMenus()
 	connect(findAction, &QAction::triggered, this, &CNodeEditorUIController::find);
 
 
-    // edit modes
-    editMenu->addSeparator();
+	// edit modes
+	editMenu->addSeparator();
 
-    m_editModesGroup = new QActionGroup(this);
-    m_editModesGroup->setExclusive(true);
-    connect(m_editModesGroup, &QActionGroup::triggered, this, &CNodeEditorUIController::sceneEditMode);
+	m_editModesGroup = new QActionGroup(this);
+	m_editModesGroup->setExclusive(true);
+	connect(m_editModesGroup, &QActionGroup::triggered, this, &CNodeEditorUIController::sceneEditMode);
 
-    modeDefaultAction = editMenu->addAction(QIcon(":/Icons/Mode-Select"), tr("Select Items"));
-    modeDefaultAction->setToolTip(tr("Items selection mode"));
-    modeDefaultAction->setStatusTip(tr("Select/deselect items in the document"));
-    modeDefaultAction->setCheckable(true);
-    modeDefaultAction->setActionGroup(m_editModesGroup);
-    modeDefaultAction->setChecked(m_editorScene->getEditMode() == EM_Default);
-    modeDefaultAction->setData(EM_Default);
+	modeDefaultAction = editMenu->addAction(QIcon(":/Icons/Mode-Select"), tr("Select Items"));
+	modeDefaultAction->setToolTip(tr("Items selection mode"));
+	modeDefaultAction->setStatusTip(tr("Select/deselect items in the document"));
+	modeDefaultAction->setCheckable(true);
+	modeDefaultAction->setActionGroup(m_editModesGroup);
+	modeDefaultAction->setChecked(m_editorScene->getEditMode() == EM_Default);
+	modeDefaultAction->setData(EM_Default);
 
-    modeNodesAction = editMenu->addAction(QIcon(":/Icons/Mode-AddNodes"), tr("Create Nodes"));
-    modeNodesAction->setToolTip(tr("Adding new nodes mode"));
-    modeNodesAction->setStatusTip(tr("Quickly add nodes & edges"));
-    modeNodesAction->setCheckable(true);
-    modeNodesAction->setActionGroup(m_editModesGroup);
-    modeNodesAction->setChecked(m_editorScene->getEditMode() == EM_AddNodes);
-    modeNodesAction->setData(EM_AddNodes);
+	modeNodesAction = editMenu->addAction(QIcon(":/Icons/Mode-AddNodes"), tr("Create Nodes"));
+	modeNodesAction->setToolTip(tr("Adding new nodes mode"));
+	modeNodesAction->setStatusTip(tr("Quickly add nodes & edges"));
+	modeNodesAction->setCheckable(true);
+	modeNodesAction->setActionGroup(m_editModesGroup);
+	modeNodesAction->setChecked(m_editorScene->getEditMode() == EM_AddNodes);
+	modeNodesAction->setData(EM_AddNodes);
 
 	modeTransformAction = editMenu->addAction(QIcon(":/Icons/Mode-Transform"), tr("Transform"));
 	modeTransformAction->setToolTip(tr("Items transformation mode"));
@@ -296,78 +294,113 @@ void CNodeEditorUIController::createMenus()
 	modeFactorAction->setData(EM_Factor);
 
 
-    // scene actions
-    editMenu->addSeparator();
+	// scene actions
+	editMenu->addSeparator();
 
-    QAction *sceneCropAction = editMenu->addAction(QIcon(":/Icons/Crop"), tr("&Crop Area"));
-    sceneCropAction->setStatusTip(tr("Crop document area to contents"));
-    connect(sceneCropAction, &QAction::triggered, m_editorScene, &CEditorScene::crop);
-
-
-    // color schemes
-    editMenu->addSeparator();
-
-    m_schemesController = new CColorSchemesUIController(this);
-    m_schemesController->setScene(m_editorScene);
-    QAction *schemesAction = editMenu->addMenu(m_schemesController->getSchemesMenu());
-    schemesAction->setText(tr("Apply Colors"));
-    schemesAction->setStatusTip(tr("Apply predefined color scheme to the document"));
+	QAction *sceneCropAction = editMenu->addAction(QIcon(":/Icons/Crop"), tr("&Crop Area"));
+	sceneCropAction->setStatusTip(tr("Crop document area to contents"));
+	connect(sceneCropAction, &QAction::triggered, m_editorScene, &CEditorScene::crop);
 
 
-    // scene options
-    editMenu->addSeparator();
+	// color schemes
+	editMenu->addSeparator();
 
-    QAction *sceneAction = editMenu->addAction(QIcon(":/Icons/Settings"), tr("&Options..."));
-    sceneAction->setStatusTip(tr("Change document properties"));
-    connect(sceneAction, &QAction::triggered, this, &CNodeEditorUIController::sceneOptions);
+	m_schemesController = new CColorSchemesUIController(this);
+	m_schemesController->setScene(m_editorScene);
+	QAction *schemesAction = editMenu->addMenu(m_schemesController->getSchemesMenu());
+	schemesAction->setText(tr("Apply Colors"));
+	schemesAction->setStatusTip(tr("Apply predefined color scheme to the document"));
 
 
-    // add edit toolbar
-    QToolBar *editToolbar = m_parent->addToolBar(tr("Edit"));
-    editToolbar->setObjectName("editToolbar");
-    editToolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+	// scene options
+	editMenu->addSeparator();
 
-    editToolbar->addAction(undoAction);
-    editToolbar->addAction(redoAction);
+	QAction *sceneAction = editMenu->addAction(QIcon(":/Icons/Settings"), tr("&Options..."));
+	sceneAction->setStatusTip(tr("Change document properties"));
+	connect(sceneAction, &QAction::triggered, this, &CNodeEditorUIController::sceneOptions);
 
-    editToolbar->addSeparator();
 
-    editToolbar->addAction(m_editorScene->actions()->cutAction);
-    editToolbar->addAction(m_editorScene->actions()->copyAction);
-    editToolbar->addAction(m_editorScene->actions()->pasteAction);
-    editToolbar->addAction(m_editorScene->actions()->delAction);
+	// add edit toolbar
+	QToolBar *editToolbar = m_parent->addToolBar(tr("Edit"));
+	editToolbar->setObjectName("editToolbar");
+	editToolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    editToolbar->addSeparator();
+	editToolbar->addAction(undoAction);
+	editToolbar->addAction(redoAction);
+
+	editToolbar->addSeparator();
+
+	editToolbar->addAction(m_editorScene->actions()->cutAction);
+	editToolbar->addAction(m_editorScene->actions()->copyAction);
+	editToolbar->addAction(m_editorScene->actions()->pasteAction);
+	editToolbar->addAction(m_editorScene->actions()->delAction);
+
+	editToolbar->addSeparator();
 
 	editToolbar->addAction(findAction);
 
 
-    // add edit modes toolbar
-    QToolBar *editModesToolbar = m_parent->addToolBar(tr("Edit Modes"));
-    editModesToolbar->setObjectName("editModesToolbar");
-    editModesToolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+	// add edit modes toolbar
+	QToolBar *editModesToolbar = m_parent->addToolBar(tr("Edit Modes"));
+	editModesToolbar->setObjectName("editModesToolbar");
+	editModesToolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    editModesToolbar->addAction(modeDefaultAction);
-    editModesToolbar->addAction(modeNodesAction);
+	editModesToolbar->addAction(modeDefaultAction);
+	editModesToolbar->addAction(modeNodesAction);
 	editModesToolbar->addAction(modeTransformAction);
 	editModesToolbar->addAction(modeFactorAction);
+}
 
 
-    // add view menu
-    m_viewMenu = new QMenu(tr("&View"));
-    m_parent->menuBar()->insertMenu(m_parent->getWindowMenuAction(), m_viewMenu);
+void CNodeEditorUIController::createSelectMenu()
+{
+	// add select menu
+	QMenu *selectMenu = new QMenu(tr("&Select"));
+	m_parent->menuBar()->insertMenu(m_parent->getWindowMenuAction(), selectMenu);
 
-    gridAction = m_viewMenu->addAction(QIcon(":/Icons/Grid-Show"), tr("Show &Grid"));
-    gridAction->setCheckable(true);
-    gridAction->setStatusTip(tr("Show/hide background grid"));
-    gridAction->setChecked(m_editorScene->gridEnabled());
-    connect(gridAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGrid(bool)));
+	QAction *selAction = selectMenu->addAction(/*QIcon(":/Icons/SelectAll"),*/ tr("Select All"));
+	selAction->setStatusTip(tr("Select all items on the scene"));
+	selAction->setToolTip(tr("Select all items"));
+	selAction->setShortcut(QKeySequence::SelectAll);
+	connect(selAction, &QAction::triggered, m_editorScene, &CEditorScene::selectAll);
 
-    gridSnapAction = m_viewMenu->addAction(QIcon(":/Icons/Grid-Snap"), tr("&Snap to Grid"));
-    gridSnapAction->setCheckable(true);
-    gridSnapAction->setStatusTip(tr("Snap to grid when dragging"));
-    gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
-    connect(gridSnapAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGridSnap(bool)));
+
+	// toggle selection
+	QAction *selToggleAction = selectMenu->addAction(/*QIcon(":/Icons/Node"),*/ tr("Toggle Selection"));
+	selToggleAction->setStatusTip(tr("Toggle currently selected elements"));
+	selToggleAction->setToolTip(tr("Toggle selected elements"));
+
+
+	// select nodes
+	QAction *selNodesAction = selectMenu->addAction(/*QIcon(":/Icons/Node"),*/ tr("Nodes Only"));
+	selNodesAction->setStatusTip(tr("Select only scene nodes"));
+	selNodesAction->setToolTip(tr("Select nodes only"));
+
+
+	// select edges
+	QAction *selEdgesAction = selectMenu->addAction(/*QIcon(":/Icons/Edge"),*/ tr("Edges Only"));
+	selEdgesAction->setStatusTip(tr("Select only scene edges"));
+	selEdgesAction->setToolTip(tr("Select edges only"));
+}
+
+
+void CNodeEditorUIController::createViewMenu()
+{
+	// add view menu
+	m_viewMenu = new QMenu(tr("&View"));
+	m_parent->menuBar()->insertMenu(m_parent->getWindowMenuAction(), m_viewMenu);
+
+	gridAction = m_viewMenu->addAction(QIcon(":/Icons/Grid-Show"), tr("Show &Grid"));
+	gridAction->setCheckable(true);
+	gridAction->setStatusTip(tr("Show/hide background grid"));
+	gridAction->setChecked(m_editorScene->gridEnabled());
+	connect(gridAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGrid(bool)));
+
+	gridSnapAction = m_viewMenu->addAction(QIcon(":/Icons/Grid-Snap"), tr("&Snap to Grid"));
+	gridSnapAction->setCheckable(true);
+	gridSnapAction->setStatusTip(tr("Snap to grid when dragging"));
+	gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
+	connect(gridSnapAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGridSnap(bool)));
 
 	m_actionShowNodeIds = m_viewMenu->addAction(tr("Show Node Ids"));
 	m_actionShowNodeIds->setCheckable(true);
@@ -383,50 +416,59 @@ void CNodeEditorUIController::createMenus()
 
 	m_viewMenu->addSeparator();
 
-    zoomAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomIn"), tr("&Zoom"));
-    zoomAction->setStatusTip(tr("Zoom view in"));
-    zoomAction->setShortcut(QKeySequence::ZoomIn);
-    connect(zoomAction, &QAction::triggered, this, &CNodeEditorUIController::zoom);
+	zoomAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomIn"), tr("&Zoom"));
+	zoomAction->setStatusTip(tr("Zoom view in"));
+	zoomAction->setShortcut(QKeySequence::ZoomIn);
+	connect(zoomAction, &QAction::triggered, this, &CNodeEditorUIController::zoom);
 
-    unzoomAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomOut"), tr("&Unzoom"));
-    unzoomAction->setStatusTip(tr("Zoom view out"));
-    unzoomAction->setShortcut(QKeySequence::ZoomOut);
-    connect(unzoomAction, &QAction::triggered, this, &CNodeEditorUIController::unzoom);
+	unzoomAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomOut"), tr("&Unzoom"));
+	unzoomAction->setStatusTip(tr("Zoom view out"));
+	unzoomAction->setShortcut(QKeySequence::ZoomOut);
+	connect(unzoomAction, &QAction::triggered, this, &CNodeEditorUIController::unzoom);
 
-    resetZoomAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomReset"), tr("&Reset Zoom"));
-    resetZoomAction->setStatusTip(tr("Zoom view to 100%"));
-    connect(resetZoomAction, &QAction::triggered, this, &CNodeEditorUIController::resetZoom);
+	resetZoomAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomReset"), tr("&Reset Zoom"));
+	resetZoomAction->setStatusTip(tr("Zoom view to 100%"));
+	connect(resetZoomAction, &QAction::triggered, this, &CNodeEditorUIController::resetZoom);
 
-    fitZoomAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomFit"), tr("&Fit to View"));
-    fitZoomAction->setStatusTip(tr("Zoom to fit all the items to view"));
-    connect(fitZoomAction, &QAction::triggered, m_editorView, &CEditorView::fitToView);
+	fitZoomAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomFit"), tr("&Fit to View"));
+	fitZoomAction->setStatusTip(tr("Zoom to fit all the items to view"));
+	connect(fitZoomAction, &QAction::triggered, m_editorView, &CEditorView::fitToView);
 
-    fitZoomSelectedAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomFitSelected"), tr("Fit &Selection"));
+	fitZoomSelectedAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomFitSelected"), tr("Fit &Selection"));
 	fitZoomSelectedAction->setToolTip(tr("Fit selected items to view"));
-    fitZoomSelectedAction->setStatusTip(tr("Zoom to fit selected items to view"));
-    connect(fitZoomSelectedAction, &QAction::triggered, m_editorView, &CEditorView::fitSelectedToView);
+	fitZoomSelectedAction->setStatusTip(tr("Zoom to fit selected items to view"));
+	connect(fitZoomSelectedAction, &QAction::triggered, m_editorView, &CEditorView::fitSelectedToView);
 
 	fitZoomBackAction = m_viewMenu->addAction(QIcon(":/Icons/ZoomFitBack"), tr("Zoom &Back"));
 	fitZoomBackAction->setStatusTip(tr("Zoom to previous state before last fit"));
 	connect(fitZoomBackAction, &QAction::triggered, m_editorView, &CEditorView::zoomBack);
 
 
-    // add zoom toolbar
-    QToolBar *zoomToolbar = m_parent->addToolBar(tr("Zoom"));
-    zoomToolbar->setObjectName("zoomToolbar");
-    zoomToolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+	// add zoom toolbar
+	QToolBar *zoomToolbar = m_parent->addToolBar(tr("Zoom"));
+	zoomToolbar->setObjectName("zoomToolbar");
+	zoomToolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    zoomToolbar->addAction(zoomAction);
+	zoomToolbar->addAction(zoomAction);
 
-    resetZoomAction2 = zoomToolbar->addAction(QIcon(":/Icons/Zoom"), "");
-    resetZoomAction2->setStatusTip(resetZoomAction->statusTip());
-    resetZoomAction2->setToolTip(resetZoomAction->statusTip());
-    connect(resetZoomAction2, &QAction::triggered, this, &CNodeEditorUIController::resetZoom);
+	resetZoomAction2 = zoomToolbar->addAction(QIcon(":/Icons/Zoom"), "");
+	resetZoomAction2->setStatusTip(resetZoomAction->statusTip());
+	resetZoomAction2->setToolTip(resetZoomAction->statusTip());
+	connect(resetZoomAction2, &QAction::triggered, this, &CNodeEditorUIController::resetZoom);
 
-    zoomToolbar->addAction(unzoomAction);
-    zoomToolbar->addAction(fitZoomAction);
-    zoomToolbar->addAction(fitZoomSelectedAction);
+	zoomToolbar->addAction(unzoomAction);
+	zoomToolbar->addAction(fitZoomAction);
+	zoomToolbar->addAction(fitZoomSelectedAction);
 	zoomToolbar->addAction(fitZoomBackAction);
+}
+
+
+void CNodeEditorUIController::createMenus()
+{
+	createFileMenu();
+	createEditMenu();
+	createSelectMenu();
+	createViewMenu();
 }
 
 

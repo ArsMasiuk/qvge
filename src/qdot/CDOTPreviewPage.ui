@@ -32,42 +32,32 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QComboBox" name="EngineSelector">
-            <item>
-             <property name="text">
-              <string>dot</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>neato</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>fdp</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>sfdp</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>circo</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="RunPreview">
+           <widget class="QSint::QSplitButton" name="LayoutButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
-             <string>Run...</string>
+             <string>...</string>
+            </property>
+            <property name="popupMode">
+             <enum>QToolButton::MenuButtonPopup</enum>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
             </property>
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Export</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -76,6 +66,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QSint::QSplitButton</class>
+   <extends>QToolButton</extends>
+   <header location="global">qsplitbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

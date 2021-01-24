@@ -19,7 +19,10 @@ QSplitButton::QSplitButton(QWidget *parent) : QToolButton(parent)
 QAction* QSplitButton::addAction(const QString &text, const QVariant &v)
 {
     QAction* act = new QAction(text, parent());
-    act->setData(v);
+	if (v.isNull())
+		act->setData(text);
+	else
+		act->setData(v);
 
 	m_localMenu->addAction(act);
 

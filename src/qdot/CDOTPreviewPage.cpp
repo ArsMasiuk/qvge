@@ -18,6 +18,12 @@ CDOTPreviewPage::CDOTPreviewPage(QWidget *parent) :
 	ui->GraphPreview->setScene(&m_previewScene);
 
 	connect(this, SIGNAL(documentChanged(bool)), parent, SLOT(onDocumentChangedState(bool)));
+
+	ui->LayoutButton->addAction("dot");
+	ui->LayoutButton->addAction("neato");
+	ui->LayoutButton->addAction("fdp");
+	ui->LayoutButton->addAction("sfdp");
+	ui->LayoutButton->addAction("circo");
 }
 
 
@@ -136,15 +142,15 @@ void CDOTPreviewPage::on_DotEditor_undoAvailable(bool available)
 }
 
 
-void CDOTPreviewPage::on_RunPreview_clicked()
+void CDOTPreviewPage::on_LayoutButton_activated(QVariant data)
 {
 	m_previewScene.clear();
 
-	QString engine = ui->EngineSelector->currentText();
+	QString engine = data.toString();
 	QString dotFileName = m_dotFileName;
 
 	bool isChanged = ui->DotEditor->document()->isUndoAvailable();
-	if (isChanged) 
+	if (isChanged)
 	{
 		QTemporaryFile tempFile(QDir::tempPath() + "/qdot-XXXXXX.dot");
 		tempFile.open();
@@ -174,4 +180,3 @@ void CDOTPreviewPage::on_RunPreview_clicked()
 	if (isChanged)
 		QFile::remove(dotFileName);
 }
-

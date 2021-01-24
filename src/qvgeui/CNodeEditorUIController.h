@@ -102,6 +102,11 @@ private Q_SLOTS:
 
 private:
 	void createMenus();
+	void createFileMenu();
+	void createEditMenu();
+	void createSelectMenu();
+	void createViewMenu();
+
 	void createPanels();
     void createNavigator();
 

@@ -24,7 +24,7 @@ Q_SIGNALS:
 	void documentChanged(bool changed);
 
 private Q_SLOTS:
-	void on_RunPreview_clicked();
+	void on_LayoutButton_activated(QVariant data);
 	void on_DotEditor_undoAvailable(bool available);
 
 private:
