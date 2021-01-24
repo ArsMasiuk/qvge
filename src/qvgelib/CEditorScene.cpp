@@ -2308,6 +2308,18 @@ void CEditorScene::deselectAll()
 }
 
 
+void CEditorScene::toggleSelection()
+{
+	beginSelection();
+
+	auto itemList = items();
+	for (auto item : itemList)
+		item->setSelected(!item->isSelected());
+
+	endSelection();
+}
+
+
 void CEditorScene::selectItem(CItem* item, bool exclusive)
 {
 	if (!item)

@@ -369,18 +369,27 @@ void CNodeEditorUIController::createSelectMenu()
 	QAction *selToggleAction = selectMenu->addAction(/*QIcon(":/Icons/Node"),*/ tr("Toggle Selection"));
 	selToggleAction->setStatusTip(tr("Toggle currently selected elements"));
 	selToggleAction->setToolTip(tr("Toggle selected elements"));
+	connect(selToggleAction, &QAction::triggered, m_editorScene, &CEditorScene::toggleSelection);
 
 
 	// select nodes
 	QAction *selNodesAction = selectMenu->addAction(/*QIcon(":/Icons/Node"),*/ tr("Nodes Only"));
 	selNodesAction->setStatusTip(tr("Select only scene nodes"));
 	selNodesAction->setToolTip(tr("Select nodes only"));
+	connect(selNodesAction, &QAction::triggered, [=] {
+		auto nodes = m_editorScene->getItems<CItem, CNode>();
+		m_editorScene->selectItems(nodes);
+	});
 
 
 	// select edges
 	QAction *selEdgesAction = selectMenu->addAction(/*QIcon(":/Icons/Edge"),*/ tr("Edges Only"));
 	selEdgesAction->setStatusTip(tr("Select only scene edges"));
 	selEdgesAction->setToolTip(tr("Select edges only"));
+	connect(selEdgesAction, &QAction::triggered, [=] {
+		auto edges = m_editorScene->getItems<CItem, CEdge>();
+		m_editorScene->selectItems(edges);
+	});
 }
 
 

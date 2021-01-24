@@ -1,5 +1,10 @@
 QVGE 0.7.x
 -------------------------------------------------------------------------------
+New features/improvements:
+- added "Select" main menu item
+- added actions to toggle active selection, select only nodes or only edges (#134)
+
+
 Bugfixes:
 - fixed crash if DOT file has HTML labels (#131)
 
