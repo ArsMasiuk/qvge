@@ -69,6 +69,7 @@ protected Q_SLOTS:
     void on_LabelFont_activated(const QFont &font);
 	void on_LabelColor_activated(const QColor &color);
 	void on_LabelFontSize_valueChanged(int value);
+	void on_LabelFontFamily_currentFontChanged(const QFont &font);
 	void on_LabelFontBold_toggled(bool on);
 	void on_LabelFontItalic_toggled(bool on);
 	void on_LabelFontUnderline_toggled(bool on);

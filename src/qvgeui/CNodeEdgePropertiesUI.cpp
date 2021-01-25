@@ -250,19 +250,20 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 
 
     // labels
-    QList<CItem*> itemList;
-    for (auto edgeItem: edges) itemList << edgeItem;
-    for (auto nodeItem: nodes) itemList << nodeItem;
-    for (auto item: itemList)
-    {
+	CItem* item = nullptr;
+	if (edgeItems.size()) item = edgeItems.first();
+	else if (nodeItems.size()) item = nodeItems.first();
+    if (item) 
+	{
 		QFont f(item->getAttribute("label.font").value<QFont>());
         ui->LabelFont->setCurrentFont(f);
+        ui->LabelFontFamily->setCurrentFont(f);
+        ui->LabelFontFamily->lineEdit()->setFont(QFont(f.family()));
 		ui->LabelFontSize->setValue(f.pointSize());
 		ui->LabelFontBold->setChecked(f.bold());
 		ui->LabelFontItalic->setChecked(f.italic());
 		ui->LabelFontUnderline->setChecked(f.underline());
 		ui->LabelColor->setColor(item->getAttribute("label.color").value<QColor>());
-        break;
     }
 
     // allow updates
@@ -482,6 +483,33 @@ void CNodeEdgePropertiesUI::on_LabelFontSize_valueChanged(int value)
 		if (font.pointSize() != value)
 		{
 			font.setPointSize(value);
+			item->setAttribute(attr_label_font, font);
+			set = true;
+		}
+	}
+
+	if (set)
+		m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_LabelFontFamily_currentFontChanged(const QFont &value)
+{
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CItem*> items = m_scene->getSelectedNodesEdges();
+	if (items.isEmpty())
+		return;
+
+	bool set = false;
+
+	for (auto item : items)
+	{
+		QFont font = item->getAttribute(attr_label_font).value<QFont>();
+		if (font.family() != value.family())
+		{
+			font.setFamily(value.family());
 			item->setAttribute(attr_label_font, font);
 			set = true;
 		}
