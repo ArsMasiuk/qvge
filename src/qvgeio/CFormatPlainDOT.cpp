@@ -21,7 +21,7 @@ static QString fromDotNodeShape(const QString& shape)
 {
 	// rename to conform dot
 	if (shape == "ellipse")		return "disc";
-	if (shape == "rect")		return "square";
+	if (shape == "rect" || shape == "box" ) return "square";
 	if (shape == "invtriangle")	return "triangle2";
 
 	// else take original
