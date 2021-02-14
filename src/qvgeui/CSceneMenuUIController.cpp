@@ -61,6 +61,11 @@ void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphic
 	menu.addAction(scene->actions()->pasteAction);
 	menu.addAction(scene->actions()->delAction);
 
+	menu.addSeparator();
+
+	QAction *clearAction = menu.addAction(tr("Clear Appearance"), sceneActions, SLOT(onActionNodeEdgeClear()));
+	clearAction->setEnabled(edgesSelected || nodesSelected);
+
 	// add default node actions
 	menu.addSeparator();
 
@@ -73,10 +78,7 @@ void CSceneMenuUIController::fillMenu(QMenu &menu, CEditorScene *scene, QGraphic
 	QAction *nodeColorAction = menu.addAction(tr("Node(s) Color..."), sceneActions, SLOT(onActionNodeColor()));
 	nodeColorAction->setEnabled(nodesSelected);
 
-	//QAction *factorAction = menu.addAction(tr("Factor Nodes..."), parent(), SLOT(factorNodes()));
-	//factorAction->setEnabled(nodesCount > 1);
-
-	menu.addSeparator();
+	//menu.addSeparator();
 
 	QAction *addPortAction = menu.addAction(tr("Add Port..."), parent(), SLOT(addNodePort()));
 	addPortAction->setEnabled(nodesCount == 1);

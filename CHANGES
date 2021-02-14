@@ -4,6 +4,7 @@ New features/improvements:
 - added "Select" main menu item
 - added actions to toggle active selection, select only nodes or only edges (#134)
 - added font combo box (#135)
+- added action to clear nodes & edges appearance to defaults
 
 Bugfixes:
 - fixed crash if DOT file has HTML labels (#131)

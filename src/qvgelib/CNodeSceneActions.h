@@ -28,14 +28,18 @@ public Q_SLOTS:
 	bool editEdgeId(CEdge* edge);
 
 	void onActionNodeColor();
+	void onActionNodeClear();
 	void onActionLink();
 	void onActionUnlink();
 
 	void onActionEdgeColor();
+	void onActionEdgeClear();
 	void onActionEdgeReverse();
 	void onActionEdgeDirected();
 	void onActionEdgeMutual();
 	void onActionEdgeUndirected();
+
+	void onActionNodeEdgeClear();
 
 private:
 	CNodeEditorScene &nodeScene;

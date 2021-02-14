@@ -13,6 +13,7 @@ It can be used freely, maintaining the information above.
 
 #include "CNodeSceneActions.h"
 #include "CNodeEditorScene.h"
+#include "CEditorSceneDefines.h"
 #include "CNode.h"
 #include "CEdge.h"
 
@@ -107,6 +108,30 @@ void CNodeSceneActions::onActionNodeColor()
 	for (auto node : nodes)
 	{
 		node->setAttribute("color", color);
+	}
+
+	nodeScene.addUndoState();
+}
+
+
+void CNodeSceneActions::onActionNodeClear()
+{
+	auto nodes = nodeScene.getSelectedNodes();
+	if (nodes.isEmpty())
+		return;
+
+	for (auto node : nodes)
+	{
+		node->removeAttribute(attr_size);
+		node->removeAttribute(attr_weight);
+		node->removeAttribute(attr_color);
+		node->removeAttribute(attr_style);
+		node->removeAttribute(attr_shape);
+		node->removeAttribute(attr_stroke_color);
+		node->removeAttribute(attr_stroke_style);
+		node->removeAttribute(attr_stroke_size);
+		node->removeAttribute(attr_label_font);
+		node->removeAttribute(attr_label_color);
 	}
 
 	nodeScene.addUndoState();
@@ -233,6 +258,27 @@ void CNodeSceneActions::onActionEdgeColor()
 }
 
 
+void CNodeSceneActions::onActionEdgeClear()
+{
+	auto edges = nodeScene.getSelectedEdges();
+	if (edges.isEmpty())
+		return;
+
+	for (auto edge : edges)
+	{
+		edge->removeAttribute(attr_size);
+		edge->removeAttribute(attr_weight);
+		edge->removeAttribute(attr_color);
+		edge->removeAttribute(attr_style);
+		edge->removeAttribute(attr_label_font);
+		edge->removeAttribute(attr_label_color);
+		edge->removeAttribute(attr_edge_direction);
+	}
+
+	nodeScene.addUndoState();
+}
+
+
 void CNodeSceneActions::onActionEdgeReverse()
 {
 	auto edges = nodeScene.getSelectedEdges();
@@ -295,3 +341,9 @@ void CNodeSceneActions::onActionEdgeUndirected()
 	nodeScene.addUndoState();
 }
 
+
+void CNodeSceneActions::onActionNodeEdgeClear()
+{
+	onActionNodeClear();
+	onActionEdgeClear();
+}
