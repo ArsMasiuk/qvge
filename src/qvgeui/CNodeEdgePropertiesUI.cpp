@@ -281,7 +281,10 @@ void CNodeEdgePropertiesUI::setNodesAttribute(const QByteArray& attrId, const QV
 
 	QList<CNode*> nodes = m_scene->getSelectedNodes();
 	if (nodes.isEmpty())
+	{
+		//m_scene->setClassAttribute(class_node, attrId, v);
 		return;
+	}
 
 	for (auto node : nodes)
 		node->setAttribute(attrId, v);
@@ -300,7 +303,10 @@ void CNodeEdgePropertiesUI::setEdgesAttribute(const QByteArray& attrId, const QV
 
 	QList<CEdge*> edges = m_scene->getSelectedEdges();
 	if (edges.isEmpty())
+	{
+		//m_scene->setClassAttribute(class_edge, attrId, v);
 		return;
+	}
 
 	for (auto edge : edges)
 		edge->setAttribute(attrId, v);

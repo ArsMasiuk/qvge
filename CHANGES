@@ -7,6 +7,7 @@ New features/improvements:
 
 Bugfixes:
 - fixed crash if DOT file has HTML labels (#131)
+- fixed building with OGDF support (#130, #139)
 
 Linux:
 - some setup issues fixed (#132, #133)

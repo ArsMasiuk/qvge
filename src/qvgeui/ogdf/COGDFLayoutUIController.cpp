@@ -4,8 +4,8 @@
 
 #include <appbase/CMainWindow.h>
 
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CEditorView.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CEditorView.h>
 
 #include <ogdf/planarity/PlanarizationLayout.h>
 #include <ogdf/misclayout/LinearLayout.h>

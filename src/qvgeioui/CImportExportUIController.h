@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 
 class CMainWindow;
 class CEditorScene;
+class CNodeEditorScene;
 class IFileSerializer;
 
 // think: to move?
@@ -38,8 +39,8 @@ public:
 	void exportDOT(CEditorScene& scene);
 	bool importCSV(CEditorScene& scene, const QString &fileName, QString* lastError);
 
-	bool loadFromFile(const QString &format, const QString &fileName, CEditorScene& scene, QString* lastError);
-	bool saveToFile(const QString &format, const QString &fileName, CEditorScene& scene, QString* lastError);
+	bool loadFromFile(const QString &format, const QString &fileName, CNodeEditorScene& scene, QString* lastError);
+	bool saveToFile(const QString &format, const QString &fileName, CNodeEditorScene& scene, QString* lastError);
 
 private:
 	bool doExport(CEditorScene& scene, const IFileSerializer &exporter);

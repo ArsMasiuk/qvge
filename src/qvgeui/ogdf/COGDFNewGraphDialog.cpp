@@ -2,7 +2,7 @@
 #include "ui_COGDFNewGraphDialog.h"
 #include "COGDFLayout.h"
 
-#include <qvge/CNodeEditorScene.h>
+#include <qvgelib/CNodeEditorScene.h>
 
 #include <ogdf/basic/graph_generators.h>
 #include <ogdf/energybased/FMMMLayout.h>

@@ -1,8 +1,8 @@
 #include "COGDFLayout.h"
 
-#include <qvge/CNodeEditorScene.h>
-#include <qvge/CNode.h>
-#include <qvge/CDirectEdge.h>
+#include <qvgelib/CNodeEditorScene.h>
+#include <qvgelib/CNode.h>
+#include <qvgelib/CDirectEdge.h>
 
 #include <ogdf/fileformats/GraphIO.h>
 

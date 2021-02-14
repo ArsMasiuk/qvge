@@ -1,6 +1,7 @@
 #include "CColorSchemesUIController.h"
 
 #include <qvgelib/CEditorScene.h>
+#include <qvgelib/CEditorSceneDefines.h>
 
 
 CColorSchemesUIController::CColorSchemesUIController(QObject *parent) : QObject(parent)
@@ -122,11 +123,11 @@ void CColorSchemesUIController::applyScheme(const Scheme& scheme)
 	{
 		m_scene->setBackgroundBrush(scheme.bgColor);
 		m_scene->setGridPen(scheme.gridColor);
-		m_scene->setClassAttribute("node", "color", scheme.nodeColor);
-		m_scene->setClassAttribute("node", "stroke.color", scheme.nodeStrokeColor);
-		m_scene->setClassAttribute("node", "label.color", scheme.nodeLabelColor);
-		m_scene->setClassAttribute("edge", "color", scheme.edgeColor);
-		m_scene->setClassAttribute("edge", "label.color", scheme.edgeLabelColor);
+		m_scene->setClassAttribute(class_node, "color", scheme.nodeColor);
+		m_scene->setClassAttribute(class_node, "stroke.color", scheme.nodeStrokeColor);
+		m_scene->setClassAttribute(class_node, "label.color", scheme.nodeLabelColor);
+		m_scene->setClassAttribute(class_edge, "color", scheme.edgeColor);
+		m_scene->setClassAttribute(class_edge, "label.color", scheme.edgeLabelColor);
 
 		m_scene->addUndoState();
 

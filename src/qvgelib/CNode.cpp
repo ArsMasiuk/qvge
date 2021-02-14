@@ -1000,13 +1000,13 @@ void CNode::recalculateShape()
 		float ry = r.center().y();
 
 		m_shapeCache 
-			<< QPointF(r.left() + r.width() / 3, ry - r.height() / 2)
-			<< QPointF(r.left() + r.width() / 3 * 2, ry - r.height() / 2)
+			<< QPointF(r.left() + r.width() / 4, ry - r.height() / 2)
+			<< QPointF(r.left() + r.width() - r.width() / 4, ry - r.height() / 2)
 			<< QPointF(rx + r.width() / 2, ry)
-			<< QPointF(r.left() + r.width() / 3 * 2, ry + r.height() / 2)
-			<< QPointF(r.left() + r.width() / 3, ry + r.height() / 2)
+			<< QPointF(r.left() + r.width() - r.width() / 4, ry + r.height() / 2)
+			<< QPointF(r.left() + r.width() / 4, ry + r.height() / 2)
 			<< QPointF(r.left(), ry)
-			<< QPointF(r.left() + r.width() / 3, ry - r.height() / 2);
+			<< QPointF(r.left() + r.width() / 4, ry - r.height() / 2);
 	}
 	else if (shapeType == "triangle")
 	{
