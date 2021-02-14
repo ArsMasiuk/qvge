@@ -212,7 +212,7 @@ bool CImportExportUIController::importCSV(CEditorScene& scene, const QString &fi
 }
 
 
-bool CImportExportUIController::loadFromFile(const QString &format, const QString &fileName, CEditorScene& scene, QString* lastError)
+bool CImportExportUIController::loadFromFile(const QString &format, const QString &fileName, CNodeEditorScene& scene, QString* lastError)
 {
 	try 
 	{
@@ -272,7 +272,7 @@ bool CImportExportUIController::loadFromFile(const QString &format, const QStrin
 }
 
 
-bool CImportExportUIController::saveToFile(const QString &format, const QString &fileName, CEditorScene& scene, QString* lastError)
+bool CImportExportUIController::saveToFile(const QString &format, const QString &fileName, CNodeEditorScene& scene, QString* lastError)
 {
     if (format == "xgr")
         return (CFileSerializerXGR().save(fileName, scene, lastError));
