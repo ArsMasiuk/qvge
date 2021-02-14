@@ -9,6 +9,7 @@ Bugfixes:
 - fixed crash if DOT file has HTML labels (#131)
 - fixed building with OGDF support (#130, #139)
 - fixed import of multiline labels from DOT (#141)
+- fixed DOT: shape="box" not recognized (#140) - thanks casiosmu for fixing this!
 
 Linux:
 - some setup issues fixed (#132, #133)
