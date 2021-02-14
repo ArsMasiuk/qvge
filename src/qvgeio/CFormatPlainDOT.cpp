@@ -325,6 +325,7 @@ bool CFormatPlainDOT::parseNode(const QStringList &refs, GraphInternal &gi) cons
 	node.attrs["width"] = width * 72.0 * gi.g_scale;
 	node.attrs["height"] = height * 72.0 * gi.g_scale;
 
+	label = label.replace("\\n", "\n");
 	node.attrs["label"] = label;
 	node.attrs["shape"] = fromDotNodeShape(shape);
 	fromDotNodeStyle(style, node.attrs);
@@ -368,6 +369,8 @@ bool CFormatPlainDOT::parseEdge(const QStringList &refs, GraphInternal &gi) cons
 	{
 		QString label;
 		rit.next(label);
+		label = label.replace("\\n", "\n");
+
 		rit.next(x);
 		rit.next(y);
 		edge.attrs["label"] = label;
