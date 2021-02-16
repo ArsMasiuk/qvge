@@ -108,7 +108,7 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 
 #endif // windows
 
-#if (defined(Q_OS_LINUX) || defined (Q_OS_UNIX) || defined (Q_OS_CYGWIN)) && (!defined (Q_OS_HAIKU))
+#if (defined(Q_OS_LINUX) || defined (Q_OS_UNIX) || defined (Q_OS_CYGWIN)) && (!defined (Q_OS_HAIKU)) && (!defined (Q_OS_DARWIN))
 
 #include <QProcessInfo>
 
@@ -208,7 +208,7 @@ quint64 CPlatformServices::GetTotalRAMBytes()
 
 
 // haiku
-#if defined (Q_OS_HAIKU)
+#if (defined(Q_OS_HAIKU) || defined(Q_OS_DARWIN))
 
 quint64 CPlatformServices::GetTotalRAMBytes()
 {

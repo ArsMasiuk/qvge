@@ -5,10 +5,11 @@ FORMS       += $$files($$PWD/*.ui)
 RESOURCES   += $$files($$PWD/*.qrc)
 
 unix{
-    !haiku{
+    !if(haiku|mac){
         QT += x11extras
         LIBS += -lX11
-
+    }
+    !haiku {
         SOURCES += $$PWD/../3rdParty/qprocessinfo/qprocessinfo.cpp
         HEADERS += $$PWD/../3rdParty/qprocessinfo/qprocessinfo.h
         INCLUDEPATH += $$PWD/../3rdParty/qprocessinfo

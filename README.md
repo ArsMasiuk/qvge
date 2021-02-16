@@ -80,9 +80,16 @@ cd <directory-with-qvgeapp.pro>
 qmake-qt5 -r
 ~~~
 
+or, for macOS (with Homebrew and XCode Command Line Tools):
+~~~
+brew install qt
+cd <directory-with-qvgeapp.pro>
+/usr/local/Cellar/qt/5.*/bin/qmake -r
+~~~
+
 Then run corresponding 'make' command to build the application: 
 
-Linux GCC:
+Linux GCC, macOS Clang:
 ~~~
 make
 ~~~
