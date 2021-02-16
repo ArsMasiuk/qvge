@@ -157,13 +157,13 @@ Recent version of **QVGE** has been built with:
 - MinGW 7.3
 - GCC 7.5 (Linux)
 - GCC 6.4.0 (Cygwin)
-- Clang C++ (FreeBSD)
+- Clang C++ (FreeBSD, macOS)
 
 Hopefully it can also be compiled with others compilers. If not please do not hesitate to provide description of the issue.
 
 ### Supported OS
 
-**QVGE** has been tested on Microsoft Windows 10 and several Linux OS (Mint, Mageia, Fedora etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
+**QVGE** has been tested on Microsoft Windows 10, several Linux distributions (Mint, Mageia, Fedora etc) and macOS 11.2 Big Sur. Theoretically it should run on (almost) any OS which have Qt 5.x installed.
 
 **QVGE** can be compiled & run under Cygwin.
 
