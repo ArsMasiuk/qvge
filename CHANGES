@@ -15,6 +15,9 @@ Bugfixes:
 Linux:
 - some setup issues fixed (#132, #133)
 
+MacOS:
+- added support of Clang compiler (#144) - thanks to fabian-z!
+
 
 
 QVGE 0.6.2

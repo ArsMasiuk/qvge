@@ -43,7 +43,7 @@ win32{
 
 
 unix{
-    !haiku{
+    !if(haiku|mac){
         QT += x11extras
         LIBS += -lX11
     }

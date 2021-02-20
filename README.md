@@ -1,14 +1,15 @@
 ## Qt Visual Graph Editor
+[![Download qvge](https://img.shields.io/sourceforge/dt/qvge.svg?style=for-the-badge)](https://sourceforge.net/projects/qvge/files/latest/download) 
 [![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)](https://github.com/ArsMasiuk/qvge/releases/latest)
 ![GitHub release](https://img.shields.io/github/release/ArsMasiuk/qvge.svg?style=for-the-badge)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=for-the-badge)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url)
 
 **QVGE** is a multiplatform graph editor written in C++/Qt. Its main goal is to make possible visually edit two-dimensional graphs
 in a simple and intuitive way.
 
 ![Screenshot1](https://user-images.githubusercontent.com/19762856/89233004-f7846780-d5e8-11ea-8a18-ba395794e1d4.PNG)
 
-Please note that **QVGE** is not a replacement for such a software like Gephi, Graphvis, Dot, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor.
+Please note that **QVGE** is not a replacement for such a software like Gephi, Inkscape, yEd, Dia and so on. It is neither a tool for "big data analysis" nor a math application. It is really just a simple graph editor with some advanced features (i.e. GraphViz integration).
 
 ### Support
 
@@ -28,17 +29,13 @@ Thank you!
 - Custom (user-defined) attributes of graphs and their elements
 - Dynamically maintained list of commutations between nodes
 - Search among the graph elements and their attributes
-
 - Windows: portable mode (no installation required)
-- Auto-layout of graphs via [GraphViz](https://graphviz.org/) engines (dot, neato, fdp, circo...)
-- Auto-creation and auto-layout of graphs (via [OGDF](https://ogdf.uos.de/)):
-  - Linear
-  - Balloon
-  - Circular
-  - FMMM
-  - Planar
-  - Sugiyama
-  - Davidson-Harel
+- Auto-layout of graphs via [GraphViz](https://graphviz.org/) engines:
+  - dot
+  - neato
+  - fdp
+  - sfdp
+  - circo
 - Export of graphs into:
   - PDF
   - SVG
@@ -83,9 +80,16 @@ cd <directory-with-qvgeapp.pro>
 qmake-qt5 -r
 ~~~
 
+or, for macOS (with Homebrew and XCode Command Line Tools):
+~~~
+brew install qt
+cd <directory-with-qvgeapp.pro>
+/usr/local/Cellar/qt/5.*/bin/qmake -r
+~~~
+
 Then run corresponding 'make' command to build the application: 
 
-Linux GCC:
+Linux GCC, macOS Clang:
 ~~~
 make
 ~~~
@@ -112,6 +116,15 @@ sudo make install
 
 ### Enabling OGDF
 
+Integration with [OGDF](https://ogdf.uos.de/) enables auto-creation and auto-layout of graphs using following algorithms:
+  - Linear
+  - Balloon
+  - Circular
+  - FMMM
+  - Planar
+  - Sugiyama
+  - Davidson-Harel
+  
 #### WARNING: bundled OGDF support has been removed since QVGE 0.6.1 due to memory access issues
 
 In order to build **QVGE** with external OGDF support (installed in your system):
@@ -144,13 +157,13 @@ Recent version of **QVGE** has been built with:
 - MinGW 7.3
 - GCC 7.5 (Linux)
 - GCC 6.4.0 (Cygwin)
-- Clang C++ (FreeBSD)
+- Clang C++ (FreeBSD, macOS)
 
 Hopefully it can also be compiled with others compilers. If not please do not hesitate to provide description of the issue.
 
 ### Supported OS
 
-**QVGE** has been tested on Microsoft Windows 10 and several Linux OS (Mint, Mageia, Fedora etc). Theoretically it should run on (almost) any OS which have Qt 5.x installed.
+**QVGE** has been tested on Microsoft Windows 10, several Linux distributions (Mint, Mageia, Fedora etc) and macOS 11.2 Big Sur. Theoretically it should run on (almost) any OS which have Qt 5.x installed.
 
 **QVGE** can be compiled & run under Cygwin.
 
@@ -162,11 +175,12 @@ Hopefully it can also be compiled with others compilers. If not please do not he
 
 **QVGE** uses following 3rd party components:
 
-- [Qt](https://www.qt.io)
-- [Qt property browser](https://github.com/qtproject/qt-solutions)
-- [QProcessInfo](https://github.com/baldurk/qprocessinfo)
-- [QSint widgets library](https://sourceforge.net/projects/qsint)
-- SVG icons from [Inkscape](https://inkscape.org)
+- [Qt](https://www.qt.io) - licensed under LGPLv3
+- [Qt property browser](https://github.com/qtproject/qt-solutions) - licensed under BSD
+- [QProcessInfo](https://github.com/baldurk/qprocessinfo) - licensed under BSD
+- [QSint widgets library](https://sourceforge.net/projects/qsint) - licensed under LGPLv3
+- SVG icons from [Inkscape](https://inkscape.org) - licensed under GPL (more details here: https://inkscape.org/de/ueber/lizenzierung/)
+- [GraphViz](https://graphviz.org) - licensed under CPLv1.0 (more details here: https://graphviz.org/license/)
 
 Special thanks to:
 
@@ -175,11 +189,13 @@ Special thanks to:
 
 ### Extenal Links
 
-**QVGE** at [![Download QVGE](https://sourceforge.net/sflogo.php?type=13&group_id=2914953)](https://sourceforge.net/p/qvge/)
+**QVGE** at [![Download qvge](https://sourceforge.net/sflogo.php?type=14&group_id=2914953)](https://sourceforge.net/p/qvge/) 
 
-**QVGE** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml)
+**QVGE** at [Softpedia.com](https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml) <a target="_blank" href="https://www.softpedia.com/get/Multimedia/Graphic/Graphic-Others/Qt-Visual-Graph-Editor.shtml"><img src="https://cdnssl.softpedia.com/_img/sp100free.png?1"/></a>
 
-**QVGE** at [software-file.com](http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html)<a href="http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html" target="_blank"><img src="http://www.software-file.com/images/fivestar.png" alt="Qt Visual Graph Editor on Software-File.com" border=0></a>
+**QVGE** at [SoftX64.com](https://www.softx64.com/windows/qt-visual-graph-editor.html) <a target="_blank" href="https://www.softx64.com/windows/qt-visual-graph-editor.html" title="Qt Visual Graph Editor review"><img src="https://www.softx64.com/softx64-review.png" alt="Qt Visual Graph Editor review" /></a>
+
+**QVGE** at [software-file.com](http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html) <a href="http://www.software-file.com/Qt_Visual_Graph_Editor-sfs-472477.html" target="_blank"><img src="http://www.software-file.com/images/fivestar.png" alt="Qt Visual Graph Editor on Software-File.com" border=0></a>
 
 **QVGE** at <a href="https://www.producthunt.com/posts/qt-visual-graph-editor?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-qt-visual-graph-editor" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=217842&theme=dark" alt="Qt Visual Graph Editor - Software to visually create and manipulate graphs | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
 
