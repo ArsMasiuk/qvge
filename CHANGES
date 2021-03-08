@@ -11,6 +11,7 @@ Bugfixes:
 - fixed building with OGDF support (#130, #139)
 - fixed import of multiline labels from DOT (#141)
 - fixed DOT: shape="box" not recognized (#140) - thanks casiosmu for fixing this!
+- fixed crash after exporting to SVG and reopening the document (#145)
 
 Linux:
 - some setup issues fixed (#132, #133)
