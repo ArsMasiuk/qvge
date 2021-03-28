@@ -162,7 +162,7 @@ void CFormatGraphML::writeAttributes(QXmlStreamWriter &xsw, const AttributeInfos
 		case QVariant::LongLong:	xsw.writeAttribute("attr.type", "long"); break;
 		case QVariant::Double:		xsw.writeAttribute("attr.type", "double"); break;
 		case QMetaType::Float:		xsw.writeAttribute("attr.type", "float"); break;
-		case QMetaType::Bool:		xsw.writeAttribute("attr.type", "boolen"); break;
+		case QMetaType::Bool:		xsw.writeAttribute("attr.type", "boolean"); break;
 		default:					xsw.writeAttribute("attr.type", "string"); break;
 		}
 
