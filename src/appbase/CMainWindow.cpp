@@ -183,7 +183,7 @@ void CMainWindow::processParams(const QStringList& args)
         }
     }
 
-	// assotiated file?
+	// associated file?
 	if (args.count() == 2)
 	{
 		doOpenDocument(args.at(1));

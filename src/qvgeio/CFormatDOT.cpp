@@ -178,7 +178,7 @@ bool CFormatDOT::load(const QString& fileName, Graph& g, QString* lastError) con
 
 	catch (...)
 	{
-		*lastError = ("BGL: unknown exeption");
+		*lastError = ("BGL: unknown exception");
 		return false;
 	}
 

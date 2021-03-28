@@ -287,7 +287,7 @@ void CNodeEditorUIController::createMenus()
 	modeTransformAction->setData(EM_Transform);
 
 	modeFactorAction = editMenu->addAction(QIcon(":/Icons/Mode-Factor"), tr("Factor"));
-	modeFactorAction->setToolTip(tr("Positions tranformation mode"));
+	modeFactorAction->setToolTip(tr("Positions transformation mode"));
 	modeFactorAction->setStatusTip(tr("Scale position of selected nodes (move only)"));
 	modeFactorAction->setCheckable(true);
 	modeFactorAction->setActionGroup(m_editModesGroup);
