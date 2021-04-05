@@ -17,7 +17,11 @@ INCLUDEPATH += $$PWD/../3rdParty/qsint-widgets
 INCLUDEPATH += $$PWD/../3rdParty/qtpropertybrowser 
 
 USE_OGDF{
+
     INCLUDEPATH += $$OGDF_INCLUDE_PATH
+
+message(qvgeui.pri - use OGDF)
+message($$OGDF_INCLUDE_PATH)
 
     SOURCES += $$files($$PWD/ogdf/*.cpp)
     HEADERS += $$files($$PWD/ogdf/*.h)

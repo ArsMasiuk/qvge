@@ -60,8 +60,8 @@ Windows:
 qvge (0.6.1) ; urgency=medium
 
   * Tighter integration with GraphViz (reading of DOT format, layout via GraphViz engines)
-  * OGDF is no more shipped together due to its instability (can be linked as 3rdparty-library hovewer)
-  * boost is no more shipped together (can be linked as 3rdparty-library hovewer)
+  * OGDF is no more shipped together due to its instability (can be however linked as 3rdparty-library)
+  * boost is no more shipped together (can be however linked as 3rdparty-library)
   * Various bugfixes and minor improvements
 
  -- Ars L. Masiuk <ars.masiuk@gmail.com>  Mon, 09 Nov 2020 06:30:06 +0100

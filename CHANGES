@@ -10,8 +10,9 @@ Bugfixes:
 - fixed crash if DOT file has HTML labels (#131)
 - fixed building with OGDF support (#130, #139)
 - fixed import of multiline labels from DOT (#141)
-- fixed DOT: shape="box" not recognized (#140) - thanks casiosmu for fixing this!
+- fixed DOT: shape="box" not recognized (#140) - thanks to casiosmu for fixing this!
 - fixed crash after exporting to SVG and reopening the document (#145)
+- fixed various typos and export to GraphML (#147) - thanks to luzpaz!
 
 Linux:
 - some setup issues fixed (#132, #133)
@@ -80,7 +81,7 @@ New features/improvements:
 - when editing a label, Enter begins a new line, Esc finishes editing
 - transformation tool: Drag+Shift performs parallel transformation
 - "Factor" mode added next to "Transform" (#102)
-- impoved export & import of Graphviz format (using boost-BGL instead of OGDF)
+- improved export & import of Graphviz format (using boost-BGL instead of OGDF)
 - PDF export: automatically sets page orientation; printer options made persistent (#73)
 - a scene loaded from file is automatically centered by its contents
 - improved drawing of edge selection
@@ -193,7 +194,7 @@ QVGE 0.5.3
 QVGE 0.5.2
 -------------------------------------------------------------------------------
 - View Menu: added Toolbars & Panels submenu (#52) 
-- View Menu: item ids can be shown/hidded separately from labels (#47)
+- View Menu: item ids can be shown/hidden separately from labels (#47)
 - added in-place label editing (by double click)
 - added node port colors 
 - added timed auto backups (#60)

@@ -268,7 +268,7 @@ void CItem::updateLabelContent()
     m_labelItem->setFont(f);
 
 
-	// update exlicitly
+	// update explicitly
 	m_labelItem->update();
 }
 

@@ -5,7 +5,7 @@
 #
 # It can be used freely, maintaining the information above.
 
-#CONFIG += USE_OGDF
+CONFIG += USE_OGDF
 CONFIG += USE_GVGRAPH
 #CONFIG += USE_BOOST
 
@@ -15,9 +15,12 @@ USE_OGDF{
     DEFINES += USE_OGDF
 
     # system-specific OGDF setup
-    OGDF_LIB_NAME = ogdf
-    OGDF_LIB_PATH =
-    OGDF_INCLUDE_PATH = /usr/share/ogdf/include
+    #OGDF_LIB_NAME = ogdf
+    #OGDF_LIB_PATH = 
+    #OGDF_INCLUDE_PATH = /usr/share/ogdf/include
+    OGDF_LIB_NAME = ogdf-2020
+	OGDF_LIB_PATH = "w:\Projects\qvge_github\repo\qvge.0.7.old\src\lib"
+    OGDF_INCLUDE_PATH = "w:\Projects\qvge_github\repo\qvge.0.7.old\src\3rdParty\ogdf-2020\include"
 }
 
 # external boost::graph

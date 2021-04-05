@@ -99,7 +99,7 @@ void CPolyEdge::transform(const QRectF & oldRect, const QRectF & newRect,
 	// snap
 	//auto scene = getScene();
 
-	// transfrom subpoints as well
+	// transform subpoints as well
 	for (auto &point : m_polyPoints)
 	{
 		double xp = (point.x() - oldRect.left()) * xc + newRect.left();
