@@ -2227,12 +2227,6 @@ void CEditorScene::focusInEvent(QFocusEvent *focusEvent)
 
 void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-	if (m_skipMenuEvent)
-	{
-		m_skipMenuEvent = false;
-		return;
-	}
-
 	// propagate to items
 	Super::contextMenuEvent(event);
 	

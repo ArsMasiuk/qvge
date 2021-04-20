@@ -594,8 +594,9 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	// cancel on RMB
 	if (mouseEvent->button() == Qt::RightButton)
 	{
+		// cancel further handlers as well (i.e. context menu)
 		m_state = IS_Cancelling;
-		m_skipMenuEvent = true;
+		mouseEvent->accept();
 	}
 
 	// release local grabber if any
@@ -606,8 +607,9 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		// cancel on RMB
 		if (mouseEvent->button() == Qt::RightButton)
 		{
+			// cancel further handlers as well (i.e. context menu)
 			m_state = IS_Cancelling;
-			m_skipMenuEvent = true;
+			mouseEvent->accept();
 		}
 
 		// cancel on same position
@@ -624,6 +626,7 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	if (m_state == IS_Cancelling)
 	{
 		cancel(mouseEvent->scenePos());
+		mouseEvent->accept();
 	}
 
 	m_state = IS_None;

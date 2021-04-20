@@ -354,7 +354,6 @@ protected:
 	QPointF m_lastDragPos;
 	QGraphicsItem *m_draggedItem = nullptr;
 	QSet<IInteractive*> m_acceptedHovers, m_rejectedHovers;
-	bool m_skipMenuEvent = false;
 
 	CItem *m_editItem = nullptr;
 
