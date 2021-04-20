@@ -13,7 +13,10 @@ It can be used freely, maintaining the information above.
 
 #include <QTextCursor>
 #include <QTextDocument>
+#include <QTextEdit>
+#include <QMenu>
 #include <QKeyEvent>
+#include <QGraphicsSceneContextMenuEvent>
 
 
 CTextLabelEdit::CTextLabelEdit()
@@ -58,15 +61,42 @@ bool CTextLabelEdit::onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent)
 }
 
 
+bool CTextLabelEdit::showMenu(QGraphicsSceneContextMenuEvent* event, CEditorScene* /*scene*/, const QList<QGraphicsItem*>& /*selectedItems*/)
+{
+	//static QTextEdit textEdit;
+
+	//QMenu* menu = textEdit.createStandardContextMenu();
+
+	//menu->exec(event->screenPos());
+
+	contextMenuEvent(event);
+
+	return true;
+}
+
+
 bool CTextLabelEdit::sceneEvent(QEvent *event)
 {
-	if (event->type() == QEvent::FocusOut)
+	if (event->type() == QEvent::FocusOut && !m_menuActive)
 	{
 		finishEdit(true);
 		return true;
 	}
 
 	return QGraphicsTextItem::sceneEvent(event);
+}
+
+
+void CTextLabelEdit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+	m_menuActive = true;
+
+	QMenu menu;
+	QAction *removeAction = menu.addAction("Remove");
+	QAction *markAction = menu.addAction("Mark");
+	QAction *selectedAction = menu.exec(event->screenPos());
+
+	m_menuActive = false;
 }
 
 

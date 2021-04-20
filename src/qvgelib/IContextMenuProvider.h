@@ -13,9 +13,17 @@ It can be used freely, maintaining the information above.
 #include <QList>
 #include <QGraphicsItem>
 
+class CEditorScene;
+class QGraphicsSceneContextMenuEvent;
+
 
 class IContextMenuProvider
 {
 public:
-	virtual bool populateMenu(QMenu& menu, const QList<QGraphicsItem*>& selectedItems) = 0;
+	virtual bool showMenu(QGraphicsSceneContextMenuEvent* contextMenuEvent, CEditorScene* scene, const QList<QGraphicsItem*>& selectedItems) 
+	{ return false; }
+
+	// tbd: deprecate
+	virtual bool populateMenu(QMenu& menu, const QList<QGraphicsItem*>& selectedItems) 
+	{ return false; }
 };

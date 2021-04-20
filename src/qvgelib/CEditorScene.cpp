@@ -2226,7 +2226,7 @@ void CEditorScene::focusInEvent(QFocusEvent *focusEvent)
 
 // menu stuff 
 
-void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent)
+void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
 	if (m_skipMenuEvent)
 	{
@@ -2234,22 +2234,33 @@ void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuE
 		return;
 	}
 
-	m_menuTriggerItem = getItemAt(contextMenuEvent->scenePos()); //Get the item at the position
+	// propagate to items
+	Super::contextMenuEvent(event);
+	
+	if (event->isAccepted())
+		return;
+
+	m_menuTriggerItem = getItemAt(event->scenePos()); //Get the item at the position
 
 	// check if item provides own menu
-	if (auto menuItem = dynamic_cast<IContextMenuProvider*>(m_menuTriggerItem))
-	{
-		QMenu sceneMenu;
-		if (menuItem->populateMenu(sceneMenu, selectedItems()))
-		{
-			sceneMenu.exec(contextMenuEvent->screenPos());
-			return;
-		}
-	}
+	//if (auto menuItem = dynamic_cast<IContextMenuProvider*>(m_menuTriggerItem))
+	//{
+	//	if (menuItem->showMenu(event, this, selectedItems()))
+	//		return;
+
+	//	QMenu sceneMenu;
+	//	if (menuItem->populateMenu(sceneMenu, selectedItems()))
+	//	{
+	//		if (!sceneMenu.isEmpty())
+	//			sceneMenu.exec(event->screenPos());
+	//		
+	//		return;
+	//	}
+	//}
 
 	// else custom menu
 	if (m_menuController)
-		m_menuController->exec(this, m_menuTriggerItem, contextMenuEvent);
+		m_menuController->exec(this, m_menuTriggerItem, event);
 }
 
 

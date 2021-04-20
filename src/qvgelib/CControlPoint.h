@@ -26,8 +26,8 @@ public:
 	explicit CControlPoint(CItem *parent);
 	virtual ~CControlPoint() {}
 
-	// menu
-	virtual bool populateMenu(QMenu& menu, const QList<QGraphicsItem*>& selectedItems);
+	// IContextMenuProvider
+	virtual bool populateMenu(QMenu& menu, const QList<QGraphicsItem*>& selectedItems) override;
 
 protected Q_SLOTS:
 	void onActionDelete();
@@ -35,6 +35,7 @@ protected Q_SLOTS:
 protected:
 	// reimp 
 	virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+	virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 	CItem *m_parentItem;
 };

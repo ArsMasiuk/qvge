@@ -7,6 +7,8 @@ QVGE - Qt Visual Graph Editor
 It can be used freely, maintaining the information above.
 */
 
+#include <QGraphicsSceneContextMenuEvent>
+
 #include "CControlPoint.h"
 #include "CItem.h"
 
@@ -45,6 +47,16 @@ QVariant CControlPoint::itemChange(QGraphicsItem::GraphicsItemChange change, con
 	}
 
 	return Shape::itemChange(change, value);
+}
+
+
+void CControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+	event->accept();
+
+	QMenu menu;
+	menu.addAction(tr("Delete point"), this, SLOT(onActionDelete()));
+	menu.exec(event->screenPos());
 }
 
 
