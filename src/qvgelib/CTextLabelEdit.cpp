@@ -80,8 +80,12 @@ void CTextLabelEdit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 	m_menuActive = true;
 
 	QMenu menu;
-	QAction *removeAction = menu.addAction("Remove");
-	QAction *markAction = menu.addAction("Mark");
+	menu.addAction("Cut");
+	menu.addAction("Copy");
+	menu.addAction("Paste");
+	menu.addSeparator();
+	menu.addAction("Select all");
+
 	QAction *selectedAction = menu.exec(event->screenPos());
 
 	m_menuActive = false;

@@ -2239,23 +2239,8 @@ void CEditorScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 	if (event->isAccepted())
 		return;
 
-	m_menuTriggerItem = getItemAt(event->scenePos()); //Get the item at the position
-
-	// check if item provides own menu
-	//if (auto menuItem = dynamic_cast<IContextMenuProvider*>(m_menuTriggerItem))
-	//{
-	//	if (menuItem->showMenu(event, this, selectedItems()))
-	//		return;
-
-	//	QMenu sceneMenu;
-	//	if (menuItem->populateMenu(sceneMenu, selectedItems()))
-	//	{
-	//		if (!sceneMenu.isEmpty())
-	//			sceneMenu.exec(event->screenPos());
-	//		
-	//		return;
-	//	}
-	//}
+	// get the item at the position
+	m_menuTriggerItem = getItemAt(event->scenePos()); 
 
 	// else custom menu
 	if (m_menuController)
