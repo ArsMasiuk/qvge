@@ -11,14 +11,12 @@ It can be used freely, maintaining the information above.
 
 #include <QGraphicsTextItem> 
 
-#include "IContextMenuProvider.h"
-
 
 class CItem;
 class CEditorScene;
 
 
-class CTextLabelEdit: public QGraphicsTextItem, public IContextMenuProvider
+class CTextLabelEdit: public QGraphicsTextItem
 {
 	Q_OBJECT
 
@@ -31,9 +29,6 @@ public:
 
 	virtual bool onKeyPressed(CEditorScene& scene, QKeyEvent *keyEvent);
 	virtual bool onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent);
-
-	// IContextMenuProvider
-	virtual bool showMenu(QGraphicsSceneContextMenuEvent* contextMenuEvent, CEditorScene* scene, const QList<QGraphicsItem*>& selectedItems);
 
 Q_SIGNALS:
 	void editingStarted(CItem *item);

@@ -61,20 +61,6 @@ bool CTextLabelEdit::onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent)
 }
 
 
-bool CTextLabelEdit::showMenu(QGraphicsSceneContextMenuEvent* event, CEditorScene* /*scene*/, const QList<QGraphicsItem*>& /*selectedItems*/)
-{
-	//static QTextEdit textEdit;
-
-	//QMenu* menu = textEdit.createStandardContextMenu();
-
-	//menu->exec(event->screenPos());
-
-	contextMenuEvent(event);
-
-	return true;
-}
-
-
 bool CTextLabelEdit::sceneEvent(QEvent *event)
 {
 	if (event->type() == QEvent::FocusOut && !m_menuActive)
@@ -89,6 +75,8 @@ bool CTextLabelEdit::sceneEvent(QEvent *event)
 
 void CTextLabelEdit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
+	event->accept();
+
 	m_menuActive = true;
 
 	QMenu menu;

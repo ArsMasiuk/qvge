@@ -15,7 +15,6 @@ It can be used freely, maintaining the information above.
 #include "CControlPoint.h"
 #include "CSimpleUndoManager.h"
 #include "CDiffUndoManager.h"
-#include "IContextMenuProvider.h"
 #include "ISceneItemFactory.h"
 #include "ISceneMenuController.h"
 

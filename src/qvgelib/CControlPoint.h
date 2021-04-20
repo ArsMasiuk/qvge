@@ -11,23 +11,19 @@ It can be used freely, maintaining the information above.
 
 #include <QGraphicsRectItem>
 
-#include "IContextMenuProvider.h"
-
 
 class CItem;
 
 
-class CControlPoint : public QObject, public QGraphicsRectItem, public IContextMenuProvider
+class CControlPoint : public QObject, public QGraphicsRectItem
 {
 	Q_OBJECT
+
 public:
 	typedef QGraphicsRectItem Shape;
 
 	explicit CControlPoint(CItem *parent);
 	virtual ~CControlPoint() {}
-
-	// IContextMenuProvider
-	virtual bool populateMenu(QMenu& menu, const QList<QGraphicsItem*>& selectedItems) override;
 
 protected Q_SLOTS:
 	void onActionDelete();

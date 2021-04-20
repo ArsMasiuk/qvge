@@ -50,6 +50,8 @@ QVariant CControlPoint::itemChange(QGraphicsItem::GraphicsItemChange change, con
 }
 
 
+// menu
+
 void CControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
 	event->accept();
@@ -57,16 +59,6 @@ void CControlPoint::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 	QMenu menu;
 	menu.addAction(tr("Delete point"), this, SLOT(onActionDelete()));
 	menu.exec(event->screenPos());
-}
-
-
-// menu
-
-bool CControlPoint::populateMenu(QMenu& menu, const QList<QGraphicsItem*>& /*selectedItems*/)
-{
-	/*QAction *deleteAction =*/ menu.addAction(tr("Delete point"), this, SLOT(onActionDelete()));
-
-	return true;
 }
 
 
