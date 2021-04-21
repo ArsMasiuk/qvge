@@ -51,7 +51,7 @@ bool CTextLabelEdit::onKeyPressed(CEditorScene& scene, QKeyEvent *keyEvent)
 
 bool CTextLabelEdit::onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent)
 {
-	if (keyEvent->matches(QKeySequence::Cancel))				// Esc
+	if (keyEvent->matches(QKeySequence::Cancel) && !m_menuActive)				// Esc
 	{
 		finishEdit(true);
 		return true;

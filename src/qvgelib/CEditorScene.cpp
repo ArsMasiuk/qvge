@@ -1706,6 +1706,8 @@ void CEditorScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
 		m_doubleClick = true;
+
+		m_leftClickPos = mouseEvent->scenePos();
 	}
 }
 

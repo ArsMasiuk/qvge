@@ -590,7 +590,7 @@ void CNodeEditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
  		Super::mouseReleaseEvent(mouseEvent);
 		return;
 	}
-	else 
+
 	// cancel on RMB
 	if (mouseEvent->button() == Qt::RightButton)
 	{

@@ -13,6 +13,7 @@ Bugfixes:
 - fixed DOT: shape="box" not recognized (#140) - thanks to casiosmu for fixing this!
 - fixed crash after exporting to SVG and reopening the document (#145)
 - fixed various typos and export to GraphML (#147) - thanks to luzpaz!
+- fixed opening node editor after double click (#136)
 
 Linux:
 - some setup issues fixed (#132, #133)
