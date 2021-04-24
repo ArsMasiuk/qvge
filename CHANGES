@@ -5,6 +5,7 @@ New features/improvements:
 - added actions to toggle active selection, select only nodes or only edges (#134)
 - added font combo box (#135)
 - added action to clear nodes & edges appearance to defaults
+- added default context menu to the label editor (#146)
 
 Bugfixes:
 - fixed crash if DOT file has HTML labels (#131)

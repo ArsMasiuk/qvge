@@ -17,6 +17,8 @@ It can be used freely, maintaining the information above.
 #include <QMenu>
 #include <QKeyEvent>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QTimer>
+#include <QApplication>
 
 
 CTextLabelEdit::CTextLabelEdit()
@@ -80,15 +82,45 @@ void CTextLabelEdit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 	m_menuActive = true;
 
 	QMenu menu;
-	menu.addAction("Cut");
-	menu.addAction("Copy");
-	menu.addAction("Paste");
+	bool hasSelection = textCursor().hasSelection();
+
+	auto cutAction = menu.addAction(QIcon(":/Icons/Cut"), tr("Cut"), this, [&]
+	{
+		static QKeyEvent ke(QEvent::KeyPress, Qt::Key_X, Qt::ControlModifier);
+		QApplication::sendEvent(scene(), &ke);
+	});
+	cutAction->setEnabled(hasSelection);
+	cutAction->setShortcut(QKeySequence::Cut);
+	
+	auto copyAction = menu.addAction(QIcon(":/Icons/Copy"), tr("Copy"), this, [&]
+	{
+		static QKeyEvent ke(QEvent::KeyPress, Qt::Key_C, Qt::ControlModifier);
+		QApplication::sendEvent(scene(), &ke);
+	});
+	copyAction->setEnabled(hasSelection);
+	copyAction->setShortcut(QKeySequence::Copy);
+	
+	auto pasteAction = menu.addAction(QIcon(":/Icons/Paste"), tr("Paste"), this, [&]
+	{
+		static QKeyEvent ke(QEvent::KeyPress, Qt::Key_V, Qt::ControlModifier);
+		QApplication::sendEvent(scene(), &ke);
+	});
+	pasteAction->setShortcut(QKeySequence::Paste);
+
 	menu.addSeparator();
-	menu.addAction("Select all");
 
-	QAction *selectedAction = menu.exec(event->screenPos());
+	auto selectAllAction = menu.addAction(tr("Select all"), this, [&] 
+	{ 
+		QTextCursor c(this->document());
+		c.select(QTextCursor::Document);
+		this->setTextCursor(c);
+	});
+	selectAllAction->setShortcut(QKeySequence::SelectAll);
 
-	m_menuActive = false;
+	menu.exec(event->screenPos());
+
+	// delayed call to "m_menuActive = false" to get the event processed before
+	QTimer::singleShot(100, this, [&] { m_menuActive = false; });
 }
 
 
@@ -114,7 +146,7 @@ void CTextLabelEdit::startEdit(CItem *item)
 
 	updateGeometry();
 
-	QTextCursor c = textCursor();
+	QTextCursor c(document());
 	c.select(QTextCursor::Document);
 	setTextCursor(c);
 	
