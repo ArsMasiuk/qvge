@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Qt Visual Graph Editor"
-#define MyAppVersion "0.6.2 (32 bit)"
+#define MyAppVersion "0.7 (32 bit)"
 #define MyAppPublisher "Ars L. Masiuk"
 #define MyAppURL "https://sourceforge.net/projects/qvge"
 #define MyAppExeName "qvgeapp.exe"
@@ -27,7 +27,7 @@ Compression=lzma
 SolidCompression=yes
 
 OutputDir=..\..\..\..\_releases\win32
-OutputBaseFilename=qvge-0.6.2-setup-32bit
+OutputBaseFilename=qvge-0.7-setup-32bit
 DefaultDirName={pf}\QVGE
 
 [Languages]

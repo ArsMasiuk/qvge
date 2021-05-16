@@ -8,19 +8,24 @@ New features/improvements:
 - added default context menu to the label editor (#146)
 
 Bugfixes:
-- fixed crash if DOT file has HTML labels (#131)
 - fixed building with OGDF support (#130, #139)
 - fixed import of multiline labels from DOT (#141)
 - fixed DOT: shape="box" not recognized (#140) - thanks to casiosmu for fixing this!
 - fixed crash after exporting to SVG and reopening the document (#145)
 - fixed various typos and export to GraphML (#147) - thanks to luzpaz!
+- fixed crash if DOT file has HTML labels (#131)
 - fixed opening node editor after double click (#136)
+- fixed improper selection behavior after finishing of label editing
 
 Linux:
 - some setup issues fixed (#132, #133)
 
 MacOS:
 - added support of Clang compiler (#144) - thanks to fabian-z!
+
+Internal changes:
+- qvge renamed to qvgelib and qvgeapp renamed to qvge
+- common UI classes left in commonui, while qvge-related UI classes moved to qvgeui
 
 
 

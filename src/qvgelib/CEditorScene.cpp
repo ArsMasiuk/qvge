@@ -1373,11 +1373,13 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		m_cancelled = false;
 	}
 
+	// if edit controller is active (i.e. transform) then stop label editor
 	if (m_editController)
 	{
 		if (m_editItem)
 		{
 			m_pimpl->m_labelEditor.finishEdit();
+			m_editItem = nullptr;
 		}
 
 		if (m_editController->onMousePressed(*this, mouseEvent))
@@ -1386,14 +1388,18 @@ void CEditorScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 			return;
 		}
 		else
+		{
 			mouseEvent->setAccepted(false);
+		}
 	}
 
+	// if an item is being edited (i.e. label)
 	if (m_editItem)
 	{
 		// call super
 		Super::mousePressEvent(mouseEvent);
-		return;
+		if (mouseEvent->isAccepted())
+			return;
 	}
 
 	// check RMB
