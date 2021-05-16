@@ -1,7 +1,11 @@
-QVGE 0.6.x.Master - mostly merged back from 0.7.dev branch
+QVGE 0.6.3/Master - mostly merged back from 0.7.dev branch
 -------------------------------------------------------------------------------
 Bugfixes:
-- #130, #139, #140, #141, #144, #145, #147
+- fixed building with OGDF support (#130, #139)
+- fixed import of multiline labels from DOT (#141)
+- fixed DOT: shape="box" not recognized (#140) - thanks to casiosmu for fixing this!
+- fixed crash after exporting to SVG and reopening the document (#145)
+- fixed various typos and export to GraphML (#147) - thanks to luzpaz!
 
 
 
