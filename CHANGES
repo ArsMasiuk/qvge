@@ -19,6 +19,7 @@ Bugfixes:
 
 Linux:
 - some setup issues fixed (#132, #133)
+- license info updated (#151) - thanks to tieugene!
 
 MacOS:
 - added support of Clang compiler (#144) - thanks to fabian-z!

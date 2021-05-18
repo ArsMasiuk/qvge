@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2016-2020 Ars L. Masiuk <ars.masiuk@gmail.com> -->
+<!-- Copyright 2016-2021 Ars L. Masiuk <ars.masiuk@gmail.com> -->
 <component type="desktop">
   <id>qvge.desktop</id>
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
+  <project_license>BSD</project_license>
+  <project_license>LGPL-3.0</project_license>
   <name>Qt visual graph editor</name>
   <summary>View and manipulate small till middle-sized graphs.</summary>
   <description>
