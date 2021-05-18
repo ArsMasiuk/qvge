@@ -4,6 +4,8 @@
   <id>qvge.desktop</id>
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
+  <project_license>BSD</project_license>
+  <project_license>LGPL-3.0</project_license>
   <name>Qt visual graph editor</name>
   <summary>View and manipulate small till middle-sized graphs.</summary>
   <description>
