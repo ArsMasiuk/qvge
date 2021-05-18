@@ -26,6 +26,8 @@ public:
 
 	void startEdit(CItem *item);
 	void finishEdit(bool accept = true);
+	
+	void onItemLayout();
 
 	virtual bool onKeyPressed(CEditorScene& scene, QKeyEvent *keyEvent);
 	virtual bool onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent);

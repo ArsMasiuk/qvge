@@ -138,7 +138,6 @@ void CTextLabelEdit::startEdit(CItem *item)
 	scene->selectItem(m_item);
 
 	m_storedText = m_item->getAttribute("label").toString();
-	m_item->showLabel(false);
 
 	setPlainText(m_storedText);
 	setFont(m_item->getAttribute("label.font").value<QFont>());
@@ -156,6 +155,19 @@ void CTextLabelEdit::startEdit(CItem *item)
 	show();
 
 	Q_EMIT editingStarted(m_item);
+}
+
+
+void CTextLabelEdit::onItemLayout()
+{
+	if (m_item == nullptr)
+		return;
+
+	// update attributes
+	setFont(m_item->getAttribute("label.font").value<QFont>());
+	//setDefaultTextColor(m_item->getAttribute("label.color").value<QColor>());
+
+	updateGeometry();
 }
 
 
@@ -177,8 +189,6 @@ void CTextLabelEdit::finishEdit(bool accept)
 
 		scene->addUndoState();
 	}
-
-	m_item->showLabel(true);
 
 	m_item = nullptr;
 	scene->removeItem(this);

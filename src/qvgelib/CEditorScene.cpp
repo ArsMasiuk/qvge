@@ -1340,15 +1340,23 @@ void CEditorScene::layoutItemLabels()
 		citem->updateLabelContent();
 		citem->updateLabelPosition();
 
-		if (labelPolicy == AlwaysOn)
-			citem->showLabel(true);
-		else
+		if (citem == m_editItem)
 		{
-			QRectF labelRect = citem->getSceneLabelRect();
-			QRectF reducedRect(labelRect.topLeft() / 10, labelRect.size() / 10);
-
-			citem->showLabel(checkLabelRegion(reducedRect));
+			citem->showLabel(false);
+			m_pimpl->m_labelEditor.onItemLayout();
+			continue;
 		}
+
+		if (labelPolicy == AlwaysOn)
+		{
+			citem->showLabel(true);
+			continue;
+		}
+
+		QRectF labelRect = citem->getSceneLabelRect();
+		QRectF reducedRect(labelRect.topLeft() / 10, labelRect.size() / 10);
+
+		citem->showLabel(checkLabelRegion(reducedRect));
 	}
 
 	//qDebug() << "layout labels: " << tm.elapsed();
@@ -2271,7 +2279,7 @@ void CEditorScene::onActionSelectAll()
 
 // label edit
 
-void CEditorScene::onActionEditLabel(CItem *item)
+void CEditorScene::onActionEditLabel(CItem* item)
 {
 	setInfoStatus(SIS_Edit_Label);
 	setSceneCursor(Qt::IBeamCursor);
@@ -2279,11 +2287,13 @@ void CEditorScene::onActionEditLabel(CItem *item)
 	m_pimpl->m_labelEditor.startEdit(item);
 
 	m_editItem = item;
+	m_editItem->showLabel(false);
 }
 
 
-void CEditorScene::onItemEditingFinished(CItem * /*item*/, bool /*cancelled*/)
+void CEditorScene::onItemEditingFinished(CItem* /*item*/, bool /*cancelled*/)
 {
+	m_editItem->showLabel(true);
 	m_editItem = nullptr;
 }
 

@@ -16,6 +16,7 @@ Bugfixes:
 - fixed crash if DOT file has HTML labels (#131)
 - fixed opening node editor after double click (#136)
 - fixed improper selection behavior after finishing of label editing
+- fixed label font update while editing
 
 Linux:
 - some setup issues fixed (#132, #133)
