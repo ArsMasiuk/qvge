@@ -3,9 +3,7 @@
 <component type="desktop">
   <id>qvge.desktop</id>
   <metadata_license>MIT</metadata_license>
-  <project_license>MIT</project_license>
-  <project_license>BSD</project_license>
-  <project_license>LGPL-3.0</project_license>
+  <project_license>MIT AND BSD-2-Clause AND BSD-3-Clause AND LGPL-3.0-only</project_license>
   <name>Qt visual graph editor</name>
   <summary>View and manipulate small till middle-sized graphs.</summary>
   <description>
