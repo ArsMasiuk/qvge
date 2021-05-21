@@ -1,5 +1,5 @@
 Name:		qvge
-Version:	0.6.2
+Version:	0.6.3
 Release:	1
 Summary:	Qt Visual Graph Editor
 License:	MIT
@@ -37,6 +37,9 @@ cp /usr/local/share/mime/packages/application-xgr.xml %buildroot/usr/local/share
 
 %changelog
 -------------------------------------------------------------------------------
+* Fri May 21 2021 Ars Masiuk <ars.masiuk@gmail.com> 0.6.3
+- Various bugfixes and minor improvements
+
 * Sat Dec 12 2020 Ars Masiuk <ars.masiuk@gmail.com> 0.6.2
 - import of GraphML in SocNetV format supported
 - GraphViz accessibility and version can be checked out of the Options dialog
