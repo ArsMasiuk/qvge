@@ -1,7 +1,7 @@
 [DEBREATE-0.7.13]
 <<CTRL>>
 Package: qvge
-Version: 0.6.2
+Version: 0.6.3
 Maintainer: Ars L. Masiuk <ars.masiuk@gmail.com>
 Section: editors
 Source: https://github.com/ArsMasiuk/qvge
@@ -37,6 +37,13 @@ Description: Qt Visual Graph Editor
 <</SCRIPTS>>
 <<CHANGELOG>>
 <<DEST>>DEFAULT<</DEST>>
+qvge (0.6.3) ; urgency=medium
+
+  * Various bugfixes and minor improvements
+
+ -- Ars L. Masiuk <ars.masiuk@gmail.com>  Fri, 21 May 2021 08:58:06 +0100
+ 
+ 
 qvge (0.6.2) ; urgency=medium
 
 New features/improvements:
