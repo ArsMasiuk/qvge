@@ -17,6 +17,7 @@ Bugfixes:
 - fixed opening node editor after double click (#136)
 - fixed improper selection behavior after finishing of label editing
 - fixed label font update while editing
+- partially fixed snapping after drop on a node (#158)
 
 Linux:
 - some setup issues fixed (#132, #133)

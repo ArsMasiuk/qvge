@@ -115,13 +115,13 @@ public:
 	virtual void onPortDeleted(CNodePort *port);
 	virtual void onPortRenamed(CNodePort *port, const QByteArray& oldId);
 
-	virtual void onItemMoved(const QPointF& delta);
-	virtual void onItemRestored();
-	virtual void onDroppedOn(const QSet<IInteractive*>& acceptedItems, const QSet<IInteractive*>& rejectedItems);
-	virtual ItemDragTestResult acceptDragFromItem(QGraphicsItem* draggedItem);
+	virtual void onItemMoved(const QPointF& delta) override;
+	virtual void onItemRestored() override;
+	virtual bool onDroppedOn(const QSet<IInteractive*>& acceptedItems, const QSet<IInteractive*>& rejectedItems, QGraphicsItem** mergedWith) override;
+	virtual ItemDragTestResult acceptDragFromItem(QGraphicsItem* draggedItem) override;
 
 	// reimp 
-	virtual QRectF boundingRect() const;
+	virtual QRectF boundingRect() const override;
 
 protected:
 	// reimp 

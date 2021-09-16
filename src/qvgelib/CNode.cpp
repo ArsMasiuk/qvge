@@ -761,7 +761,7 @@ void CNode::onItemRestored()
 }
 
 
-void CNode::onDroppedOn(const QSet<IInteractive*>& acceptedItems, const QSet<IInteractive*>& /*rejectedItems*/)
+bool CNode::onDroppedOn(const QSet<IInteractive*>& acceptedItems, const QSet<IInteractive*>& /*rejectedItems*/, QGraphicsItem** mergedWith)
 {
 	if (acceptedItems.size())
 	{
@@ -774,7 +774,9 @@ void CNode::onDroppedOn(const QSet<IInteractive*>& acceptedItems, const QSet<IIn
 				CNode* node = port->getNode();
 				node->merge(this, port->getId());
 				node->setSelected(true);
-				return;
+				if (mergedWith) 
+					*mergedWith = node;
+				return true;
 			}
 		}
 
@@ -786,12 +788,16 @@ void CNode::onDroppedOn(const QSet<IInteractive*>& acceptedItems, const QSet<IIn
 			{
 				node->merge(this);
 				node->setSelected(true);
-				return;
+				if (mergedWith)
+					*mergedWith = node;
+				return true;
 			}
 		}
 
 		// nothing...
 	}
+
+	return false;
 }
 
 

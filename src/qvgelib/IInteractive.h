@@ -19,7 +19,7 @@ public:
 	// callbacks
 	virtual void onItemMoved(const QPointF& /*delta*/) {}
 	virtual void onDraggedOver(const QSet<IInteractive*>& /*acceptedItems*/, const QSet<IInteractive*>& /*rejectedItems*/) {}
-	virtual void onDroppedOn(const QSet<IInteractive*>& /*acceptedItems*/, const QSet<IInteractive*>& /*rejectedItems*/) {}
+	virtual bool onDroppedOn(const QSet<IInteractive*>& /*acceptedItems*/, const QSet<IInteractive*>& /*rejectedItems*/, QGraphicsItem** mergedWith = nullptr) { return false; }
 	virtual void onHoverEnter(QGraphicsItem* /*sceneItem*/, QGraphicsSceneHoverEvent* /*event*/) {}
 	virtual void onHoverLeave(QGraphicsItem* /*sceneItem*/, QGraphicsSceneHoverEvent* /*event*/) {}
 	virtual void onClick(QGraphicsSceneMouseEvent* /*mouseEvent*/) {}

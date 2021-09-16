@@ -1821,9 +1821,14 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 
 		// inform the dragger
 		IInteractive* draggedItem = dynamic_cast<IInteractive*>(dragItem);
+		QGraphicsItem* dropTarget = nullptr;
+		bool merged = false;
+
 		if (draggedItem && !dragCancelled)
 		{
-			draggedItem->onDroppedOn(m_acceptedHovers, m_rejectedHovers);
+			// tbd: if merged, this must return the node which is the drop target because draggedItem will die in this case
+			//...
+			merged = draggedItem->onDroppedOn(m_acceptedHovers, m_rejectedHovers, &dropTarget);
 		}
 
 		// drag finish
@@ -1832,10 +1837,16 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 
 		if (!dragCancelled)
 		{
-			// snap after drop if dragItem still alive (can die after onDroppedOn??)
+			// snap after drop if dragItem still alive (can die after onDroppedOn because of merging)
 			if (items().contains(dragItem))
 			{
 				onDropped(mouseEvent, dragItem);
+			}
+			else // #158 - snap selected items together
+			{
+				// to do: the nodes have to be snapped to the merged target
+				if (merged && dropTarget)
+					onDropped(mouseEvent, dropTarget);
 			}
 
 			// update undo manager
