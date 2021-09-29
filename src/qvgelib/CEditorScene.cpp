@@ -1888,7 +1888,8 @@ void CEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsItem
 		for (auto item : selectedItems())
 		{
 			if (item != dragItem)
-				item->moveBy(d.x(), d.y());
+				//item->moveBy(d.x(), d.y());
+				item->setPos(getSnapped(item->pos()));
 		}
 	}
 }

@@ -89,6 +89,9 @@ int CSceneOptionsDialog::exec(CEditorScene &scene, CEditorView &view, OptionsDat
 	data.graphvizDefaultEngine = ui->GraphvizDefaultEngine->currentText();
 #endif
 
+	// undo state
+	scene.addUndoState();
+
 	return QDialog::Accepted;
 }
 

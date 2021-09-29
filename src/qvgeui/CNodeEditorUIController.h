@@ -83,6 +83,8 @@ private Q_SLOTS:
 
     void sceneOptions();
 
+	void enableGrid(bool on);
+	void enableGridSnap(bool on);
 	void showNodeIds(bool on);
 	void showEdgeIds(bool on);
 

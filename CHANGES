@@ -17,7 +17,8 @@ Bugfixes:
 - fixed opening node editor after double click (#136)
 - fixed improper selection behavior after finishing of label editing
 - fixed label font update while editing
-- partially fixed snapping after drop on a node (#158)
+- fixed snap after dropping node(s) on the field/another node (#158)
+- fixed undo/redo behaviour for some scene options (#159)
 
 Linux:
 - some setup issues fixed (#132, #133)

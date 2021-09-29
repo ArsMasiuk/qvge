@@ -868,7 +868,8 @@ void CNodeEditorScene::onDropped(QGraphicsSceneMouseEvent* mouseEvent, QGraphics
 			}
 
 			for (auto item : items)
-				item->moveBy(d.x(), d.y());
+				//item->moveBy(d.x(), d.y());
+				item->setPos(getSnapped(item->pos()));
 
 			for (auto edge : edges)
 				edge->onItemMoved(d);

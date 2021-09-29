@@ -403,13 +403,13 @@ void CNodeEditorUIController::createViewMenu()
 	gridAction->setCheckable(true);
 	gridAction->setStatusTip(tr("Show/hide background grid"));
 	gridAction->setChecked(m_editorScene->gridEnabled());
-	connect(gridAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGrid(bool)));
+	connect(gridAction, SIGNAL(toggled(bool)), this, SLOT(enableGrid(bool)));
 
 	gridSnapAction = m_viewMenu->addAction(QIcon(":/Icons/Grid-Snap"), tr("&Snap to Grid"));
 	gridSnapAction->setCheckable(true);
 	gridSnapAction->setStatusTip(tr("Snap to grid when dragging"));
 	gridSnapAction->setChecked(m_editorScene->gridSnapEnabled());
-	connect(gridSnapAction, SIGNAL(toggled(bool)), m_editorScene, SLOT(enableGridSnap(bool)));
+	connect(gridSnapAction, SIGNAL(toggled(bool)), this, SLOT(enableGridSnap(bool)));
 
 	m_actionShowNodeIds = m_viewMenu->addAction(tr("Show Node Ids"));
 	m_actionShowNodeIds->setCheckable(true);
@@ -1049,6 +1049,22 @@ void CNodeEditorUIController::editNodePort(CNodePort &port)
 void CNodeEditorUIController::find()
 {
     m_searchDialog->exec(*m_editorScene);
+}
+
+
+void CNodeEditorUIController::enableGrid(bool on)
+{
+	m_editorScene->enableGrid(on);
+
+	m_editorScene->addUndoState();
+}
+
+
+void CNodeEditorUIController::enableGridSnap(bool on)
+{
+	m_editorScene->enableGridSnap(on);
+
+	m_editorScene->addUndoState();
 }
 
 
