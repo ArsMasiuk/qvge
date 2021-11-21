@@ -42,6 +42,7 @@ const QByteArray attr_stroke_size = QByteArrayLiteral("stroke.size");
 const QByteArray attr_label = QByteArrayLiteral("label");
 const QByteArray attr_label_font = QByteArrayLiteral("label.font");
 const QByteArray attr_label_color = QByteArrayLiteral("label.color");
+const QByteArray attr_label_position = QByteArrayLiteral("label.position");
 const QByteArray attr_labels_policy = QByteArrayLiteral("labels.policy");
 const QByteArray attr_labels_visIds = QByteArrayLiteral("labels.visibleIds");
 const QByteArray attr_edge_direction = QByteArrayLiteral("direction");

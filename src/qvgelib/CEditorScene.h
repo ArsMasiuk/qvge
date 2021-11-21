@@ -79,6 +79,10 @@ public:
 	bool itemLabelsEnabled() const		{ return m_labelsEnabled; }
 	bool itemLabelsNeedUpdate() const	{ return m_labelsUpdate; }
 
+	enum LabelsPosition {
+		Center, Top, Bottom, Left, Right
+	};
+
 	enum LabelsPolicy {
 		Auto, AlwaysOn, AlwaysOff
 	};

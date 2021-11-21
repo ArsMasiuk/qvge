@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016 Ars L.Masiuk(ars.masiuk@gmail.com)
+(c) 2016-2021 Ars L. Masiuk L.Masiuk(ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -106,24 +106,36 @@ void CEditorScene::initialize()
 	m_classAttributesConstrains.clear();
 
 	// default item attrs
-    createClassAttribute(class_item, "label", "Label", "", ATTR_NODEFAULT | ATTR_FIXED, nullptr, true);
-	createClassAttribute(class_item, "label.color", "Label Color", QColor(Qt::black));
+    createClassAttribute(class_item, "label", tr("Label"), "", ATTR_NODEFAULT | ATTR_FIXED, nullptr, true);
+	createClassAttribute(class_item, "label.color", tr("Label Color"), QColor(Qt::black));
 
 	QFont labelFont;
-	CAttribute labelFontAttr("label.font", "Label Font", labelFont, ATTR_FIXED);
+	CAttribute labelFontAttr("label.font", tr("Label Font"), labelFont, ATTR_FIXED);
 	setClassAttribute(class_item, labelFontAttr);
 
-    createClassAttribute(class_item, "id", "ID", "", ATTR_NODEFAULT | ATTR_FIXED, nullptr, true);
+    createClassAttribute(class_item, "id", tr("ID"), "", ATTR_NODEFAULT | ATTR_FIXED, nullptr, true);
+
+	// labels position
+	static CAttributeConstrainsEnum *labelsPositions = new CAttributeConstrainsEnum();
+	if (labelsPositions->ids.isEmpty()) 
+	{
+		labelsPositions->names << tr("Center") << tr("Top") << tr("Bottom") << tr("Left") << tr("Right");
+		labelsPositions->ids << Center << Top << Bottom << Left << Right;
+	}
+
+	createClassAttribute(class_node, attr_label_position, tr("Label Position"), Center, ATTR_FIXED, labelsPositions);
+	//createClassAttribute(class_scene, attr_label_position, tr("Labels Position"), Center, ATTR_FIXED, labelsPositions);
 
 
 	// labels policy
 	static CAttributeConstrainsEnum *labelsPolicy = new CAttributeConstrainsEnum();
-	if (labelsPolicy->ids.isEmpty()) {
+	if (labelsPolicy->ids.isEmpty()) 
+	{
 		labelsPolicy->names << tr("Auto") << tr("Always On") << tr("Always Off");
 		labelsPolicy->ids << Auto << AlwaysOn << AlwaysOff;
 	}
 
-	createClassAttribute(class_scene, attr_labels_policy, "Labels Policy", Auto, ATTR_FIXED, labelsPolicy);
+	createClassAttribute(class_scene, attr_labels_policy, tr("Labels Policy"), Auto, ATTR_FIXED, labelsPolicy);
 }
 
 
@@ -1331,8 +1343,8 @@ void CEditorScene::layoutItemLabels()
 		return;
 	}
 
-	QElapsedTimer tm;
-	tm.start();
+	//QElapsedTimer tm;
+	//tm.start();
 
 	// else layout texts
 	for (auto citem : allItems)

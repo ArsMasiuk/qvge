@@ -964,11 +964,30 @@ void CNode::updateLabelPosition()
 	int w = m_labelItem->boundingRect().width();
 	int h = m_labelItem->boundingRect().height();
 
+	auto labelPos = (CEditorScene::LabelsPosition) getAttribute(QByteArrayLiteral("label.position")).toInt();
+
 	QRectF r = Shape::boundingRect();
-	if (r.width() < 16 || r.height() < 16)
-		m_labelItem->setPos(-w / 2, boundingRect().height() / 2);	// if too small: put label at the bottom
-	else
+
+	switch (labelPos)
+	{
+	case CEditorScene::Top:
+		m_labelItem->setPos(-w / 2, -boundingRect().height() / 2 - h);
+		break;
+
+	case CEditorScene::Bottom:
+		m_labelItem->setPos(-w / 2, boundingRect().height() / 2);
+		break;
+
+	default:
 		m_labelItem->setPos(-w / 2, -h / 2);		// else center
+		break;
+	}
+
+
+	//if (r.width() < 16 || r.height() < 16)
+	//	m_labelItem->setPos(-w / 2, boundingRect().height() / 2);	// if too small: put label at the bottom
+	//else
+	//	m_labelItem->setPos(-w / 2, -h / 2);		// else center
 }
 
 
