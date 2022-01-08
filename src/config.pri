@@ -1,11 +1,11 @@
 # This file is a part of
 # QVGE - Qt Visual Graph Editor
 #
-# (c) 2016-2020 Ars L. Masiuk (ars.masiuk@gmail.com)
+# (c) 2016-2022 Ars L. Masiuk (ars.masiuk@gmail.com)
 #
 # It can be used freely, maintaining the information above.
 
-CONFIG += USE_OGDF
+#CONFIG += USE_OGDF
 CONFIG += USE_GVGRAPH
 #CONFIG += USE_BOOST
 

@@ -73,6 +73,7 @@ protected Q_SLOTS:
 	void on_LabelFontBold_toggled(bool on);
 	void on_LabelFontItalic_toggled(bool on);
 	void on_LabelFontUnderline_toggled(bool on);
+	void on_LabelPosition_activated(QVariant data);
 
 private:
 	void setNodesAttribute(const QByteArray& attrId, const QVariant& v);

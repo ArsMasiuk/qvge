@@ -1,6 +1,7 @@
 #include "CNode.h"
 #include "CEdge.h"
 #include "CDirectEdge.h"
+#include "CEditorSceneDefines.h"
 
 #include <QPen>
 #include <QBrush>
@@ -964,18 +965,26 @@ void CNode::updateLabelPosition()
 	int w = m_labelItem->boundingRect().width();
 	int h = m_labelItem->boundingRect().height();
 
-	auto labelPos = (CEditorScene::LabelsPosition) getAttribute(QByteArrayLiteral("label.position")).toInt();
+	auto labelPos = (CEditorScene::LabelsPosition) getAttribute(attr_label_position).toInt();
 
 	QRectF r = Shape::boundingRect();
 
 	switch (labelPos)
 	{
 	case CEditorScene::Top:
-		m_labelItem->setPos(-w / 2, -boundingRect().height() / 2 - h);
+		m_labelItem->setPos(-w / 2, -r.height() / 2 - h - 8);
 		break;
 
 	case CEditorScene::Bottom:
-		m_labelItem->setPos(-w / 2, boundingRect().height() / 2);
+		m_labelItem->setPos(-w / 2, r.height() / 2 + 8);
+		break;
+
+	case CEditorScene::Left:
+		m_labelItem->setPos(-w - r.width() / 2 - 8, -h / 2);
+		break;
+
+	case CEditorScene::Right:
+		m_labelItem->setPos(r.width() / 2 + 8, -h / 2);
 		break;
 
 	default:

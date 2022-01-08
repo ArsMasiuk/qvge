@@ -33,6 +33,8 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
+	// nodes
     ui->NodeColor->setColorScheme(QSint::OpenOfficeColors());
 	ui->NodeColor->enableNoColor(true);
 
@@ -46,6 +48,7 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
     ui->NodeAttrBox->setChecked(false);
 
 
+	// edges
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Directed"), tr("Directed (one end)"), "directed");
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Mutual"), tr("Mutual (both ends)"), "mutual");
 	ui->EdgeDirection->addAction(QIcon(":/Icons/Edge-Undirected"), tr("None (no ends)"), "undirected");
@@ -59,6 +62,16 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	ui->StrokeStyle->setUsedRange(Qt::SolidLine, Qt::DashDotDotLine);
 
     ui->EdgeAttrBox->setChecked(false);
+
+
+	// labels
+	ui->LabelColor->setColorScheme(QSint::OpenOfficeColors());
+
+	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Center"), CEditorScene::Center);
+	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Top"), CEditorScene::Top);
+	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Bottom"), CEditorScene::Bottom);
+	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Left"), CEditorScene::Left);
+	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Right"), CEditorScene::Right);
 
 
 	// font size
@@ -255,7 +268,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 	else if (nodeItems.size()) item = nodeItems.first();
     if (item) 
 	{
-		QFont f(item->getAttribute("label.font").value<QFont>());
+		QFont f(item->getAttribute(attr_label_font).value<QFont>());
         ui->LabelFont->setCurrentFont(f);
         ui->LabelFontFamily->setCurrentFont(f);
         ui->LabelFontFamily->lineEdit()->setFont(QFont(f.family()));
@@ -263,7 +276,8 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 		ui->LabelFontBold->setChecked(f.bold());
 		ui->LabelFontItalic->setChecked(f.italic());
 		ui->LabelFontUnderline->setChecked(f.underline());
-		ui->LabelColor->setColor(item->getAttribute("label.color").value<QColor>());
+		ui->LabelColor->setColor(item->getAttribute(attr_label_color).value<QColor>());
+		ui->LabelPosition->selectAction(item->getAttribute(attr_label_position).toUInt());
     }
 
     // allow updates
@@ -605,4 +619,22 @@ void CNodeEdgePropertiesUI::on_LabelFontUnderline_toggled(bool on)
 
 	if (set)
 		m_scene->addUndoState();
+}
+
+
+void CNodeEdgePropertiesUI::on_LabelPosition_activated(QVariant data)
+{
+	if (m_updateLock || m_scene == NULL)
+		return;
+
+	QList<CItem*> items = m_scene->getSelectedNodesEdges();
+	if (items.isEmpty())
+		return;
+
+	for (auto item : items)
+	{
+		item->setAttribute(attr_label_position, data);
+	}
+
+	m_scene->addUndoState();
 }
