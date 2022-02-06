@@ -67,11 +67,11 @@ CNodeEdgePropertiesUI::CNodeEdgePropertiesUI(QWidget *parent) :
 	// labels
 	ui->LabelColor->setColorScheme(QSint::OpenOfficeColors());
 
-	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Center"), CEditorScene::Center);
-	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Top"), CEditorScene::Top);
-	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Bottom"), CEditorScene::Bottom);
-	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Left"), CEditorScene::Left);
-	ui->LabelPosition->addAction(/*QIcon(":/Icons/Edge-Line"),*/ tr("Right"), CEditorScene::Right);
+	ui->LabelPosition->addAction(QIcon(":/Icons/Label-Center"), tr("Center"), CEditorScene::Center);
+	ui->LabelPosition->addAction(QIcon(":/Icons/Label-Top"), tr("Top"), CEditorScene::Top);
+	ui->LabelPosition->addAction(QIcon(":/Icons/Label-Bottom"), tr("Bottom"), CEditorScene::Bottom);
+	ui->LabelPosition->addAction(QIcon(":/Icons/Label-Left"), tr("Left"), CEditorScene::Left);
+	ui->LabelPosition->addAction(QIcon(":/Icons/Label-Right"), tr("Right"), CEditorScene::Right);
 
 
 	// font size
@@ -278,6 +278,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
 		ui->LabelFontUnderline->setChecked(f.underline());
 		ui->LabelColor->setColor(item->getAttribute(attr_label_color).value<QColor>());
 		ui->LabelPosition->selectAction(item->getAttribute(attr_label_position).toUInt());
+		ui->LabelPosition->setEnabled(nodes.count());
     }
 
     // allow updates
