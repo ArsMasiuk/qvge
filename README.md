@@ -186,6 +186,7 @@ Special thanks to:
 
 - Dr. prof. [Vladimir A. Svjatnyj](https://wiki.donntu.edu.ua/view/%D0%A1%D0%B2%D1%8F%D1%82%D0%BD%D0%B8%D0%B9_%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80_%D0%90%D0%BD%D0%B4%D1%80%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87), head of [computer engineering chair](https://donntu.edu.ua/knt/kafedra-ki) at [DonNTU](https://donntu.edu.ua/en/donntu2020) and my scientific supervisor
 - [Tatsuro Ueda](https://github.com/weed), founder of [Feel Physics](https://feel-physics.jp), for comrehensive testing, feedback and suggestions
+- [Alexander Uslontsev](http://www.sanych.org), for the great support of the project and for a lot of useful feedbacks
 
 ### External Links
 
