@@ -96,7 +96,6 @@ bool CGVGraphLayoutUIController::doRunDOT(const QString &engine, const QString &
 	QProcess process;
 	process.setWorkingDirectory(m_pathToGraphviz);
 	process.start(cmd);
-	int res = 0;
 	process.waitForStarted(1000);
 	while (process.state() != QProcess::NotRunning)
 	{
@@ -118,8 +117,7 @@ bool CGVGraphLayoutUIController::doRunDOT(const QString &engine, const QString &
 		}
 	}
 
-	//int res = QProcess::execute(cmd);
-	if (res != 0)
+	if (process.exitCode() != 0)
 	{
 		if (lastError)
 			*lastError = errorCannotRun(pathToDot);
