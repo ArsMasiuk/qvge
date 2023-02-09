@@ -2402,7 +2402,7 @@ void CEditorScene::ensureSelectionVisible()
 
 	QRectF r;
 	for (const auto item : items)
-		r |= item->sceneBoundingRect();
+		r |= item->boundingRect();
 
 	if (items.count())
 		items.first()->ensureVisible(r);
