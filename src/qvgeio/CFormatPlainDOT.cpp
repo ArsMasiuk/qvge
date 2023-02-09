@@ -175,6 +175,7 @@ static QStringList parseLine(QTextStream &ts)
 			while (line[i] != '"' && line[i] != '\0')
 				token += line[i++];
 			tokens << token;
+			i++;
 
 			goto _loop;
 		}
