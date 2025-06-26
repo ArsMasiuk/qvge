@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2021 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2025 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -269,12 +269,18 @@ bool CFormatDOT::load(const QString& fileName, Graph& g, QString* lastError) con
     return status;
 
 #else
+	if (lastError)
+		*lastError = QObject::tr("DOT format support is disabled, recompile with USE_BOOST defined");
+
+	Q_UNUSED(fileName);
+	Q_UNUSED(g);
+
 	return false;
 #endif
 }
 
 
-bool CFormatDOT::save(const QString& fileName, Graph& graph, QString* lastError) const
+bool CFormatDOT::save(const QString& /*fileName*/, Graph& /*graph*/, QString* /*lastError*/) const
 {
 	return false;
 }

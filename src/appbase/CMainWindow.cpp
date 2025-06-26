@@ -536,7 +536,7 @@ bool CMainWindow::doOpenDocument(const QString &fileName)
 }
 
 
-void CMainWindow::onOpenDocumentDialog(QString &title, QString &filter)
+void CMainWindow::onOpenDocumentDialog(QString &/*title*/, QString &filter)
 {
     filter = "";
 

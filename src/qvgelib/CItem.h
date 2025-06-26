@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2021 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2025 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -116,7 +116,15 @@ public:
 	// transformations
 	virtual void transform(const QRectF& oldRect, const QRectF& newRect,
 		double xc, double yc,
-		bool changeSize, bool changePos) {}
+		bool changeSize, bool changePos) 
+	{
+		Q_UNUSED(oldRect);
+		Q_UNUSED(newRect);
+		Q_UNUSED(xc);
+		Q_UNUSED(yc);
+		Q_UNUSED(changeSize);
+		Q_UNUSED(changePos);
+	}
 
 	// serialization 
 	virtual bool storeTo(QDataStream& out, quint64 version64) const;

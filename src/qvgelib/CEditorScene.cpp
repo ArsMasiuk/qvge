@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2021 Ars L. Masiuk L.Masiuk(ars.masiuk@gmail.com)
+(c) 2016-2025 Ars L. Masiuk  (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -1221,7 +1221,7 @@ void CEditorScene::onSelectionChanged()
 }
 
 
-void CEditorScene::onFocusItemChanged(QGraphicsItem *newFocusItem, QGraphicsItem *oldFocusItem, Qt::FocusReason reason)
+void CEditorScene::onFocusItemChanged(QGraphicsItem */*newFocusItem*/, QGraphicsItem */*oldFocusItem*/, Qt::FocusReason /*reason*/)
 {
 }
 
@@ -1896,7 +1896,7 @@ void CEditorScene::finishDrag(QGraphicsSceneMouseEvent* mouseEvent, QGraphicsIte
 }
 
 
-void CEditorScene::onMoving(QGraphicsSceneMouseEvent *mouseEvent, QGraphicsItem* hoverItem)
+void CEditorScene::onMoving(QGraphicsSceneMouseEvent* /*mouseEvent*/, QGraphicsItem* hoverItem)
 {
 	updateCursorState();
 

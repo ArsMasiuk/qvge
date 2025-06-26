@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2021 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2025 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -32,8 +32,8 @@ public:
 	virtual bool onMouseMove(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent) = 0;
 	virtual bool onMouseReleased(CEditorScene& scene, QGraphicsSceneMouseEvent *mouseEvent) = 0;
 
-	virtual bool onKeyPressed(CEditorScene& scene, QKeyEvent *keyEvent) { return false; }
-	virtual bool onKeyReleased(CEditorScene& scene, QKeyEvent *keyEvent) { return false; }
+	virtual bool onKeyPressed(CEditorScene& /*scene*/, QKeyEvent */*keyEvent*/) { return false; }
+	virtual bool onKeyReleased(CEditorScene& /*scene*/, QKeyEvent */*keyEvent*/) { return false; }
 
 	virtual void draw(CEditorScene& scene, QPainter *painter, const QRectF &r) = 0;
 };

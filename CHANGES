@@ -10,6 +10,7 @@ New features/improvements:
 - pressing Ctrl while dropping node on node does not merge them (#177) - works only for nodes
 
 Bugfixes:
+- fixed memory leak on importing some GraphViz (gv) files (#182: partially)
 - fixed building with OGDF support (#130, #139)
 - fixed import of multiline labels from DOT (#141)
 - fixed DOT: shape="box" not recognized (#140) - thanks to casiosmu for fixing this!
@@ -33,6 +34,16 @@ Internal changes:
 - qvge renamed to qvgelib and qvgeapp renamed to qvge
 - common UI classes left in commonui, while qvge-related UI classes moved to qvgeui
 
+
+
+QVGE 0.6.3/Master - mostly merged back from 0.7.dev branch
+-------------------------------------------------------------------------------
+Bugfixes:
+- fixed building with OGDF support (#130, #139)
+- fixed import of multiline labels from DOT (#141)
+- fixed DOT: shape="box" not recognized (#140) - thanks to casiosmu for fixing this!
+- fixed crash after exporting to SVG and reopening the document (#145)
+- fixed various typos and export to GraphML (#147) - thanks to luzpaz!
 
 
 QVGE 0.6.2

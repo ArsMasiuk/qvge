@@ -5,7 +5,7 @@
 #define MyAppVersion "0.7.0 (64 bit)"
 #define MyAppPublisher "Ars L. Masiuk"
 #define MyAppURL "https://sourceforge.net/projects/qvge"
-#define MyAppExeName "qvgeapp.exe"
+#define MyAppExeName "qvge.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -27,7 +27,7 @@ Compression=lzma
 SolidCompression=yes
 
 ArchitecturesInstallIn64BitMode=x64
-OutputDir=..\..\..\..\_releases\win32
+OutputDir=..\build_msvc_2022_64\_setup
 OutputBaseFilename=qvge-0.7-setup-64bit
 DefaultDirName={pf}\QVGE
 
@@ -42,15 +42,16 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "bin64\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
+;Source: "bin64\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\build_msvc_2022_64\bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs                                                        
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-;Source: "vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+;Source: "..\build_msvc_2022_64\vc_redist.x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 
 Source: "..\..\LICENSE"; DestDir: "{app}"
 Source: "..\..\CHANGES"; DestDir: "{app}"
 Source: "..\..\README.md"; DestDir: "{app}"
 Source: "..\..\examples\*"; DestDir: "{app}\examples"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\3rdParty\tools\*"; DestDir: "{app}\tools"; Flags: ignoreversion recursesubdirs createallsubdirs
+;Source: "..\3rdParty\tools\*"; DestDir: "{app}\tools"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 
 [Icons]
@@ -61,8 +62,8 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 Name: "{group}\{cm:UninstallProgram, {#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Run]
-;Filename: {tmp}\vcredist_x64.exe; \
+;Filename: {tmp}\vc_redist.x64.exe; \
     Parameters: "/q /passive /Q:a /c:""msiexec /q /i vcredist.msi"""; \
-    StatusMsg: "Installing VC++ 2015 Redistributables..."
+    StatusMsg: "Installing Microsoft Visual C++ 2015-2022 Redistributables (x64)..."
 
 Filename: "{app}\bin\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

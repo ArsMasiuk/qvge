@@ -2,7 +2,7 @@
 This file is a part of
 QVGE - Qt Visual Graph Editor
 
-(c) 2016-2021 Ars L. Masiuk (ars.masiuk@gmail.com)
+(c) 2016-2025 Ars L. Masiuk (ars.masiuk@gmail.com)
 
 It can be used freely, maintaining the information above.
 */
@@ -21,7 +21,7 @@ It can be used freely, maintaining the information above.
 
 // reimp
 
-bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QString* lastError) const
+bool CFileSerializerDOT::save(const QString& fileName, CEditorScene& scene, QString* /*lastError*/) const
 {
 	QFile saveFile(fileName);
 	if (saveFile.open(QFile::WriteOnly))

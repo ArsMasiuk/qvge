@@ -12,7 +12,7 @@ TARGET = qvge
 win32{
 	VERSION = 0.7.0.0
 	RC_ICONS = $$PWD/win32/icon.ico
-	QMAKE_TARGET_COPYRIGHT = (C) 2016-2020 Ars L. Masiuk
+	QMAKE_TARGET_COPYRIGHT = (C) 2016-2025 Ars L. Masiuk
 	QMAKE_TARGET_DESCRIPTION = Qt Visual Graph Editor
 	QMAKE_TARGET_PRODUCT = qvge
 	LIBS += -ladvapi32
