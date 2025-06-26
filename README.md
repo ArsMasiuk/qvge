@@ -1,5 +1,5 @@
 ## Qt Visual Graph Editor
-[![Download qvge](https://img.shields.io/sourceforge/dt/qvge.svg?style=for-the-badge)](https://sourceforge.net/projects/qvge/files/latest/download) 
+
 [![Github All Releases](https://img.shields.io/github/downloads/ArsMasiuk/qvge/total.svg?style=for-the-badge)](https://github.com/ArsMasiuk/qvge/releases/latest)
 ![GitHub release](https://img.shields.io/github/release/ArsMasiuk/qvge.svg?style=for-the-badge)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=for-the-badge)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url)
@@ -153,23 +153,22 @@ Then run qmake + make as described in the step before.
 ### Supported compilers
 
 Recent version of **QVGE** has been built with:
-- Microsoft Visual Studio 2017 (Community Edition)
-- MinGW 7.3
-- GCC 7.5 (Linux)
-- GCC 6.4.0 (Cygwin)
+- Microsoft Visual Studio 2022 (Community Edition)
+- MinGW (x64)
+- GCC (Linux, Cygwin)
 - Clang C++ (FreeBSD, macOS)
 
 Hopefully it can also be compiled with others compilers. If not please do not hesitate to provide description of the issue.
 
 ### Supported OS
 
-**QVGE** has been tested on Microsoft Windows 10, several Linux distributions (Mint, Mageia, Fedora etc) and macOS 11.2 Big Sur. Theoretically it should run on (almost) any OS which have Qt 5.x installed.
+**QVGE** has been tested on Microsoft Windows 11, several Linux distributions (Mint, Mageia, Fedora etc) and macOS 11.2 Big Sur. Theoretically it should run on (almost) any OS which have Qt 5.x installed.
 
 **QVGE** can be compiled & run under Cygwin.
 
 ### Supported Qt
 
-**QVGE** has been tested with Qt 5.9-5.15. But it should work with any newer 5.x version too.
+**QVGE** has been tested with Qt 5.9-5.15.16. But it should work with any newer 5.x version too.
 
 ### Credits
 
