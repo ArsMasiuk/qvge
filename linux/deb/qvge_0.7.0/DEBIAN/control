@@ -1,0 +1,9 @@
+Package: qvge
+Version: 0.7.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: Ars <ars.masiuk@gmail.com>
+Description: Qt Visual Graph Editor
+ QVGE is a multiplatform graph editor written in C++/Qt. 
+ Its main goal is to make possible visually edit two-dimensional graphs in a simple and intuitive way.
