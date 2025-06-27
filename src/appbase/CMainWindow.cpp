@@ -936,8 +936,8 @@ void CMainWindow::createHelpMenu()
 	m_helpMenu = new QMenu(tr("&Help"));
 	menuBar()->addMenu(m_helpMenu);
 
-	m_helpMenu->addAction(tr("About &Qt..."), qApp, SLOT(aboutQt()));
 	m_helpMenu->addAction(tr("&About..."), this, SLOT(onAboutApplication()));
+	m_helpMenu->addAction(tr("About &Qt..."), qApp, SLOT(aboutQt()));
 }
 
 

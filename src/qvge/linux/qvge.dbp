@@ -1,7 +1,7 @@
 [DEBREATE-0.7.13]
 <<CTRL>>
 Package: qvge
-Version: 0.6.2
+Version: 0.7.0
 Maintainer: Ars L. Masiuk <ars.masiuk@gmail.com>
 Section: editors
 Source: https://github.com/ArsMasiuk/qvge
@@ -37,7 +37,7 @@ Description: Qt Visual Graph Editor
 <</SCRIPTS>>
 <<CHANGELOG>>
 <<DEST>>DEFAULT<</DEST>>
-qvge (0.6.2) ; urgency=medium
+qvge (0.7.0) ; urgency=medium
 
 New features/improvements:
   * import of GraphML in SocNetV format supported
@@ -70,7 +70,7 @@ qvge (0.6.1) ; urgency=medium
 <<COPYRIGHT>>
 The MIT-X (MIT/X11) License
 
-Copyright © 2016-2020 Ars L. Masiuk [ars.masiuk@gmail.com]
+Copyright © 2016-2025 Ars L. Masiuk [ars.masiuk@gmail.com]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -94,8 +94,8 @@ SOFTWARE.
 1
 [FILENAME=qvge]
 Name=Qt Visual Graph Editor
-Version=1.0
-Exec=qvgeapp
+Version=0.7.0
+Exec=qvge
 Comment=View and manipulate small till middle-sized graphs
 Icon=/usr/share/qvge/icon.png
 Type=Application

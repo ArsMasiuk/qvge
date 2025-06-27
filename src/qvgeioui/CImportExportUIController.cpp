@@ -14,6 +14,7 @@ It can be used freely, maintaining the information above.
 
 #include <CImportExportUIController.h>
 #include <CDOTExportDialog.h>
+#include <CPDFExportDialog.h>
 #include <CImageExportDialog.h>
 #include <CCSVImportDialog.h>
 
@@ -52,6 +53,7 @@ CImportExportUIController::CImportExportUIController(CMainWindow *parent): QObje
 	// export dialogs
 	m_dotDialog = new CDOTExportDialog(parent);
 	m_imageDialog = new CImageExportDialog(parent);
+	m_pdfDialog = new CPDFExportDialog(parent);
 }
 
 
@@ -153,9 +155,13 @@ void CImportExportUIController::exportPDF(CEditorScene& scene)
 	CPDFExport pdf;
 	pdf.readSettings(settings);
 
-	if (pdf.setupDialog(scene))
+	m_pdfDialog->setup(pdf.settings().resolution, pdf.settings().pageLayout);
+
+	if (m_pdfDialog->exec() == QDialog::Accepted)
 	{
+		pdf.setup(m_pdfDialog->resoulution(), m_pdfDialog->pageLayout());
 		pdf.writeSettings(settings);
+
 		doExport(scene, pdf);
 	}
 }

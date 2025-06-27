@@ -44,6 +44,8 @@ protected:
 
 	virtual QString getAboutText() const;
 
+	virtual void createHelpMenu() override;
+
 	virtual void doReadSettings(QSettings& settings);
 	virtual void doWriteSettings(QSettings& settings);
 	

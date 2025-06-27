@@ -1,0 +1,44 @@
+digraph "test"
+{
+
+bgcolor = "#ffffff"
+
+node [
+class = "node"
+,fillcolor = "#ff00ff",style = "filled"
+,width = "0.152778",height = "0.152778"
+,shape = "ellipse"
+,color = "#000000"
+,penwidth = "1"
+,"_vis_" = "label"
+];
+
+
+"N1" [
+pos = "0,0!"
+,xlabel = "a"
+]
+
+"N3" [
+pos = "0.347222,-0.694444!"
+,xlabel = "b"
+]
+
+
+
+edge [
+class = "edge"
+,weight = "1"
+,penwidth = "1"
+,"_vis_" = "label"
+,"color" = "#a0a0a4"
+,"style" = "solid"
+];
+
+
+"N1" -> "N3" [id = "E2"
+];
+
+
+}
+

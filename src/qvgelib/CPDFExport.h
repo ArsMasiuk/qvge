@@ -10,11 +10,17 @@ It can be used freely, maintaining the information above.
 #pragma once
 
 #include <QString>
-#include <QPrinter>
+#include <QPdfWriter>
 #include <QSettings>
-#include <QPageSetupDialog>
 
 #include "qvgelib/IFileSerializer.h"
+
+
+struct PDFExportSettings
+{
+	int resolution = 1200;
+	QPageLayout pageLayout;
+};
 
 
 class CPDFExport : public IFileSerializer
@@ -27,6 +33,13 @@ public:
 	void readSettings(QSettings& settings);
 	void writeSettings(QSettings& settings);
 	bool setupDialog(CEditorScene& scene);
+
+	// settings accessors
+	const PDFExportSettings& settings() const { return m_settings; }
+	void setup(int resolution, const QPageLayout& pageLayout) {
+		m_settings.resolution = resolution;
+		m_settings.pageLayout = pageLayout;
+	}
 
 	// reimp: IFileSerializer
 	virtual QString description() const {
@@ -56,6 +69,5 @@ public:
 	virtual bool save(const QString& fileName, CEditorScene& scene, QString* lastError = nullptr) const;
 
 private:
-	mutable QPrinter *m_printer = nullptr;
-	QPageSetupDialog m_pageDialog;
+	mutable PDFExportSettings m_settings;
 };

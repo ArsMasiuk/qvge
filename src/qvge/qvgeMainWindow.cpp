@@ -18,6 +18,7 @@ It can be used freely, maintaining the information above.
 #include <QMessageBox>
 #include <QSettings>
 #include <QDebug>
+#include <QDesktopServices>
 
 #include <appbase/CPlatformServices.h>
 #include <qvgeui/CNodeEditorUIController.h>
@@ -242,20 +243,37 @@ QString qvgeMainWindow::getAboutText() const
 {
 	return Super::getAboutText()
 		+ QString(
+			"<p><a href='https://github.com/ArsMasiuk/qvge'>https://github.com/ArsMasiuk/qvge</a></p>"
 			"<p>This is a free software."
 			"<br>It comes without warranty of any kind. Use it on your own risk."
 			"<p>&copy; 2016-2025 Ars L. Masiuk"
 			"<hr>"
-			"<p><i>Credits:</i>"
-			"<br>&nbsp; - Qt framework &copy; <i>The Qt Company Ltd</i>"
-			"<br>&nbsp; - Qt property browser framework &copy; <i>The Qt Company Ltd</i>"
+			"<p>If you like the application and wish to say <b>Thanks! :)</b>, you can consider making a donation:</p>"
+			"<p><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url'>PayPal</a></p>"
+			"<hr>"
+			"<p><i>Additional components used:</i>"
+			"<br>&nbsp; - Qt framework &copy; <i>Qt Group Plc</i>"
+			"<br>&nbsp; - Qt property browser framework &copy; <i>Qt Group Plc</i>"
 			"<br>&nbsp; - QSint widgets library &copy; <i>Sintegrial Technologies</i>"
             "<br>&nbsp; - QProcessInfo &copy; <i>Baldur Karlsson</i>"
-			"<br>&nbsp; - menu & toolbar graphics &copy; <i>Inkscape project</i>"
+			"<br>&nbsp; - menu & toolbar graphics &copy; <i>Inkscape Project</i>"
 #ifdef USE_OGDF
             "<br>&nbsp; - OGDF &copy; <i>OGDF development team</i>"
 #endif
 		);
+}
+
+
+void qvgeMainWindow::createHelpMenu()
+{
+	Super::createHelpMenu();
+
+	m_helpMenu->addSeparator();
+	m_helpMenu->addAction(tr("Donate :)"), this, []() 
+		{
+		QUrl url("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url");
+		QDesktopServices::openUrl(url);
+	});
 }
 
 

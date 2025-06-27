@@ -50,6 +50,7 @@ private:
 
 	class CDOTExportDialog *m_dotDialog = nullptr;
 	class CImageExportDialog *m_imageDialog = nullptr;
+	class CPDFExportDialog *m_pdfDialog = nullptr;
 
 	// think: to move?
 	CGVGraphLayoutUIController *m_gvController = nullptr;
