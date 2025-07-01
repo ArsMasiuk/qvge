@@ -19,7 +19,7 @@ Since **QVGE** is a free software, it is developed in the free time on my own co
 
 or via GitHub Sponsors: 
 
-<iframe src="https://github.com/sponsors/ArsMasiuk/button" title="Sponsor ArsMasiuk" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-181717?style=flat&logo=github)](https://github.com/sponsors/ArsMasiuk)
 
 Thank you!
 
