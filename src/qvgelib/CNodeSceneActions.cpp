@@ -45,7 +45,7 @@ _again:
 		return false;
 
 	auto items = nodeScene.getItemsById(newId);
-	for (auto item : items)
+	for (auto& item : items)
 	{
 		CNode* node = dynamic_cast<CNode*>(item);
 		if (node == NULL || node == editNode)
@@ -97,7 +97,7 @@ _again:
 
 void CNodeSceneActions::onActionNodeColor()
 {
-	auto nodes = nodeScene.getSelectedNodes();
+	auto& nodes = nodeScene.getSelectedNodes();
 	if (nodes.isEmpty())
 		return;
 
@@ -105,7 +105,7 @@ void CNodeSceneActions::onActionNodeColor()
 	if (!color.isValid())
 		return;
 
-	for (auto node : nodes)
+	for (auto& node : nodes)
 	{
 		node->setAttribute("color", color);
 	}
@@ -116,13 +116,14 @@ void CNodeSceneActions::onActionNodeColor()
 
 void CNodeSceneActions::onActionNodeClear()
 {
-	auto nodes = nodeScene.getSelectedNodes();
+	auto& nodes = nodeScene.getSelectedNodes();
 	if (nodes.isEmpty())
 		return;
 
-	for (auto node : nodes)
+	for (auto& node : nodes)
 	{
-		node->removeAttribute(attr_size);
+		node->removeAttribute(attr_width);
+		node->removeAttribute(attr_height);
 		node->removeAttribute(attr_weight);
 		node->removeAttribute(attr_color);
 		node->removeAttribute(attr_style);
@@ -145,7 +146,7 @@ void CNodeSceneActions::onActionLink()
 		return;
 
 	auto baseNode = nodes.takeFirst();
-	for (auto node : nodes)
+	for (auto& node : nodes)
 	{
 		baseNode->merge(node);
 	}
@@ -156,11 +157,11 @@ void CNodeSceneActions::onActionLink()
 
 void CNodeSceneActions::onActionUnlink()
 {
-	auto nodes = nodeScene.getSelectedNodes();
+	auto& nodes = nodeScene.getSelectedNodes();
 	if (nodes.isEmpty())
 		return;
 
-	for (auto node : nodes)
+	for (auto& node : nodes)
 	{
 		node->unlink();
 	}
@@ -189,7 +190,7 @@ _again:
 		return false;
 
 	auto items = nodeScene.getItemsById(newId);
-	for (auto item : items)
+	for (auto& item : items)
 	{
 		CEdge* edge = dynamic_cast<CEdge*>(item);
 		if (edge == NULL || edge == editEdge)
@@ -241,17 +242,17 @@ _again:
 
 void CNodeSceneActions::onActionEdgeColor()
 {
-	auto edges = nodeScene.getSelectedEdges();
+	auto& edges = nodeScene.getSelectedEdges();
 	if (edges.isEmpty())
 		return;
 
-	QColor color = QColorDialog::getColor(edges.first()->getAttribute("color").value<QColor>());
+	QColor color = QColorDialog::getColor(edges.first()->getAttribute(attr_color).value<QColor>());
 	if (!color.isValid())
 		return;
 
-	for (auto edge : edges)
+	for (auto& edge : edges)
 	{
-		edge->setAttribute("color", color);
+		edge->setAttribute(attr_color, color);
 	}
 
 	nodeScene.addUndoState();
@@ -260,13 +261,12 @@ void CNodeSceneActions::onActionEdgeColor()
 
 void CNodeSceneActions::onActionEdgeClear()
 {
-	auto edges = nodeScene.getSelectedEdges();
+	auto& edges = nodeScene.getSelectedEdges();
 	if (edges.isEmpty())
 		return;
 
-	for (auto edge : edges)
+	for (auto& edge : edges)
 	{
-		edge->removeAttribute(attr_size);
 		edge->removeAttribute(attr_weight);
 		edge->removeAttribute(attr_color);
 		edge->removeAttribute(attr_style);
@@ -281,11 +281,11 @@ void CNodeSceneActions::onActionEdgeClear()
 
 void CNodeSceneActions::onActionEdgeReverse()
 {
-	auto edges = nodeScene.getSelectedEdges();
+	auto& edges = nodeScene.getSelectedEdges();
 	if (edges.isEmpty())
 		return;
 
-	for (auto edge : edges)
+	for (auto& edge : edges)
 	{
 		edge->reverse();
 	}
@@ -296,13 +296,13 @@ void CNodeSceneActions::onActionEdgeReverse()
 
 void CNodeSceneActions::onActionEdgeDirected()
 {
-	auto edges = nodeScene.getSelectedEdges();
+	auto& edges = nodeScene.getSelectedEdges();
 	if (edges.isEmpty())
 		return;
 
-	for (auto edge : edges)
+	for (auto& edge : edges)
 	{
-		edge->setAttribute("direction", "directed");
+		edge->setAttribute(attr_edge_direction, "directed");
 		edge->update();
 	}
 
@@ -312,13 +312,13 @@ void CNodeSceneActions::onActionEdgeDirected()
 
 void CNodeSceneActions::onActionEdgeMutual()
 {
-	auto edges = nodeScene.getSelectedEdges();
+	auto& edges = nodeScene.getSelectedEdges();
 	if (edges.isEmpty())
 		return;
 
-	for (auto edge : edges)
+	for (auto& edge : edges)
 	{
-		edge->setAttribute("direction", "mutual");
+		edge->setAttribute(attr_edge_direction, "mutual");
 		edge->update();
 	}
 
@@ -328,13 +328,13 @@ void CNodeSceneActions::onActionEdgeMutual()
 
 void CNodeSceneActions::onActionEdgeUndirected()
 {
-	auto edges = nodeScene.getSelectedEdges();
+	auto& edges = nodeScene.getSelectedEdges();
 	if (edges.isEmpty())
 		return;
 
-	for (auto edge : edges)
+	for (auto& edge : edges)
 	{
-		edge->setAttribute("direction", "undirected");
+		edge->setAttribute(attr_edge_direction, "undirected");
 		edge->update();
 	}
 

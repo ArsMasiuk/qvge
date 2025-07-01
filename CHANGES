@@ -2,6 +2,10 @@ QVGE 0.7.1
 -------------------------------------------------------------------------------
 Bugfixes:
 - fixed crash on PDF export (#170)
+- fixed import/export of default node attributes (#178)	
+
+Changes:
+- node attribute "size" removed from the default attributes list and replaced by "width" and "height"
 
 
 QVGE 0.7.0

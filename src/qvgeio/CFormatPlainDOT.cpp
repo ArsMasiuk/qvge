@@ -322,7 +322,7 @@ bool CFormatPlainDOT::parseNode(const QStringList &refs, GraphInternal &gi) cons
 	rit.next(fillcolor);
 
 	node.attrs["x"] = x * 72.0 * gi.g_scale;
-	node.attrs["y"] = y * 72.0 * gi.g_scale;
+	node.attrs["y"] = -y * 72.0 * gi.g_scale;
 	node.attrs["width"] = width * 72.0 * gi.g_scale;
 	node.attrs["height"] = height * 72.0 * gi.g_scale;
 
@@ -359,7 +359,7 @@ bool CFormatPlainDOT::parseEdge(const QStringList &refs, GraphInternal &gi) cons
 			rit.next(x);
 			rit.next(y);
 			x = x * 72.0 * gi.g_scale;
-			y = y * 72.0 * gi.g_scale;
+			y = -y * 72.0 * gi.g_scale;
 			points += QString("%1 %2 ").arg(x).arg(y);
 		}
 		//edge.attrs["points"] = points;
@@ -376,7 +376,7 @@ bool CFormatPlainDOT::parseEdge(const QStringList &refs, GraphInternal &gi) cons
 		rit.next(y);
 		edge.attrs["label"] = label;
 		edge.attrs["label.x"] = x * 72.0 * gi.g_scale;
-		edge.attrs["label.y"] = y * 72.0 * gi.g_scale;
+		edge.attrs["label.y"] = -y * 72.0 * gi.g_scale;
 
 		edge.id = label.toUtf8();
 	}

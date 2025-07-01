@@ -153,11 +153,12 @@ void CNodeEdgePropertiesUI::updateFromScene(CEditorScene* scene)
 	ui->NodeColor->setColor(nodeAttrs["color"].defaultValue.value<QColor>());
 	ui->NodeShape->selectAction(nodeAttrs["shape"].defaultValue);
 
-	QSize size = nodeAttrs["size"].defaultValue.toSize();
-	ui->NodeSizeSwitch->setChecked(size.width() == size.height());
-	ui->NodeSizeY->setVisible(size.width() != size.height());
-	ui->NodeSizeX->setValue(size.width());
-	ui->NodeSizeY->setValue(size.height());
+	auto width = nodeAttrs[attr_width].defaultValue.toInt();
+	auto height = nodeAttrs[attr_height].defaultValue.toInt();
+	ui->NodeSizeSwitch->setChecked(width == height);
+	ui->NodeSizeY->setVisible(width != height);
+	ui->NodeSizeX->setValue(width);
+	ui->NodeSizeY->setValue(height);
 
 	ui->StrokeColor->setColor(nodeAttrs["stroke.color"].defaultValue.value<QColor>());
 	ui->StrokeStyle->setPenStyle(CUtils::textToPenStyle(nodeAttrs["stroke.style"].defaultValue.toString()));
@@ -226,11 +227,12 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
         ui->NodeColor->setColor(node->getAttribute("color").value<QColor>());
         ui->NodeShape->selectAction(node->getAttribute("shape"));
 		
-		QSize size = node->getAttribute("size").toSize();
-		ui->NodeSizeSwitch->setChecked(size.width() == size.height());
-		ui->NodeSizeY->setVisible(size.width() != size.height());
-		ui->NodeSizeX->setValue(size.width());
-		ui->NodeSizeY->setValue(size.height());
+		auto width = node->getAttribute(attr_width).toInt();
+		auto height = node->getAttribute(attr_height).toInt();
+		ui->NodeSizeSwitch->setChecked(width == height);
+		ui->NodeSizeY->setVisible(width != height);
+		ui->NodeSizeX->setValue(width);
+		ui->NodeSizeY->setValue(height);
 
 		ui->StrokeColor->setColor(node->getAttribute("stroke.color").value<QColor>());
 		ui->StrokeStyle->setPenStyle(CUtils::textToPenStyle(node->getAttribute("stroke.style").toString()));
@@ -238,7 +240,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     }
 
     QList<CItem*> nodeItems;
-    for (auto item: nodes) nodeItems << item;
+    for (auto& item: nodes) nodeItems << item;
     int attrCount = ui->NodeAttrEditor->setupFromItems(*m_scene, nodeItems);
 	ui->NodeAttrBox->setTitle(tr("Custom Attributes: %1").arg(attrCount));
 
@@ -257,7 +259,7 @@ void CNodeEdgePropertiesUI::onSelectionChanged()
     }
 
     QList<CItem*> edgeItems;
-    for (auto item: edges) edgeItems << item;
+    for (auto& item: edges) edgeItems << item;
 	attrCount = ui->EdgeAttrEditor->setupFromItems(*m_scene, edgeItems);
 	ui->EdgeAttrBox->setTitle(tr("Custom Attributes: %1").arg(attrCount));
 
@@ -301,7 +303,7 @@ void CNodeEdgePropertiesUI::setNodesAttribute(const QByteArray& attrId, const QV
 		return;
 	}
 
-	for (auto node : nodes)
+	for (auto& node : nodes)
 		node->setAttribute(attrId, v);
 
 	m_scene->addUndoState();
@@ -323,7 +325,7 @@ void CNodeEdgePropertiesUI::setEdgesAttribute(const QByteArray& attrId, const QV
 		return;
 	}
 
-	for (auto edge : edges)
+	for (auto& edge : edges)
 		edge->setAttribute(attrId, v);
 
 	m_scene->addUndoState();
@@ -342,26 +344,26 @@ void CNodeEdgePropertiesUI::on_NodeShape_activated(QVariant data)
 }
 
 
-void CNodeEdgePropertiesUI::on_NodeSizeX_valueChanged(int /*value*/)
+void CNodeEdgePropertiesUI::on_NodeSizeX_valueChanged(int value)
 {
 	ui->NodeSizeX->blockSignals(true);
-	ui->NodeSizeY->blockSignals(true);
 
 	if (ui->NodeSizeSwitch->isChecked())
 		ui->NodeSizeY->setValue(ui->NodeSizeX->value());
 
-	QSize size(ui->NodeSizeX->value(), ui->NodeSizeY->value());
-
-	setNodesAttribute("size", size);
+	setNodesAttribute(attr_width, value);
 
  	ui->NodeSizeX->blockSignals(false);
-	ui->NodeSizeY->blockSignals(false);
 }
 
 
 void CNodeEdgePropertiesUI::on_NodeSizeY_valueChanged(int value)
 {
-	on_NodeSizeX_valueChanged(value);
+	ui->NodeSizeY->blockSignals(true);
+
+	setNodesAttribute(attr_height, value);
+
+	ui->NodeSizeY->blockSignals(false);
 }
 
 
@@ -460,7 +462,7 @@ void CNodeEdgePropertiesUI::on_LabelFont_activated(const QFont &font)
 	if (items.isEmpty())
 		return;
 
-	for (auto item : items)
+	for (auto& item : items)
 	{
 		item->setAttribute(attr_label_font, font);
 	}
@@ -478,7 +480,7 @@ void CNodeEdgePropertiesUI::on_LabelColor_activated(const QColor &color)
 	if (items.isEmpty())
 		return;
 
-	for (auto item : items)
+	for (auto& item : items)
 	{
 		item->setAttribute(attr_label_color, color);
 	}

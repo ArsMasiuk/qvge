@@ -11,6 +11,7 @@ It can be used freely, maintaining the information above.
 #include "CNode.h"
 #include "CDirectEdge.h"
 #include "CPolyEdge.h"
+#include "CEditorSceneDefines.h"
 
 #include <QFile>
 #include <QDate>
@@ -165,10 +166,11 @@ bool CFileSerializerGEXF::readAttrs(int /*index*/, const QDomNode &domNode, CEdi
 			// other attrs
 			QVariant v = CUtils::textToVariant(def, attrInfo.variantType);
 
-			if (attrId == "size" && classId == "node")
-			{
-				v = QSizeF(v.toDouble(), v.toDouble());
-			}
+			// size is obsoleted
+			//if (attrId == "size" && classId == "node")
+			//{
+			//	v = QSizeF(v.toDouble(), v.toDouble());
+			//}
 
 			attr.defaultValue = v;
 		}
@@ -244,7 +246,9 @@ bool CFileSerializerGEXF::readNode(int index, const QDomNode &domNode, const IdT
 		if (viz_elem.hasAttribute("height"))
 			sz.setHeight(viz_elem.attribute("height").toFloat());
 
-		node->setAttribute("size", sz);
+		//node->setAttribute("size", sz);
+		node->setAttribute("width", sz.width());
+		node->setAttribute("height", sz.height());
 	}
 
 	// shape
@@ -494,10 +498,10 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 
 		for (auto item : items)
 		{
-			auto itemAttrs = item->getLocalAttributes();
+			auto& itemAttrs = item->getLocalAttributes();
 			for (auto it = itemAttrs.constBegin(); it != itemAttrs.constEnd(); ++it)
 			{
-				auto id = it.key();
+				auto& id = it.key();
 				if (!attrs.contains(id))
 					attrs[id] = CAttribute(id);
 			}
@@ -520,28 +524,25 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 
 	ts << "    <attributes class=\"" << classId << "\" mode=\"static\">\n";
 
+	// support of node size
+	QSizeF sz;
+
 	for (auto it = attrs.constBegin(); it != attrs.constEnd(); ++it)
 	{
 		const auto &attr = it.value();
 		if (attr.flags & ATTR_VIRTUAL)
 			continue;
 
-		// size
-		if (it.key() == "size")
-		{
-			ts << "        <attribute id=\"" << "size" << "\" title=\"" << "size" << "\" type=\"" << "float" << "\">\n";
+		// size - will be written later
+		//if (it.key() == attr_width)
+		//{
+		//	sz.setWidth(attr.defaultValue.toFloat());
+		//}
 
-			if (attr.defaultValue.canConvert(QMetaType::QSizeF))
-			{
-				QSizeF size = attr.defaultValue.toSizeF();
-				ts << "            <default>" << qMax(size.width(), size.height()) << "</default>\n";
-			}
-			else
-				ts << "            <default>" << attr.defaultValue.toFloat() << "</default>\n";
-
-			ts << "        </attribute>\n";
-			continue;
-		}
+		//if (it.key() == attr_height)
+		//{
+		//	sz.setHeight(attr.defaultValue.toFloat());
+		//}
 
 		// others (id = title)
 		ts << "        <attribute id=\"" << it.key() << "\" title=\"" << it.key() << "\" type=\"" << typeToString(attr.valueType) << "\">\n";
@@ -560,6 +561,14 @@ void CFileSerializerGEXF::writeClassAttrs(QTextStream &ts, const CEditorScene& s
 
 		ts << "        </attribute>\n";
 	}
+
+
+	//if (sz.isValid())
+	//{
+	//	ts << "        <attribute id=\"" << "size" << "\" title=\"" << "size" << "\" type=\"" << "float" << "\">\n";
+	//	ts << "            <default>" << qMax(sz.width(), sz.height()) << "</default>\n";
+	//	ts << "        </attribute>\n";
+	//}
 
 	ts << "    </attributes>\n";
 }

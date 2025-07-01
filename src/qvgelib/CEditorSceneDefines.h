@@ -31,7 +31,8 @@ const QByteArray class_node = QByteArrayLiteral("node");
 const QByteArray class_edge = QByteArrayLiteral("edge");
 
 const QByteArray attr_id = QByteArrayLiteral("id");
-const QByteArray attr_size = QByteArrayLiteral("size");
+const QByteArray attr_width = QByteArrayLiteral("width");
+const QByteArray attr_height = QByteArrayLiteral("height");
 const QByteArray attr_weight = QByteArrayLiteral("weight");
 const QByteArray attr_color = QByteArrayLiteral("color");
 const QByteArray attr_style = QByteArrayLiteral("style");

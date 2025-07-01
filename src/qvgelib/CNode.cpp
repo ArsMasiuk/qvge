@@ -157,7 +157,8 @@ void CNode::transform(
 
 void CNode::setSize(float w, float h)
 {
-	setAttribute("size", QSizeF(w, h));
+	setAttribute(attr_width, w);
+	setAttribute(attr_height, h);
 }
 
 
@@ -185,7 +186,7 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 	}
 
 	// mapped attributes
-	if (attrId == "size")
+/*	if (attrId == "size")
 	{
 		if (v.type() == QVariant::Size || v.type() == QVariant::SizeF)
 		{
@@ -211,22 +212,29 @@ bool CNode::setAttribute(const QByteArray& attrId, const QVariant& v)
 
 		return false;
 	}
+	*/
 
-	if (attrId == "width")
+	if (attrId == attr_width)
 	{
-		float s = v.toFloat();
+		Super::setAttribute(attrId, v);
+
+		float w = v.toFloat();
 		QSizeF sf = getSize();
-		Super::setAttribute("size", QSizeF(s, sf.height()));
-		resize(s, sf.height());
+		resize(w, sf.height());
+
+		updateCachedItems();
 		return true;
 	}
 
-	if (attrId == "height")
+	if (attrId == attr_height)
 	{
-		float s = v.toFloat();
+		Super::setAttribute(attrId, v);
+
+		float h = v.toFloat();
 		QSizeF sf = getSize();
-		Super::setAttribute("size", QSizeF(sf.width(), s));
-		resize(sf.width(), s);
+		resize(sf.width(), h);
+
+		updateCachedItems();
 		return true;
 	}
 
@@ -1004,8 +1012,9 @@ void CNode::updateLabelPosition()
 
 void CNode::recalculateShape()
 {
-	QSizeF sz = getAttribute("size").toSizeF();
-	resize(sz);
+	auto w = getAttribute(attr_width).toFloat();
+	auto h = getAttribute(attr_height).toFloat();
+	resize(w, h);
 
 	QRectF r = Shape::boundingRect();
 

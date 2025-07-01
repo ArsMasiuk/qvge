@@ -79,9 +79,6 @@ bool CNodeEditorScene::fromGraph(const Graph& g)
 			continue;
 		}
 
-		if (attr.id == attr_size)
-			continue;	// ignore for now
-
 		createClassAttribute("node", attr.id, attr.name, attr.defaultValue, ATTR_NONE);
 	}
 
@@ -191,7 +188,7 @@ bool CNodeEditorScene::toGraph(Graph& g)
 	}
 
 	// temp solution
-	g.nodeAttrs.remove("size");
+	//g.nodeAttrs.remove("size");
 	g.nodeAttrs.remove("pos");
 
 
@@ -310,9 +307,9 @@ void CNodeEditorScene::initialize()
     CAttribute shapeAttr("shape", "Shape", "disc", ATTR_FIXED);
 	setClassAttribute("node", shapeAttr);
 
-	createClassAttribute("node", "size", "Size", QSizeF(11.0, 11.0), ATTR_MAPPED | ATTR_FIXED);
-	//createClassAttribute("node", "width", "Width", 11.0f, ATTR_MAPPED);
-	//createClassAttribute("node", "height", "Height", 11.0f, ATTR_MAPPED);
+	//createClassAttribute("node", "size", "Size", QSizeF(11.0, 11.0), ATTR_MAPPED | ATTR_FIXED);
+	createClassAttribute("node", "width", "Width", 11.0f, ATTR_MAPPED);
+	createClassAttribute("node", "height", "Height", 11.0f, ATTR_MAPPED);
 
 	//createClassAttribute("node", "pos", "Position", QPointF(), ATTR_NODEFAULT | ATTR_MAPPED);
 	createClassAttribute("node", "x", "X-Coordinate", 0.0f, ATTR_NODEFAULT | ATTR_MAPPED | ATTR_FIXED);
@@ -678,7 +675,8 @@ void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 		for (auto &node : nodes)
 		{
-			node->setAttribute(attr_size, node->getSize() * 1.1);
+			node->setAttribute(attr_width, node->getSize().width() * 1.1);
+			node->setAttribute(attr_height, node->getSize().height() * 1.1);
 		}
 
 		addUndoState();
@@ -699,7 +697,8 @@ void CNodeEditorScene::keyPressEvent(QKeyEvent *keyEvent)
 
 		for (auto &node : nodes)
 		{
-			node->setAttribute(attr_size, node->getSize() / 1.1);
+			node->setAttribute(attr_width, node->getSize().width() / 1.1);
+			node->setAttribute(attr_height, node->getSize().height() / 1.1);
 		}
 
 		addUndoState();

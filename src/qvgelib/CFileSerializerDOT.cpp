@@ -184,11 +184,22 @@ void CFileSerializerDOT::doWriteNodeAttrs(QTextStream& ts, QMap<QByteArray, QVar
 		nodeAttrs.remove("color");
 	}
 
+	// "size" is obsoleted
 	if (nodeAttrs.contains("size")) {
 		ts << ",width = \"" << nodeAttrs["size"].toSizeF().width() / 72.0 << "\"";		//  / 72.0 -> point to inch
 		ts << ",height = \"" << nodeAttrs["size"].toSizeF().height() / 72.0 << "\"";
 		ts << "\n";
 		nodeAttrs.remove("size");
+	}
+
+	if (nodeAttrs.contains("width")) {
+		ts << ",width = \"" << nodeAttrs["width"].toFloat() / 72.0 << "\"";		//  / 72.0 -> point to inch
+		nodeAttrs.remove("width");
+	}
+
+	if (nodeAttrs.contains("height")) {
+		ts << ",height = \"" << nodeAttrs["height"].toFloat() / 72.0 << "\"";	//  / 72.0 -> point to inch
+		nodeAttrs.remove("height");
 	}
 
 	if (nodeAttrs.contains("shape")) {
