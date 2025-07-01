@@ -13,9 +13,13 @@ Please note that **QVGE** is not a replacement for such a software like Gephi, I
 
 ### Support
 
-Since **QVGE** is a free software, it is developed in the free time on my own costs only. If you like the software and wish to support its further development, you could make a small donation using the button below:
+Since **QVGE** is a free software, it is developed in the free time on my own costs only. If you like the software and wish to support its further development, you could make a donation via PayPal using the button below:
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z35EHHJ3729GG&source=url)
+
+or via GitHub Sponsors: 
+
+<iframe src="https://github.com/sponsors/ArsMasiuk/button" title="Sponsor ArsMasiuk" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
 
 Thank you!
 
